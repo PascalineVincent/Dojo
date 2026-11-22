@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Laboratoire : indices de ségrégation – Le Dojo</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../assets/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-80558751abe2b985a76e6f6f417f2174.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-bde8d0188a8d44dff803acbb058a059b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-80558751abe2b985a76e6f6f417f2174.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../assets/dojo.css">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Le Dojo</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Basculer la navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Aujourd’hui</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parcours" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Parcours</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-parcours">    
+        <li>
+    <a class="dropdown-item" href="../parcours/micro.html">
+ <span class="dropdown-text">Micro (L1/L2)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/stats.html">
+ <span class="dropdown-text">Statistiques (L1)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/econometrie.html">
+ <span class="dropdown-text">Économétrie</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/histoire.html">
+ <span class="dropdown-text">Histoire économique</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/contemporaine.html">
+ <span class="dropdown-text">Économie contemporaine</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-recherche" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Recherche</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-recherche">    
+        <li>
+    <a class="dropdown-item" href="../recherche/index.html">
+ <span class="dropdown-text">Le défi de la semaine</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../recherche/segregation.html">
+ <span class="dropdown-text">Ségrégation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../recherche/inegalites.html">
+ <span class="dropdown-text">Inégalités</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../veille.html"> 
+<span class="menu-text">Veille</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../progression.html"> 
+<span class="menu-text">Progression</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Basculer le mode sombre"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sur cette page</h2>
+   
+  <ul>
+  <li><a href="#terrain-de-jeu-simuler-une-ville" id="toc-terrain-de-jeu-simuler-une-ville" class="nav-link active" data-scroll-target="#terrain-de-jeu-simuler-une-ville">Terrain de jeu : simuler une ville</a></li>
+  <li><a href="#seg-d-0" id="toc-seg-d-0" class="nav-link" data-scroll-target="#seg-d-0">Parts de chaque groupe et indice D sur 6 quartiers</a></li>
+  <li><a href="#seg-d-1" id="toc-seg-d-1" class="nav-link" data-scroll-target="#seg-d-1">Coder l’indice D de Duncan</a></li>
+  <li><a href="#seg-m-0" id="toc-seg-m-0" class="nav-link" data-scroll-target="#seg-m-0">Entropie d’une composition</a></li>
+  <li><a href="#seg-m-1" id="toc-seg-m-1" class="nav-link" data-scroll-target="#seg-m-1">Coder l’indice d’information mutuelle M</a></li>
+  <li><a href="#seg-biais-1" id="toc-seg-biais-1" class="nav-link" data-scroll-target="#seg-biais-1">Biais de petites unités par Monte-Carlo</a></li>
+  <li><a href="#seg-decomp-1" id="toc-seg-decomp-1" class="nav-link" data-scroll-target="#seg-decomp-1">Décomposer M entre et intra zones</a></li>
+  <li><a href="#aller-plus-loin" id="toc-aller-plus-loin" class="nav-link" data-scroll-target="#aller-plus-loin">Aller plus loin</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Laboratoire : indices de ségrégation</h1>
+<p class="subtitle lead">Coder, comparer, décomposer, corriger</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Niveau doctoral : on <strong>recode les indices depuis zéro</strong> puis on les compare à la boîte à outils du dépôt (<code>R/segregation.R</code>, testée). Toutes les fonctions prennent une matrice <code>tab</code> d’effectifs (<strong>unités × groupes</strong>).</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>seg_D(tab)</code></td>
+<td>Dissimilarité de Duncan (2 groupes)</td>
+</tr>
+<tr class="even">
+<td><code>seg_M(tab)</code>, <code>seg_H(tab)</code></td>
+<td>Information mutuelle et sa version normalisée (multigroupe)</td>
+</tr>
+<tr class="odd">
+<td><code>seg_isolation(tab, g)</code></td>
+<td>Isolement du groupe <code>g</code></td>
+</tr>
+<tr class="even">
+<td><code>seg_M_decomp(tab, zone)</code></td>
+<td>Décomposition entre/intra zones</td>
+</tr>
+<tr class="odd">
+<td><code>seg_null(tab, B, stat)</code></td>
+<td>Distribution sous allocation aléatoire</td>
+</tr>
+<tr class="even">
+<td><code>seg_sim_city(U, size, p, kappa)</code></td>
+<td>Ville synthétique (kappa petit = quartiers homogènes)</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb1" data-startfrom="47" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 46;"><span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> {</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Générateur pseudo-aléatoire reproductible : graine = jour + id d'exercice + salt.</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  <span class="co">// (Source unique : scripts/test_exercices.R évalue cette même cellule avec Node.)</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> today <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>()<span class="op">.</span><span class="fu">toISOString</span>()<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> hash <span class="op">=</span> (s) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> h <span class="op">=</span> <span class="dv">1779033703</span> <span class="op">^</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) { h <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(h <span class="op">^</span> s<span class="op">.</span><span class="fu">charCodeAt</span>(i)<span class="op">,</span> <span class="dv">3432918353</span>)<span class="op">;</span> h <span class="op">=</span> (h <span class="op">&lt;&lt;</span> <span class="dv">13</span>) <span class="op">|</span> (h <span class="op">&gt;&gt;&gt;</span> <span class="dv">19</span>)<span class="op">;</span> }</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> h <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> mulberry32 <span class="op">=</span> (a) <span class="kw">=&gt;</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    a <span class="op">|=</span> <span class="dv">0</span><span class="op">;</span> a <span class="op">=</span> (a <span class="op">+</span> <span class="bn">0x6d2b79f5</span>) <span class="op">|</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> t <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(a <span class="op">^</span> (a <span class="op">&gt;&gt;&gt;</span> <span class="dv">15</span>)<span class="op">,</span> <span class="dv">1</span> <span class="op">|</span> a)<span class="op">;</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> (t <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">7</span>)<span class="op">,</span> <span class="dv">61</span> <span class="op">|</span> t)) <span class="op">^</span> t<span class="op">;</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ((t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">14</span>)) <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span>) <span class="op">/</span> <span class="dv">4294967296</span><span class="op">;</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> (id<span class="op">,</span> salt <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> day <span class="op">=</span> today) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> u <span class="op">=</span> <span class="fu">mulberry32</span>(<span class="fu">hash</span>(<span class="vs">`</span><span class="sc">${</span>day<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>id<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>salt<span class="sc">}</span><span class="vs">`</span>))<span class="op">;</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> int <span class="op">=</span> (a<span class="op">,</span> b) <span class="kw">=&gt;</span> a <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> (b <span class="op">-</span> a <span class="op">+</span> <span class="dv">1</span>))<span class="op">;</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> pick <span class="op">=</span> (arr) <span class="kw">=&gt;</span> arr[<span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> arr<span class="op">.</span><span class="at">length</span>)]<span class="op">;</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> normal <span class="op">=</span> () <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">log</span>(<span class="dv">1</span> <span class="op">-</span> <span class="fu">u</span>())) <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">cos</span>(<span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="cn">PI</span> <span class="op">*</span> <span class="fu">u</span>())<span class="op">;</span></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { u<span class="op">,</span> int<span class="op">,</span> pick<span class="op">,</span> normal }<span class="op">;</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>viewof salt <span class="op">=</span> {</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> b <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;button class="dojo-btn dojo-reroll"&gt;🎲 Nouveaux énoncés&lt;/button&gt;`</span><span class="op">;</span></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> n <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>  b<span class="op">.</span><span class="at">onclick</span> <span class="op">=</span> () <span class="kw">=&gt;</span> { b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="op">++</span>n<span class="op">;</span> b<span class="op">.</span><span class="fu">dispatchEvent</span>(<span class="kw">new</span> <span class="bu">Event</span>(<span class="st">"input"</span><span class="op">,</span> { <span class="dt">bubbles</span><span class="op">:</span> <span class="kw">true</span> }))<span class="op">;</span> }<span class="op">;</span></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> b<span class="op">;</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<section id="terrain-de-jeu-simuler-une-ville" class="level2">
+<h2 class="anchored" data-anchor-id="terrain-de-jeu-simuler-une-ville">Terrain de jeu : simuler une ville</h2>
+<div class="cell" data-autorun="true" data-caption="Villes synthétiques : D et M selon kappa">
+<div>
+<div id="webr-1" class="exercise-cell">
+
+</div>
+<script type="webr-1-contents">
+eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImNhcHRpb24iOiJWaWxsZXMgc3ludGjDqXRpcXVlcyA6IEQgZXQgTSBzZWxvbiBrYXBwYSIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzb3VyY2UoXCJSL3NlZ3JlZ2F0aW9uLlJcIilcbmthcHBhcyA8LSBjKDAuNSwgMiwgNSwgMjAsIDEwMCwgSW5mKVxucmVzIDwtIHQoc2FwcGx5KGthcHBhcywgZnVuY3Rpb24oaykge1xuICB0YWIgPC0gc2VnX3NpbV9jaXR5KFUgPSAxMDAsIHNpemUgPSAyMDAsIHAgPSAwLjMsIGthcHBhID0gaywgc2VlZCA9IDEpXG4gIGMoRCA9IHNlZ19EKHRhYiksIE0gPSBzZWdfTSh0YWIpLCBIID0gc2VnX0godGFiKSwgaXNvbGVtZW50X0IgPSBzZWdfaXNvbGF0aW9uKHRhYiwgXCJCXCIpKVxufSkpXG5yb3duYW1lcyhyZXMpIDwtIHBhc3RlMChcImthcHBhID0gXCIsIGthcHBhcylcbnJvdW5kKHJlcywgMykifQ==
+</script>
+</div>
+</div>
+<p>Avec <code>kappa = Inf</code> il n’y a <strong>aucune ségrégation structurelle</strong>, pourtant D et M ne sont pas nuls : c’est le biais d’échantillonnage (voir plus bas).</p>
+<div class="dojo-track" data-track="seg">
+
+</div>
+</section>
+<section id="seg-d-0" class="level2">
+<h2 class="anchored" data-anchor-id="seg-d-0">Parts de chaque groupe et indice D sur 6 quartiers</h2>
+<p><span class="dojo-step">Marche 1 sur 6 · Guidé</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="135" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 134;"><span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>seg0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"seg-d-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Une ville compte 6 quartiers. Les vecteurs <code>a</code> (groupe A) et <code>b</code> (groupe B) donnent les effectifs par quartier. Calcule la part de chaque groupe qui vit dans chaque quartier, puis l’indice D de Duncan, et repère le quartier qui contribue le plus.</p>
+<div class="cell" data-exercise="seg-d-0" data-caption="D sur 6 quartiers" data-input="seg0">
+<div>
+<div id="webr-2" class="exercise-cell">
+
+</div>
+<script type="webr-2-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJEIHN1ciA2IHF1YXJ0aWVycyIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoic2VnLWQtMCIsImlucHV0IjpbInNlZzAiXSwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKHNlZzAkc2VlZClcbmEgPC0gc2FtcGxlKDU6ODAsIDYpOyBiIDwtIHNhbXBsZSg1OjgwLCA2KVxucGEgPC0gX19fX19fICAgICAgIyBwYXJ0IGR1IGdyb3VwZSBBIHZpdmFudCBkYW5zIGNoYXF1ZSBxdWFydGllciA6IGEgLyBzdW0oYSlcbnBiIDwtIF9fX19fXyAgICAgICMgaWRlbSBwb3VyIGxlIGdyb3VwZSBCXG5EICA8LSBfX19fX18gICAgICAjIDAsNSAqIHNvbW1lIGRlcyB2YWxldXJzIGFic29sdWVzIGRlcyDDqWNhcnRzIGRlIHBhcnRzXG5jKEQgPSBELCBxdWFydGllcl9tYXggPSB3aGljaC5tYXgoYWJzKHBhIC0gcGIpKSkifQ==
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="seg-d-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>On compare deux <strong>répartitions</strong> : celle du groupe A entre les quartiers, celle du groupe B. Pour cela, divise chaque effectif par le total de <strong>son</strong> groupe.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="seg-d-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · les formules
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>pa &lt;- a / sum(a)</code> et <code>pb &lt;- b / sum(b)</code> ; <span class="math inline">\(D\)</span> est la moitié de <code>sum(abs(pa - pb))</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="seg-d-0">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>Les effectifs bruts ne se comparent pas (un quartier peut être plus peuplé) ; on compare des <strong>parts de chaque groupe</strong> : <span class="math inline">\(a_i/A\)</span> et <span class="math inline">\(b_i/B\)</span>. Chacun de ces vecteurs somme à 1.</li>
+<li>Si les deux groupes se répartissent de la même façon, <span class="math inline">\(a_i/A = b_i/B\)</span> partout et <span class="math inline">\(D = 0\)</span>.</li>
+<li>Chaque quartier contribue par l’écart absolu <span class="math inline">\(|a_i/A - b_i/B|\)</span> ; <span class="math inline">\(D\)</span> est la <strong>moitié</strong> de la somme de ces écarts.</li>
+<li>Lecture : <span class="math inline">\(D\)</span> est la part de A (ou de B) qui devrait déménager pour égaliser les deux répartitions.</li>
+<li><code>which.max(abs(pa - pb))</code> désigne le quartier le plus « déséquilibré » : c’est lui qui contribue le plus à <span class="math inline">\(D\)</span>.</li>
+</ol>
+<div class="cell" data-exercise="seg-d-0" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="seg-d-0">
+<code id="interpolate-4" class="solution-code d-none">set.seed(seg0$seed)
+a &lt;- sample(5:80, 6); b &lt;- sample(5:80, 6)
+pa &lt;- a / sum(a)                   # répartition du groupe A entre les quartiers
+pb &lt;- b / sum(b)                   # répartition du groupe B
+D  &lt;- 0.5 * sum(abs(pa - pb))
+c(D = D, quartier_max = which.max(abs(pa - pb)))</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-5-1"><a href="#interpolate-5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(seg0<span class="sc">$</span>seed)</span>
+<span id="interpolate-5-2"><a href="#interpolate-5-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">5</span><span class="sc">:</span><span class="dv">80</span>, <span class="dv">6</span>); b <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">5</span><span class="sc">:</span><span class="dv">80</span>, <span class="dv">6</span>)</span>
+<span id="interpolate-5-3"><a href="#interpolate-5-3" aria-hidden="true" tabindex="-1"></a>pa <span class="ot">&lt;-</span> a <span class="sc">/</span> <span class="fu">sum</span>(a)                   <span class="co"># répartition du groupe A entre les quartiers</span></span>
+<span id="interpolate-5-4"><a href="#interpolate-5-4" aria-hidden="true" tabindex="-1"></a>pb <span class="ot">&lt;-</span> b <span class="sc">/</span> <span class="fu">sum</span>(b)                   <span class="co"># répartition du groupe B</span></span>
+<span id="interpolate-5-5"><a href="#interpolate-5-5" aria-hidden="true" tabindex="-1"></a>D  <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="sc">*</span> <span class="fu">sum</span>(<span class="fu">abs</span>(pa <span class="sc">-</span> pb))</span>
+<span id="interpolate-5-6"><a href="#interpolate-5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">D =</span> D, <span class="at">quartier_max =</span> <span class="fu">which.max</span>(<span class="fu">abs</span>(pa <span class="sc">-</span> pb)))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Calculer des parts <strong>dans</strong> le quartier (<span class="math inline">\(a_i/(a_i+b_i)\)</span>) : c’est une mesure d’exposition ou d’isolement, pas D.</li>
+<li>Oublier la valeur absolue : la somme des écarts signés vaut toujours 0.</li>
+<li>Oublier le facteur <span class="math inline">\(1/2\)</span> : D dépasserait 1 en cas de séparation complète.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> À l’étape suivante tu écris cette formule comme une <strong>fonction</strong> valable pour n’importe quelle table, et tu la testes sur des cas limites.</p>
+</div>
+<div class="cell" data-exercise="seg-d-0" data-check="true">
+<script type="exercise-check-seg-d-0-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNlZy1kLTAiLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic2V0LnNlZWQoc2VnMCRzZWVkKVxuYSA8LSBzYW1wbGUoNTo4MCwgNik7IGIgPC0gc2FtcGxlKDU6ODAsIDYpXG5wYSA8LSBhIC8gc3VtKGEpOyBwYiA8LSBiIC8gc3VtKGIpXG5EIDwtIDAuNSAqIHN1bShhYnMocGEgLSBwYikpOyBxIDwtIHdoaWNoLm1heChhYnMocGEgLSBwYikpXG5yZXMgPC0gc3VwcHJlc3NXYXJuaW5ncyhhcy5udW1lcmljKC5yZXN1bHQpKVxuaWYgKGxlbmd0aChyZXMpICE9IDIgfHwgYW55TkEocmVzKSkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiUmVudm9pZSBjKEQgPSAuLi4sIHF1YXJ0aWVyX21heCA9IC4uLikgY29tbWUgZGFucyBsZSBnYWJhcml0LlwiKVxufSBlbHNlIGlmIChhYnMocmVzWzFdIC0gRCkgPiAxZS05KSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJEIGluY29ycmVjdCA6IGNvbXBhcmUgYSAvIHN1bShhKSBldCBiIC8gc3VtKGIpIChwYXJ0cyBkZSBDSEFRVUUgZ3JvdXBlKSwgcHJlbmRzIGxhIHZhbGV1ciBhYnNvbHVlIGRlcyDDqWNhcnRzLCBwdWlzIGxhIG1vaXRpw6kgZGUgbGV1ciBzb21tZS5cIilcbn0gZWxzZSBpZiAocmVzWzJdICE9IHEpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIkQgZXN0IGp1c3RlIG1haXMgbGUgcXVhcnRpZXIgZMOpc2lnbsOpIG5vbiA6IGlsIG1heGltaXNlIGxhIHZhbGV1ciBhYnNvbHVlIGRlIGwnw6ljYXJ0IGRlIHBhcnRzIGFicyhwYSAtIHBiKS5cIilcbn0gZWxzZSB7XG4gIGxpc3QoY29ycmVjdCA9IFRSVUUsIG1lc3NhZ2UgPSBzcHJpbnRmKFwiQ29ycmVjdCA6IEQgPSAlLjNmLCBzb2l0ICUuMGYgJSUgZCd1biBncm91cGUgw6AgZMOpcGxhY2VyIDsgbGUgcXVhcnRpZXIgJWQgY29udHJpYnVlIGxlIHBsdXMuXCIsIEQsIDEwMCAqIEQsIHEpKVxufSJ9
+</script>
+</div>
+<div class="dojo-done" data-id="seg-d-0">
+
+</div>
+</section>
+<section id="seg-d-1" class="level2">
+<h2 class="anchored" data-anchor-id="seg-d-1">Coder l’indice D de Duncan</h2>
+<p><span class="dojo-step">Marche 2 sur 6 · À compléter</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="227" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 226;"><span id="cb3-227"><a href="#cb3-227" aria-hidden="true" tabindex="-1"></a>seg1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"seg-d-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">kappa</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">2</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">8</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Pour deux groupes, <span class="math inline">\(D = \frac12 \sum_i \left|\frac{a_i}{A} - \frac{b_i}{B}\right|\)</span> où <span class="math inline">\(a_i, b_i\)</span> sont les effectifs de l’unité <span class="math inline">\(i\)</span> et <span class="math inline">\(A, B\)</span> les totaux. Écris <code>my_D()</code> ; elle sera testée sur plusieurs villes, pas seulement sur celle affichée.</p>
+<div class="cell" data-exercise="seg-d-1" data-caption="D à la main" data-input="seg1">
+<div>
+<div id="webr-7" class="exercise-cell">
+
+</div>
+<script type="webr-7-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJEIMOgIGxhIG1haW4iLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNlZy1kLTEiLCJpbnB1dCI6WyJzZWcxIl0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzb3VyY2UoXCJSL3NlZ3JlZ2F0aW9uLlJcIilcbnRhYiA8LSBzZWdfc2ltX2NpdHkoVSA9IDQwLCBzaXplID0gMTUwLCBwID0gMC4zLCBrYXBwYSA9IHNlZzEka2FwcGEsIHNlZWQgPSBzZWcxJHNlZWQpXG5cbm15X0QgPC0gZnVuY3Rpb24odGFiKSB7XG4gIGEgPC0gdGFiWywgMV07IGIgPC0gdGFiWywgMl1cbiAgX19fX19fICAgICAjIDAsNSAqIHNvbW1lIGRlcyB2YWxldXJzIGFic29sdWVzIGRlcyDDqWNhcnRzIGRlIHBhcnRzXG59XG5jKG1vbl9EID0gbXlfRCh0YWIpLCBzZWdfRCA9IHNlZ19EKHRhYikpIn0=
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="seg-d-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>D compare, quartier par quartier, la part du groupe A et la part du groupe B. Calcule d’abord ces deux vecteurs de parts (chacun somme à 1), puis agrège les écarts.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="seg-d-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>0.5 * sum(abs(a / sum(a) - b / sum(b)))</code>. Interprétation : part minimale de l’un des groupes qui devrait déménager pour égaliser les répartitions.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="seg-d-1">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li><span class="math inline">\(a_i/A\)</span> est la part du groupe A qui vit dans l’unité <span class="math inline">\(i\)</span> ; <span class="math inline">\(b_i/B\)</span> celle du groupe B. Chacune somme à 1 sur l’ensemble des unités.</li>
+<li>Si les deux groupes sont répartis de la même façon, tous les écarts sont nuls et <span class="math inline">\(D = 0\)</span>.</li>
+<li>Si les groupes sont totalement séparés, chaque unité n’abrite qu’un groupe : <span class="math inline">\(\sum_i |\cdot| = 2\)</span>, et le facteur <span class="math inline">\(1/2\)</span> ramène <span class="math inline">\(D\)</span> à 1.</li>
+<li>Lecture : <span class="math inline">\(D\)</span> est la <strong>part minimale</strong> d’un groupe qui devrait déménager pour égaliser les deux répartitions.</li>
+<li>La fonction est testée sur quatre tables, dont la séparation totale (<span class="math inline">\(D = 1\)</span>) et l’intégration parfaite (<span class="math inline">\(D = 0\)</span>).</li>
+</ol>
+<div class="cell" data-exercise="seg-d-1" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="seg-d-1">
+<code id="interpolate-9" class="solution-code d-none">source("R/segregation.R")
+tab &lt;- seg_sim_city(U = 40, size = 150, p = 0.3, kappa = seg1$kappa, seed = seg1$seed)
+
+my_D &lt;- function(tab) {
+  a &lt;- tab[, 1]; b &lt;- tab[, 2]
+  0.5 * sum(abs(a / sum(a) - b / sum(b)))
+}
+c(mon_D = my_D(tab), seg_D = seg_D(tab))</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-10-1"><a href="#interpolate-10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/segregation.R"</span>)</span>
+<span id="interpolate-10-2"><a href="#interpolate-10-2" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">seg_sim_city</span>(<span class="at">U =</span> <span class="dv">40</span>, <span class="at">size =</span> <span class="dv">150</span>, <span class="at">p =</span> <span class="fl">0.3</span>, <span class="at">kappa =</span> seg1<span class="sc">$</span>kappa, <span class="at">seed =</span> seg1<span class="sc">$</span>seed)</span>
+<span id="interpolate-10-3"><a href="#interpolate-10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="interpolate-10-4"><a href="#interpolate-10-4" aria-hidden="true" tabindex="-1"></a>my_D <span class="ot">&lt;-</span> <span class="cf">function</span>(tab) {</span>
+<span id="interpolate-10-5"><a href="#interpolate-10-5" aria-hidden="true" tabindex="-1"></a>  a <span class="ot">&lt;-</span> tab[, <span class="dv">1</span>]; b <span class="ot">&lt;-</span> tab[, <span class="dv">2</span>]</span>
+<span id="interpolate-10-6"><a href="#interpolate-10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.5</span> <span class="sc">*</span> <span class="fu">sum</span>(<span class="fu">abs</span>(a <span class="sc">/</span> <span class="fu">sum</span>(a) <span class="sc">-</span> b <span class="sc">/</span> <span class="fu">sum</span>(b)))</span>
+<span id="interpolate-10-7"><a href="#interpolate-10-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="interpolate-10-8"><a href="#interpolate-10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">mon_D =</span> <span class="fu">my_D</span>(tab), <span class="at">seg_D =</span> <span class="fu">seg_D</span>(tab))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Oublier la valeur absolue : la somme des écarts signés vaut toujours 0.</li>
+<li>Calculer des parts <strong>à l’intérieur</strong> de chaque unité (<span class="math inline">\(a_i/(a_i+b_i)\)</span>) : c’est une autre famille de mesures (exposition, isolement).</li>
+<li>Interpréter un D élevé sans tenir compte de la taille des unités : D est biaisé vers le haut quand les unités sont petites (exercice « Biais de petites unités »).</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Calcule D sur la même ville après avoir regroupé les unités deux à deux : D baisse. C’est le problème d’unité spatiale modifiable (MAUP), traité par l’exercice de décomposition.</p>
+</div>
+<div class="cell" data-exercise="seg-d-1" data-check="true">
+<script type="exercise-check-seg-d-1-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNlZy1kLTEiLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic291cmNlKFwiUi9zZWdyZWdhdGlvbi5SXCIpXG5mIDwtIGdldDAoXCJteV9EXCIsIGVudmlyID0gLmVudmlyX3Jlc3VsdCwgaW5oZXJpdHMgPSBGQUxTRSlcbmlmICghaXMuZnVuY3Rpb24oZikpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIkTDqWZpbmlzIGxhIGZvbmN0aW9uIG15X0QodGFiKS5cIilcbn0gZWxzZSB7XG4gIHRhYnMgPC0gbGlzdChzZWdfc2ltX2NpdHkoNDAsIDE1MCwgMC4zLCBhcy5udW1lcmljKHNlZzEka2FwcGEpLCBzZWVkID0gc2VnMSRzZWVkKSxcbiAgICAgICAgICAgICAgIHNlZ19zaW1fY2l0eSgxMCwgMzAsIDAuNSwgMywgc2VlZCA9IDEpLFxuICAgICAgICAgICAgICAgY2JpbmQoQSA9IGMoMTAsIDApLCBCID0gYygwLCAxMCkpLFxuICAgICAgICAgICAgICAgY2JpbmQoQSA9IGMoMTAsIDIwKSwgQiA9IGMoNSwgMTApKSlcbiAgb2sgPC0gdmFwcGx5KHRhYnMsIGZ1bmN0aW9uKHQpIGlzVFJVRShhbGwuZXF1YWwodHJ5Q2F0Y2goZih0KSwgZXJyb3IgPSBmdW5jdGlvbihlKSBOQV9yZWFsXyksIHNlZ19EKHQpKSksIGxvZ2ljYWwoMSkpXG4gIGlmIChhbGwob2spKSBsaXN0KGNvcnJlY3QgPSBUUlVFLCBtZXNzYWdlID0gXCJDb3JyZWN0IDogbXlfRCByZXByb2R1aXQgc2VnX0Qgc3VyIDQgdGFibGVzIChkb250IHPDqXBhcmF0aW9uIHRvdGFsZSA9IDEgZXQgaW50w6lncmF0aW9uID0gMCkuXCIpXG4gIGVsc2UgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBzcHJpbnRmKFwibXlfRCDDqWNob3VlIHN1ciAlZCB0YWJsZShzKSBkZSB0ZXN0LiBQZW5zZSBhdXggcGFydHMgZGUgY2hhcXVlIGdyb3VwZSAoYSAvIHN1bShhKSkgZXQgw6AgbGEgdmFsZXVyIGFic29sdWUuXCIsIHN1bSghb2spKSlcbn0ifQ==
+</script>
+</div>
+<div class="dojo-done" data-id="seg-d-1">
+
+</div>
+</section>
+<section id="seg-m-0" class="level2">
+<h2 class="anchored" data-anchor-id="seg-m-0">Entropie d’une composition</h2>
+<p><span class="dojo-step">Marche 3 sur 6 · Guidé</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="320" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 319;"><span id="cb4-320"><a href="#cb4-320" aria-hidden="true" tabindex="-1"></a>seg00 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"seg-m-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">p</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="fl">0.1</span><span class="op">,</span> <span class="fl">0.2</span><span class="op">,</span> <span class="fl">0.3</span><span class="op">,</span> <span class="fl">0.4</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Écris la fonction <code>entropie(p)</code> (entropie de Shannon, logarithme naturel, convention 0 ln 0 = 0) puis évalue-la sur quatre compositions : un groupe seul, deux groupes de parts <span><span id="ojs-element-id-1"></span></span> et <span><span id="ojs-element-id-2"></span>,</span> deux groupes égaux, trois groupes égaux.</p>
+<div class="cell" data-exercise="seg-m-0" data-caption="Entropie de Shannon" data-input="seg00">
+<div>
+<div id="webr-12" class="exercise-cell">
+
+</div>
+<script type="webr-12-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJFbnRyb3BpZSBkZSBTaGFubm9uIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhlcmNpc2UiOiJzZWctbS0wIiwiaW5wdXQiOlsic2VnMDAiXSwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6ImVudHJvcGllIDwtIGZ1bmN0aW9uKHApIHtcbiAgcCA8LSBwW3AgPiAwXSAgICAgICAgICAgICAgICAgICMgY29udmVudGlvbiAwICogbG9nKDApID0gMFxuICBfX19fX18gICAgICAgICAgICAgICAgICAgICAgICAgIyAtIHNvbW1lIGRlcyBwICogbG9nKHApXG59XG5wIDwtIHNlZzAwJHBcbmMoc2VwYXJlZSA9IGVudHJvcGllKGMoMSwgMCkpLCBkZXV4X2dyb3VwZXMgPSBlbnRyb3BpZShjKHAsIDEgLSBwKSksXG4gIGVnYWwyID0gZW50cm9waWUoYygwLjUsIDAuNSkpLCBlZ2FsMyA9IGVudHJvcGllKHJlcCgxIC8gMywgMykpKSJ9
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="seg-m-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Une composition très diverse (parts égales) doit donner une grande valeur, une composition « pure » doit donner 0. Pense à une somme de termes de la forme <span class="math inline">\(p \ln p\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="seg-m-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(E = -\sum_g p_g \ln p_g\)</span> : en R, <code>-sum(p * log(p))</code> après avoir retiré les parts nulles.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="seg-m-0">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li><span class="math inline">\(E(p) = -\sum_g p_g \ln p_g\)</span> est maximale quand tous les groupes sont également présents (elle vaut alors <span class="math inline">\(\ln G\)</span>) et nulle quand un seul groupe est présent.</li>
+<li>Valeurs de contrôle : composition séparée <span class="math inline">\(0\)</span> ; deux groupes à parts égales <span class="math inline">\(\ln 2 \approx 0{,}693\)</span> ; trois groupes égaux <span class="math inline">\(\ln 3 \approx 1{,}099\)</span>.</li>
+<li><code>p[p &gt; 0]</code> applique la convention <span class="math inline">\(0\ln 0 = 0\)</span> ; sans elle, <code>0 * log(0)</code> vaut <code>NaN</code> et le résultat entier est perdu.</li>
+<li>Dans l’indice <span class="math inline">\(M\)</span>, <span class="math inline">\(E\)</span> est l’entropie de la ville entière et <span class="math inline">\(E_i\)</span> celle du quartier <span class="math inline">\(i\)</span>. <span class="math inline">\(M\)</span> mesure de combien les quartiers sont <strong>moins divers</strong> que la ville.</li>
+</ol>
+<div class="cell" data-exercise="seg-m-0" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="seg-m-0">
+<code id="interpolate-14" class="solution-code d-none">entropie &lt;- function(p) {
+  p &lt;- p[p &gt; 0]                  # convention 0 * log(0) = 0
+  -sum(p * log(p))
+}
+p &lt;- seg00$p
+c(separee = entropie(c(1, 0)), deux_groupes = entropie(c(p, 1 - p)),
+  egal2 = entropie(c(0.5, 0.5)), egal3 = entropie(rep(1 / 3, 3)))</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-15-1"><a href="#interpolate-15-1" aria-hidden="true" tabindex="-1"></a>entropie <span class="ot">&lt;-</span> <span class="cf">function</span>(p) {</span>
+<span id="interpolate-15-2"><a href="#interpolate-15-2" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> p[p <span class="sc">&gt;</span> <span class="dv">0</span>]                  <span class="co"># convention 0 * log(0) = 0</span></span>
+<span id="interpolate-15-3"><a href="#interpolate-15-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span><span class="fu">sum</span>(p <span class="sc">*</span> <span class="fu">log</span>(p))</span>
+<span id="interpolate-15-4"><a href="#interpolate-15-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="interpolate-15-5"><a href="#interpolate-15-5" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> seg00<span class="sc">$</span>p</span>
+<span id="interpolate-15-6"><a href="#interpolate-15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">separee =</span> <span class="fu">entropie</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>)), <span class="at">deux_groupes =</span> <span class="fu">entropie</span>(<span class="fu">c</span>(p, <span class="dv">1</span> <span class="sc">-</span> p)),</span>
+<span id="interpolate-15-7"><a href="#interpolate-15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">egal2 =</span> <span class="fu">entropie</span>(<span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>)), <span class="at">egal3 =</span> <span class="fu">entropie</span>(<span class="fu">rep</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="dv">3</span>, <span class="dv">3</span>)))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Oublier le signe moins : l’entropie serait négative.</li>
+<li>Ne pas filtrer les zéros : <code>NaN</code> dès qu’une part est nulle (cas très fréquent dans les quartiers homogènes).</li>
+<li>Mélanger <code>log</code>, <code>log2</code> et <code>log10</code> : cela change l’échelle (nats, bits, dits), pas le classement, à condition de rester cohérent d’un indice à l’autre.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> L’étape suivante combine cette fonction quartier par quartier pour construire M, avec un nombre quelconque de groupes.</p>
+</div>
+<div class="cell" data-exercise="seg-m-0" data-check="true">
+<script type="exercise-check-seg-m-0-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNlZy1tLTAiLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoicCA8LSBzZWcwMCRwXG5FIDwtIGZ1bmN0aW9uKHYpIHsgdiA8LSB2W3YgPiAwXTsgLXN1bSh2ICogbG9nKHYpKSB9XG5leHBfIDwtIGMoMCwgRShjKHAsIDEgLSBwKSksIGxvZygyKSwgbG9nKDMpKVxucmVzIDwtIHN1cHByZXNzV2FybmluZ3MoYXMubnVtZXJpYygucmVzdWx0KSlcbmlmIChsZW5ndGgocmVzKSAhPSA0KSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJSZW52b2llIGxlcyBxdWF0cmUgdmFsZXVycyBkdSBnYWJhcml0LlwiKVxufSBlbHNlIGlmIChhbnkoaXMubmFuKHJlcykpKSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJUdSBvYnRpZW5zIE5hTiA6IDAgKiBsb2coMCkgbidlc3QgcGFzIGTDqWZpbmkgZW4gUi4gUmV0aXJlIGxlcyBwYXJ0cyBudWxsZXMgYXZlYyBwW3AgPiAwXS5cIilcbn0gZWxzZSBpZiAoYW55TkEocmVzKSkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiVW5lIHZhbGV1ciBlc3QgbWFucXVhbnRlIDogbGEgZm9uY3Rpb24gZG9pdCByZW52b3llciB1biBub21icmUuXCIpXG59IGVsc2UgaWYgKGlzVFJVRShhbGwuZXF1YWwocmVzLCBleHBfLCB0b2xlcmFuY2UgPSAxZS05KSkpIHtcbiAgbGlzdChjb3JyZWN0ID0gVFJVRSwgbWVzc2FnZSA9IHNwcmludGYoXCJDb3JyZWN0IDogRShzw6lwYXLDqWUpID0gMCwgRSjDqWdhbCAyKSA9IGxuIDIgPSAlLjNmLCBFKMOpZ2FsIDMpID0gbG4gMyA9ICUuM2YuXCIsIGxvZygyKSwgbG9nKDMpKSlcbn0gZWxzZSBpZiAoaXNUUlVFKGFsbC5lcXVhbChyZXMsIC1leHBfLCB0b2xlcmFuY2UgPSAxZS05KSkpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIlNpZ25lIGludmVyc8OpIDogbCdlbnRyb3BpZSBlc3QgLXNvbW1lKHAgbG9nIHApLCBkb25jIHBvc2l0aXZlLlwiKVxufSBlbHNlIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIsOJY2FydCBhdmVjIGxlcyB2YWxldXJzIGF0dGVuZHVlcyA6IC1zdW0ocCAqIGxvZyhwKSkgc3VyIGxlcyBwYXJ0cyBub24gbnVsbGVzLiBDb250csO0bGUgOiBzw6lwYXLDqWUgPSAwLCBkZXV4IGdyb3VwZXMgw6lnYXV4ID0gbG4gMi5cIilcbn0ifQ==
+</script>
+</div>
+<div class="dojo-done" data-id="seg-m-0">
+
+</div>
+</section>
+<section id="seg-m-1" class="level2">
+<h2 class="anchored" data-anchor-id="seg-m-1">Coder l’indice d’information mutuelle M</h2>
+<p><span class="dojo-step">Marche 4 sur 6 · À compléter</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="504" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 503;"><span id="cb5-504"><a href="#cb5-504" aria-hidden="true" tabindex="-1"></a>seg2 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"seg-m-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p><span class="math inline">\(M = E - \sum_i t_i E_i\)</span> avec <span class="math inline">\(E\)</span> l’entropie de la composition globale, <span class="math inline">\(E_i\)</span> celle de l’unité <span class="math inline">\(i\)</span>, <span class="math inline">\(t_i\)</span> la part de la population dans l’unité <span class="math inline">\(i\)</span> (entropie de Shannon, log naturel). Écris <code>my_M()</code> pour un <strong>nombre quelconque de groupes</strong>.</p>
+<div class="cell" data-exercise="seg-m-1" data-caption="M multigroupe" data-input="seg2">
+<div>
+<div id="webr-17" class="exercise-cell">
+
+</div>
+<script type="webr-17-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJNIG11bHRpZ3JvdXBlIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhlcmNpc2UiOiJzZWctbS0xIiwiaW5wdXQiOlsic2VnMiJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic291cmNlKFwiUi9zZWdyZWdhdGlvbi5SXCIpXG5zZXQuc2VlZChzZWcyJHNlZWQpXG50YWIzIDwtIG1hdHJpeChycG9pcyg4ICogMywgMjUpICsgMSwgOCwgMykgICAgICAgIyA4IHVuaXTDqXMsIDMgZ3JvdXBlc1xuXG5lbnRyb3BpZSA8LSBmdW5jdGlvbihwKSB7IHAgPC0gcFtwID4gMF07IC1zdW0ocCAqIGxvZyhwKSkgfVxubXlfTSA8LSBmdW5jdGlvbih0YWIpIHtcbiAgRSAgPC0gX19fX19fICAgICAgICAgICMgZW50cm9waWUgZGUgbGEgY29tcG9zaXRpb24gZ2xvYmFsZSAocGFydHMgZGVzIGNvbG9ubmVzKVxuICBFaSA8LSBfX19fX18gICAgICAgICAgIyBlbnRyb3BpZSBkZSBjaGFxdWUgdW5pdMOpIDogYXBwbHkocGFydHMgcGFyIGxpZ25lLCAxLCBlbnRyb3BpZSlcbiAgdGkgPC0gX19fX19fICAgICAgICAgICMgcGFydCBkZSBjaGFxdWUgdW5pdMOpIGRhbnMgbGEgcG9wdWxhdGlvbiB0b3RhbGVcbiAgRSAtIHN1bSh0aSAqIEVpKVxufVxuYyhtb25fTSA9IG15X00odGFiMyksIHNlZ19NID0gc2VnX00odGFiMykpIn0=
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="seg-m-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>M est une « information mutuelle » : l’entropie globale moins l’entropie moyenne locale. La fonction <code>entropie</code> est fournie ; il te faut trois ingrédients : <span class="math inline">\(E\)</span>, les <span class="math inline">\(E_i\)</span> et les poids <span class="math inline">\(t_i\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="seg-m-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>E &lt;- entropie(colSums(tab) / sum(tab))</code>, <code>Ei &lt;- apply(tab / rowSums(tab), 1, entropie)</code>, <code>ti &lt;- rowSums(tab) / sum(tab)</code>. Contrôle : si toutes les unités ont la même composition, <span class="math inline">\(M = 0\)</span> ; si les groupes sont totalement séparés, <span class="math inline">\(M = E\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="seg-m-1">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li><span class="math inline">\(E = -\sum_g p_g \ln p_g\)</span> mesure la diversité de la composition de <strong>toute</strong> la ville.</li>
+<li><span class="math inline">\(E_i\)</span> est la même quantité calculée dans l’unité <span class="math inline">\(i\)</span>.</li>
+<li><span class="math inline">\(M = E - \sum_i t_i E_i\)</span> est la réduction moyenne de diversité quand on connaît l’unité : plus les unités sont homogènes, plus <span class="math inline">\(M\)</span> est grand.</li>
+<li>Bornes : <span class="math inline">\(M = 0\)</span> si chaque unité a la composition globale ; <span class="math inline">\(M = E\)</span> si chaque unité est « pure ». D’où <span class="math inline">\(H = M/E \in [0,1]\)</span>.</li>
+<li>Le calcul est valable pour un nombre quelconque de groupes (matrice à <span class="math inline">\(G\)</span> colonnes), contrairement à D.</li>
+</ol>
+<div class="cell" data-exercise="seg-m-1" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="seg-m-1">
+<code id="interpolate-19" class="solution-code d-none">source("R/segregation.R")
+set.seed(seg2$seed)
+tab3 &lt;- matrix(rpois(8 * 3, 25) + 1, 8, 3)
+
+entropie &lt;- function(p) { p &lt;- p[p &gt; 0]; -sum(p * log(p)) }
+my_M &lt;- function(tab) {
+  E  &lt;- entropie(colSums(tab) / sum(tab))
+  Ei &lt;- apply(tab / rowSums(tab), 1, entropie)
+  ti &lt;- rowSums(tab) / sum(tab)
+  E - sum(ti * Ei)
+}
+c(mon_M = my_M(tab3), seg_M = seg_M(tab3))</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-20-1"><a href="#interpolate-20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/segregation.R"</span>)</span>
+<span id="interpolate-20-2"><a href="#interpolate-20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(seg2<span class="sc">$</span>seed)</span>
+<span id="interpolate-20-3"><a href="#interpolate-20-3" aria-hidden="true" tabindex="-1"></a>tab3 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rpois</span>(<span class="dv">8</span> <span class="sc">*</span> <span class="dv">3</span>, <span class="dv">25</span>) <span class="sc">+</span> <span class="dv">1</span>, <span class="dv">8</span>, <span class="dv">3</span>)</span>
+<span id="interpolate-20-4"><a href="#interpolate-20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="interpolate-20-5"><a href="#interpolate-20-5" aria-hidden="true" tabindex="-1"></a>entropie <span class="ot">&lt;-</span> <span class="cf">function</span>(p) { p <span class="ot">&lt;-</span> p[p <span class="sc">&gt;</span> <span class="dv">0</span>]; <span class="sc">-</span><span class="fu">sum</span>(p <span class="sc">*</span> <span class="fu">log</span>(p)) }</span>
+<span id="interpolate-20-6"><a href="#interpolate-20-6" aria-hidden="true" tabindex="-1"></a>my_M <span class="ot">&lt;-</span> <span class="cf">function</span>(tab) {</span>
+<span id="interpolate-20-7"><a href="#interpolate-20-7" aria-hidden="true" tabindex="-1"></a>  E  <span class="ot">&lt;-</span> <span class="fu">entropie</span>(<span class="fu">colSums</span>(tab) <span class="sc">/</span> <span class="fu">sum</span>(tab))</span>
+<span id="interpolate-20-8"><a href="#interpolate-20-8" aria-hidden="true" tabindex="-1"></a>  Ei <span class="ot">&lt;-</span> <span class="fu">apply</span>(tab <span class="sc">/</span> <span class="fu">rowSums</span>(tab), <span class="dv">1</span>, entropie)</span>
+<span id="interpolate-20-9"><a href="#interpolate-20-9" aria-hidden="true" tabindex="-1"></a>  ti <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(tab) <span class="sc">/</span> <span class="fu">sum</span>(tab)</span>
+<span id="interpolate-20-10"><a href="#interpolate-20-10" aria-hidden="true" tabindex="-1"></a>  E <span class="sc">-</span> <span class="fu">sum</span>(ti <span class="sc">*</span> Ei)</span>
+<span id="interpolate-20-11"><a href="#interpolate-20-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="interpolate-20-12"><a href="#interpolate-20-12" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">mon_M =</span> <span class="fu">my_M</span>(tab3), <span class="at">seg_M =</span> <span class="fu">seg_M</span>(tab3))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Pondérer les <span class="math inline">\(E_i\)</span> par la part du groupe au lieu de la part de population <span class="math inline">\(t_i\)</span> de l’unité.</li>
+<li>Mélanger <code>log</code>, <code>log2</code> et <code>log10</code> : l’échelle change ; reste cohérent avec <code>seg_M</code> (logarithme naturel).</li>
+<li>Oublier la convention <span class="math inline">\(0 \ln 0 = 0\)</span> : sans <code>p[p &gt; 0]</code>, une part nulle donne <code>NaN</code>.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> M est <strong>décomposable</strong> exactement entre et intra zones : c’est l’exercice de décomposition, en fin de page.</p>
+</div>
+<div class="cell" data-exercise="seg-m-1" data-check="true">
+<script type="exercise-check-seg-m-1-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNlZy1tLTEiLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic291cmNlKFwiUi9zZWdyZWdhdGlvbi5SXCIpXG5mIDwtIGdldDAoXCJteV9NXCIsIGVudmlyID0gLmVudmlyX3Jlc3VsdCwgaW5oZXJpdHMgPSBGQUxTRSlcbmlmICghaXMuZnVuY3Rpb24oZikpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIkTDqWZpbmlzIGxhIGZvbmN0aW9uIG15X00odGFiKS5cIilcbn0gZWxzZSB7XG4gIHNldC5zZWVkKHNlZzIkc2VlZClcbiAgdGFicyA8LSBsaXN0KG1hdHJpeChycG9pcyg4ICogMywgMjUpICsgMSwgOCwgMyksXG4gICAgICAgICAgICAgICBzZWdfc2ltX2NpdHkoMzAsIDYwLCAwLjMsIDQsIHNlZWQgPSA1KSxcbiAgICAgICAgICAgICAgIGNiaW5kKEEgPSBjKDEwLCAwKSwgQiA9IGMoMCwgMTApKSwgICAgICAgICAgICAjIE0gPSBsb2coMilcbiAgICAgICAgICAgICAgIGNiaW5kKEEgPSBjKDEwLCAyMCksIEIgPSBjKDUsIDEwKSkpICAgICAgICAgICAjIE0gPSAwXG4gIG9rIDwtIHZhcHBseSh0YWJzLCBmdW5jdGlvbih0KSBpc1RSVUUoYWxsLmVxdWFsKHRyeUNhdGNoKGYodCksIGVycm9yID0gZnVuY3Rpb24oZSkgTkFfcmVhbF8pLCBzZWdfTSh0KSkpLCBsb2dpY2FsKDEpKVxuICBpZiAoYWxsKG9rKSkgbGlzdChjb3JyZWN0ID0gVFJVRSwgbWVzc2FnZSA9IFwiQ29ycmVjdCA6IG15X00gY2/Dr25jaWRlIGF2ZWMgc2VnX00sIHkgY29tcHJpcyBhdXggYm9ybmVzICgwIGV0IGxvZyAyKS5cIilcbiAgZWxzZSBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IHNwcmludGYoXCJteV9NIMOpY2hvdWUgc3VyICVkIHRhYmxlKHMpLiBWw6lyaWZpZSBxdWUgRWkgZXN0IGNhbGN1bMOpZSB1bml0w6kgcGFyIHVuaXTDqSBldCBwb25kw6lyw6llIHBhciB0aS5cIiwgc3VtKCFvaykpKVxufSJ9
+</script>
+</div>
+<div class="dojo-done" data-id="seg-m-1">
+
+</div>
+</section>
+<section id="seg-biais-1" class="level2">
+<h2 class="anchored" data-anchor-id="seg-biais-1">Biais de petites unités par Monte-Carlo</h2>
+<p><span class="dojo-step">Marche 5 sur 6 · Autonome</span></p>
+<p>Dans une ville <strong>sans ségrégation structurelle</strong> (<code>kappa = Inf</code>), calcule la valeur moyenne de D sous allocation aléatoire pour des unités de <strong>5</strong> puis de <strong>500</strong> habitants. Instructions exactes (pour que la correction soit déterministe) : <code>seg_sim_city(U = 100, size = s, p = 0.3, kappa = Inf, seed = 1)</code> puis <code>mean(seg_null(tab, B = 100, stat = seg_D, seed = 2))</code>.</p>
+<div class="cell" data-exercise="seg-biais-1" data-caption="D attendu sous H0">
+<div>
+<div id="webr-22" class="exercise-cell">
+
+</div>
+<script type="webr-22-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJEIGF0dGVuZHUgc291cyBIMCIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoic2VnLWJpYWlzLTEiLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic291cmNlKFwiUi9zZWdyZWdhdGlvbi5SXCIpXG50YWlsbGVzIDwtIGMocGV0aXQgPSA1LCBncmFuZCA9IDUwMClcbnJlcyA8LSBzYXBwbHkodGFpbGxlcywgZnVuY3Rpb24ocykge1xuICB0YWIgPC0gc2VnX3NpbV9jaXR5KFUgPSAxMDAsIHNpemUgPSBzLCBwID0gMC4zLCBrYXBwYSA9IEluZiwgc2VlZCA9IDEpXG4gIF9fX19fXyAgICAgICMgbW95ZW5uZSBkZSBEIHN1ciAxMDAgYWxsb2NhdGlvbnMgYWzDqWF0b2lyZXNcbn0pXG5yb3VuZChyZXMsIDMpIn0=
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="seg-biais-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Dans cette ville aucune ségrégation n’a été « mise » : les groupes sont répartis au hasard. Que vaut D « attendu » dans ce cas ? Pas 0. Réfléchis à ce que produit le hasard dans de <strong>petites</strong> unités.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="seg-biais-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>mean(seg_null(tab, B = 100, stat = seg_D, seed = 2))</code>. Que conclure d’un D observé de 0,25 dans une ville dont les unités comptent 5 habitants ?</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="seg-biais-1">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>Avec des unités de 5 habitants, la part du groupe B varie énormément d’une unité à l’autre par pur hasard (0 %, 20 %, 40 %…).</li>
+<li>D mesure ces écarts à la moyenne : il est donc mécaniquement positif, même sans ségrégation.</li>
+<li><code>seg_null</code> réalloue au hasard les individus entre les unités (en gardant leurs tailles) et recalcule D ; la moyenne sur 100 allocations est le niveau attendu sous H0.</li>
+<li>Le biais décroît quand la taille des unités augmente, en gros comme l’inverse de sa racine carrée.</li>
+<li>Conséquence pratique : on ne compare jamais deux D sans benchmark quand la taille des unités diffère entre villes ou dates, ou alors on corrige (Carrington-Troske, inférence d’Allen et al.).</li>
+</ol>
+<div class="cell" data-exercise="seg-biais-1" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="seg-biais-1">
+<code id="interpolate-24" class="solution-code d-none">source("R/segregation.R")
+tailles &lt;- c(petit = 5, grand = 500)
+res &lt;- sapply(tailles, function(s) {
+  tab &lt;- seg_sim_city(U = 100, size = s, p = 0.3, kappa = Inf, seed = 1)
+  mean(seg_null(tab, B = 100, stat = seg_D, seed = 2))
+})
+round(res, 3)</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-25-1"><a href="#interpolate-25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/segregation.R"</span>)</span>
+<span id="interpolate-25-2"><a href="#interpolate-25-2" aria-hidden="true" tabindex="-1"></a>tailles <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">petit =</span> <span class="dv">5</span>, <span class="at">grand =</span> <span class="dv">500</span>)</span>
+<span id="interpolate-25-3"><a href="#interpolate-25-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">sapply</span>(tailles, <span class="cf">function</span>(s) {</span>
+<span id="interpolate-25-4"><a href="#interpolate-25-4" aria-hidden="true" tabindex="-1"></a>  tab <span class="ot">&lt;-</span> <span class="fu">seg_sim_city</span>(<span class="at">U =</span> <span class="dv">100</span>, <span class="at">size =</span> s, <span class="at">p =</span> <span class="fl">0.3</span>, <span class="at">kappa =</span> <span class="cn">Inf</span>, <span class="at">seed =</span> <span class="dv">1</span>)</span>
+<span id="interpolate-25-5"><a href="#interpolate-25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(<span class="fu">seg_null</span>(tab, <span class="at">B =</span> <span class="dv">100</span>, <span class="at">stat =</span> seg_D, <span class="at">seed =</span> <span class="dv">2</span>))</span>
+<span id="interpolate-25-6"><a href="#interpolate-25-6" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="interpolate-25-7"><a href="#interpolate-25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(res, <span class="dv">3</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Lire un D de 0,25 comme une « forte ségrégation » sans le comparer au D attendu sous H0.</li>
+<li>Utiliser une seule allocation aléatoire : il faut moyenner sur <span class="math inline">\(B\)</span> allocations (ici 100).</li>
+<li>Oublier les graines : la correction attend <code>seed = 1</code> pour la ville et <code>seed = 2</code> pour <code>seg_null</code>.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Calcule aussi l’intervalle à 95 % de D sous H0 (quantiles de <code>seg_null</code>) et dis si un D observé est significativement supérieur. Cette idée est le point de départ des méthodes d’inférence sur les indices de ségrégation.</p>
+</div>
+<div class="cell" data-exercise="seg-biais-1" data-check="true">
+<script type="exercise-check-seg-biais-1-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNlZy1iaWFpcy0xIiwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNvdXJjZShcIlIvc2VncmVnYXRpb24uUlwiKVxucmVmIDwtIHNhcHBseShjKHBldGl0ID0gNSwgZ3JhbmQgPSA1MDApLCBmdW5jdGlvbihzKSB7XG4gIHRhYiA8LSBzZWdfc2ltX2NpdHkoVSA9IDEwMCwgc2l6ZSA9IHMsIHAgPSAwLjMsIGthcHBhID0gSW5mLCBzZWVkID0gMSlcbiAgbWVhbihzZWdfbnVsbCh0YWIsIEIgPSAxMDAsIHN0YXQgPSBzZWdfRCwgc2VlZCA9IDIpKVxufSlcbnJlcyA8LSBzdXBwcmVzc1dhcm5pbmdzKGFzLm51bWVyaWMoLnJlc3VsdCkpXG5pZiAobGVuZ3RoKHJlcykgIT0gMiB8fCBhbnlOQShyZXMpKSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJSZW52b2llIGxlcyBkZXV4IHZhbGV1cnMgbW95ZW5uZXMgKHBldGl0LCBncmFuZCkuXCIpXG59IGVsc2UgaWYgKGFsbChhYnMocmVzIC0gcmVmKSA8IDAuMDAxNSkpIHtcbiAgbGlzdChjb3JyZWN0ID0gVFJVRSwgbWVzc2FnZSA9IHNwcmludGYoXCJDb3JyZWN0IDogRCBhdHRlbmR1IHNvdXMgSDAgPSAlLjNmIHBvdXIgZGVzIHVuaXTDqXMgZGUgNSBoYWJpdGFudHMsIG1haXMgJS4zZiBwb3VyIDUwMC4gTGUgYmlhaXMgZGUgcGV0aXRlcyB1bml0w6lzIGVzdCAlLjBmIGZvaXMgcGx1cyBncmFuZC5cIiwgcmVmWzFdLCByZWZbMl0sIHJlZlsxXSAvIHJlZlsyXSkpXG59IGVsc2Uge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiw4ljYXJ0IHBhciByYXBwb3J0IMOgIGxhIHLDqWbDqXJlbmNlIDogdXRpbGlzZSBleGFjdGVtZW50IHNlZ19zaW1fY2l0eSguLi4sIHNlZWQgPSAxKSBwdWlzIHNlZ19udWxsKC4uLiwgQiA9IDEwMCwgc2VlZCA9IDIpIGV0IHByZW5kcyBsYSBtb3llbm5lLlwiKVxufSJ9
+</script>
+</div>
+<div class="dojo-done" data-id="seg-biais-1">
+
+</div>
+</section>
+<section id="seg-decomp-1" class="level2">
+<h2 class="anchored" data-anchor-id="seg-decomp-1">Décomposer M entre et intra zones</h2>
+<p><span class="dojo-step">Marche 6 sur 6 · Autonome</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb6" data-startfrom="0" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line -1;"><span id="cb6-0"><a href="#cb6-0" aria-hidden="true" tabindex="-1"></a>seg4 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"seg-decomp-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Une ville a 12 unités regroupées en 3 zones. Vérifie à la main l’identité <span class="math inline">\(M = M_{\text{inter}} + \sum_r \frac{N_r}{N} M_r\)</span> où <span class="math inline">\(M_{\text{inter}}\)</span> est le <span class="math inline">\(M\)</span> calculé sur les <strong>zones agrégées</strong> et <span class="math inline">\(M_r\)</span> le <span class="math inline">\(M\)</span> à l’intérieur de la zone <span class="math inline">\(r\)</span>.</p>
+<div class="cell" data-exercise="seg-decomp-1" data-caption="Entre / intra" data-input="seg4">
+<div>
+<div id="webr-27" class="exercise-cell">
+
+</div>
+<script type="webr-27-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJFbnRyZSAvIGludHJhIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhlcmNpc2UiOiJzZWctZGVjb21wLTEiLCJpbnB1dCI6WyJzZWc0Il0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzb3VyY2UoXCJSL3NlZ3JlZ2F0aW9uLlJcIilcbnRhYiA8LSBzZWdfc2ltX2NpdHkoVSA9IDEyLCBzaXplID0gODAsIHAgPSAwLjQsIGthcHBhID0gMywgc2VlZCA9IHNlZzQkc2VlZClcbnpvbmUgPC0gcmVwKGMoXCJub3JkXCIsIFwiY2VudHJlXCIsIFwic3VkXCIpLCBlYWNoID0gNClcblxuYWdnIDwtIF9fX19fXyAgICAgICAgICAgICAgICAgICAgICAgICMgZWZmZWN0aWZzIGFncsOpZ8OpcyBwYXIgem9uZSA6IHJvd3N1bSh0YWIsIHpvbmUpXG5NX2ludGVyIDwtIHNlZ19NKGFnZylcbk5fciA8LSBfX19fX18gICAgICAgICAgICAgICAgICAgICAgICAjIHBvcHVsYXRpb24gZGUgY2hhcXVlIHpvbmUgKG3Dqm1lIG9yZHJlIHF1ZSBhZ2cpXG5NX3IgPC0gX19fX19fICAgICAgICAgICAgICAgICAgICAgICAgIyBNIGRhbnMgY2hhcXVlIHpvbmUgOiBzYXBwbHkoc3BsaXQoc2VxX2xlbihucm93KHRhYikpLCB6b25lKSwgZnVuY3Rpb24oaSkgc2VnX00odGFiW2ksICwgZHJvcCA9IEZBTFNFXSkpXG5NX2ludHJhIDwtIHN1bShOX3IgLyBzdW0oTl9yKSAqIE1fcilcbmMoaW50ZXIgPSBNX2ludGVyLCBpbnRyYSA9IE1faW50cmEsIHRvdGFsID0gTV9pbnRlciArIE1faW50cmEsIGRpcmVjdCA9IHNlZ19NKHRhYikpIn0=
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="seg-decomp-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Deux regards sur la même ville : à l’échelle des zones (unités agrégées) et à l’intérieur de chaque zone. Prépare d’abord la table des effectifs <strong>agrégés par zone</strong>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="seg-decomp-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>rowsum(tab, zone)</code> trie les zones par ordre alphabétique ; <code>split()</code> aussi, donc <code>N_r &lt;- rowSums(agg)</code> reste cohérent avec <code>M_r</code>. Les deux dernières colonnes doivent coïncider.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="seg-decomp-1">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li><span class="math inline">\(M_{\text{inter}}\)</span> est le <span class="math inline">\(M\)</span> calculé après avoir sommé les unités de chaque zone : on perd la ségrégation qui existe <strong>à l’intérieur</strong> des zones.</li>
+<li><span class="math inline">\(M_r\)</span> est le <span class="math inline">\(M\)</span> calculé sur les seules unités de la zone <span class="math inline">\(r\)</span>.</li>
+<li>Les poids sont les parts de population des zones, <span class="math inline">\(N_r/N\)</span>.</li>
+<li>L’identité <span class="math inline">\(M = M_{\text{inter}} + \sum_r (N_r/N)\,M_r\)</span> est <strong>exacte</strong> pour M (additivité de l’entropie) ; elle ne l’est ni pour D ni pour H.</li>
+<li>Conséquence : agréger ne peut que <strong>réduire</strong> M, et la perte vaut exactement le terme intra. C’est une lecture directe du MAUP.</li>
+</ol>
+<div class="cell" data-exercise="seg-decomp-1" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="seg-decomp-1">
+<code id="interpolate-29" class="solution-code d-none">source("R/segregation.R")
+tab &lt;- seg_sim_city(U = 12, size = 80, p = 0.4, kappa = 3, seed = seg4$seed)
+zone &lt;- rep(c("nord", "centre", "sud"), each = 4)
+
+agg &lt;- rowsum(tab, zone)
+M_inter &lt;- seg_M(agg)
+N_r &lt;- rowSums(agg)
+M_r &lt;- sapply(split(seq_len(nrow(tab)), zone), function(i) seg_M(tab[i, , drop = FALSE]))
+M_intra &lt;- sum(N_r / sum(N_r) * M_r)
+c(inter = M_inter, intra = M_intra, total = M_inter + M_intra, direct = seg_M(tab))</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-30-1"><a href="#interpolate-30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/segregation.R"</span>)</span>
+<span id="interpolate-30-2"><a href="#interpolate-30-2" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">seg_sim_city</span>(<span class="at">U =</span> <span class="dv">12</span>, <span class="at">size =</span> <span class="dv">80</span>, <span class="at">p =</span> <span class="fl">0.4</span>, <span class="at">kappa =</span> <span class="dv">3</span>, <span class="at">seed =</span> seg4<span class="sc">$</span>seed)</span>
+<span id="interpolate-30-3"><a href="#interpolate-30-3" aria-hidden="true" tabindex="-1"></a>zone <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"nord"</span>, <span class="st">"centre"</span>, <span class="st">"sud"</span>), <span class="at">each =</span> <span class="dv">4</span>)</span>
+<span id="interpolate-30-4"><a href="#interpolate-30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="interpolate-30-5"><a href="#interpolate-30-5" aria-hidden="true" tabindex="-1"></a>agg <span class="ot">&lt;-</span> <span class="fu">rowsum</span>(tab, zone)</span>
+<span id="interpolate-30-6"><a href="#interpolate-30-6" aria-hidden="true" tabindex="-1"></a>M_inter <span class="ot">&lt;-</span> <span class="fu">seg_M</span>(agg)</span>
+<span id="interpolate-30-7"><a href="#interpolate-30-7" aria-hidden="true" tabindex="-1"></a>N_r <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(agg)</span>
+<span id="interpolate-30-8"><a href="#interpolate-30-8" aria-hidden="true" tabindex="-1"></a>M_r <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">split</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(tab)), zone), <span class="cf">function</span>(i) <span class="fu">seg_M</span>(tab[i, , <span class="at">drop =</span> <span class="cn">FALSE</span>]))</span>
+<span id="interpolate-30-9"><a href="#interpolate-30-9" aria-hidden="true" tabindex="-1"></a>M_intra <span class="ot">&lt;-</span> <span class="fu">sum</span>(N_r <span class="sc">/</span> <span class="fu">sum</span>(N_r) <span class="sc">*</span> M_r)</span>
+<span id="interpolate-30-10"><a href="#interpolate-30-10" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">inter =</span> M_inter, <span class="at">intra =</span> M_intra, <span class="at">total =</span> M_inter <span class="sc">+</span> M_intra, <span class="at">direct =</span> <span class="fu">seg_M</span>(tab))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Désaligner les zones : <code>rowsum</code> et <code>split</code> trient par ordre alphabétique ; garde le même ordre pour les poids.</li>
+<li>Pondérer par le nombre d’unités au lieu de la population.</li>
+<li>Croire que l’identité vaut pour D : seul M (et les indices de la famille entropique) se décompose ainsi.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Pour des agrégations successives (12 → 6 → 3 → 1 zones), calcule la part « inter » : tu obtiens une courbe de MAUP, avec ses plateaux et ses sauts.</p>
+</div>
+<div class="cell" data-exercise="seg-decomp-1" data-check="true">
+<script type="exercise-check-seg-decomp-1-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNlZy1kZWNvbXAtMSIsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzb3VyY2UoXCJSL3NlZ3JlZ2F0aW9uLlJcIilcbnRhYiA8LSBzZWdfc2ltX2NpdHkoVSA9IDEyLCBzaXplID0gODAsIHAgPSAwLjQsIGthcHBhID0gMywgc2VlZCA9IHNlZzQkc2VlZClcbnpvbmUgPC0gcmVwKGMoXCJub3JkXCIsIFwiY2VudHJlXCIsIFwic3VkXCIpLCBlYWNoID0gNClcbmQgPC0gc2VnX01fZGVjb21wKHRhYiwgem9uZSlcbnJlcyA8LSBzdXBwcmVzc1dhcm5pbmdzKGFzLm51bWVyaWMoLnJlc3VsdCkpXG5pZiAobGVuZ3RoKHJlcykgIT0gNCB8fCBhbnlOQShyZXMpKSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJSZW52b2llIGMoaW50ZXIsIGludHJhLCB0b3RhbCwgZGlyZWN0KS5cIilcbn0gZWxzZSBpZiAoYWJzKHJlc1sxXSAtIGRbW1wiaW50ZXJcIl1dKSA+IDFlLTkpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIk0gaW50ZXIgOiBjYWxjdWxlIE0gc3VyIGxhIHRhYmxlIGFncsOpZ8OpZSBwYXIgem9uZSAocm93c3VtKS5cIilcbn0gZWxzZSBpZiAoYWJzKHJlc1syXSAtIGRbW1wiaW50cmFcIl1dKSA+IDFlLTkpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIk0gaW50cmEgOiBtb3llbm5lIGRlcyBNX3IgcG9uZMOpcsOpZSBwYXIgbGEgcGFydCBkZSBwb3B1bGF0aW9uIE5fciAvIE4gZGUgY2hhcXVlIHpvbmUgKG3Dqm1lIG9yZHJlIGRlcyB6b25lcykuXCIpXG59IGVsc2UgaWYgKGFicyhyZXNbM10gLSByZXNbNF0pID4gMWUtOSkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiVG90YWwgZXQgZGlyZWN0IGRldnJhaWVudCBjb8OvbmNpZGVyIDogdsOpcmlmaWUgbCdhbGlnbmVtZW50IGRlcyB6b25lcy5cIilcbn0gZWxzZSB7XG4gIGxpc3QoY29ycmVjdCA9IFRSVUUsIG1lc3NhZ2UgPSBzcHJpbnRmKFwiQ29ycmVjdCA6IE0gPSAlLjRmID0gaW50ZXIgJS40ZiArIGludHJhICUuNGYgKHBhcnQgaW50ZXIgOiAlLjBmICUlKS5cIiwgcmVzWzRdLCByZXNbMV0sIHJlc1syXSwgMTAwICogcmVzWzFdIC8gcmVzWzRdKSlcbn0ifQ==
+</script>
+</div>
+<div class="dojo-done" data-id="seg-decomp-1">
+
+</div>
+</section>
+<section id="aller-plus-loin" class="level2">
+<h2 class="anchored" data-anchor-id="aller-plus-loin">Aller plus loin</h2>
+<p>Les <strong>défis hebdomadaires</strong> de <a href="../recherche/index.html">la page Recherche</a> prolongent ces exercices : MAUP par agrégations successives, correction du biais de petites unités, bootstrap de H, algorithme de déplacement de Duncan.</p>
+<div class="dojo-cards" data-course="recherche" data-n="5">
+
+</div>
+<div class="dojo-quiz" data-course="recherche" data-n="3">
+
+</div>
+
+
+<script type="webr-data">
+eyJvcHRpb25zIjp7ImJhc2VVcmwiOiJodHRwczovL3dlYnIuci13YXNtLm9yZy92MC42LjAvIn0sInBhY2thZ2VzIjp7InBrZ3MiOlsiZXZhbHVhdGUiLCJrbml0ciIsImh0bWx0b29scyJdLCJyZXBvcyI6W119LCJyZW5kZXJfZGYiOiJkZWZhdWx0In0=
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0yNyIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMjc7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0yNyIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzI3ID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMjctY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICAvLyBEZWZhdWx0IGV4ZXJjaXNlIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oXG4gICAge1xuICAgICAgaWQ6IFwid2Vici0yNy1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzI3ID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8yNywge3NlZzR9KTtcbl93ZWJyX2ZlZWRiYWNrXzI3ID0ge1xuICBjb25zdCB7IFdlYlJHcmFkZXIgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGVtcHR5RmVlZGJhY2sgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTtcblxuICBjb25zdCBncmFkZXIgPSBuZXcgV2ViUkdyYWRlcihfd2Vicl92YWx1ZV8yNy5ldmFsdWF0b3IpO1xuICBjb25zdCBmZWVkYmFjayA9IGF3YWl0IGdyYWRlci5ncmFkZUV4ZXJjaXNlKCk7XG4gIGlmICghZmVlZGJhY2spIHJldHVybiBlbXB0eUZlZWRiYWNrO1xuICByZXR1cm4gZmVlZGJhY2s7XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici13aWRnZXQtMjIiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIC8vIFdhaXQgZm9yIG91dHB1dCB0byBiZSB3cml0dGVuIHRvIHRoZSBET00sIHRoZW4gdHJpZ2dlciB3aWRnZXQgcmVuZGVyaW5nXG4gIGF3YWl0IF93ZWJyX3ZhbHVlXzIyO1xuICBpZiAod2luZG93LkhUTUxXaWRnZXRzKSB7XG4gICAgd2luZG93LkhUTUxXaWRnZXRzLnN0YXRpY1JlbmRlcigpO1xuICB9XG4gIGlmICh3aW5kb3cuUGFnZWRUYWJsZURvYykge1xuICAgIHdpbmRvdy5QYWdlZFRhYmxlRG9jLmluaXRBbGwoKTtcbiAgfVxufVxuIn0seyJjZWxsTmFtZSI6IndlYnItMjIiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF93ZWJyX2VkaXRvcl8yMiA9IHtcbiAgY29uc3QgeyBXZWJSRXhlcmNpc2VFZGl0b3IsIGI2NERlY29kZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJ3ZWJyLTIyLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgLy8gRGVmYXVsdCBleGVyY2lzZSBjb25maWd1cmF0aW9uXG4gIGNvbnN0IG9wdGlvbnMgPSBPYmplY3QuYXNzaWduKFxuICAgIHtcbiAgICAgIGlkOiBcIndlYnItMjItY29udGVudHNcIixcbiAgICAgIGVudmlyOiBgZXhlcmNpc2UtZW52LSR7YmxvY2suYXR0ci5leGVyY2lzZX1gLFxuICAgICAgZXJyb3I6IGZhbHNlLFxuICAgICAgY2FwdGlvbjogJ0V4ZXJjaXNlJyxcbiAgICB9LFxuICAgIGJsb2NrLmF0dHJcbiAgKTtcblxuICBjb25zdCBlZGl0b3IgPSBuZXcgV2ViUkV4ZXJjaXNlRWRpdG9yKHdlYlJPanMud2ViUlByb21pc2UsIGJsb2NrLmNvZGUsIG9wdGlvbnMpO1xuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbnZpZXdvZiBfd2Vicl92YWx1ZV8yMiA9IHdlYlJPanMucHJvY2Vzcyhfd2Vicl9lZGl0b3JfMjIsIHt9KTtcbl93ZWJyX2ZlZWRiYWNrXzIyID0ge1xuICBjb25zdCB7IFdlYlJHcmFkZXIgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGVtcHR5RmVlZGJhY2sgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTtcblxuICBjb25zdCBncmFkZXIgPSBuZXcgV2ViUkdyYWRlcihfd2Vicl92YWx1ZV8yMi5ldmFsdWF0b3IpO1xuICBjb25zdCBmZWVkYmFjayA9IGF3YWl0IGdyYWRlci5ncmFkZUV4ZXJjaXNlKCk7XG4gIGlmICghZmVlZGJhY2spIHJldHVybiBlbXB0eUZlZWRiYWNrO1xuICByZXR1cm4gZmVlZGJhY2s7XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici13aWRnZXQtMTciLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIC8vIFdhaXQgZm9yIG91dHB1dCB0byBiZSB3cml0dGVuIHRvIHRoZSBET00sIHRoZW4gdHJpZ2dlciB3aWRnZXQgcmVuZGVyaW5nXG4gIGF3YWl0IF93ZWJyX3ZhbHVlXzE3O1xuICBpZiAod2luZG93LkhUTUxXaWRnZXRzKSB7XG4gICAgd2luZG93LkhUTUxXaWRnZXRzLnN0YXRpY1JlbmRlcigpO1xuICB9XG4gIGlmICh3aW5kb3cuUGFnZWRUYWJsZURvYykge1xuICAgIHdpbmRvdy5QYWdlZFRhYmxlRG9jLmluaXRBbGwoKTtcbiAgfVxufVxuIn0seyJjZWxsTmFtZSI6IndlYnItMTciLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF93ZWJyX2VkaXRvcl8xNyA9IHtcbiAgY29uc3QgeyBXZWJSRXhlcmNpc2VFZGl0b3IsIGI2NERlY29kZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJ3ZWJyLTE3LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgLy8gRGVmYXVsdCBleGVyY2lzZSBjb25maWd1cmF0aW9uXG4gIGNvbnN0IG9wdGlvbnMgPSBPYmplY3QuYXNzaWduKFxuICAgIHtcbiAgICAgIGlkOiBcIndlYnItMTctY29udGVudHNcIixcbiAgICAgIGVudmlyOiBgZXhlcmNpc2UtZW52LSR7YmxvY2suYXR0ci5leGVyY2lzZX1gLFxuICAgICAgZXJyb3I6IGZhbHNlLFxuICAgICAgY2FwdGlvbjogJ0V4ZXJjaXNlJyxcbiAgICB9LFxuICAgIGJsb2NrLmF0dHJcbiAgKTtcblxuICBjb25zdCBlZGl0b3IgPSBuZXcgV2ViUkV4ZXJjaXNlRWRpdG9yKHdlYlJPanMud2ViUlByb21pc2UsIGJsb2NrLmNvZGUsIG9wdGlvbnMpO1xuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbnZpZXdvZiBfd2Vicl92YWx1ZV8xNyA9IHdlYlJPanMucHJvY2Vzcyhfd2Vicl9lZGl0b3JfMTcsIHtzZWcyfSk7XG5fd2Vicl9mZWVkYmFja18xNyA9IHtcbiAgY29uc3QgeyBXZWJSR3JhZGVyIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBlbXB0eUZlZWRiYWNrID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7XG5cbiAgY29uc3QgZ3JhZGVyID0gbmV3IFdlYlJHcmFkZXIoX3dlYnJfdmFsdWVfMTcuZXZhbHVhdG9yKTtcbiAgY29uc3QgZmVlZGJhY2sgPSBhd2FpdCBncmFkZXIuZ3JhZGVFeGVyY2lzZSgpO1xuICBpZiAoIWZlZWRiYWNrKSByZXR1cm4gZW1wdHlGZWVkYmFjaztcbiAgcmV0dXJuIGZlZWRiYWNrO1xufVxuIn0seyJjZWxsTmFtZSI6IndlYnItd2lkZ2V0LTEyIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICAvLyBXYWl0IGZvciBvdXRwdXQgdG8gYmUgd3JpdHRlbiB0byB0aGUgRE9NLCB0aGVuIHRyaWdnZXIgd2lkZ2V0IHJlbmRlcmluZ1xuICBhd2FpdCBfd2Vicl92YWx1ZV8xMjtcbiAgaWYgKHdpbmRvdy5IVE1MV2lkZ2V0cykge1xuICAgIHdpbmRvdy5IVE1MV2lkZ2V0cy5zdGF0aWNSZW5kZXIoKTtcbiAgfVxuICBpZiAod2luZG93LlBhZ2VkVGFibGVEb2MpIHtcbiAgICB3aW5kb3cuUGFnZWRUYWJsZURvYy5pbml0QWxsKCk7XG4gIH1cbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLTEyIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfd2Vicl9lZGl0b3JfMTIgPSB7XG4gIGNvbnN0IHsgV2ViUkV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwid2Vici0xMi1jb250ZW50c1xcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGJsb2NrID0gSlNPTi5wYXJzZShiNjREZWNvZGUoc2NyaXB0Q29udGVudCkpO1xuXG4gIC8vIERlZmF1bHQgZXhlcmNpc2UgY29uZmlndXJhdGlvblxuICBjb25zdCBvcHRpb25zID0gT2JqZWN0LmFzc2lnbihcbiAgICB7XG4gICAgICBpZDogXCJ3ZWJyLTEyLWNvbnRlbnRzXCIsXG4gICAgICBlbnZpcjogYGV4ZXJjaXNlLWVudi0ke2Jsb2NrLmF0dHIuZXhlcmNpc2V9YCxcbiAgICAgIGVycm9yOiBmYWxzZSxcbiAgICAgIGNhcHRpb246ICdFeGVyY2lzZScsXG4gICAgfSxcbiAgICBibG9jay5hdHRyXG4gICk7XG5cbiAgY29uc3QgZWRpdG9yID0gbmV3IFdlYlJFeGVyY2lzZUVkaXRvcih3ZWJST2pzLndlYlJQcm9taXNlLCBibG9jay5jb2RlLCBvcHRpb25zKTtcbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG52aWV3b2YgX3dlYnJfdmFsdWVfMTIgPSB3ZWJST2pzLnByb2Nlc3MoX3dlYnJfZWRpdG9yXzEyLCB7c2VnMDB9KTtcbl93ZWJyX2ZlZWRiYWNrXzEyID0ge1xuICBjb25zdCB7IFdlYlJHcmFkZXIgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGVtcHR5RmVlZGJhY2sgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTtcblxuICBjb25zdCBncmFkZXIgPSBuZXcgV2ViUkdyYWRlcihfd2Vicl92YWx1ZV8xMi5ldmFsdWF0b3IpO1xuICBjb25zdCBmZWVkYmFjayA9IGF3YWl0IGdyYWRlci5ncmFkZUV4ZXJjaXNlKCk7XG4gIGlmICghZmVlZGJhY2spIHJldHVybiBlbXB0eUZlZWRiYWNrO1xuICByZXR1cm4gZmVlZGJhY2s7XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici13aWRnZXQtNyIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfNztcbiAgaWYgKHdpbmRvdy5IVE1MV2lkZ2V0cykge1xuICAgIHdpbmRvdy5IVE1MV2lkZ2V0cy5zdGF0aWNSZW5kZXIoKTtcbiAgfVxuICBpZiAod2luZG93LlBhZ2VkVGFibGVEb2MpIHtcbiAgICB3aW5kb3cuUGFnZWRUYWJsZURvYy5pbml0QWxsKCk7XG4gIH1cbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLTciLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF93ZWJyX2VkaXRvcl83ID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItNy1jb250ZW50c1xcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGJsb2NrID0gSlNPTi5wYXJzZShiNjREZWNvZGUoc2NyaXB0Q29udGVudCkpO1xuXG4gIC8vIERlZmF1bHQgZXhlcmNpc2UgY29uZmlndXJhdGlvblxuICBjb25zdCBvcHRpb25zID0gT2JqZWN0LmFzc2lnbihcbiAgICB7XG4gICAgICBpZDogXCJ3ZWJyLTctY29udGVudHNcIixcbiAgICAgIGVudmlyOiBgZXhlcmNpc2UtZW52LSR7YmxvY2suYXR0ci5leGVyY2lzZX1gLFxuICAgICAgZXJyb3I6IGZhbHNlLFxuICAgICAgY2FwdGlvbjogJ0V4ZXJjaXNlJyxcbiAgICB9LFxuICAgIGJsb2NrLmF0dHJcbiAgKTtcblxuICBjb25zdCBlZGl0b3IgPSBuZXcgV2ViUkV4ZXJjaXNlRWRpdG9yKHdlYlJPanMud2ViUlByb21pc2UsIGJsb2NrLmNvZGUsIG9wdGlvbnMpO1xuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbnZpZXdvZiBfd2Vicl92YWx1ZV83ID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl83LCB7c2VnMX0pO1xuX3dlYnJfZmVlZGJhY2tfNyA9IHtcbiAgY29uc3QgeyBXZWJSR3JhZGVyIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBlbXB0eUZlZWRiYWNrID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7XG5cbiAgY29uc3QgZ3JhZGVyID0gbmV3IFdlYlJHcmFkZXIoX3dlYnJfdmFsdWVfNy5ldmFsdWF0b3IpO1xuICBjb25zdCBmZWVkYmFjayA9IGF3YWl0IGdyYWRlci5ncmFkZUV4ZXJjaXNlKCk7XG4gIGlmICghZmVlZGJhY2spIHJldHVybiBlbXB0eUZlZWRiYWNrO1xuICByZXR1cm4gZmVlZGJhY2s7XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici13aWRnZXQtMiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMjtcbiAgaWYgKHdpbmRvdy5IVE1MV2lkZ2V0cykge1xuICAgIHdpbmRvdy5IVE1MV2lkZ2V0cy5zdGF0aWNSZW5kZXIoKTtcbiAgfVxuICBpZiAod2luZG93LlBhZ2VkVGFibGVEb2MpIHtcbiAgICB3aW5kb3cuUGFnZWRUYWJsZURvYy5pbml0QWxsKCk7XG4gIH1cbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLTIiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF93ZWJyX2VkaXRvcl8yID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMi1jb250ZW50c1xcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGJsb2NrID0gSlNPTi5wYXJzZShiNjREZWNvZGUoc2NyaXB0Q29udGVudCkpO1xuXG4gIC8vIERlZmF1bHQgZXhlcmNpc2UgY29uZmlndXJhdGlvblxuICBjb25zdCBvcHRpb25zID0gT2JqZWN0LmFzc2lnbihcbiAgICB7XG4gICAgICBpZDogXCJ3ZWJyLTItY29udGVudHNcIixcbiAgICAgIGVudmlyOiBgZXhlcmNpc2UtZW52LSR7YmxvY2suYXR0ci5leGVyY2lzZX1gLFxuICAgICAgZXJyb3I6IGZhbHNlLFxuICAgICAgY2FwdGlvbjogJ0V4ZXJjaXNlJyxcbiAgICB9LFxuICAgIGJsb2NrLmF0dHJcbiAgKTtcblxuICBjb25zdCBlZGl0b3IgPSBuZXcgV2ViUkV4ZXJjaXNlRWRpdG9yKHdlYlJPanMud2ViUlByb21pc2UsIGJsb2NrLmNvZGUsIG9wdGlvbnMpO1xuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbnZpZXdvZiBfd2Vicl92YWx1ZV8yID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8yLCB7c2VnMH0pO1xuX3dlYnJfZmVlZGJhY2tfMiA9IHtcbiAgY29uc3QgeyBXZWJSR3JhZGVyIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBlbXB0eUZlZWRiYWNrID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7XG5cbiAgY29uc3QgZ3JhZGVyID0gbmV3IFdlYlJHcmFkZXIoX3dlYnJfdmFsdWVfMi5ldmFsdWF0b3IpO1xuICBjb25zdCBmZWVkYmFjayA9IGF3YWl0IGdyYWRlci5ncmFkZUV4ZXJjaXNlKCk7XG4gIGlmICghZmVlZGJhY2spIHJldHVybiBlbXB0eUZlZWRiYWNrO1xuICByZXR1cm4gZmVlZGJhY2s7XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici13aWRnZXQtMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMTtcbiAgaWYgKHdpbmRvdy5IVE1MV2lkZ2V0cykge1xuICAgIHdpbmRvdy5IVE1MV2lkZ2V0cy5zdGF0aWNSZW5kZXIoKTtcbiAgfVxuICBpZiAod2luZG93LlBhZ2VkVGFibGVEb2MpIHtcbiAgICB3aW5kb3cuUGFnZWRUYWJsZURvYy5pbml0QWxsKCk7XG4gIH1cbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLTEiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF93ZWJyX2VkaXRvcl8xID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMS1jb250ZW50c1xcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGJsb2NrID0gSlNPTi5wYXJzZShiNjREZWNvZGUoc2NyaXB0Q29udGVudCkpO1xuXG4gIGNvbnN0IG9wdGlvbnMgPSBPYmplY3QuYXNzaWduKHsgaWQ6IGB3ZWJyLTEtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgV2ViUkV4ZXJjaXNlRWRpdG9yKHdlYlJPanMud2ViUlByb21pc2UsIGJsb2NrLmNvZGUsIG9wdGlvbnMpO1xuXG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxuX3dlYnJfdmFsdWVfMSA9IHdlYlJPanMucHJvY2Vzcyhfd2Vicl9lZGl0b3JfMSwge30pO1xuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTQiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCI0XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJub25lXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTUiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCI1XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJyXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTkiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCI5XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJub25lXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTEwIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICBjb25zdCB7IGludGVycG9sYXRlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBibG9ja19pZCA9IFwiMTBcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcInJcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtMTQiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCIxNFwiO1xuICBjb25zdCBsYW5ndWFnZSA9IFwibm9uZVwiO1xuICBjb25zdCBkZWZfbWFwID0ge1xufTtcbiAgY29uc3QgZWxlbSA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGBpbnRlcnBvbGF0ZS0ke2Jsb2NrX2lkfWApO1xuXG4gIC8vIFN0b3JlIG9yaWdpbmFsIHRlbXBsYXRlZCBIVE1MIGZvciByZWZlcmVuY2UgaW4gZnV0dXJlIHJlYWN0aXZlIHVwZGF0ZXNcbiAgaWYgKCFlbGVtLm9yaWdIVE1MKSBlbGVtLm9yaWdIVE1MID0gZWxlbS5pbm5lckhUTUw7XG5cbiAgLy8gSW50ZXJwb2xhdGUgcmVhY3RpdmUgT0pTIHZhcmlhYmxlcyBpbnRvIGVzdGFibGlzaGVkIEhUTUwgZWxlbWVudFxuICBlbGVtLmlubmVySFRNTCA9IGVsZW0ub3JpZ0hUTUw7XG4gIE9iamVjdC5rZXlzKGRlZl9tYXApLmZvckVhY2goKGRlZikgPT5cbiAgICBpbnRlcnBvbGF0ZShlbGVtLCBcIiR7XCIgKyBkZWYgKyBcIn1cIiwgZGVmX21hcFtkZWZdLCBsYW5ndWFnZSlcbiAgKTtcbn1cbiJ9LHsiY2VsbE5hbWUiOiJpbnRlcnBvbGF0ZS0xNSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgY29uc3QgeyBpbnRlcnBvbGF0ZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgYmxvY2tfaWQgPSBcIjE1XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJyXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTE5IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICBjb25zdCB7IGludGVycG9sYXRlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBibG9ja19pZCA9IFwiMTlcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcIm5vbmVcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtMjAiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCIyMFwiO1xuICBjb25zdCBsYW5ndWFnZSA9IFwiclwiO1xuICBjb25zdCBkZWZfbWFwID0ge1xufTtcbiAgY29uc3QgZWxlbSA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGBpbnRlcnBvbGF0ZS0ke2Jsb2NrX2lkfWApO1xuXG4gIC8vIFN0b3JlIG9yaWdpbmFsIHRlbXBsYXRlZCBIVE1MIGZvciByZWZlcmVuY2UgaW4gZnV0dXJlIHJlYWN0aXZlIHVwZGF0ZXNcbiAgaWYgKCFlbGVtLm9yaWdIVE1MKSBlbGVtLm9yaWdIVE1MID0gZWxlbS5pbm5lckhUTUw7XG5cbiAgLy8gSW50ZXJwb2xhdGUgcmVhY3RpdmUgT0pTIHZhcmlhYmxlcyBpbnRvIGVzdGFibGlzaGVkIEhUTUwgZWxlbWVudFxuICBlbGVtLmlubmVySFRNTCA9IGVsZW0ub3JpZ0hUTUw7XG4gIE9iamVjdC5rZXlzKGRlZl9tYXApLmZvckVhY2goKGRlZikgPT5cbiAgICBpbnRlcnBvbGF0ZShlbGVtLCBcIiR7XCIgKyBkZWYgKyBcIn1cIiwgZGVmX21hcFtkZWZdLCBsYW5ndWFnZSlcbiAgKTtcbn1cbiJ9LHsiY2VsbE5hbWUiOiJpbnRlcnBvbGF0ZS0yNCIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgY29uc3QgeyBpbnRlcnBvbGF0ZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgYmxvY2tfaWQgPSBcIjI0XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJub25lXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTI1IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICBjb25zdCB7IGludGVycG9sYXRlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBibG9ja19pZCA9IFwiMjVcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcInJcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtMjkiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCIyOVwiO1xuICBjb25zdCBsYW5ndWFnZSA9IFwibm9uZVwiO1xuICBjb25zdCBkZWZfbWFwID0ge1xufTtcbiAgY29uc3QgZWxlbSA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGBpbnRlcnBvbGF0ZS0ke2Jsb2NrX2lkfWApO1xuXG4gIC8vIFN0b3JlIG9yaWdpbmFsIHRlbXBsYXRlZCBIVE1MIGZvciByZWZlcmVuY2UgaW4gZnV0dXJlIHJlYWN0aXZlIHVwZGF0ZXNcbiAgaWYgKCFlbGVtLm9yaWdIVE1MKSBlbGVtLm9yaWdIVE1MID0gZWxlbS5pbm5lckhUTUw7XG5cbiAgLy8gSW50ZXJwb2xhdGUgcmVhY3RpdmUgT0pTIHZhcmlhYmxlcyBpbnRvIGVzdGFibGlzaGVkIEhUTUwgZWxlbWVudFxuICBlbGVtLmlubmVySFRNTCA9IGVsZW0ub3JpZ0hUTUw7XG4gIE9iamVjdC5rZXlzKGRlZl9tYXApLmZvckVhY2goKGRlZikgPT5cbiAgICBpbnRlcnBvbGF0ZShlbGVtLCBcIiR7XCIgKyBkZWYgKyBcIn1cIiwgZGVmX21hcFtkZWZdLCBsYW5ndWFnZSlcbiAgKTtcbn1cbiJ9LHsiY2VsbE5hbWUiOiJpbnRlcnBvbGF0ZS0zMCIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgY29uc3QgeyBpbnRlcnBvbGF0ZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgYmxvY2tfaWQgPSBcIjMwXCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJyXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6IndlYnItcHJlbHVkZSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IndlYlJPanMgPSB7XG4gIGNvbnN0IHsgV2ViUiwgQ2hhbm5lbFR5cGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWUuV2ViUjtcbiAgY29uc3Qge1xuICAgIFdlYlJFdmFsdWF0b3IsXG4gICAgV2ViUkVudmlyb25tZW50TWFuYWdlcixcbiAgICBzZXR1cFIsXG4gICAgYjY0RGVjb2RlLFxuICAgIGNvbGxhcHNlUGF0aFxuICB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcblxuICBjb25zdCBzdGF0dXNDb250YWluZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImV4ZXJjaXNlLWxvYWRpbmctc3RhdHVzXCIpO1xuICBjb25zdCBpbmRpY2F0b3JDb250YWluZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImV4ZXJjaXNlLWxvYWRpbmctaW5kaWNhdG9yXCIpO1xuICBpbmRpY2F0b3JDb250YWluZXIuY2xhc3NMaXN0LnJlbW92ZShcImQtbm9uZVwiKTtcblxuICBsZXQgc3RhdHVzVGV4dCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJkaXZcIilcbiAgc3RhdHVzVGV4dC5jbGFzc0xpc3QgPSBcImV4ZXJjaXNlLWxvYWRpbmctZGV0YWlsc1wiO1xuICBzdGF0dXNUZXh0ID0gc3RhdHVzQ29udGFpbmVyLmFwcGVuZENoaWxkKHN0YXR1c1RleHQpO1xuICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYEluaXRpYWxpc2VgO1xuXG4gIC8vIEhvaXN0IGluZGljYXRvciBvdXQgZnJvbSBmaW5hbCBzbGlkZSB3aGVuIHJ1bm5pbmcgdW5kZXIgcmV2ZWFsXG4gIGNvbnN0IHJldmVhbFN0YXR1cyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIucmV2ZWFsIC5leGVyY2lzZS1sb2FkaW5nLWluZGljYXRvclwiKTtcbiAgaWYgKHJldmVhbFN0YXR1cykge1xuICAgIHJldmVhbFN0YXR1cy5yZW1vdmUoKTtcbiAgICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKFwiLnJldmVhbCA+IC5zbGlkZXNcIikuYXBwZW5kQ2hpbGQocmV2ZWFsU3RhdHVzKTtcbiAgfVxuXG4gIC8vIE1ha2UgYW55IHJldmVhbCBzbGlkZXMgd2l0aCBsaXZlIGNlbGxzIHNjcm9sbGFibGVcbiAgZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbChcIi5yZXZlYWwgLmV4ZXJjaXNlLWNlbGxcIikuZm9yRWFjaCgoZWwpID0+IHtcbiAgICBlbC5jbG9zZXN0KCdzZWN0aW9uLnNsaWRlJykuY2xhc3NMaXN0LmFkZChcInNjcm9sbGFibGVcIik7XG4gIH0pXG5cbiAgLy8gd2ViUiBzdXBwbGVtZW50YWwgZGF0YSBhbmQgb3B0aW9uc1xuICBjb25zdCBkYXRhQ29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJ3ZWJyLWRhdGFcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBkYXRhID0gSlNPTi5wYXJzZShiNjREZWNvZGUoZGF0YUNvbnRlbnQpKTtcblxuICAvLyBHcmFiIGxpc3Qgb2YgcmVzb3VyY2VzIHRvIGJlIGRvd25sb2FkZWRcbiAgY29uc3QgZmlsZXNDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcInZmcy1maWxlXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgZmlsZXMgPSBKU09OLnBhcnNlKGI2NERlY29kZShmaWxlc0NvbnRlbnQpKTtcblxuICAvLyBJbml0aWFsaXNlIHdlYlIgYW5kIHNldHVwIGZvciBSIGNvZGUgZXZhbHVhdGlvblxuICBsZXQgd2ViUlByb21pc2UgPSAoYXN5bmMgKHdlYlIpID0+IHtcbiAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYERvd25sb2FkaW5nIHdlYlJgO1xuICAgIGF3YWl0IHdlYlIuaW5pdCgpO1xuXG4gICAgLy8gSW5zdGFsbCBwcm92aWRlZCBsaXN0IG9mIHBhY2thZ2VzXG4gICAgLy8gRW5zdXJlIHdlYlIgZGVmYXVsdCByZXBvIGlzIGluY2x1ZGVkXG4gICAgZGF0YS5wYWNrYWdlcy5yZXBvcy5wdXNoKFwiaHR0cHM6Ly9yZXBvLnItd2FzbS5vcmdcIilcbiAgICBhd2FpdCBkYXRhLnBhY2thZ2VzLnBrZ3MubWFwKChwa2cpID0+ICgpID0+IHtcbiAgICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgRG93bmxvYWRpbmcgcGFja2FnZTogJHtwa2d9YDtcbiAgICAgIHJldHVybiB3ZWJSLmV2YWxSVm9pZChgXG4gICAgICAgIHdlYnI6Omluc3RhbGwocGtnLCByZXBvcyA9IHJlcG9zKVxuICAgICAgICBsaWJyYXJ5KHBrZywgY2hhcmFjdGVyLm9ubHkgPSBUUlVFKVxuICAgICAgYCwgeyBlbnY6IHtcbiAgICAgICAgcGtnOiBwa2csXG4gICAgICAgIHJlcG9zOiBkYXRhLnBhY2thZ2VzLnJlcG9zLFxuICAgICAgfX0pO1xuICAgIH0pLnJlZHVjZSgoY3VyLCBuZXh0KSA9PiBjdXIudGhlbihuZXh0KSwgUHJvbWlzZS5yZXNvbHZlKCkpO1xuXG4gICAgLy8gRG93bmxvYWQgYW5kIGluc3RhbGwgcmVzb3VyY2VzXG4gICAgYXdhaXQgZmlsZXMubWFwKChmaWxlKSA9PiBhc3luYyAoKSA9PiB7XG4gICAgICBjb25zdCBuYW1lID0gZmlsZS5zdWJzdHJpbmcoZmlsZS5sYXN0SW5kZXhPZignLycpICsgMSk7XG4gICAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYERvd25sb2FkaW5nIHJlc291cmNlOiAke25hbWV9YDtcbiAgICAgIGNvbnN0IHJlc3BvbnNlID0gYXdhaXQgZmV0Y2goZmlsZSk7XG4gICAgICBpZiAoIXJlc3BvbnNlLm9rKSB7XG4gICAgICAgIHRocm93IG5ldyBFcnJvcihgQ2FuJ3QgZG93bmxvYWQgXFxgJHtmaWxlfVxcYC4gRXJyb3IgJHtyZXNwb25zZS5zdGF0dXN9OiBcIiR7cmVzcG9uc2Uuc3RhdHVzVGV4dH1cIi5gKTtcbiAgICAgIH1cbiAgICAgIGNvbnN0IGRhdGEgPSBhd2FpdCByZXNwb25zZS5hcnJheUJ1ZmZlcigpO1xuXG4gICAgICAvLyBTdG9yZSBVUkxzIGluIHRoZSBjd2Qgd2l0aG91dCBhbnkgc3ViZGlyZWN0b3J5IHN0cnVjdHVyZVxuICAgICAgaWYgKGZpbGUuaW5jbHVkZXMoXCI6Ly9cIikpIHtcbiAgICAgICAgZmlsZSA9IG5hbWU7XG4gICAgICB9XG5cbiAgICAgIC8vIENvbGxhcHNlIGhpZ2hlciBkaXJlY3Rvcnkgc3RydWN0dXJlXG4gICAgICBmaWxlID0gY29sbGFwc2VQYXRoKGZpbGUpO1xuXG4gICAgICAvLyBDcmVhdGUgZGlyZWN0b3J5IHRyZWUsIGlnbm9yaW5nIFwiZGlyZWN0b3J5IGV4aXN0c1wiIFZGUyBlcnJvcnNcbiAgICAgIGNvbnN0IHBhcnRzID0gZmlsZS5zcGxpdCgnLycpLnNsaWNlKDAsIC0xKTtcbiAgICAgIGxldCBwYXRoID0gJyc7XG4gICAgICB3aGlsZSAocGFydHMubGVuZ3RoID4gMCkge1xuICAgICAgICBwYXRoICs9IHBhcnRzLnNoaWZ0KCkgKyAnLyc7XG4gICAgICAgIGNvbnN0IGFuYWx5c2lzID0gYXdhaXQgd2ViUi5GUy5hbmFseXplUGF0aChwYXRoKTtcbiAgICAgICAgaWYgKCFhbmFseXNpcy5leGlzdHMpIHtcbiAgICAgICAgICB0cnkge1xuICAgICAgICAgICAgYXdhaXQgd2ViUi5GUy5ta2RpcihwYXRoKTtcbiAgICAgICAgICB9IGNhdGNoIChlKSB7XG4gICAgICAgICAgICB0aHJvdyBuZXcgRXJyb3IoYEZpbGVzeXN0ZW0gRXJyb3I6IFwiJHtlLm1lc3NhZ2V9XCIuYCk7XG4gICAgICAgICAgfVxuICAgICAgICB9XG4gICAgICB9XG5cbiAgICAgIC8vIFdyaXRlIHRoaXMgZmlsZSB0byB0aGUgVkZTXG4gICAgICByZXR1cm4gYXdhaXQgd2ViUi5GUy53cml0ZUZpbGUoZmlsZSwgbmV3IFVpbnQ4QXJyYXkoZGF0YSkpO1xuICAgIH0pLnJlZHVjZSgoY3VyLCBuZXh0KSA9PiBjdXIudGhlbihuZXh0KSwgUHJvbWlzZS5yZXNvbHZlKCkpO1xuXG4gICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBJbnN0YWxsaW5nIHdlYlIgc2hpbXNgO1xuICAgIGF3YWl0IHdlYlIuZXZhbFJWb2lkKGB3ZWJyOjpzaGltX2luc3RhbGwoKWApO1xuXG4gICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBXZWJSIGVudmlyb25tZW50IHNldHVwYDtcbiAgICBhd2FpdCBzZXR1cFIod2ViUiwgZGF0YSk7XG5cbiAgICBzdGF0dXNUZXh0LnJlbW92ZSgpO1xuICAgIGlmIChzdGF0dXNDb250YWluZXIuY2hpbGRyZW4ubGVuZ3RoID09IDApIHtcbiAgICAgIHN0YXR1c0NvbnRhaW5lci5wYXJlbnROb2RlLnJlbW92ZSgpO1xuICAgIH1cbiAgICByZXR1cm4gd2ViUjtcbiAgfSkobmV3IFdlYlIoZGF0YS5vcHRpb25zKSk7XG5cbiAgLy8gS2VlcCB0cmFjayBvZiBpbml0aWFsIE9KUyBibG9jayByZW5kZXJcbiAgY29uc3QgcmVuZGVyZWRPanMgPSB7fTtcblxuICBjb25zdCBwcm9jZXNzID0gYXN5bmMgKGNvbnRleHQsIGlucHV0cykgPT4ge1xuICAgIGNvbnN0IHdlYlIgPSBhd2FpdCB3ZWJSUHJvbWlzZTtcbiAgICBjb25zdCBldmFsdWF0b3IgPSBuZXcgV2ViUkV2YWx1YXRvcih3ZWJSLCBjb250ZXh0KVxuICAgIGF3YWl0IGV2YWx1YXRvci5wcm9jZXNzKGlucHV0cyk7XG4gICAgcmV0dXJuIGV2YWx1YXRvci5jb250YWluZXI7XG4gIH1cblxuICByZXR1cm4ge1xuICAgIHByb2Nlc3MsXG4gICAgd2ViUlByb21pc2UsXG4gICAgcmVuZGVyZWRPanMsXG4gIH07XG59XG4ifV19
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+WyIuLi9SL3ZlaWxsZS5SIiwiLi4vUi9zZWdyZWdhdGlvbi5SIiwiLi4vUi9pbmVnYWxpdGVzLlIiLCIuLi9SL2Rvam8uUiJd
+</script>
+<div class="ojs-auto-generated hidden">
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6WyAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7c2VnMDAucH08L3NwYW4+YCIsICJjZWxsTmFtZSI6Im9qcy1lbGVtZW50LWlkLTEifSwgIHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImlubGluZSI6InRydWUiLCJzb3VyY2UiOiJodGwuaHRtbGA8c3Bhbj4kezEgLSBzZWcwMC5wfTwvc3Bhbj5gIiwgImNlbGxOYW1lIjoib2pzLWVsZW1lbnQtaWQtMiJ9XX0=
+</script>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script>
+// Charge le module dojo.js depuis la racine du site, quelle que soit la profondeur de la page.
+(function () {
+  var m = document.querySelector('meta[name="quarto:offset"]');
+  var base = m ? m.getAttribute('content') : './';
+  var s = document.createElement('script');
+  s.type = 'module';
+  s.src = base + 'assets/dojo.js';
+  document.body.appendChild(s);
+})();
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InJuZyA9IHtcbiAgLy8gR8OpbsOpcmF0ZXVyIHBzZXVkby1hbMOpYXRvaXJlIHJlcHJvZHVjdGlibGUgOiBncmFpbmUgPSBqb3VyICsgaWQgZCdleGVyY2ljZSArIHNhbHQuXG4gIC8vIChTb3VyY2UgdW5pcXVlIDogc2NyaXB0cy90ZXN0X2V4ZXJjaWNlcy5SIMOpdmFsdWUgY2V0dGUgbcOqbWUgY2VsbHVsZSBhdmVjIE5vZGUuKVxuICBjb25zdCB0b2RheSA9IG5ldyBEYXRlKCkudG9JU09TdHJpbmcoKS5zbGljZSgwLCAxMCk7XG4gIGNvbnN0IGhhc2ggPSAocykgPT4ge1xuICAgIGxldCBoID0gMTc3OTAzMzcwMyBeIHMubGVuZ3RoO1xuICAgIGZvciAobGV0IGkgPSAwOyBpIDwgcy5sZW5ndGg7IGkrKykgeyBoID0gTWF0aC5pbXVsKGggXiBzLmNoYXJDb2RlQXQoaSksIDM0MzI5MTgzNTMpOyBoID0gKGggPDwgMTMpIHwgKGggPj4+IDE5KTsgfVxuICAgIHJldHVybiBoID4+PiAwO1xuICB9O1xuICBjb25zdCBtdWxiZXJyeTMyID0gKGEpID0+ICgpID0+IHtcbiAgICBhIHw9IDA7IGEgPSAoYSArIDB4NmQyYjc5ZjUpIHwgMDtcbiAgICBsZXQgdCA9IE1hdGguaW11bChhIF4gKGEgPj4+IDE1KSwgMSB8IGEpO1xuICAgIHQgPSAodCArIE1hdGguaW11bCh0IF4gKHQgPj4+IDcpLCA2MSB8IHQpKSBeIHQ7XG4gICAgcmV0dXJuICgodCBeICh0ID4+PiAxNCkpID4+PiAwKSAvIDQyOTQ5NjcyOTY7XG4gIH07XG4gIHJldHVybiAoaWQsIHNhbHQgPSAwLCBkYXkgPSB0b2RheSkgPT4ge1xuICAgIGNvbnN0IHUgPSBtdWxiZXJyeTMyKGhhc2goYCR7ZGF5fXwke2lkfXwke3NhbHR9YCkpO1xuICAgIGNvbnN0IGludCA9IChhLCBiKSA9PiBhICsgTWF0aC5mbG9vcih1KCkgKiAoYiAtIGEgKyAxKSk7XG4gICAgY29uc3QgcGljayA9IChhcnIpID0+IGFycltNYXRoLmZsb29yKHUoKSAqIGFyci5sZW5ndGgpXTtcbiAgICBjb25zdCBub3JtYWwgPSAoKSA9PiBNYXRoLnNxcnQoLTIgKiBNYXRoLmxvZygxIC0gdSgpKSkgKiBNYXRoLmNvcygyICogTWF0aC5QSSAqIHUoKSk7XG4gICAgcmV0dXJuIHsgdSwgaW50LCBwaWNrLCBub3JtYWwgfTtcbiAgfTtcbn1cblxudmlld29mIHNhbHQgPSB7XG4gIGNvbnN0IGIgPSBodG1sYDxidXR0b24gY2xhc3M9XCJkb2pvLWJ0biBkb2pvLXJlcm9sbFwiPvCfjrIgTm91dmVhdXggw6lub25jw6lzPC9idXR0b24+YDtcbiAgbGV0IG4gPSAwOyBiLnZhbHVlID0gMDtcbiAgYi5vbmNsaWNrID0gKCkgPT4geyBiLnZhbHVlID0gKytuOyBiLmRpc3BhdGNoRXZlbnQobmV3IEV2ZW50KFwiaW5wdXRcIiwgeyBidWJibGVzOiB0cnVlIH0pKTsgfTtcbiAgcmV0dXJuIGI7XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJzZWcwID0geyBjb25zdCBnID0gcm5nKFwic2VnLWQtMFwiLCBzYWx0KTsgcmV0dXJuIHsgc2VlZDogZy5pbnQoMSwgOTk5OSkgfTsgfVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0zIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoic2VnMSA9IHsgY29uc3QgZyA9IHJuZyhcInNlZy1kLTFcIiwgc2FsdCk7IHJldHVybiB7IHNlZWQ6IGcuaW50KDEsIDk5OTkpLCBrYXBwYTogZy5waWNrKFsyLCA0LCA4XSkgfTsgfVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC00IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoic2VnMDAgPSB7IGNvbnN0IGcgPSBybmcoXCJzZWctbS0wXCIsIHNhbHQpOyByZXR1cm4geyBwOiBnLnBpY2soWzAuMSwgMC4yLCAwLjMsIDAuNF0pIH07IH1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InNlZzIgPSB7IGNvbnN0IGcgPSBybmcoXCJzZWctbS0xXCIsIHNhbHQpOyByZXR1cm4geyBzZWVkOiBnLmludCgxLCA5OTk5KSB9OyB9XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTYiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJzZWc0ID0geyBjb25zdCBnID0gcm5nKFwic2VnLWRlY29tcC0xXCIsIHNhbHQpOyByZXR1cm4geyBzZWVkOiBnLmludCgxLCA5OTk5KSB9OyB9XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ3NhbHQnKSJ9XX0=
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../recherche";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Le Dojo : un entraînement par jour. Ta progression est stockée dans ton navigateur (voir « Progression » pour l’exporter).</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

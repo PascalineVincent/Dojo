@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Micro : concurrence parfaite et imparfaite – Le Dojo</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../assets/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-80558751abe2b985a76e6f6f417f2174.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-bde8d0188a8d44dff803acbb058a059b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-80558751abe2b985a76e6f6f417f2174.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../assets/dojo.css">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Le Dojo</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Basculer la navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Aujourd’hui</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parcours" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Parcours</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-parcours">    
+        <li>
+    <a class="dropdown-item" href="../parcours/micro.html">
+ <span class="dropdown-text">Micro (L1/L2)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/stats.html">
+ <span class="dropdown-text">Statistiques (L1)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/econometrie.html">
+ <span class="dropdown-text">Économétrie</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/histoire.html">
+ <span class="dropdown-text">Histoire économique</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/contemporaine.html">
+ <span class="dropdown-text">Économie contemporaine</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-recherche" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Recherche</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-recherche">    
+        <li>
+    <a class="dropdown-item" href="../recherche/index.html">
+ <span class="dropdown-text">Le défi de la semaine</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../recherche/segregation.html">
+ <span class="dropdown-text">Ségrégation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../recherche/inegalites.html">
+ <span class="dropdown-text">Inégalités</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../veille.html"> 
+<span class="menu-text">Veille</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../progression.html"> 
+<span class="menu-text">Progression</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Basculer le mode sombre"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sur cette page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#laboratoire-comparer-les-structures-de-marché" id="toc-laboratoire-comparer-les-structures-de-marché" class="nav-link active" data-scroll-target="#laboratoire-comparer-les-structures-de-marché">Laboratoire : comparer les structures de marché</a></li>
+  <li><a href="#micro-cpp-1" id="toc-micro-cpp-1" class="nav-link" data-scroll-target="#micro-cpp-1">Offre d’une firme preneuse de prix</a></li>
+  <li><a href="#micro-cpp-3" id="toc-micro-cpp-3" class="nav-link" data-scroll-target="#micro-cpp-3">Offre de court terme et seuil de fermeture</a></li>
+  <li><a href="#micro-cpp-2" id="toc-micro-cpp-2" class="nav-link" data-scroll-target="#micro-cpp-2">Équilibre de long terme et nombre de firmes</a></li>
+  <li><a href="#micro-mono-0" id="toc-micro-mono-0" class="nav-link" data-scroll-target="#micro-mono-0">Recette totale et recette marginale</a></li>
+  <li><a href="#micro-mono-1" id="toc-micro-mono-1" class="nav-link" data-scroll-target="#micro-mono-1">Monopole et perte sèche</a></li>
+  <li><a href="#micro-cournot-0" id="toc-micro-cournot-0" class="nav-link" data-scroll-target="#micro-cournot-0">Duopole de Cournot : meilleures réponses</a></li>
+  <li><a href="#micro-cournot-1" id="toc-micro-cournot-1" class="nav-link" data-scroll-target="#micro-cournot-1">Cournot à N firmes : prix d’équilibre</a></li>
+  <li><a href="#fiche-de-rappel" id="toc-fiche-de-rappel" class="nav-link" data-scroll-target="#fiche-de-rappel">Fiche de rappel</a></li>
+  <li><a href="#entraîne-toi-sur-les-cartes" id="toc-entraîne-toi-sur-les-cartes" class="nav-link" data-scroll-target="#entraîne-toi-sur-les-cartes">Entraîne-toi sur les cartes</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Micro : concurrence parfaite et imparfaite</h1>
+<p class="subtitle lead">L1 / L2, rappels et entraînement</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Les énoncés sont <strong>tirés au sort chaque jour</strong> (graine = date) : les chiffres changent d’un jour à l’autre, on ne peut donc pas retenir les réponses par cœur. Le bouton ci-dessous redonne de nouveaux énoncés à la demande. Le code R s’exécute dans ton navigateur ; <strong>Vérifier</strong> corrige ta réponse.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb1" data-startfrom="37" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 36;"><span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> {</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Générateur pseudo-aléatoire reproductible : graine = jour + id d'exercice + salt.</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="co">// (Source unique : scripts/test_exercices.R évalue cette même cellule avec Node.)</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> today <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>()<span class="op">.</span><span class="fu">toISOString</span>()<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> hash <span class="op">=</span> (s) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> h <span class="op">=</span> <span class="dv">1779033703</span> <span class="op">^</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) { h <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(h <span class="op">^</span> s<span class="op">.</span><span class="fu">charCodeAt</span>(i)<span class="op">,</span> <span class="dv">3432918353</span>)<span class="op">;</span> h <span class="op">=</span> (h <span class="op">&lt;&lt;</span> <span class="dv">13</span>) <span class="op">|</span> (h <span class="op">&gt;&gt;&gt;</span> <span class="dv">19</span>)<span class="op">;</span> }</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> h <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> mulberry32 <span class="op">=</span> (a) <span class="kw">=&gt;</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    a <span class="op">|=</span> <span class="dv">0</span><span class="op">;</span> a <span class="op">=</span> (a <span class="op">+</span> <span class="bn">0x6d2b79f5</span>) <span class="op">|</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> t <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(a <span class="op">^</span> (a <span class="op">&gt;&gt;&gt;</span> <span class="dv">15</span>)<span class="op">,</span> <span class="dv">1</span> <span class="op">|</span> a)<span class="op">;</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> (t <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">7</span>)<span class="op">,</span> <span class="dv">61</span> <span class="op">|</span> t)) <span class="op">^</span> t<span class="op">;</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ((t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">14</span>)) <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span>) <span class="op">/</span> <span class="dv">4294967296</span><span class="op">;</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> (id<span class="op">,</span> salt <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> day <span class="op">=</span> today) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> u <span class="op">=</span> <span class="fu">mulberry32</span>(<span class="fu">hash</span>(<span class="vs">`</span><span class="sc">${</span>day<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>id<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>salt<span class="sc">}</span><span class="vs">`</span>))<span class="op">;</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> int <span class="op">=</span> (a<span class="op">,</span> b) <span class="kw">=&gt;</span> a <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> (b <span class="op">-</span> a <span class="op">+</span> <span class="dv">1</span>))<span class="op">;</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> pick <span class="op">=</span> (arr) <span class="kw">=&gt;</span> arr[<span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> arr<span class="op">.</span><span class="at">length</span>)]<span class="op">;</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> normal <span class="op">=</span> () <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">log</span>(<span class="dv">1</span> <span class="op">-</span> <span class="fu">u</span>())) <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">cos</span>(<span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="cn">PI</span> <span class="op">*</span> <span class="fu">u</span>())<span class="op">;</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { u<span class="op">,</span> int<span class="op">,</span> pick<span class="op">,</span> normal }<span class="op">;</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>viewof salt <span class="op">=</span> {</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> b <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;button class="dojo-btn dojo-reroll"&gt;🎲 Nouveaux énoncés&lt;/button&gt;`</span><span class="op">;</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> n <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>  b<span class="op">.</span><span class="at">onclick</span> <span class="op">=</span> () <span class="kw">=&gt;</span> { b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="op">++</span>n<span class="op">;</span> b<span class="op">.</span><span class="fu">dispatchEvent</span>(<span class="kw">new</span> <span class="bu">Event</span>(<span class="st">"input"</span><span class="op">,</span> { <span class="dt">bubbles</span><span class="op">:</span> <span class="kw">true</span> }))<span class="op">;</span> }<span class="op">;</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> b<span class="op">;</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<section id="laboratoire-comparer-les-structures-de-marché" class="level2">
+<h2 class="anchored" data-anchor-id="laboratoire-comparer-les-structures-de-marché">Laboratoire : comparer les structures de marché</h2>
+<p>Demande linéaire <span class="math inline">\(P = A - bQ\)</span> et coût marginal constant <span class="math inline">\(c\)</span> (sans coût fixe). Fais varier les paramètres et compare <strong>prix, quantités, surplus et perte sèche</strong> entre concurrence, monopole, Cournot et Stackelberg.</p>
+<div class="dojo-lab" data-lab="market">
+
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Ce qu'il faut observer">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Ce qu’il faut observer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Le prix suit l’ordre <strong>concurrence &lt; Stackelberg &lt; Cournot (N = 2) &lt; monopole</strong>, et la quantité l’ordre inverse.</li>
+<li>Quand <span class="math inline">\(N\)</span> augmente, Cournot tend vers la concurrence parfaite.</li>
+<li>La perte sèche est le triangle entre la demande et le coût marginal, à droite de la quantité produite.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="dojo-track" data-track="micro-cpp">
+
+</div>
+</section>
+<section id="micro-cpp-1" class="level2">
+<h2 class="anchored" data-anchor-id="micro-cpp-1">Offre d’une firme preneuse de prix</h2>
+<p><span class="dojo-step">Marche 1 sur 3 · Guidé</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="121" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 120;"><span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>micro1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-cpp-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="kw">const</span> a <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">8</span>)<span class="op">;</span> <span class="cf">return</span> { a<span class="op">,</span> <span class="dt">F</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">20</span><span class="op">,</span> <span class="dv">60</span>)<span class="op">,</span> <span class="dt">p</span><span class="op">:</span> a <span class="op">+</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">6</span><span class="op">,</span> <span class="dv">20</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Une firme preneuse de prix a pour coût total <strong>C(q) = 0,5 q² + <span><span id="ojs-element-id-1"></span></span> q + <span><span id="ojs-element-id-2"></span></span></strong> et le prix de marché est <strong>p = <span><span id="ojs-element-id-3"></span></span></strong>. Calcule la quantité qui maximise son profit et ce profit.</p>
+<div class="cell" data-exercise="micro-cpp-1" data-caption="Quantité et profit" data-input="micro1">
+<div>
+<div id="webr-1" class="exercise-cell">
+
+</div>
+<script type="webr-1-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJRdWFudGl0w6kgZXQgcHJvZml0IiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhlcmNpc2UiOiJtaWNyby1jcHAtMSIsImlucHV0IjpbIm1pY3JvMSJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoiYSA8LSBtaWNybzEkYTsgRiA8LSBtaWNybzEkRjsgcCA8LSBtaWNybzEkcFxuIyBDb8O7dCBtYXJnaW5hbCA6IENtKHEpID0gcSArIGEuIENvbmRpdGlvbiBkZSBwcmVtaWVyIG9yZHJlIDogcCA9IENtKHEpXG5xX3N0YXIgPC0gX19fX19fXG5wcm9maXQgPC0gX19fX19fICAgICAgIyByZWNldHRlIC0gY2/Du3QgdG90YWwgKG4nb3VibGllIHBhcyBsZSBjb8O7dCBmaXhlKVxuYyhxID0gcV9zdGFyLCBwcm9maXQgPSBwcm9maXQpIn0=
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="micro-cpp-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Une firme preneuse de prix choisit la quantité <span class="math inline">\(q\)</span> qui maximise <span class="math inline">\(\pi(q) = pq - C(q)\)</span>. Écris la condition du premier ordre <strong>en mots</strong> avant de la mettre en formule : à l’optimum, le prix doit égaler le coût de la dernière unité produite.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="micro-cpp-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Dérive <span class="math inline">\(C(q)\)</span> : <span class="math inline">\(C'(q) = q + a\)</span>. Pose <span class="math inline">\(p = C'(q)\)</span> et résous en <span class="math inline">\(q\)</span>. Le profit est <span class="math inline">\(pq - C(q)\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="micro-cpp-1">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>La firme est preneuse de prix : <span class="math inline">\(p\)</span> est une donnée, seule la quantité <span class="math inline">\(q\)</span> est choisie.</li>
+<li>Profit : <span class="math inline">\(\pi(q) = pq - C(q)\)</span>. Condition du premier ordre : <span class="math inline">\(p = C'(q)\)</span> (la recette marginale d’une firme preneuse de prix est <span class="math inline">\(p\)</span>).</li>
+<li>Ici <span class="math inline">\(C'(q) = q + a\)</span>, donc <span class="math inline">\(q^* = p - a\)</span>.</li>
+<li>Condition du second ordre : <span class="math inline">\(C''(q) = 1 &gt; 0\)</span>, le coût marginal est croissant, c’est bien un maximum.</li>
+<li>Le profit se calcule en remplaçant <span class="math inline">\(q^*\)</span> dans <span class="math inline">\(pq - C(q)\)</span>, <strong>sans oublier le coût fixe</strong> <span class="math inline">\(F\)</span> : il peut être négatif tout en étant supérieur à <span class="math inline">\(-F\)</span>, auquel cas la firme produit quand même à court terme.</li>
+</ol>
+<div class="cell" data-exercise="micro-cpp-1" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="micro-cpp-1">
+<code id="interpolate-3" class="solution-code d-none">a &lt;- micro1$a; F &lt;- micro1$F; p &lt;- micro1$p
+q_star &lt;- p - a
+profit &lt;- p * q_star - (0.5 * q_star^2 + a * q_star + F)
+c(q = q_star, profit = profit)</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-4-1"><a href="#interpolate-4-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> micro1<span class="sc">$</span>a; F <span class="ot">&lt;-</span> micro1<span class="sc">$</span>F; p <span class="ot">&lt;-</span> micro1<span class="sc">$</span>p</span>
+<span id="interpolate-4-2"><a href="#interpolate-4-2" aria-hidden="true" tabindex="-1"></a>q_star <span class="ot">&lt;-</span> p <span class="sc">-</span> a</span>
+<span id="interpolate-4-3"><a href="#interpolate-4-3" aria-hidden="true" tabindex="-1"></a>profit <span class="ot">&lt;-</span> p <span class="sc">*</span> q_star <span class="sc">-</span> (<span class="fl">0.5</span> <span class="sc">*</span> q_star<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> a <span class="sc">*</span> q_star <span class="sc">+</span> F)</span>
+<span id="interpolate-4-4"><a href="#interpolate-4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">q =</span> q_star, <span class="at">profit =</span> profit)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Oublier <span class="math inline">\(F\)</span> dans le profit : on conclut à tort que la firme gagne de l’argent.</li>
+<li>Résoudre <span class="math inline">\(p = CM(q)\)</span> (coût moyen) au lieu de <span class="math inline">\(p = Cm(q)\)</span> (coût marginal) : le coût moyen sert à décider d’<strong>entrer ou sortir</strong>, pas de combien produire.</li>
+<li>Conclure qu’un profit négatif impose de fermer : à court terme, la firme produit tant que le prix couvre le coût variable (voir la marche suivante).</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Trace <span class="math inline">\(\pi(q)\)</span> sur une grille de valeurs de <span class="math inline">\(q\)</span> et vérifie que son sommet est bien en <span class="math inline">\(q^*\)</span>. Puis passe à la marche suivante : que devient la décision de la firme quand <span class="math inline">\(p\)</span> devient très bas ?</p>
+</div>
+<div class="cell" data-exercise="micro-cpp-1" data-check="true">
+<script type="exercise-check-micro-cpp-1-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1pY3JvLWNwcC0xIiwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6ImEgPC0gbWljcm8xJGE7IEYgPC0gbWljcm8xJEY7IHAgPC0gbWljcm8xJHBcbnEgPC0gcCAtIGFcbnByb2YgPC0gcCAqIHEgLSAoMC41ICogcV4yICsgYSAqIHEgKyBGKVxucmVzIDwtIHN1cHByZXNzV2FybmluZ3MoYXMubnVtZXJpYygucmVzdWx0KSlcbmlmIChsZW5ndGgocmVzKSAhPSAyIHx8IGFueU5BKHJlcykpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIlJlbnZvaWUgdW4gdmVjdGV1ciBkZSBkZXV4IG5vbWJyZXMgOiBjKHEgPSAuLi4sIHByb2ZpdCA9IC4uLikuXCIpXG59IGVsc2UgaWYgKGFicyhyZXNbMV0gLSBxKSA+IDFlLTYpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIkxhIHF1YW50aXTDqSBuJ2VzdCBwYXMgbGEgYm9ubmUuIMOJY3JpcyBwID0gQ20ocSksIGF2ZWMgQ20ocSkgPSBxICsgYS5cIilcbn0gZWxzZSBpZiAoYWJzKHJlc1syXSAtIHByb2YpID4gMWUtNikge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiUXVhbnRpdMOpIGNvcnJlY3RlLCBwcm9maXQgaW5jb3JyZWN0IDogcHJvZml0ID0gcCBxIC0gQyhxKSwgY2/Du3QgZml4ZSBjb21wcmlzLlwiKVxufSBlbHNlIHtcbiAgbGlzdChjb3JyZWN0ID0gVFJVRSwgbWVzc2FnZSA9IHNwcmludGYoXCJDb3JyZWN0IDogcSogPSAlZyBldCBwcm9maXQgPSAlZy5cIiwgcSwgcHJvZikpXG59In0=
+</script>
+</div>
+<div class="dojo-done" data-id="micro-cpp-1">
+
+</div>
+</section>
+<section id="micro-cpp-3" class="level2">
+<h2 class="anchored" data-anchor-id="micro-cpp-3">Offre de court terme et seuil de fermeture</h2>
+<p><span class="dojo-step">Marche 2 sur 3 · À compléter</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="223" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 222;"><span id="cb3-223"><a href="#cb3-223" aria-hidden="true" tabindex="-1"></a>cpp3 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-cpp-3"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">a</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">8</span>)<span class="op">,</span> <span class="dt">F</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">18</span><span class="op">,</span> <span class="dv">32</span><span class="op">,</span> <span class="dv">50</span><span class="op">,</span> <span class="dv">72</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Une firme preneuse de prix a pour coût total <strong>C(q) = 0,5 q² + <span><span id="ojs-element-id-4"></span></span> q + <span><span id="ojs-element-id-5"></span></span></strong>. Le coût fixe est d’abord <strong>irrécupérable</strong> (court terme : la firme ne peut pas le récupérer en fermant), puis <strong>évitable</strong> (long terme : elle peut quitter le marché). Écris les deux fonctions d’offre et compare-les sur une grille de prix.</p>
+<div class="cell" data-exercise="micro-cpp-3" data-caption="Deux courbes d'offre" data-input="cpp3">
+<div>
+<div id="webr-6" class="exercise-cell">
+
+</div>
+<script type="webr-6-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJEZXV4IGNvdXJiZXMgZCdvZmZyZSIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoibWljcm8tY3BwLTMiLCJpbnB1dCI6WyJjcHAzIl0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJhIDwtIGNwcDMkYTsgRiA8LSBjcHAzJEZcbiMgUXVhbmQgbGEgZmlybWUgcHJvZHVpdCwgZWxsZSDDqWdhbGlzZSBwIGV0IENtKHEpID0gcSArIGEsIGRvbmMgcSA9IHAgLSBhLlxuIyBSZXN0ZSDDoCBkw6ljaWRlciBTSSBlbGxlIHByb2R1aXQuXG5vZmZyZV9jdCA8LSBmdW5jdGlvbihwKSB7XG4gICMgY291cnQgdGVybWUgOiBGIGVzdCBpcnLDqWN1cMOpcmFibGUuIE9uIHByb2R1aXQgdGFudCBxdWUgcCBjb3V2cmUgbGUgY2/Du3QgdmFyaWFibGUgbW95ZW4gKG1pbmltdW0gOiBhKVxuICBfX19fX19cbn1cbm9mZnJlX2x0IDwtIGZ1bmN0aW9uKHApIHtcbiAgIyBsb25nIHRlcm1lIDogRiBlc3Qgw6l2aXRhYmxlLiBPbiBwcm9kdWl0IHNldWxlbWVudCBzaSBsZSBwcm9maXQgZXN0IHBvc2l0aWYgb3UgbnVsIChwID49IGEgKyBzcXJ0KDJGKSlcbiAgX19fX19fXG59XG5wcml4IDwtIHNlcSgwLjI1LCAzMCwgYnkgPSAyLjUpXG5yYmluZChjb3VydCA9IHNhcHBseShwcml4LCBvZmZyZV9jdCksIGxvbmcgPSBzYXBwbHkocHJpeCwgb2ZmcmVfbHQpKSJ9
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="micro-cpp-3">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Dans les deux cas, quand la firme produit, <span class="math inline">\(q = p - a\)</span>. Seule la condition « produit-elle ? » change. Pour la trouver, demande-toi ce que la firme <strong>perd</strong> si elle ferme.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="micro-cpp-3">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Court terme : fermer fait perdre exactement <span class="math inline">\(F\)</span> (irrécupérable) ; produire rapporte un profit variable <span class="math inline">\(\tfrac12(p-a)^2 \ge 0\)</span> dès que <span class="math inline">\(p \ge a\)</span>. Long terme : fermer fait gagner <span class="math inline">\(0\)</span> ; la firme produit seulement si <span class="math inline">\(\pi = \tfrac12(p-a)^2 - F \ge 0\)</span>, soit <span class="math inline">\(p \ge a + \sqrt{2F}\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="micro-cpp-3">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>Quand elle produit, la firme égalise <span class="math inline">\(p\)</span> et <span class="math inline">\(Cm(q) = q + a\)</span> : <span class="math inline">\(q = p - a\)</span>. La vraie question est : <strong>produit-elle ?</strong></li>
+<li><strong>Court terme.</strong> <span class="math inline">\(F\)</span> est payé quoi qu’il arrive. Produire <span class="math inline">\(q = p - a\)</span> rapporte un profit <em>variable</em> <span class="math inline">\(\tfrac12(p-a)^2\)</span>, positif dès que <span class="math inline">\(p &gt; a\)</span> ; fermer ne rapporte rien. Donc elle produit pour tout <span class="math inline">\(p \ge a\)</span> (minimum du coût variable moyen, le « seuil de fermeture »), soit <span class="math inline">\(q = \max(p-a,\,0)\)</span>. Sa perte totale peut être négative (jusqu’à <span class="math inline">\(-F\)</span>) sans qu’elle ferme.</li>
+<li><strong>Long terme.</strong> <span class="math inline">\(F\)</span> est évitable : la firme n’est active que si <span class="math inline">\(\pi = \tfrac12(p-a)^2 - F \ge 0\)</span>, soit <span class="math inline">\(p \ge a + \sqrt{2F}\)</span> (minimum du coût moyen, le « seuil de rentabilité »). Sous ce prix, l’offre est nulle.</li>
+<li>L’offre de long terme présente un <strong>saut</strong> : elle passe de 0 à la production <span class="math inline">\(\sqrt{2F}\)</span> au prix <span class="math inline">\(a + \sqrt{2F}\)</span>. Entre <span class="math inline">\(a\)</span> et ce seuil, la firme produit à court terme en perdant de l’argent, ce que le long terme ne tolère pas.</li>
+</ol>
+<div class="cell" data-exercise="micro-cpp-3" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="micro-cpp-3">
+<code id="interpolate-8" class="solution-code d-none">a &lt;- cpp3$a; F &lt;- cpp3$F
+offre_ct &lt;- function(p) {
+  if (p &gt;= a) p - a else 0                       # seuil de fermeture : p = a
+}
+offre_lt &lt;- function(p) {
+  if (p &gt;= a + sqrt(2 * F)) p - a else 0         # seuil de rentabilité : p = a + sqrt(2F)
+}
+prix &lt;- seq(0.25, 30, by = 2.5)
+rbind(court = sapply(prix, offre_ct), long = sapply(prix, offre_lt))</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-9-1"><a href="#interpolate-9-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> cpp3<span class="sc">$</span>a; F <span class="ot">&lt;-</span> cpp3<span class="sc">$</span>F</span>
+<span id="interpolate-9-2"><a href="#interpolate-9-2" aria-hidden="true" tabindex="-1"></a>offre_ct <span class="ot">&lt;-</span> <span class="cf">function</span>(p) {</span>
+<span id="interpolate-9-3"><a href="#interpolate-9-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (p <span class="sc">&gt;=</span> a) p <span class="sc">-</span> a <span class="cf">else</span> <span class="dv">0</span>                       <span class="co"># seuil de fermeture : p = a</span></span>
+<span id="interpolate-9-4"><a href="#interpolate-9-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="interpolate-9-5"><a href="#interpolate-9-5" aria-hidden="true" tabindex="-1"></a>offre_lt <span class="ot">&lt;-</span> <span class="cf">function</span>(p) {</span>
+<span id="interpolate-9-6"><a href="#interpolate-9-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (p <span class="sc">&gt;=</span> a <span class="sc">+</span> <span class="fu">sqrt</span>(<span class="dv">2</span> <span class="sc">*</span> F)) p <span class="sc">-</span> a <span class="cf">else</span> <span class="dv">0</span>         <span class="co"># seuil de rentabilité : p = a + sqrt(2F)</span></span>
+<span id="interpolate-9-7"><a href="#interpolate-9-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="interpolate-9-8"><a href="#interpolate-9-8" aria-hidden="true" tabindex="-1"></a>prix <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.25</span>, <span class="dv">30</span>, <span class="at">by =</span> <span class="fl">2.5</span>)</span>
+<span id="interpolate-9-9"><a href="#interpolate-9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">court =</span> <span class="fu">sapply</span>(prix, offre_ct), <span class="at">long =</span> <span class="fu">sapply</span>(prix, offre_lt))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Fermer dès que le profit total est négatif <strong>à court terme</strong> : tant que <span class="math inline">\(p\)</span> couvre le coût variable, produire réduit la perte.</li>
+<li>Utiliser le coût moyen <em>total</em> pour la décision de court terme : seul le coût moyen <em>variable</em> compte quand <span class="math inline">\(F\)</span> est irrécupérable.</li>
+<li>Écrire <code>p - a</code> sans condition : sous le seuil on obtiendrait une production négative.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Repère sur un graphique le seuil de fermeture (<span class="math inline">\(p = a\)</span>) et le seuil de rentabilité (<span class="math inline">\(p = a + \sqrt{2F}\)</span>). La marche suivante s’appuie sur ce second seuil pour trouver le prix et le nombre de firmes de long terme.</p>
+</div>
+<div class="cell" data-exercise="micro-cpp-3" data-check="true">
+<script type="exercise-check-micro-cpp-3-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1pY3JvLWNwcC0zIiwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6ImEgPC0gY3BwMyRhOyBGIDwtIGNwcDMkRlxucHJpeCA8LSBzZXEoMC4yNSwgMzAsIGJ5ID0gMi41KVxuY3QgPC0gcG1heChwcml4IC0gYSwgMClcbmx0IDwtIGlmZWxzZShwcml4ID49IGEgKyBzcXJ0KDIgKiBGKSwgcHJpeCAtIGEsIDApXG5yZXMgPC0gc3VwcHJlc3NXYXJuaW5ncyhhcy5udW1lcmljKC5yZXN1bHQpKVxuaWYgKGxlbmd0aChyZXMpICE9IDIgKiBsZW5ndGgocHJpeCkgfHwgYW55TkEocmVzKSkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiUmVudm9pZSBsZSB0YWJsZWF1IHJiaW5kKGNvdXJ0ID0gLi4uLCBsb25nID0gLi4uKSBkdSBnYWJhcml0LCBhdmVjIGxlcyBkZXV4IGZvbmN0aW9ucyBjb21wbMOpdMOpZXMuXCIpXG59IGVsc2Uge1xuICBtIDwtIG1hdHJpeChyZXMsIG5yb3cgPSAyKVxuICBva19jdCA8LSBpc1RSVUUoYWxsLmVxdWFsKG1bMSwgXSwgY3QsIHRvbGVyYW5jZSA9IDFlLTgpKTsgb2tfbHQgPC0gaXNUUlVFKGFsbC5lcXVhbChtWzIsIF0sIGx0LCB0b2xlcmFuY2UgPSAxZS04KSlcbiAgaWYgKG9rX2N0ICYmIG9rX2x0KSB7XG4gICAgbGlzdChjb3JyZWN0ID0gVFJVRSwgbWVzc2FnZSA9IHNwcmludGYoXCJDb3JyZWN0IDogc2V1aWwgZGUgZmVybWV0dXJlIHAgPSAlZywgc2V1aWwgZGUgcmVudGFiaWxpdMOpIHAgPSAlZy5cIiwgYSwgYSArIHNxcnQoMiAqIEYpKSlcbiAgfSBlbHNlIGlmICghb2tfY3QpIHtcbiAgICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiT2ZmcmUgZGUgY291cnQgdGVybWUgaW5jb3JyZWN0ZSA6IEYgZXN0IGlycsOpY3Vww6lyYWJsZSwgbGEgZmlybWUgcHJvZHVpdCBxID0gcCAtIGEgZMOocyBxdWUgcCA+PSBhIChjb8O7dCB2YXJpYWJsZSBtb3llbiBtaW5pbWFsKS5cIilcbiAgfSBlbHNlIHtcbiAgICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiT2ZmcmUgZGUgbG9uZyB0ZXJtZSBpbmNvcnJlY3RlIDogRiBlc3Qgw6l2aXRhYmxlLCBsYSBmaXJtZSBuZSBwcm9kdWl0IHF1ZSBzaSBsZSBwcm9maXQgMCw1IChwIC0gYSleMiAtIEYgZXN0ID49IDAsIGMnZXN0LcOgLWRpcmUgcCA+PSBhICsgc3FydCgyRikuXCIpXG4gIH1cbn0ifQ==
+</script>
+</div>
+<div class="dojo-done" data-id="micro-cpp-3">
+
+</div>
+</section>
+<section id="micro-cpp-2" class="level2">
+<h2 class="anchored" data-anchor-id="micro-cpp-2">Équilibre de long terme et nombre de firmes</h2>
+<p><span class="dojo-step">Marche 3 sur 3 · À compléter</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="321" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 320;"><span id="cb4-321"><a href="#cb4-321" aria-hidden="true" tabindex="-1"></a>micro2 <span class="op">=</span> {</span>
+<span id="cb4-322"><a href="#cb4-322" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-cpp-2"</span><span class="op">,</span> salt)<span class="op">;</span></span>
+<span id="cb4-323"><a href="#cb4-323" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> s <span class="op">=</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">4</span><span class="op">,</span> <span class="dv">6</span><span class="op">,</span> <span class="dv">8</span><span class="op">,</span> <span class="dv">10</span>])<span class="op">;</span>                       <span class="co">// s = sqrt(2F), caché</span></span>
+<span id="cb4-324"><a href="#cb4-324" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> a <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">6</span>)<span class="op">,</span> b <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">4</span>)<span class="op">,</span> N0 <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">10</span><span class="op">,</span> <span class="dv">40</span>)<span class="op">;</span></span>
+<span id="cb4-325"><a href="#cb4-325" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { a<span class="op">,</span> <span class="dt">F</span><span class="op">:</span> s <span class="op">*</span> s <span class="op">/</span> <span class="dv">2</span><span class="op">,</span> b<span class="op">,</span> <span class="dt">D0</span><span class="op">:</span> b <span class="op">*</span> (a <span class="op">+</span> s) <span class="op">+</span> N0 <span class="op">*</span> s }<span class="op">;</span></span>
+<span id="cb4-326"><a href="#cb4-326" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Dans une industrie en concurrence parfaite avec libre entrée, toutes les firmes ont le coût <strong>C(q) = 0,5 q² + <span><span id="ojs-element-id-6"></span></span> q + <span><span id="ojs-element-id-7"></span></span></strong>. La demande de marché est <strong>Q = <span><span id="ojs-element-id-8"></span></span> − <span><span id="ojs-element-id-9"></span></span> p</strong>. Trouve l’équilibre de long terme : prix, production par firme et nombre de firmes.</p>
+<div class="cell" data-exercise="micro-cpp-2" data-caption="Équilibre de long terme" data-input="micro2">
+<div>
+<div id="webr-11" class="exercise-cell">
+
+</div>
+<script type="webr-11-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiLDiXF1aWxpYnJlIGRlIGxvbmcgdGVybWUiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1pY3JvLWNwcC0yIiwiaW5wdXQiOlsibWljcm8yIl0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJhIDwtIG1pY3JvMiRhOyBGIDwtIG1pY3JvMiRGOyBiIDwtIG1pY3JvMiRiOyBEMCA8LSBtaWNybzIkRDBcbiMgQ2/Du3QgbW95ZW4gOiBDTShxKSA9IDAsNSBxICsgYSArIEYvcSA7IHNvbiBtaW5pbXVtIGVzdCBhdHRlaW50IGVuIHEgPSBzcXJ0KDJGKVxucV9sciA8LSBfX19fX19cbnBfbHIgPC0gX19fX19fICAgICAgIyBwcm9maXQgbnVsIDogcCA9IENNIG1pbmltdW1cblFfbHIgPC0gX19fX19fICAgICAgIyBkZW1hbmRlIGRlIG1hcmNow6kgYXUgcHJpeCBwX2xyXG5OX2xyIDwtIF9fX19fXyAgICAgICMgbm9tYnJlIGRlIGZpcm1lc1xuYyhwID0gcF9sciwgcSA9IHFfbHIsIE4gPSBOX2xyKSJ9
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="micro-cpp-2">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>À long terme deux conditions tiennent en même temps : la libre entrée pousse le profit à zéro, et la concurrence fait produire chaque firme là où prix = coût marginal. Ensemble, elles fixent la production d’<strong>une</strong> firme. Commence par elle.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="micro-cpp-2">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Le minimum de <span class="math inline">\(CM(q) = 0{,}5\,q + a + F/q\)</span> se trouve en annulant sa dérivée : <span class="math inline">\(0{,}5 - F/q^2 = 0\)</span>. Ensuite <span class="math inline">\(p = CM(q_{lr})\)</span>, <span class="math inline">\(Q = D_0 - b\,p\)</span> et <span class="math inline">\(N = Q / q_{lr}\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="micro-cpp-2">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>Libre entrée : profit nul, donc <span class="math inline">\(p = CM(q)\)</span>.</li>
+<li>Concurrence : <span class="math inline">\(p = Cm(q)\)</span>. Les deux conditions imposent <span class="math inline">\(Cm(q) = CM(q)\)</span>, ce qui n’arrive qu’au <strong>minimum du coût moyen</strong>.</li>
+<li><span class="math inline">\(CM(q) = 0{,}5\,q + a + F/q\)</span> ; <span class="math inline">\(CM'(q) = 0{,}5 - F/q^2 = 0\)</span> donne <span class="math inline">\(q = \sqrt{2F}\)</span> (échelle efficace minimale).</li>
+<li>Prix de long terme : <span class="math inline">\(p = CM_{\min} = a + \sqrt{2F}\)</span>, indépendant de la demande.</li>
+<li>La demande de marché fixe seulement la quantité totale : <span class="math inline">\(Q = D_0 - b\,p\)</span>, d’où <span class="math inline">\(N = Q/q\)</span>. (En pratique on arrondit <span class="math inline">\(N\)</span> à l’entier inférieur ; l’énoncé est construit pour que <span class="math inline">\(N\)</span> soit entier.)</li>
+</ol>
+<div class="cell" data-exercise="micro-cpp-2" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="micro-cpp-2">
+<code id="interpolate-13" class="solution-code d-none">a &lt;- micro2$a; F &lt;- micro2$F; b &lt;- micro2$b; D0 &lt;- micro2$D0
+q_lr &lt;- sqrt(2 * F)
+p_lr &lt;- a + sqrt(2 * F)
+Q_lr &lt;- D0 - b * p_lr
+N_lr &lt;- Q_lr / q_lr
+c(p = p_lr, q = q_lr, N = N_lr)</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-14-1"><a href="#interpolate-14-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> micro2<span class="sc">$</span>a; F <span class="ot">&lt;-</span> micro2<span class="sc">$</span>F; b <span class="ot">&lt;-</span> micro2<span class="sc">$</span>b; D0 <span class="ot">&lt;-</span> micro2<span class="sc">$</span>D0</span>
+<span id="interpolate-14-2"><a href="#interpolate-14-2" aria-hidden="true" tabindex="-1"></a>q_lr <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">2</span> <span class="sc">*</span> F)</span>
+<span id="interpolate-14-3"><a href="#interpolate-14-3" aria-hidden="true" tabindex="-1"></a>p_lr <span class="ot">&lt;-</span> a <span class="sc">+</span> <span class="fu">sqrt</span>(<span class="dv">2</span> <span class="sc">*</span> F)</span>
+<span id="interpolate-14-4"><a href="#interpolate-14-4" aria-hidden="true" tabindex="-1"></a>Q_lr <span class="ot">&lt;-</span> D0 <span class="sc">-</span> b <span class="sc">*</span> p_lr</span>
+<span id="interpolate-14-5"><a href="#interpolate-14-5" aria-hidden="true" tabindex="-1"></a>N_lr <span class="ot">&lt;-</span> Q_lr <span class="sc">/</span> q_lr</span>
+<span id="interpolate-14-6"><a href="#interpolate-14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">p =</span> p_lr, <span class="at">q =</span> q_lr, <span class="at">N =</span> N_lr)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Résoudre <span class="math inline">\(p = Cm(q)\)</span> sans imposer le profit nul : on obtient la production de court terme, pas celle de long terme.</li>
+<li>Diviser la demande <strong>de marché</strong> par <span class="math inline">\(N\)</span> avant de connaître <span class="math inline">\(N\)</span> : <span class="math inline">\(N\)</span> est justement l’inconnue.</li>
+<li>Penser que la demande influence le prix de long terme : avec libre entrée et des coûts identiques, l’offre de long terme est horizontale, seul <span class="math inline">\(N\)</span> s’ajuste.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Que devient le prix si la demande double ? Rien : c’est <span class="math inline">\(N\)</span> qui double. Reprends la marche précédente pour retrouver le seuil <span class="math inline">\(p = a + \sqrt{2F}\)</span> sur la courbe d’offre.</p>
+</div>
+<div class="cell" data-exercise="micro-cpp-2" data-check="true">
+<script type="exercise-check-micro-cpp-2-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1pY3JvLWNwcC0yIiwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6ImEgPC0gbWljcm8yJGE7IEYgPC0gbWljcm8yJEY7IGIgPC0gbWljcm8yJGI7IEQwIDwtIG1pY3JvMiREMFxucSA8LSBzcXJ0KDIgKiBGKTsgcCA8LSBhICsgcTsgTiA8LSAoRDAgLSBiICogcCkgLyBxXG5yZXMgPC0gc3VwcHJlc3NXYXJuaW5ncyhhcy5udW1lcmljKC5yZXN1bHQpKVxuaWYgKGxlbmd0aChyZXMpICE9IDMgfHwgYW55TkEocmVzKSkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiUmVudm9pZSBjKHAgPSAuLi4sIHEgPSAuLi4sIE4gPSAuLi4pLlwiKVxufSBlbHNlIGlmIChhYnMocmVzWzJdIC0gcSkgPiAxZS02KSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJMYSBwcm9kdWN0aW9uIHBhciBmaXJtZSBuJ2VzdCBwYXMgYm9ubmUgOiBtaW5pbWlzZSBsZSBjb8O7dCBtb3llbiAoQ00nKHEpID0gMCkuXCIpXG59IGVsc2UgaWYgKGFicyhyZXNbMV0gLSBwKSA+IDFlLTYpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIkxlIHByaXggZGUgbG9uZyB0ZXJtZSBlc3Qgw6lnYWwgYXUgY2/Du3QgbW95ZW4gbWluaW11bSA6IHAgPSBDTShxKS5cIilcbn0gZWxzZSBpZiAoYWJzKHJlc1szXSAtIE4pID4gMWUtNikge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiTGUgbm9tYnJlIGRlIGZpcm1lcyB2YXV0IFEgLyBxLCBhdmVjIFEgPSBEMCAtIGIgcC5cIilcbn0gZWxzZSB7XG4gIGxpc3QoY29ycmVjdCA9IFRSVUUsIG1lc3NhZ2UgPSBzcHJpbnRmKFwiQ29ycmVjdCA6IHAgPSAlZywgcSA9ICVnLCBOID0gJWcgZmlybWVzLlwiLCBwLCBxLCBOKSlcbn0ifQ==
+</script>
+</div>
+<div class="dojo-done" data-id="micro-cpp-2">
+
+</div>
+<div class="dojo-track" data-track="micro-pouvoir">
+
+</div>
+</section>
+<section id="micro-mono-0" class="level2">
+<h2 class="anchored" data-anchor-id="micro-mono-0">Recette totale et recette marginale</h2>
+<p><span class="dojo-step">Marche 1 sur 4 · Guidé</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="415" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 414;"><span id="cb5-415"><a href="#cb5-415" aria-hidden="true" tabindex="-1"></a>micro0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-mono-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">A</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">40</span><span class="op">,</span> <span class="dv">100</span>)<span class="op">,</span> <span class="dt">b</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span>])<span class="op">,</span> <span class="dt">Q</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">3</span><span class="op">,</span> <span class="dv">9</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>La demande inverse d’un monopole est <strong>P = <span><span id="ojs-element-id-10"></span></span> − <span><span id="ojs-element-id-11"></span></span> Q</strong>. Pour la quantité <strong>Q = <span><span id="ojs-element-id-12"></span></span></strong>, calcule le prix, la recette totale et la recette marginale, puis vérifie la recette marginale par un calcul numérique (vendre 0,001 unité de plus).</p>
+<div class="cell" data-exercise="micro-mono-0" data-caption="Recette marginale" data-input="micro0">
+<div>
+<div id="webr-16" class="exercise-cell">
+
+</div>
+<script type="webr-16-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJSZWNldHRlIG1hcmdpbmFsZSIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoibWljcm8tbW9uby0wIiwiaW5wdXQiOlsibWljcm8wIl0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJBIDwtIG1pY3JvMCRBOyBiIDwtIG1pY3JvMCRiOyBRIDwtIG1pY3JvMCRRXG5QICA8LSBfX19fX18gICAgICAgIyBwcml4IGF1cXVlbCBzZSB2ZW5kZW50IFEgdW5pdMOpcyAobHUgc3VyIGxhIGRlbWFuZGUpXG5SICA8LSBfX19fX18gICAgICAgIyByZWNldHRlIHRvdGFsZSA6IHByaXggeCBxdWFudGl0w6lcblJtIDwtIF9fX19fXyAgICAgICAjIHJlY2V0dGUgbWFyZ2luYWxlIDogZMOpcml2w6llIGRlIFIoUSkgcGFyIHJhcHBvcnQgw6AgUVxuaCA8LSAwLjAwMVxuUm1fbnVtIDwtICgoQSAtIGIgKiAoUSArIGgpKSAqIChRICsgaCkgLSBSKSAvIGggICAgICMgdsOpcmlmaWNhdGlvbiBudW3DqXJpcXVlIChuZSBwYXMgbW9kaWZpZXIpXG5jKFAgPSBQLCBSID0gUiwgUm0gPSBSbSwgUm1fbnVtID0gUm1fbnVtKSJ9
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="micro-mono-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Trois grandeurs s’enchaînent : le prix se lit sur la demande, la recette totale est prix × quantité, et la recette marginale est la <strong>variation</strong> de la recette totale quand on vend une unité de plus.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="micro-mono-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · les formules
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(P = A - bQ\)</span> ; <span class="math inline">\(R = P \times Q\)</span> ; <span class="math inline">\(R_m = dR/dQ = A - 2bQ\)</span>. Le calcul numérique du gabarit doit donner à peu près la même chose (il diffère de <span class="math inline">\(bh\)</span>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="micro-mono-0">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>Le prix se lit sur la demande : <span class="math inline">\(P = A - bQ\)</span>.</li>
+<li>La recette totale est <span class="math inline">\(R(Q) = P \times Q = AQ - bQ^2\)</span>.</li>
+<li>La recette marginale est sa dérivée : <span class="math inline">\(R_m(Q) = A - 2bQ\)</span>. Elle part du même point que la demande mais <strong>descend deux fois plus vite</strong> : pour vendre une unité de plus, le monopole doit baisser le prix, et cette baisse s’applique à toutes les unités déjà vendues.</li>
+<li>Le calcul numérique confirme : <span class="math inline">\([R(Q+h) - R(Q)]/h \approx R_m\)</span> (l’écart est de <span class="math inline">\(-bh\)</span>).</li>
+<li>Conséquence : <span class="math inline">\(R_m &lt; P\)</span> dès que <span class="math inline">\(Q &gt; 0\)</span>. C’est la source du pouvoir de marché : le monopole ne retire de la dernière unité que <span class="math inline">\(R_m\)</span>, pas <span class="math inline">\(P\)</span>.</li>
+</ol>
+<div class="cell" data-exercise="micro-mono-0" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="micro-mono-0">
+<code id="interpolate-18" class="solution-code d-none">A &lt;- micro0$A; b &lt;- micro0$b; Q &lt;- micro0$Q
+P  &lt;- A - b * Q
+R  &lt;- P * Q
+Rm &lt;- A - 2 * b * Q
+h &lt;- 0.001
+Rm_num &lt;- ((A - b * (Q + h)) * (Q + h) - R) / h
+c(P = P, R = R, Rm = Rm, Rm_num = Rm_num)</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-19-1"><a href="#interpolate-19-1" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> micro0<span class="sc">$</span>A; b <span class="ot">&lt;-</span> micro0<span class="sc">$</span>b; Q <span class="ot">&lt;-</span> micro0<span class="sc">$</span>Q</span>
+<span id="interpolate-19-2"><a href="#interpolate-19-2" aria-hidden="true" tabindex="-1"></a>P  <span class="ot">&lt;-</span> A <span class="sc">-</span> b <span class="sc">*</span> Q</span>
+<span id="interpolate-19-3"><a href="#interpolate-19-3" aria-hidden="true" tabindex="-1"></a>R  <span class="ot">&lt;-</span> P <span class="sc">*</span> Q</span>
+<span id="interpolate-19-4"><a href="#interpolate-19-4" aria-hidden="true" tabindex="-1"></a>Rm <span class="ot">&lt;-</span> A <span class="sc">-</span> <span class="dv">2</span> <span class="sc">*</span> b <span class="sc">*</span> Q</span>
+<span id="interpolate-19-5"><a href="#interpolate-19-5" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fl">0.001</span></span>
+<span id="interpolate-19-6"><a href="#interpolate-19-6" aria-hidden="true" tabindex="-1"></a>Rm_num <span class="ot">&lt;-</span> ((A <span class="sc">-</span> b <span class="sc">*</span> (Q <span class="sc">+</span> h)) <span class="sc">*</span> (Q <span class="sc">+</span> h) <span class="sc">-</span> R) <span class="sc">/</span> h</span>
+<span id="interpolate-19-7"><a href="#interpolate-19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">P =</span> P, <span class="at">R =</span> R, <span class="at">Rm =</span> Rm, <span class="at">Rm_num =</span> Rm_num)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Confondre recette marginale et prix : pour une firme en concurrence parfaite elles coïncident, pas pour un monopole.</li>
+<li>Oublier le 2 : <span class="math inline">\(R_m = A - bQ\)</span> serait la demande elle-même.</li>
+<li>Dériver par rapport à <span class="math inline">\(P\)</span> au lieu de <span class="math inline">\(Q\)</span>.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Cherche la quantité où <span class="math inline">\(R_m\)</span> s’annule : c’est le maximum de la recette totale. La marche suivante égalise <span class="math inline">\(R_m\)</span> au coût marginal pour trouver l’équilibre du monopole.</p>
+</div>
+<div class="cell" data-exercise="micro-mono-0" data-check="true">
+<script type="exercise-check-micro-mono-0-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1pY3JvLW1vbm8tMCIsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJBIDwtIG1pY3JvMCRBOyBiIDwtIG1pY3JvMCRiOyBRIDwtIG1pY3JvMCRRXG5QIDwtIEEgLSBiICogUTsgUiA8LSBQICogUTsgUm0gPC0gQSAtIDIgKiBiICogUVxuaCA8LSAwLjAwMTsgUm1fbnVtIDwtICgoQSAtIGIgKiAoUSArIGgpKSAqIChRICsgaCkgLSBSKSAvIGhcbnJlcyA8LSBzdXBwcmVzc1dhcm5pbmdzKGFzLm51bWVyaWMoLnJlc3VsdCkpXG5pZiAobGVuZ3RoKHJlcykgIT0gNCB8fCBhbnlOQShyZXMpKSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJSZW52b2llIGMoUCA9IC4uLiwgUiA9IC4uLiwgUm0gPSAuLi4sIFJtX251bSA9IC4uLikgOiBnYXJkZSBsYSBkZXJuacOocmUgbGlnbmUgZHUgZ2FiYXJpdC5cIilcbn0gZWxzZSBpZiAoYWJzKHJlc1sxXSAtIFApID4gMWUtOCkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiTGUgcHJpeCBzZSBsaXQgc3VyIGxhIGRlbWFuZGUgOiBQID0gQSAtIGIgUS5cIilcbn0gZWxzZSBpZiAoYWJzKHJlc1syXSAtIFIpID4gMWUtOCkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiUmVjZXR0ZSB0b3RhbGUgPSBwcml4IHggcXVhbnRpdMOpID0gUCBRLlwiKVxufSBlbHNlIGlmIChhYnMocmVzWzNdIC0gUm0pID4gMWUtOCkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiUmVjZXR0ZSBtYXJnaW5hbGUgPSBkw6lyaXbDqWUgZGUgUihRKSA9IEEgLSAyIGIgUSAocGVudGUgZG91YmxlIGRlIGNlbGxlIGRlIGxhIGRlbWFuZGUpLlwiKVxufSBlbHNlIGlmIChhYnMocmVzWzRdIC0gUm1fbnVtKSA+IDFlLTYpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIkxhIGxpZ25lIGRlIHbDqXJpZmljYXRpb24gbnVtw6lyaXF1ZSBkb2l0IHJlc3RlciBjZWxsZSBkdSBnYWJhcml0LlwiKVxufSBlbHNlIHtcbiAgbGlzdChjb3JyZWN0ID0gVFJVRSwgbWVzc2FnZSA9IHNwcmludGYoXCJDb3JyZWN0IDogw6AgUSA9ICVnLCBsZSBwcml4IGVzdCAlZyBtYWlzIGxhIHJlY2V0dGUgbWFyZ2luYWxlIHNldWxlbWVudCAlZy5cIiwgUSwgUCwgUm0pKVxufSJ9
+</script>
+</div>
+<div class="dojo-done" data-id="micro-mono-0">
+
+</div>
+</section>
+<section id="micro-mono-1" class="level2">
+<h2 class="anchored" data-anchor-id="micro-mono-1">Monopole et perte sèche</h2>
+<p><span class="dojo-step">Marche 2 sur 4 · À compléter</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb6" data-startfrom="511" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 510;"><span id="cb6-511"><a href="#cb6-511" aria-hidden="true" tabindex="-1"></a>micro3 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-mono-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="kw">const</span> b <span class="op">=</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">4</span>])<span class="op">,</span> c <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">10</span>)<span class="op">,</span> k <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">5</span><span class="op">,</span> <span class="dv">15</span>)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">A</span><span class="op">:</span> c <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> b <span class="op">*</span> k<span class="op">,</span> b<span class="op">,</span> c }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Un monopole fait face à la demande inverse <strong>P = <span><span id="ojs-element-id-13"></span></span> − <span><span id="ojs-element-id-14"></span></span> Q</strong> avec un coût total <strong>C(Q) = <span><span id="ojs-element-id-15"></span></span> Q</strong>. Calcule l’équilibre de monopole, son profit et la perte sèche par rapport à la concurrence parfaite.</p>
+<div class="cell" data-exercise="micro-mono-1" data-caption="Monopole" data-input="micro3">
+<div>
+<div id="webr-21" class="exercise-cell">
+
+</div>
+<script type="webr-21-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJNb25vcG9sZSIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoibWljcm8tbW9uby0xIiwiaW5wdXQiOlsibWljcm8zIl0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJBIDwtIG1pY3JvMyRBOyBiIDwtIG1pY3JvMyRiOyBjIDwtIG1pY3JvMyRjXG4jIFJlY2V0dGUgdG90YWxlIFIoUSkgPSAoQSAtIGJRKSBRLCBkb25jIFJtKFEpID0gQSAtIDJiUS4gQ29uZGl0aW9uIDogUm0gPSBDbSA9IGNcblFfbSA8LSBfX19fX19cblBfbSA8LSBfX19fX18gICAgICAgICMgbHUgc3VyIGxhIGRlbWFuZGVcbnByb2ZpdCA8LSBfX19fX19cblFfYyA8LSBfX19fX18gICAgICAgICMgcXVhbnRpdMOpIGNvbmN1cnJlbnRpZWxsZSAoUCA9IENtKVxuZHdsIDwtIF9fX19fXyAgICAgICAgIyB0cmlhbmdsZSBkZSBwZXJ0ZSBzw6hjaGUgOiAwLDUgKiAoUF9tIC0gYykgKiAoUV9jIC0gUV9tKVxuYyhRID0gUV9tLCBQID0gUF9tLCBwcm9maXQgPSBwcm9maXQsIERXTCA9IGR3bCkifQ==
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="micro-mono-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Un monopole choisit la <strong>quantité</strong> et laisse la demande fixer le prix. Il compare ce que lui rapporte la dernière unité vendue (recette marginale) à ce qu’elle lui coûte (coût marginal).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="micro-mono-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(R_m = A - 2bQ = c\)</span> donne <span class="math inline">\(Q_m = (A-c)/(2b)\)</span>. Remplace dans la demande pour <span class="math inline">\(P_m\)</span>. La quantité concurrentielle résout <span class="math inline">\(A - bQ = c\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="micro-mono-1">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li><span class="math inline">\(R(Q) = (A - bQ)\,Q\)</span> ; en dérivant, <span class="math inline">\(R_m(Q) = A - 2bQ\)</span> : pour vendre une unité de plus il faut baisser le prix de <strong>toutes</strong> les unités, d’où une pente deux fois plus forte que celle de la demande.</li>
+<li>Condition de premier ordre : <span class="math inline">\(R_m = c\)</span>, donc <span class="math inline">\(Q_m = (A-c)/(2b)\)</span>.</li>
+<li>Le prix se lit <strong>sur la demande</strong> (pas sur <span class="math inline">\(R_m\)</span>) : <span class="math inline">\(P_m = A - bQ_m = (A+c)/2\)</span>.</li>
+<li>Profit : <span class="math inline">\((P_m - c)\,Q_m\)</span>.</li>
+<li>Référence concurrentielle : <span class="math inline">\(P = c\)</span> donne <span class="math inline">\(Q_c = (A-c)/b = 2Q_m\)</span>. Le monopole produit la moitié de la quantité concurrentielle.</li>
+<li>Perte sèche : triangle de base <span class="math inline">\(Q_c - Q_m\)</span> et de hauteur <span class="math inline">\(P_m - c\)</span>, soit <span class="math inline">\(\tfrac12 (P_m-c)(Q_c-Q_m) = (A-c)^2/(8b)\)</span>.</li>
+</ol>
+<div class="cell" data-exercise="micro-mono-1" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="micro-mono-1">
+<code id="interpolate-23" class="solution-code d-none">A &lt;- micro3$A; b &lt;- micro3$b; c &lt;- micro3$c
+Q_m &lt;- (A - c) / (2 * b)
+P_m &lt;- A - b * Q_m
+profit &lt;- (P_m - c) * Q_m
+Q_c &lt;- (A - c) / b
+dwl &lt;- 0.5 * (P_m - c) * (Q_c - Q_m)
+c(Q = Q_m, P = P_m, profit = profit, DWL = dwl)</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-24-1"><a href="#interpolate-24-1" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> micro3<span class="sc">$</span>A; b <span class="ot">&lt;-</span> micro3<span class="sc">$</span>b; c <span class="ot">&lt;-</span> micro3<span class="sc">$</span>c</span>
+<span id="interpolate-24-2"><a href="#interpolate-24-2" aria-hidden="true" tabindex="-1"></a>Q_m <span class="ot">&lt;-</span> (A <span class="sc">-</span> c) <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> b)</span>
+<span id="interpolate-24-3"><a href="#interpolate-24-3" aria-hidden="true" tabindex="-1"></a>P_m <span class="ot">&lt;-</span> A <span class="sc">-</span> b <span class="sc">*</span> Q_m</span>
+<span id="interpolate-24-4"><a href="#interpolate-24-4" aria-hidden="true" tabindex="-1"></a>profit <span class="ot">&lt;-</span> (P_m <span class="sc">-</span> c) <span class="sc">*</span> Q_m</span>
+<span id="interpolate-24-5"><a href="#interpolate-24-5" aria-hidden="true" tabindex="-1"></a>Q_c <span class="ot">&lt;-</span> (A <span class="sc">-</span> c) <span class="sc">/</span> b</span>
+<span id="interpolate-24-6"><a href="#interpolate-24-6" aria-hidden="true" tabindex="-1"></a>dwl <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="sc">*</span> (P_m <span class="sc">-</span> c) <span class="sc">*</span> (Q_c <span class="sc">-</span> Q_m)</span>
+<span id="interpolate-24-7"><a href="#interpolate-24-7" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">Q =</span> Q_m, <span class="at">P =</span> P_m, <span class="at">profit =</span> profit, <span class="at">DWL =</span> dwl)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Lire le prix sur la courbe de recette marginale : elle donne la valeur de la dernière unité pour le monopole, pas le prix payé.</li>
+<li>Oublier le facteur 2 dans <span class="math inline">\(R_m = A - 2bQ\)</span> (on retombe sur la demande).</li>
+<li>Prendre le profit pour la perte sèche : le profit est un transfert du consommateur vers le producteur ; seul le triangle est détruit pour la société.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Vérifie que ta perte sèche vaut <span class="math inline">\((A-c)^2/(8b)\)</span>, puis fais varier <span class="math inline">\(c\)</span> dans le laboratoire en haut de page. La marche suivante passe à plusieurs firmes.</p>
+</div>
+<div class="cell" data-exercise="micro-mono-1" data-check="true">
+<script type="exercise-check-micro-mono-1-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1pY3JvLW1vbm8tMSIsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJBIDwtIG1pY3JvMyRBOyBiIDwtIG1pY3JvMyRiOyBjIDwtIG1pY3JvMyRjXG5RbSA8LSAoQSAtIGMpIC8gKDIgKiBiKTsgUG0gPC0gKEEgKyBjKSAvIDI7IFFjIDwtIChBIC0gYykgLyBiXG5leHBfIDwtIGMoUW0sIFBtLCAoUG0gLSBjKSAqIFFtLCAwLjUgKiAoUG0gLSBjKSAqIChRYyAtIFFtKSlcbnJlcyA8LSBzdXBwcmVzc1dhcm5pbmdzKGFzLm51bWVyaWMoLnJlc3VsdCkpXG5pZiAobGVuZ3RoKHJlcykgIT0gNCB8fCBhbnlOQShyZXMpKSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJSZW52b2llIGMoUSA9IC4uLiwgUCA9IC4uLiwgcHJvZml0ID0gLi4uLCBEV0wgPSAuLi4pLlwiKVxufSBlbHNlIGlmIChhYnMocmVzWzFdIC0gZXhwX1sxXSkgPiAxZS02KSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJRdWFudGl0w6kgaW5jb3JyZWN0ZSA6IMOpZ2FsaXNlIGxhIHJlY2V0dGUgbWFyZ2luYWxlIEEgLSAyYlEgYXUgY2/Du3QgbWFyZ2luYWwgYy5cIilcbn0gZWxzZSBpZiAoYWJzKHJlc1syXSAtIGV4cF9bMl0pID4gMWUtNikge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiTGUgcHJpeCBzZSBsaXQgc3VyIGxhIGRlbWFuZGUgOiBQID0gQSAtIGIgUV9tLlwiKVxufSBlbHNlIGlmIChhYnMocmVzWzNdIC0gZXhwX1szXSkgPiAxZS02KSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJQcm9maXQgPSAoUCAtIGMpIFEgKHBhcyBkZSBjb8O7dCBmaXhlIGljaSkuXCIpXG59IGVsc2UgaWYgKGFicyhyZXNbNF0gLSBleHBfWzRdKSA+IDFlLTYpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIlBlcnRlIHPDqGNoZSA9IDAsNSAoUF9tIC0gYykoUV9jIC0gUV9tKSA6IHRyaWFuZ2xlIGVudHJlIGRlbWFuZGUgZXQgQ20uXCIpXG59IGVsc2Uge1xuICBsaXN0KGNvcnJlY3QgPSBUUlVFLCBtZXNzYWdlID0gc3ByaW50ZihcIkNvcnJlY3QuIExlIG1vbm9wb2xlIHByb2R1aXQgJWcgYXUgbGlldSBkZSAlZyBldCBkw6l0cnVpdCAlZyBkZSBzdXJwbHVzLlwiLCBRbSwgUWMsIGV4cF9bNF0pKVxufSJ9
+</script>
+</div>
+<div class="dojo-done" data-id="micro-mono-1">
+
+</div>
+</section>
+<section id="micro-cournot-0" class="level2">
+<h2 class="anchored" data-anchor-id="micro-cournot-0">Duopole de Cournot : meilleures réponses</h2>
+<p><span class="dojo-step">Marche 3 sur 4 · À compléter</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb7" data-startfrom="599" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 598;"><span id="cb7-599"><a href="#cb7-599" aria-hidden="true" tabindex="-1"></a>micro5 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-cournot-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">A</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">60</span><span class="op">,</span> <span class="dv">120</span>)<span class="op">,</span> <span class="dt">b</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">3</span>)<span class="op">,</span> <span class="dt">c</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">5</span><span class="op">,</span> <span class="dv">20</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Deux firmes de coût marginal <strong>c = <span><span id="ojs-element-id-16"></span></span></strong> se font concurrence en quantités sur la demande <strong>P = <span><span id="ojs-element-id-17"></span></span> − <span><span id="ojs-element-id-18"></span></span> Q</strong>. Écris la fonction de meilleure réponse, puis laisse les deux firmes s’ajuster tour à tour jusqu’à l’équilibre et compare avec la formule fermée.</p>
+<div class="cell" data-exercise="micro-cournot-0" data-caption="Meilleures réponses" data-input="micro5">
+<div>
+<div id="webr-26" class="exercise-cell">
+
+</div>
+<script type="webr-26-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJNZWlsbGV1cmVzIHLDqXBvbnNlcyIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoibWljcm8tY291cm5vdC0wIiwiaW5wdXQiOlsibWljcm81Il0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJBIDwtIG1pY3JvNSRBOyBiIDwtIG1pY3JvNSRiOyBjIDwtIG1pY3JvNSRjXG4jIE1laWxsZXVyZSByw6lwb25zZSA6IHF1YW50aXTDqSBxdWkgbWF4aW1pc2UgbGUgcHJvZml0IGVuIHByZW5hbnQgY2VsbGUgZGUgbCdhdXRyZSBjb21tZSBkb25uw6llXG5iciA8LSBmdW5jdGlvbihxX2F1dHJlKSBfX19fX19cbnExIDwtIDA7IHEyIDwtIDBcbmZvciAoayBpbiAxOjYwKSB7IHExIDwtIGJyKHEyKTsgcTIgPC0gYnIocTEpIH0gICAgICAgIyBhanVzdGVtZW50cyBzdWNjZXNzaWZzXG5xX2Zvcm11bGUgPC0gX19fX19fICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBzb2x1dGlvbiBzeW3DqXRyaXF1ZSBlbiBmb3JtZSBmZXJtw6llXG5jKHExID0gcTEsIHEyID0gcTIsIGZvcm11bGUgPSBxX2Zvcm11bGUpIn0=
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="micro-cournot-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>La meilleure réponse maximise <span class="math inline">\(\big(A - b(q_1 + q_2) - c\big)\,q_1\)</span> par rapport à <span class="math inline">\(q_1\)</span>, avec <span class="math inline">\(q_2\)</span> <strong>donné</strong>. Dérive, annule, isole <span class="math inline">\(q_1\)</span> en fonction de <span class="math inline">\(q_2\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="micro-cournot-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · les formules
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(q_1 = \dfrac{A - c - b\,q_2}{2b}\)</span>. À l’équilibre symétrique <span class="math inline">\(q_1 = q_2 = q\)</span>, donc <span class="math inline">\(3bq = A - c\)</span>, soit <span class="math inline">\(q = \dfrac{A-c}{3b}\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="micro-cournot-0">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>La firme 1 prend <span class="math inline">\(q_2\)</span> comme donné : <span class="math inline">\(\pi_1 = (A - b(q_1+q_2) - c)\,q_1\)</span>.</li>
+<li>Condition du premier ordre : <span class="math inline">\(A - bq_2 - 2bq_1 - c = 0\)</span>, d’où la meilleure réponse <span class="math inline">\(q_1 = \dfrac{A - c - bq_2}{2b}\)</span>. Elle est décroissante : si l’autre produit plus, je produis moins.</li>
+<li>Un équilibre de Nash est un point fixe des deux meilleures réponses. La boucle l’atteint car la pente de la meilleure réponse vaut <span class="math inline">\(-1/2\)</span> : chaque tour divise l’erreur par 2 (60 tours suffisent largement).</li>
+<li>Par symétrie <span class="math inline">\(q_1 = q_2 = q\)</span> : <span class="math inline">\(q = \dfrac{A-c-bq}{2b}\)</span>, donc <span class="math inline">\(q^* = \dfrac{A-c}{3b}\)</span>.</li>
+<li>Production totale : <span class="math inline">\(2(A-c)/(3b)\)</span>, soit les deux tiers de la quantité concurrentielle <span class="math inline">\((A-c)/b\)</span> (un cartel produirait la moitié, la concurrence parfaite le tout).</li>
+</ol>
+<div class="cell" data-exercise="micro-cournot-0" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="micro-cournot-0">
+<code id="interpolate-28" class="solution-code d-none">A &lt;- micro5$A; b &lt;- micro5$b; c &lt;- micro5$c
+br &lt;- function(q_autre) (A - c - b * q_autre) / (2 * b)
+q1 &lt;- 0; q2 &lt;- 0
+for (k in 1:60) { q1 &lt;- br(q2); q2 &lt;- br(q1) }
+q_formule &lt;- (A - c) / (3 * b)
+c(q1 = q1, q2 = q2, formule = q_formule)</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-29-1"><a href="#interpolate-29-1" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> micro5<span class="sc">$</span>A; b <span class="ot">&lt;-</span> micro5<span class="sc">$</span>b; c <span class="ot">&lt;-</span> micro5<span class="sc">$</span>c</span>
+<span id="interpolate-29-2"><a href="#interpolate-29-2" aria-hidden="true" tabindex="-1"></a>br <span class="ot">&lt;-</span> <span class="cf">function</span>(q_autre) (A <span class="sc">-</span> c <span class="sc">-</span> b <span class="sc">*</span> q_autre) <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> b)</span>
+<span id="interpolate-29-3"><a href="#interpolate-29-3" aria-hidden="true" tabindex="-1"></a>q1 <span class="ot">&lt;-</span> <span class="dv">0</span>; q2 <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="interpolate-29-4"><a href="#interpolate-29-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">60</span>) { q1 <span class="ot">&lt;-</span> <span class="fu">br</span>(q2); q2 <span class="ot">&lt;-</span> <span class="fu">br</span>(q1) }</span>
+<span id="interpolate-29-5"><a href="#interpolate-29-5" aria-hidden="true" tabindex="-1"></a>q_formule <span class="ot">&lt;-</span> (A <span class="sc">-</span> c) <span class="sc">/</span> (<span class="dv">3</span> <span class="sc">*</span> b)</span>
+<span id="interpolate-29-6"><a href="#interpolate-29-6" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">q1 =</span> q1, <span class="at">q2 =</span> q2, <span class="at">formule =</span> q_formule)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Oublier de diviser par <span class="math inline">\(2b\)</span> : on ignore l’effet de sa propre quantité sur le prix.</li>
+<li>Croire que l’équilibre est le monopole partagé : chaque firme ignore l’effet de sa quantité sur le <strong>profit de l’autre</strong>, d’où une production totale supérieure à celle du cartel.</li>
+<li>Mélanger <code>q_autre</code> et sa propre quantité dans <code>br</code> : la fonction ne doit dépendre que de la quantité de l’adversaire.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> La marche suivante généralise à <span class="math inline">\(N\)</span> firmes avec une fonction de <span class="math inline">\(N\)</span> ; pour <span class="math inline">\(N=2\)</span> on doit retrouver <span class="math inline">\((A-c)/(3b)\)</span>. Essaie d’autres points de départ pour <span class="math inline">\(q_1, q_2\)</span> : l’équilibre ne change pas.</p>
+</div>
+<div class="cell" data-exercise="micro-cournot-0" data-check="true">
+<script type="exercise-check-micro-cournot-0-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1pY3JvLWNvdXJub3QtMCIsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJBIDwtIG1pY3JvNSRBOyBiIDwtIG1pY3JvNSRiOyBjIDwtIG1pY3JvNSRjXG5xIDwtIChBIC0gYykgLyAoMyAqIGIpXG5yZXMgPC0gc3VwcHJlc3NXYXJuaW5ncyhhcy5udW1lcmljKC5yZXN1bHQpKVxuaWYgKGxlbmd0aChyZXMpICE9IDMgfHwgYW55TkEocmVzKSkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiUmVudm9pZSBjKHExID0gLi4uLCBxMiA9IC4uLiwgZm9ybXVsZSA9IC4uLikuXCIpXG59IGVsc2UgaWYgKGFicyhyZXNbMV0gLSBxKSA+IDFlLTYgfHwgYWJzKHJlc1syXSAtIHEpID4gMWUtNikge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiTGVzIGFqdXN0ZW1lbnRzIG5lIGNvbnZlcmdlbnQgcGFzIHZlcnMgbCfDqXF1aWxpYnJlIDogbGEgbWVpbGxldXJlIHLDqXBvbnNlIGVzdCAoQSAtIGMgLSBiIHFfYXV0cmUpIC8gKDIgYikuXCIpXG59IGVsc2UgaWYgKGFicyhyZXNbM10gLSBxKSA+IDFlLTgpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIkZvcm11bGUgZmVybcOpZSA6IHBhciBzeW3DqXRyaWUgcSA9IChBIC0gYykgLyAoMyBiKS5cIilcbn0gZWxzZSB7XG4gIGxpc3QoY29ycmVjdCA9IFRSVUUsIG1lc3NhZ2UgPSBzcHJpbnRmKFwiQ29ycmVjdCA6IGNoYXF1ZSBmaXJtZSBwcm9kdWl0ICUuM2YgOyBsZXMgYWp1c3RlbWVudHMgYXR0ZWlnbmVudCBsYSBmb3JtdWxlIGZlcm3DqWUuXCIsIHEpKVxufSJ9
+</script>
+</div>
+<div class="dojo-done" data-id="micro-cournot-0">
+
+</div>
+</section>
+<section id="micro-cournot-1" class="level2">
+<h2 class="anchored" data-anchor-id="micro-cournot-1">Cournot à N firmes : prix d’équilibre</h2>
+<p><span class="dojo-step">Marche 4 sur 4 · Autonome</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb8" data-startfrom="0" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line -1;"><span id="cb8-0"><a href="#cb8-0" aria-hidden="true" tabindex="-1"></a>micro4 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-cournot-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">A</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">60</span><span class="op">,</span> <span class="dv">120</span>)<span class="op">,</span> <span class="dt">b</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">3</span>)<span class="op">,</span> <span class="dt">c</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">5</span><span class="op">,</span> <span class="dv">20</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-8" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>N firmes identiques, de coût marginal constant <strong>c = <span><span id="ojs-element-id-19"></span></span></strong> et sans coût fixe, se font concurrence en quantités (Cournot) sur le marché de demande <strong>P = <span><span id="ojs-element-id-20"></span></span> − <span><span id="ojs-element-id-21"></span></span> Q</strong>. Écris la fonction <code>cournot_price(N)</code> qui renvoie le prix d’équilibre, puis évalue-la pour N = 1, …, 6.</p>
+<div class="cell" data-exercise="micro-cournot-1" data-caption="Une fonction de N" data-input="micro4">
+<div>
+<div id="webr-31" class="exercise-cell">
+
+</div>
+<script type="webr-31-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJVbmUgZm9uY3Rpb24gZGUgTiIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoibWljcm8tY291cm5vdC0xIiwiaW5wdXQiOlsibWljcm80Il0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJBIDwtIG1pY3JvNCRBOyBiIDwtIG1pY3JvNCRiOyBjIDwtIG1pY3JvNCRjXG5jb3Vybm90X3ByaWNlIDwtIGZ1bmN0aW9uKE4pIHtcbiAgIyBNZWlsbGV1cmUgcsOpcG9uc2UgOiBxX2kgPSAoQSAtIGMgLSBiICogUV9hdXRyZXMpIC8gKDJiKS4gUGFyIHN5bcOpdHJpZSwgcV9pID0gKEEgLSBjKSAvICgoTiArIDEpIGIpXG4gIHFfaSA8LSBfX19fX19cbiAgX19fX19fICAgIyBwcml4IGQnw6lxdWlsaWJyZSA6IFAgPSBBIC0gYiAqIE4gKiBxX2lcbn1cbnNhcHBseSgxOjYsIGNvdXJub3RfcHJpY2UpIn0=
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="micro-cournot-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Écris d’abord le problème d’<strong>une</strong> firme en prenant la quantité des autres comme donnée, puis impose la symétrie : toutes les firmes produisent la même quantité <span class="math inline">\(q\)</span>. Le résultat sera une fonction de <span class="math inline">\(N\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="micro-cournot-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>La condition de premier ordre de la firme <span class="math inline">\(i\)</span> est <span class="math inline">\(A - bQ - b q_i = c\)</span>. Avec <span class="math inline">\(Q = N q\)</span> et des firmes symétriques : <span class="math inline">\(A - c = b(N+1) q\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="micro-cournot-1">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>Profit de la firme <span class="math inline">\(i\)</span> : <span class="math inline">\(\big(A - b(q_i + Q_{-i}) - c\big)\,q_i\)</span>.</li>
+<li>Condition du premier ordre : <span class="math inline">\(A - bQ_{-i} - 2bq_i = c\)</span>, d’où la meilleure réponse <span class="math inline">\(q_i = (A - c - bQ_{-i})/(2b)\)</span>.</li>
+<li>Symétrie : <span class="math inline">\(Q_{-i} = (N-1)q\)</span> et <span class="math inline">\(q_i = q\)</span>, donc <span class="math inline">\((N+1)\,b\,q = A - c\)</span> et <span class="math inline">\(q = \dfrac{A-c}{(N+1)b}\)</span>.</li>
+<li>Quantité totale <span class="math inline">\(Q = Nq = \tfrac{N}{N+1}\,Q_c\)</span>, prix <span class="math inline">\(P = A - bQ = \dfrac{A + Nc}{N+1}\)</span>.</li>
+<li>Contrôles : <span class="math inline">\(N=1\)</span> redonne le monopole <span class="math inline">\((A+c)/2\)</span> ; quand <span class="math inline">\(N\to\infty\)</span>, <span class="math inline">\(P\to c\)</span> (concurrence parfaite).</li>
+</ol>
+<div class="cell" data-exercise="micro-cournot-1" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="micro-cournot-1">
+<code id="interpolate-33" class="solution-code d-none">A &lt;- micro4$A; b &lt;- micro4$b; c &lt;- micro4$c
+cournot_price &lt;- function(N) {
+  q_i &lt;- (A - c) / ((N + 1) * b)
+  A - b * N * q_i
+}
+sapply(1:6, cournot_price)</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-34-1"><a href="#interpolate-34-1" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> micro4<span class="sc">$</span>A; b <span class="ot">&lt;-</span> micro4<span class="sc">$</span>b; c <span class="ot">&lt;-</span> micro4<span class="sc">$</span>c</span>
+<span id="interpolate-34-2"><a href="#interpolate-34-2" aria-hidden="true" tabindex="-1"></a>cournot_price <span class="ot">&lt;-</span> <span class="cf">function</span>(N) {</span>
+<span id="interpolate-34-3"><a href="#interpolate-34-3" aria-hidden="true" tabindex="-1"></a>  q_i <span class="ot">&lt;-</span> (A <span class="sc">-</span> c) <span class="sc">/</span> ((N <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">*</span> b)</span>
+<span id="interpolate-34-4"><a href="#interpolate-34-4" aria-hidden="true" tabindex="-1"></a>  A <span class="sc">-</span> b <span class="sc">*</span> N <span class="sc">*</span> q_i</span>
+<span id="interpolate-34-5"><a href="#interpolate-34-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="interpolate-34-6"><a href="#interpolate-34-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, cournot_price)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Écrire <span class="math inline">\(q_i = (A-c)/(2b)\)</span> : on oublie la réaction aux autres firmes (c’est la quantité de monopole).</li>
+<li>Remplacer <span class="math inline">\(Q\)</span> par <span class="math inline">\(q\)</span> au lieu de <span class="math inline">\(Nq\)</span> dans la demande.</li>
+<li>Confondre <span class="math inline">\(N+1\)</span> et <span class="math inline">\(N\)</span> : le « +1 » vient de la dérivée de <span class="math inline">\(q_i^2\)</span> (la firme internalise l’effet de sa propre quantité sur le prix).</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Ajoute le profit par firme <span class="math inline">\((P-c)q\)</span> et la perte sèche pour <span class="math inline">\(N = 1, \dots, 6\)</span> : elle décroît comme <span class="math inline">\(1/(N+1)^2\)</span>. Compare avec le laboratoire en haut de page.</p>
+</div>
+<div class="cell" data-exercise="micro-cournot-1" data-check="true">
+<script type="exercise-check-micro-cournot-1-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1pY3JvLWNvdXJub3QtMSIsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJBIDwtIG1pY3JvNCRBOyBiIDwtIG1pY3JvNCRiOyBjIDwtIG1pY3JvNCRjXG5leHBfIDwtIChBICsgKDE6NikgKiBjKSAvICgoMTo2KSArIDEpXG5yZXMgPC0gc3VwcHJlc3NXYXJuaW5ncyhhcy5udW1lcmljKC5yZXN1bHQpKVxuaWYgKGxlbmd0aChyZXMpICE9IDYgfHwgYW55TkEocmVzKSkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiVGVybWluZSBsYSBmb25jdGlvbiBwdWlzIHJlbnZvaWUgc2FwcGx5KDE6NiwgY291cm5vdF9wcmljZSkuXCIpXG59IGVsc2UgaWYgKGlzVFJVRShhbGwuZXF1YWwocmVzLCBleHBfLCB0b2xlcmFuY2UgPSAxZS04KSkpIHtcbiAgbGlzdChjb3JyZWN0ID0gVFJVRSwgbWVzc2FnZSA9IHNwcmludGYoXCJDb3JyZWN0IDogUCgxKSA9ICVnIChtb25vcG9sZSkgZXQgUCg2KSA9ICUuMmYsIGTDqWrDoCBwcm9jaGUgZHUgY2/Du3QgbWFyZ2luYWwgJWcuXCIsIGV4cF9bMV0sIGV4cF9bNl0sIGMpKVxufSBlbHNlIGlmIChhYnMocmVzWzFdIC0gKEEgKyBjKSAvIDIpID4gMWUtNikge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiUG91ciBOID0gMSB0dSBkZXZyYWlzIHJldHJvdXZlciBsZSBwcml4IGRlIG1vbm9wb2xlIChBICsgYykgLyAyLlwiKVxufSBlbHNlIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIlbDqXJpZmllIGxhIGZvcm11bGUgOiBQID0gQSAtIGIgTiBxX2kgYXZlYyBxX2kgPSAoQSAtIGMpIC8gKChOICsgMSkgYikuXCIpXG59In0=
+</script>
+</div>
+<div class="dojo-done" data-id="micro-cournot-1">
+
+</div>
+</section>
+<section id="fiche-de-rappel" class="level2">
+<h2 class="anchored" data-anchor-id="fiche-de-rappel">Fiche de rappel</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Structure</th>
+<th>Quantité</th>
+<th>Prix</th>
+<th>Remarque</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Concurrence parfaite</td>
+<td><span class="math inline">\(Q_c = (A-c)/b\)</span></td>
+<td><span class="math inline">\(c\)</span></td>
+<td>Surplus total maximal</td>
+</tr>
+<tr class="even">
+<td>Monopole</td>
+<td><span class="math inline">\(Q_c/2\)</span></td>
+<td><span class="math inline">\((A+c)/2\)</span></td>
+<td>Perte sèche = <span class="math inline">\((A-c)^2/(8b)\)</span></td>
+</tr>
+<tr class="odd">
+<td>Cournot, <span class="math inline">\(N\)</span> firmes</td>
+<td><span class="math inline">\(\frac{N}{N+1}Q_c\)</span></td>
+<td><span class="math inline">\(\frac{A+Nc}{N+1}\)</span></td>
+<td>Tend vers <span class="math inline">\(c\)</span> quand <span class="math inline">\(N \to \infty\)</span></td>
+</tr>
+<tr class="even">
+<td>Stackelberg (1+1)</td>
+<td><span class="math inline">\(\frac{3}{4}Q_c\)</span></td>
+<td><span class="math inline">\(\frac{A+3c}{4}\)</span></td>
+<td>Leader : <span class="math inline">\(Q_c/2\)</span>, suiveur : <span class="math inline">\(Q_c/4\)</span></td>
+</tr>
+<tr class="odd">
+<td>Bertrand (homogène, <span class="math inline">\(c\)</span> égal)</td>
+<td><span class="math inline">\(Q_c\)</span></td>
+<td><span class="math inline">\(c\)</span></td>
+<td>Profit nul avec deux firmes</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="entraîne-toi-sur-les-cartes" class="level2">
+<h2 class="anchored" data-anchor-id="entraîne-toi-sur-les-cartes">Entraîne-toi sur les cartes</h2>
+<div class="dojo-cards" data-course="micro" data-n="5">
+
+</div>
+<div class="dojo-quiz" data-course="micro" data-n="3">
+
+</div>
+
+
+<script type="webr-data">
+eyJvcHRpb25zIjp7ImJhc2VVcmwiOiJodHRwczovL3dlYnIuci13YXNtLm9yZy92MC42LjAvIn0sInBhY2thZ2VzIjp7InBrZ3MiOlsiZXZhbHVhdGUiLCJrbml0ciIsImh0bWx0b29scyJdLCJyZXBvcyI6W119LCJyZW5kZXJfZGYiOiJkZWZhdWx0In0=
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0zMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMzE7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0zMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzMxID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMzEtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICAvLyBEZWZhdWx0IGV4ZXJjaXNlIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oXG4gICAge1xuICAgICAgaWQ6IFwid2Vici0zMS1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzMxID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8zMSwge21pY3JvNH0pO1xuX3dlYnJfZmVlZGJhY2tfMzEgPSB7XG4gIGNvbnN0IHsgV2ViUkdyYWRlciB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgZW1wdHlGZWVkYmFjayA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xuXG4gIGNvbnN0IGdyYWRlciA9IG5ldyBXZWJSR3JhZGVyKF93ZWJyX3ZhbHVlXzMxLmV2YWx1YXRvcik7XG4gIGNvbnN0IGZlZWRiYWNrID0gYXdhaXQgZ3JhZGVyLmdyYWRlRXhlcmNpc2UoKTtcbiAgaWYgKCFmZWVkYmFjaykgcmV0dXJuIGVtcHR5RmVlZGJhY2s7XG4gIHJldHVybiBmZWVkYmFjaztcbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0yNiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMjY7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0yNiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzI2ID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMjYtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICAvLyBEZWZhdWx0IGV4ZXJjaXNlIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oXG4gICAge1xuICAgICAgaWQ6IFwid2Vici0yNi1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzI2ID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8yNiwge21pY3JvNX0pO1xuX3dlYnJfZmVlZGJhY2tfMjYgPSB7XG4gIGNvbnN0IHsgV2ViUkdyYWRlciB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgZW1wdHlGZWVkYmFjayA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xuXG4gIGNvbnN0IGdyYWRlciA9IG5ldyBXZWJSR3JhZGVyKF93ZWJyX3ZhbHVlXzI2LmV2YWx1YXRvcik7XG4gIGNvbnN0IGZlZWRiYWNrID0gYXdhaXQgZ3JhZGVyLmdyYWRlRXhlcmNpc2UoKTtcbiAgaWYgKCFmZWVkYmFjaykgcmV0dXJuIGVtcHR5RmVlZGJhY2s7XG4gIHJldHVybiBmZWVkYmFjaztcbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0yMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMjE7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0yMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzIxID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMjEtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICAvLyBEZWZhdWx0IGV4ZXJjaXNlIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oXG4gICAge1xuICAgICAgaWQ6IFwid2Vici0yMS1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzIxID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8yMSwge21pY3JvM30pO1xuX3dlYnJfZmVlZGJhY2tfMjEgPSB7XG4gIGNvbnN0IHsgV2ViUkdyYWRlciB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgZW1wdHlGZWVkYmFjayA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xuXG4gIGNvbnN0IGdyYWRlciA9IG5ldyBXZWJSR3JhZGVyKF93ZWJyX3ZhbHVlXzIxLmV2YWx1YXRvcik7XG4gIGNvbnN0IGZlZWRiYWNrID0gYXdhaXQgZ3JhZGVyLmdyYWRlRXhlcmNpc2UoKTtcbiAgaWYgKCFmZWVkYmFjaykgcmV0dXJuIGVtcHR5RmVlZGJhY2s7XG4gIHJldHVybiBmZWVkYmFjaztcbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0xNiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMTY7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0xNiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzE2ID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMTYtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICAvLyBEZWZhdWx0IGV4ZXJjaXNlIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oXG4gICAge1xuICAgICAgaWQ6IFwid2Vici0xNi1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzE2ID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8xNiwge21pY3JvMH0pO1xuX3dlYnJfZmVlZGJhY2tfMTYgPSB7XG4gIGNvbnN0IHsgV2ViUkdyYWRlciB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgZW1wdHlGZWVkYmFjayA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xuXG4gIGNvbnN0IGdyYWRlciA9IG5ldyBXZWJSR3JhZGVyKF93ZWJyX3ZhbHVlXzE2LmV2YWx1YXRvcik7XG4gIGNvbnN0IGZlZWRiYWNrID0gYXdhaXQgZ3JhZGVyLmdyYWRlRXhlcmNpc2UoKTtcbiAgaWYgKCFmZWVkYmFjaykgcmV0dXJuIGVtcHR5RmVlZGJhY2s7XG4gIHJldHVybiBmZWVkYmFjaztcbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0xMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMTE7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0xMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzExID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMTEtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICAvLyBEZWZhdWx0IGV4ZXJjaXNlIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oXG4gICAge1xuICAgICAgaWQ6IFwid2Vici0xMS1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzExID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8xMSwge21pY3JvMn0pO1xuX3dlYnJfZmVlZGJhY2tfMTEgPSB7XG4gIGNvbnN0IHsgV2ViUkdyYWRlciB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgZW1wdHlGZWVkYmFjayA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xuXG4gIGNvbnN0IGdyYWRlciA9IG5ldyBXZWJSR3JhZGVyKF93ZWJyX3ZhbHVlXzExLmV2YWx1YXRvcik7XG4gIGNvbnN0IGZlZWRiYWNrID0gYXdhaXQgZ3JhZGVyLmdyYWRlRXhlcmNpc2UoKTtcbiAgaWYgKCFmZWVkYmFjaykgcmV0dXJuIGVtcHR5RmVlZGJhY2s7XG4gIHJldHVybiBmZWVkYmFjaztcbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC02IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICAvLyBXYWl0IGZvciBvdXRwdXQgdG8gYmUgd3JpdHRlbiB0byB0aGUgRE9NLCB0aGVuIHRyaWdnZXIgd2lkZ2V0IHJlbmRlcmluZ1xuICBhd2FpdCBfd2Vicl92YWx1ZV82O1xuICBpZiAod2luZG93LkhUTUxXaWRnZXRzKSB7XG4gICAgd2luZG93LkhUTUxXaWRnZXRzLnN0YXRpY1JlbmRlcigpO1xuICB9XG4gIGlmICh3aW5kb3cuUGFnZWRUYWJsZURvYykge1xuICAgIHdpbmRvdy5QYWdlZFRhYmxlRG9jLmluaXRBbGwoKTtcbiAgfVxufVxuIn0seyJjZWxsTmFtZSI6IndlYnItNiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzYgPSB7XG4gIGNvbnN0IHsgV2ViUkV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwid2Vici02LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgLy8gRGVmYXVsdCBleGVyY2lzZSBjb25maWd1cmF0aW9uXG4gIGNvbnN0IG9wdGlvbnMgPSBPYmplY3QuYXNzaWduKFxuICAgIHtcbiAgICAgIGlkOiBcIndlYnItNi1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzYgPSB3ZWJST2pzLnByb2Nlc3MoX3dlYnJfZWRpdG9yXzYsIHtjcHAzfSk7XG5fd2Vicl9mZWVkYmFja182ID0ge1xuICBjb25zdCB7IFdlYlJHcmFkZXIgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGVtcHR5RmVlZGJhY2sgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTtcblxuICBjb25zdCBncmFkZXIgPSBuZXcgV2ViUkdyYWRlcihfd2Vicl92YWx1ZV82LmV2YWx1YXRvcik7XG4gIGNvbnN0IGZlZWRiYWNrID0gYXdhaXQgZ3JhZGVyLmdyYWRlRXhlcmNpc2UoKTtcbiAgaWYgKCFmZWVkYmFjaykgcmV0dXJuIGVtcHR5RmVlZGJhY2s7XG4gIHJldHVybiBmZWVkYmFjaztcbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0xIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICAvLyBXYWl0IGZvciBvdXRwdXQgdG8gYmUgd3JpdHRlbiB0byB0aGUgRE9NLCB0aGVuIHRyaWdnZXIgd2lkZ2V0IHJlbmRlcmluZ1xuICBhd2FpdCBfd2Vicl92YWx1ZV8xO1xuICBpZiAod2luZG93LkhUTUxXaWRnZXRzKSB7XG4gICAgd2luZG93LkhUTUxXaWRnZXRzLnN0YXRpY1JlbmRlcigpO1xuICB9XG4gIGlmICh3aW5kb3cuUGFnZWRUYWJsZURvYykge1xuICAgIHdpbmRvdy5QYWdlZFRhYmxlRG9jLmluaXRBbGwoKTtcbiAgfVxufVxuIn0seyJjZWxsTmFtZSI6IndlYnItMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzEgPSB7XG4gIGNvbnN0IHsgV2ViUkV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwid2Vici0xLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgLy8gRGVmYXVsdCBleGVyY2lzZSBjb25maWd1cmF0aW9uXG4gIGNvbnN0IG9wdGlvbnMgPSBPYmplY3QuYXNzaWduKFxuICAgIHtcbiAgICAgIGlkOiBcIndlYnItMS1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzEgPSB3ZWJST2pzLnByb2Nlc3MoX3dlYnJfZWRpdG9yXzEsIHttaWNybzF9KTtcbl93ZWJyX2ZlZWRiYWNrXzEgPSB7XG4gIGNvbnN0IHsgV2ViUkdyYWRlciB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgZW1wdHlGZWVkYmFjayA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xuXG4gIGNvbnN0IGdyYWRlciA9IG5ldyBXZWJSR3JhZGVyKF93ZWJyX3ZhbHVlXzEuZXZhbHVhdG9yKTtcbiAgY29uc3QgZmVlZGJhY2sgPSBhd2FpdCBncmFkZXIuZ3JhZGVFeGVyY2lzZSgpO1xuICBpZiAoIWZlZWRiYWNrKSByZXR1cm4gZW1wdHlGZWVkYmFjaztcbiAgcmV0dXJuIGZlZWRiYWNrO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTMiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCIzXCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJub25lXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTQiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCI0XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJyXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTgiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCI4XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJub25lXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTkiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCI5XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJyXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTEzIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICBjb25zdCB7IGludGVycG9sYXRlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBibG9ja19pZCA9IFwiMTNcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcIm5vbmVcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtMTQiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCIxNFwiO1xuICBjb25zdCBsYW5ndWFnZSA9IFwiclwiO1xuICBjb25zdCBkZWZfbWFwID0ge1xufTtcbiAgY29uc3QgZWxlbSA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGBpbnRlcnBvbGF0ZS0ke2Jsb2NrX2lkfWApO1xuXG4gIC8vIFN0b3JlIG9yaWdpbmFsIHRlbXBsYXRlZCBIVE1MIGZvciByZWZlcmVuY2UgaW4gZnV0dXJlIHJlYWN0aXZlIHVwZGF0ZXNcbiAgaWYgKCFlbGVtLm9yaWdIVE1MKSBlbGVtLm9yaWdIVE1MID0gZWxlbS5pbm5lckhUTUw7XG5cbiAgLy8gSW50ZXJwb2xhdGUgcmVhY3RpdmUgT0pTIHZhcmlhYmxlcyBpbnRvIGVzdGFibGlzaGVkIEhUTUwgZWxlbWVudFxuICBlbGVtLmlubmVySFRNTCA9IGVsZW0ub3JpZ0hUTUw7XG4gIE9iamVjdC5rZXlzKGRlZl9tYXApLmZvckVhY2goKGRlZikgPT5cbiAgICBpbnRlcnBvbGF0ZShlbGVtLCBcIiR7XCIgKyBkZWYgKyBcIn1cIiwgZGVmX21hcFtkZWZdLCBsYW5ndWFnZSlcbiAgKTtcbn1cbiJ9LHsiY2VsbE5hbWUiOiJpbnRlcnBvbGF0ZS0xOCIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgY29uc3QgeyBpbnRlcnBvbGF0ZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgYmxvY2tfaWQgPSBcIjE4XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJub25lXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTE5IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICBjb25zdCB7IGludGVycG9sYXRlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBibG9ja19pZCA9IFwiMTlcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcInJcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtMjMiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCIyM1wiO1xuICBjb25zdCBsYW5ndWFnZSA9IFwibm9uZVwiO1xuICBjb25zdCBkZWZfbWFwID0ge1xufTtcbiAgY29uc3QgZWxlbSA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGBpbnRlcnBvbGF0ZS0ke2Jsb2NrX2lkfWApO1xuXG4gIC8vIFN0b3JlIG9yaWdpbmFsIHRlbXBsYXRlZCBIVE1MIGZvciByZWZlcmVuY2UgaW4gZnV0dXJlIHJlYWN0aXZlIHVwZGF0ZXNcbiAgaWYgKCFlbGVtLm9yaWdIVE1MKSBlbGVtLm9yaWdIVE1MID0gZWxlbS5pbm5lckhUTUw7XG5cbiAgLy8gSW50ZXJwb2xhdGUgcmVhY3RpdmUgT0pTIHZhcmlhYmxlcyBpbnRvIGVzdGFibGlzaGVkIEhUTUwgZWxlbWVudFxuICBlbGVtLmlubmVySFRNTCA9IGVsZW0ub3JpZ0hUTUw7XG4gIE9iamVjdC5rZXlzKGRlZl9tYXApLmZvckVhY2goKGRlZikgPT5cbiAgICBpbnRlcnBvbGF0ZShlbGVtLCBcIiR7XCIgKyBkZWYgKyBcIn1cIiwgZGVmX21hcFtkZWZdLCBsYW5ndWFnZSlcbiAgKTtcbn1cbiJ9LHsiY2VsbE5hbWUiOiJpbnRlcnBvbGF0ZS0yNCIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgY29uc3QgeyBpbnRlcnBvbGF0ZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgYmxvY2tfaWQgPSBcIjI0XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJyXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTI4IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICBjb25zdCB7IGludGVycG9sYXRlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBibG9ja19pZCA9IFwiMjhcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcIm5vbmVcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtMjkiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCIyOVwiO1xuICBjb25zdCBsYW5ndWFnZSA9IFwiclwiO1xuICBjb25zdCBkZWZfbWFwID0ge1xufTtcbiAgY29uc3QgZWxlbSA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGBpbnRlcnBvbGF0ZS0ke2Jsb2NrX2lkfWApO1xuXG4gIC8vIFN0b3JlIG9yaWdpbmFsIHRlbXBsYXRlZCBIVE1MIGZvciByZWZlcmVuY2UgaW4gZnV0dXJlIHJlYWN0aXZlIHVwZGF0ZXNcbiAgaWYgKCFlbGVtLm9yaWdIVE1MKSBlbGVtLm9yaWdIVE1MID0gZWxlbS5pbm5lckhUTUw7XG5cbiAgLy8gSW50ZXJwb2xhdGUgcmVhY3RpdmUgT0pTIHZhcmlhYmxlcyBpbnRvIGVzdGFibGlzaGVkIEhUTUwgZWxlbWVudFxuICBlbGVtLmlubmVySFRNTCA9IGVsZW0ub3JpZ0hUTUw7XG4gIE9iamVjdC5rZXlzKGRlZl9tYXApLmZvckVhY2goKGRlZikgPT5cbiAgICBpbnRlcnBvbGF0ZShlbGVtLCBcIiR7XCIgKyBkZWYgKyBcIn1cIiwgZGVmX21hcFtkZWZdLCBsYW5ndWFnZSlcbiAgKTtcbn1cbiJ9LHsiY2VsbE5hbWUiOiJpbnRlcnBvbGF0ZS0zMyIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgY29uc3QgeyBpbnRlcnBvbGF0ZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgYmxvY2tfaWQgPSBcIjMzXCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJub25lXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTM0IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICBjb25zdCB7IGludGVycG9sYXRlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBibG9ja19pZCA9IFwiMzRcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcInJcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici1wcmVsdWRlIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoid2ViUk9qcyA9IHtcbiAgY29uc3QgeyBXZWJSLCBDaGFubmVsVHlwZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZS5XZWJSO1xuICBjb25zdCB7XG4gICAgV2ViUkV2YWx1YXRvcixcbiAgICBXZWJSRW52aXJvbm1lbnRNYW5hZ2VyLFxuICAgIHNldHVwUixcbiAgICBiNjREZWNvZGUsXG4gICAgY29sbGFwc2VQYXRoXG4gIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHN0YXR1c0NvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwiZXhlcmNpc2UtbG9hZGluZy1zdGF0dXNcIik7XG4gIGNvbnN0IGluZGljYXRvckNvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwiZXhlcmNpc2UtbG9hZGluZy1pbmRpY2F0b3JcIik7XG4gIGluZGljYXRvckNvbnRhaW5lci5jbGFzc0xpc3QucmVtb3ZlKFwiZC1ub25lXCIpO1xuXG4gIGxldCBzdGF0dXNUZXh0ID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudChcImRpdlwiKVxuICBzdGF0dXNUZXh0LmNsYXNzTGlzdCA9IFwiZXhlcmNpc2UtbG9hZGluZy1kZXRhaWxzXCI7XG4gIHN0YXR1c1RleHQgPSBzdGF0dXNDb250YWluZXIuYXBwZW5kQ2hpbGQoc3RhdHVzVGV4dCk7XG4gIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgSW5pdGlhbGlzZWA7XG5cbiAgLy8gSG9pc3QgaW5kaWNhdG9yIG91dCBmcm9tIGZpbmFsIHNsaWRlIHdoZW4gcnVubmluZyB1bmRlciByZXZlYWxcbiAgY29uc3QgcmV2ZWFsU3RhdHVzID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcihcIi5yZXZlYWwgLmV4ZXJjaXNlLWxvYWRpbmctaW5kaWNhdG9yXCIpO1xuICBpZiAocmV2ZWFsU3RhdHVzKSB7XG4gICAgcmV2ZWFsU3RhdHVzLnJlbW92ZSgpO1xuICAgIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIucmV2ZWFsID4gLnNsaWRlc1wiKS5hcHBlbmRDaGlsZChyZXZlYWxTdGF0dXMpO1xuICB9XG5cbiAgLy8gTWFrZSBhbnkgcmV2ZWFsIHNsaWRlcyB3aXRoIGxpdmUgY2VsbHMgc2Nyb2xsYWJsZVxuICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKFwiLnJldmVhbCAuZXhlcmNpc2UtY2VsbFwiKS5mb3JFYWNoKChlbCkgPT4ge1xuICAgIGVsLmNsb3Nlc3QoJ3NlY3Rpb24uc2xpZGUnKS5jbGFzc0xpc3QuYWRkKFwic2Nyb2xsYWJsZVwiKTtcbiAgfSlcblxuICAvLyB3ZWJSIHN1cHBsZW1lbnRhbCBkYXRhIGFuZCBvcHRpb25zXG4gIGNvbnN0IGRhdGFDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItZGF0YVxcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGRhdGEgPSBKU09OLnBhcnNlKGI2NERlY29kZShkYXRhQ29udGVudCkpO1xuXG4gIC8vIEdyYWIgbGlzdCBvZiByZXNvdXJjZXMgdG8gYmUgZG93bmxvYWRlZFxuICBjb25zdCBmaWxlc0NvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwidmZzLWZpbGVcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBmaWxlcyA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKGZpbGVzQ29udGVudCkpO1xuXG4gIC8vIEluaXRpYWxpc2Ugd2ViUiBhbmQgc2V0dXAgZm9yIFIgY29kZSBldmFsdWF0aW9uXG4gIGxldCB3ZWJSUHJvbWlzZSA9IChhc3luYyAod2ViUikgPT4ge1xuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgRG93bmxvYWRpbmcgd2ViUmA7XG4gICAgYXdhaXQgd2ViUi5pbml0KCk7XG5cbiAgICAvLyBJbnN0YWxsIHByb3ZpZGVkIGxpc3Qgb2YgcGFja2FnZXNcbiAgICAvLyBFbnN1cmUgd2ViUiBkZWZhdWx0IHJlcG8gaXMgaW5jbHVkZWRcbiAgICBkYXRhLnBhY2thZ2VzLnJlcG9zLnB1c2goXCJodHRwczovL3JlcG8uci13YXNtLm9yZ1wiKVxuICAgIGF3YWl0IGRhdGEucGFja2FnZXMucGtncy5tYXAoKHBrZykgPT4gKCkgPT4ge1xuICAgICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyBwYWNrYWdlOiAke3BrZ31gO1xuICAgICAgcmV0dXJuIHdlYlIuZXZhbFJWb2lkKGBcbiAgICAgICAgd2Vicjo6aW5zdGFsbChwa2csIHJlcG9zID0gcmVwb3MpXG4gICAgICAgIGxpYnJhcnkocGtnLCBjaGFyYWN0ZXIub25seSA9IFRSVUUpXG4gICAgICBgLCB7IGVudjoge1xuICAgICAgICBwa2c6IHBrZyxcbiAgICAgICAgcmVwb3M6IGRhdGEucGFja2FnZXMucmVwb3MsXG4gICAgICB9fSk7XG4gICAgfSkucmVkdWNlKChjdXIsIG5leHQpID0+IGN1ci50aGVuKG5leHQpLCBQcm9taXNlLnJlc29sdmUoKSk7XG5cbiAgICAvLyBEb3dubG9hZCBhbmQgaW5zdGFsbCByZXNvdXJjZXNcbiAgICBhd2FpdCBmaWxlcy5tYXAoKGZpbGUpID0+IGFzeW5jICgpID0+IHtcbiAgICAgIGNvbnN0IG5hbWUgPSBmaWxlLnN1YnN0cmluZyhmaWxlLmxhc3RJbmRleE9mKCcvJykgKyAxKTtcbiAgICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgRG93bmxvYWRpbmcgcmVzb3VyY2U6ICR7bmFtZX1gO1xuICAgICAgY29uc3QgcmVzcG9uc2UgPSBhd2FpdCBmZXRjaChmaWxlKTtcbiAgICAgIGlmICghcmVzcG9uc2Uub2spIHtcbiAgICAgICAgdGhyb3cgbmV3IEVycm9yKGBDYW4ndCBkb3dubG9hZCBcXGAke2ZpbGV9XFxgLiBFcnJvciAke3Jlc3BvbnNlLnN0YXR1c306IFwiJHtyZXNwb25zZS5zdGF0dXNUZXh0fVwiLmApO1xuICAgICAgfVxuICAgICAgY29uc3QgZGF0YSA9IGF3YWl0IHJlc3BvbnNlLmFycmF5QnVmZmVyKCk7XG5cbiAgICAgIC8vIFN0b3JlIFVSTHMgaW4gdGhlIGN3ZCB3aXRob3V0IGFueSBzdWJkaXJlY3Rvcnkgc3RydWN0dXJlXG4gICAgICBpZiAoZmlsZS5pbmNsdWRlcyhcIjovL1wiKSkge1xuICAgICAgICBmaWxlID0gbmFtZTtcbiAgICAgIH1cblxuICAgICAgLy8gQ29sbGFwc2UgaGlnaGVyIGRpcmVjdG9yeSBzdHJ1Y3R1cmVcbiAgICAgIGZpbGUgPSBjb2xsYXBzZVBhdGgoZmlsZSk7XG5cbiAgICAgIC8vIENyZWF0ZSBkaXJlY3RvcnkgdHJlZSwgaWdub3JpbmcgXCJkaXJlY3RvcnkgZXhpc3RzXCIgVkZTIGVycm9yc1xuICAgICAgY29uc3QgcGFydHMgPSBmaWxlLnNwbGl0KCcvJykuc2xpY2UoMCwgLTEpO1xuICAgICAgbGV0IHBhdGggPSAnJztcbiAgICAgIHdoaWxlIChwYXJ0cy5sZW5ndGggPiAwKSB7XG4gICAgICAgIHBhdGggKz0gcGFydHMuc2hpZnQoKSArICcvJztcbiAgICAgICAgY29uc3QgYW5hbHlzaXMgPSBhd2FpdCB3ZWJSLkZTLmFuYWx5emVQYXRoKHBhdGgpO1xuICAgICAgICBpZiAoIWFuYWx5c2lzLmV4aXN0cykge1xuICAgICAgICAgIHRyeSB7XG4gICAgICAgICAgICBhd2FpdCB3ZWJSLkZTLm1rZGlyKHBhdGgpO1xuICAgICAgICAgIH0gY2F0Y2ggKGUpIHtcbiAgICAgICAgICAgIHRocm93IG5ldyBFcnJvcihgRmlsZXN5c3RlbSBFcnJvcjogXCIke2UubWVzc2FnZX1cIi5gKTtcbiAgICAgICAgICB9XG4gICAgICAgIH1cbiAgICAgIH1cblxuICAgICAgLy8gV3JpdGUgdGhpcyBmaWxlIHRvIHRoZSBWRlNcbiAgICAgIHJldHVybiBhd2FpdCB3ZWJSLkZTLndyaXRlRmlsZShmaWxlLCBuZXcgVWludDhBcnJheShkYXRhKSk7XG4gICAgfSkucmVkdWNlKChjdXIsIG5leHQpID0+IGN1ci50aGVuKG5leHQpLCBQcm9taXNlLnJlc29sdmUoKSk7XG5cbiAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYEluc3RhbGxpbmcgd2ViUiBzaGltc2A7XG4gICAgYXdhaXQgd2ViUi5ldmFsUlZvaWQoYHdlYnI6OnNoaW1faW5zdGFsbCgpYCk7XG5cbiAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYFdlYlIgZW52aXJvbm1lbnQgc2V0dXBgO1xuICAgIGF3YWl0IHNldHVwUih3ZWJSLCBkYXRhKTtcblxuICAgIHN0YXR1c1RleHQucmVtb3ZlKCk7XG4gICAgaWYgKHN0YXR1c0NvbnRhaW5lci5jaGlsZHJlbi5sZW5ndGggPT0gMCkge1xuICAgICAgc3RhdHVzQ29udGFpbmVyLnBhcmVudE5vZGUucmVtb3ZlKCk7XG4gICAgfVxuICAgIHJldHVybiB3ZWJSO1xuICB9KShuZXcgV2ViUihkYXRhLm9wdGlvbnMpKTtcblxuICAvLyBLZWVwIHRyYWNrIG9mIGluaXRpYWwgT0pTIGJsb2NrIHJlbmRlclxuICBjb25zdCByZW5kZXJlZE9qcyA9IHt9O1xuXG4gIGNvbnN0IHByb2Nlc3MgPSBhc3luYyAoY29udGV4dCwgaW5wdXRzKSA9PiB7XG4gICAgY29uc3Qgd2ViUiA9IGF3YWl0IHdlYlJQcm9taXNlO1xuICAgIGNvbnN0IGV2YWx1YXRvciA9IG5ldyBXZWJSRXZhbHVhdG9yKHdlYlIsIGNvbnRleHQpXG4gICAgYXdhaXQgZXZhbHVhdG9yLnByb2Nlc3MoaW5wdXRzKTtcbiAgICByZXR1cm4gZXZhbHVhdG9yLmNvbnRhaW5lcjtcbiAgfVxuXG4gIHJldHVybiB7XG4gICAgcHJvY2VzcyxcbiAgICB3ZWJSUHJvbWlzZSxcbiAgICByZW5kZXJlZE9qcyxcbiAgfTtcbn1cbiJ9XX0=
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+WyIuLi9SL3ZlaWxsZS5SIiwiLi4vUi9zZWdyZWdhdGlvbi5SIiwiLi4vUi9pbmVnYWxpdGVzLlIiLCIuLi9SL2Rvam8uUiJd
+</script>
+<div class="ojs-auto-generated hidden">
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6WyAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7bWljcm8xLmF9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC0xIn0sICB7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJpbmxpbmUiOiJ0cnVlIiwic291cmNlIjoiaHRsLmh0bWxgPHNwYW4+JHttaWNybzEuRn08L3NwYW4+YCIsICJjZWxsTmFtZSI6Im9qcy1lbGVtZW50LWlkLTIifSwgIHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImlubGluZSI6InRydWUiLCJzb3VyY2UiOiJodGwuaHRtbGA8c3Bhbj4ke21pY3JvMS5wfTwvc3Bhbj5gIiwgImNlbGxOYW1lIjoib2pzLWVsZW1lbnQtaWQtMyJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7Y3BwMy5hfTwvc3Bhbj5gIiwgImNlbGxOYW1lIjoib2pzLWVsZW1lbnQtaWQtNCJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7Y3BwMy5GfTwvc3Bhbj5gIiwgImNlbGxOYW1lIjoib2pzLWVsZW1lbnQtaWQtNSJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7bWljcm8yLmF9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC02In0sICB7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJpbmxpbmUiOiJ0cnVlIiwic291cmNlIjoiaHRsLmh0bWxgPHNwYW4+JHttaWNybzIuRn08L3NwYW4+YCIsICJjZWxsTmFtZSI6Im9qcy1lbGVtZW50LWlkLTcifSwgIHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImlubGluZSI6InRydWUiLCJzb3VyY2UiOiJodGwuaHRtbGA8c3Bhbj4ke21pY3JvMi5EMH08L3NwYW4+YCIsICJjZWxsTmFtZSI6Im9qcy1lbGVtZW50LWlkLTgifSwgIHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImlubGluZSI6InRydWUiLCJzb3VyY2UiOiJodGwuaHRtbGA8c3Bhbj4ke21pY3JvMi5ifTwvc3Bhbj5gIiwgImNlbGxOYW1lIjoib2pzLWVsZW1lbnQtaWQtOSJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7bWljcm8wLkF9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC0xMCJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7bWljcm8wLmJ9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC0xMSJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7bWljcm8wLlF9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC0xMiJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7bWljcm8zLkF9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC0xMyJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7bWljcm8zLmJ9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC0xNCJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7bWljcm8zLmN9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC0xNSJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7bWljcm81LmN9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC0xNiJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7bWljcm81LkF9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC0xNyJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7bWljcm81LmJ9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC0xOCJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7bWljcm80LmN9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC0xOSJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7bWljcm80LkF9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC0yMCJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7bWljcm80LmJ9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC0yMSJ9XX0=
+</script>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script>
+// Charge le module dojo.js depuis la racine du site, quelle que soit la profondeur de la page.
+(function () {
+  var m = document.querySelector('meta[name="quarto:offset"]');
+  var base = m ? m.getAttribute('content') : './';
+  var s = document.createElement('script');
+  s.type = 'module';
+  s.src = base + 'assets/dojo.js';
+  document.body.appendChild(s);
+})();
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InJuZyA9IHtcbiAgLy8gR8OpbsOpcmF0ZXVyIHBzZXVkby1hbMOpYXRvaXJlIHJlcHJvZHVjdGlibGUgOiBncmFpbmUgPSBqb3VyICsgaWQgZCdleGVyY2ljZSArIHNhbHQuXG4gIC8vIChTb3VyY2UgdW5pcXVlIDogc2NyaXB0cy90ZXN0X2V4ZXJjaWNlcy5SIMOpdmFsdWUgY2V0dGUgbcOqbWUgY2VsbHVsZSBhdmVjIE5vZGUuKVxuICBjb25zdCB0b2RheSA9IG5ldyBEYXRlKCkudG9JU09TdHJpbmcoKS5zbGljZSgwLCAxMCk7XG4gIGNvbnN0IGhhc2ggPSAocykgPT4ge1xuICAgIGxldCBoID0gMTc3OTAzMzcwMyBeIHMubGVuZ3RoO1xuICAgIGZvciAobGV0IGkgPSAwOyBpIDwgcy5sZW5ndGg7IGkrKykgeyBoID0gTWF0aC5pbXVsKGggXiBzLmNoYXJDb2RlQXQoaSksIDM0MzI5MTgzNTMpOyBoID0gKGggPDwgMTMpIHwgKGggPj4+IDE5KTsgfVxuICAgIHJldHVybiBoID4+PiAwO1xuICB9O1xuICBjb25zdCBtdWxiZXJyeTMyID0gKGEpID0+ICgpID0+IHtcbiAgICBhIHw9IDA7IGEgPSAoYSArIDB4NmQyYjc5ZjUpIHwgMDtcbiAgICBsZXQgdCA9IE1hdGguaW11bChhIF4gKGEgPj4+IDE1KSwgMSB8IGEpO1xuICAgIHQgPSAodCArIE1hdGguaW11bCh0IF4gKHQgPj4+IDcpLCA2MSB8IHQpKSBeIHQ7XG4gICAgcmV0dXJuICgodCBeICh0ID4+PiAxNCkpID4+PiAwKSAvIDQyOTQ5NjcyOTY7XG4gIH07XG4gIHJldHVybiAoaWQsIHNhbHQgPSAwLCBkYXkgPSB0b2RheSkgPT4ge1xuICAgIGNvbnN0IHUgPSBtdWxiZXJyeTMyKGhhc2goYCR7ZGF5fXwke2lkfXwke3NhbHR9YCkpO1xuICAgIGNvbnN0IGludCA9IChhLCBiKSA9PiBhICsgTWF0aC5mbG9vcih1KCkgKiAoYiAtIGEgKyAxKSk7XG4gICAgY29uc3QgcGljayA9IChhcnIpID0+IGFycltNYXRoLmZsb29yKHUoKSAqIGFyci5sZW5ndGgpXTtcbiAgICBjb25zdCBub3JtYWwgPSAoKSA9PiBNYXRoLnNxcnQoLTIgKiBNYXRoLmxvZygxIC0gdSgpKSkgKiBNYXRoLmNvcygyICogTWF0aC5QSSAqIHUoKSk7XG4gICAgcmV0dXJuIHsgdSwgaW50LCBwaWNrLCBub3JtYWwgfTtcbiAgfTtcbn1cblxudmlld29mIHNhbHQgPSB7XG4gIGNvbnN0IGIgPSBodG1sYDxidXR0b24gY2xhc3M9XCJkb2pvLWJ0biBkb2pvLXJlcm9sbFwiPvCfjrIgTm91dmVhdXggw6lub25jw6lzPC9idXR0b24+YDtcbiAgbGV0IG4gPSAwOyBiLnZhbHVlID0gMDtcbiAgYi5vbmNsaWNrID0gKCkgPT4geyBiLnZhbHVlID0gKytuOyBiLmRpc3BhdGNoRXZlbnQobmV3IEV2ZW50KFwiaW5wdXRcIiwgeyBidWJibGVzOiB0cnVlIH0pKTsgfTtcbiAgcmV0dXJuIGI7XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJtaWNybzEgPSB7IGNvbnN0IGcgPSBybmcoXCJtaWNyby1jcHAtMVwiLCBzYWx0KTsgY29uc3QgYSA9IGcuaW50KDIsIDgpOyByZXR1cm4geyBhLCBGOiBnLmludCgyMCwgNjApLCBwOiBhICsgZy5pbnQoNiwgMjApIH07IH1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImNwcDMgPSB7IGNvbnN0IGcgPSBybmcoXCJtaWNyby1jcHAtM1wiLCBzYWx0KTsgcmV0dXJuIHsgYTogZy5pbnQoMiwgOCksIEY6IGcucGljayhbMTgsIDMyLCA1MCwgNzJdKSB9OyB9XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTQiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJtaWNybzIgPSB7XG4gIGNvbnN0IGcgPSBybmcoXCJtaWNyby1jcHAtMlwiLCBzYWx0KTtcbiAgY29uc3QgcyA9IGcucGljayhbNCwgNiwgOCwgMTBdKTsgICAgICAgICAgICAgICAgICAgICAgIC8vIHMgPSBzcXJ0KDJGKSwgY2FjaMOpXG4gIGNvbnN0IGEgPSBnLmludCgyLCA2KSwgYiA9IGcuaW50KDIsIDQpLCBOMCA9IGcuaW50KDEwLCA0MCk7XG4gIHJldHVybiB7IGEsIEY6IHMgKiBzIC8gMiwgYiwgRDA6IGIgKiAoYSArIHMpICsgTjAgKiBzIH07XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTUiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJtaWNybzAgPSB7IGNvbnN0IGcgPSBybmcoXCJtaWNyby1tb25vLTBcIiwgc2FsdCk7IHJldHVybiB7IEE6IGcuaW50KDQwLCAxMDApLCBiOiBnLnBpY2soWzEsIDIsIDNdKSwgUTogZy5pbnQoMywgOSkgfTsgfVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC02IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoibWljcm8zID0geyBjb25zdCBnID0gcm5nKFwibWljcm8tbW9uby0xXCIsIHNhbHQpOyBjb25zdCBiID0gZy5waWNrKFsxLCAyLCA0XSksIGMgPSBnLmludCgyLCAxMCksIGsgPSBnLmludCg1LCAxNSk7IHJldHVybiB7IEE6IGMgKyAyICogYiAqIGssIGIsIGMgfTsgfVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC03IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoibWljcm81ID0geyBjb25zdCBnID0gcm5nKFwibWljcm8tY291cm5vdC0wXCIsIHNhbHQpOyByZXR1cm4geyBBOiBnLmludCg2MCwgMTIwKSwgYjogZy5pbnQoMSwgMyksIGM6IGcuaW50KDUsIDIwKSB9OyB9XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTgiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJtaWNybzQgPSB7IGNvbnN0IGcgPSBybmcoXCJtaWNyby1jb3Vybm90LTFcIiwgc2FsdCk7IHJldHVybiB7IEE6IGcuaW50KDYwLCAxMjApLCBiOiBnLmludCgxLCAzKSwgYzogZy5pbnQoNSwgMjApIH07IH1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnc2FsdCcpIn1dfQ==
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../parcours";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Le Dojo : un entraînement par jour. Ta progression est stockée dans ton navigateur (voir « Progression » pour l’exporter).</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

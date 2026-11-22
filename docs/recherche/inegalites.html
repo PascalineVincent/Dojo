@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Laboratoire : mesures d’inégalités – Le Dojo</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../assets/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-80558751abe2b985a76e6f6f417f2174.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-bde8d0188a8d44dff803acbb058a059b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-80558751abe2b985a76e6f6f417f2174.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../assets/dojo.css">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Le Dojo</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Basculer la navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Aujourd’hui</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parcours" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Parcours</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-parcours">    
+        <li>
+    <a class="dropdown-item" href="../parcours/micro.html">
+ <span class="dropdown-text">Micro (L1/L2)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/stats.html">
+ <span class="dropdown-text">Statistiques (L1)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/econometrie.html">
+ <span class="dropdown-text">Économétrie</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/histoire.html">
+ <span class="dropdown-text">Histoire économique</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/contemporaine.html">
+ <span class="dropdown-text">Économie contemporaine</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-recherche" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Recherche</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-recherche">    
+        <li>
+    <a class="dropdown-item" href="../recherche/index.html">
+ <span class="dropdown-text">Le défi de la semaine</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../recherche/segregation.html">
+ <span class="dropdown-text">Ségrégation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../recherche/inegalites.html">
+ <span class="dropdown-text">Inégalités</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../veille.html"> 
+<span class="menu-text">Veille</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../progression.html"> 
+<span class="menu-text">Progression</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Basculer le mode sombre"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sur cette page</h2>
+   
+  <ul>
+  <li><a href="#terrain-de-jeu-comparer-des-distributions" id="toc-terrain-de-jeu-comparer-des-distributions" class="nav-link active" data-scroll-target="#terrain-de-jeu-comparer-des-distributions">Terrain de jeu : comparer des distributions</a></li>
+  <li><a href="#ineq-gini-0" id="toc-ineq-gini-0" class="nav-link" data-scroll-target="#ineq-gini-0">Gini sur 6 revenus : la double somme</a></li>
+  <li><a href="#ineq-gini-1" id="toc-ineq-gini-1" class="nav-link" data-scroll-target="#ineq-gini-1">Gini pondéré et courbe de Lorenz</a></li>
+  <li><a href="#ineq-ge-0" id="toc-ineq-ge-0" class="nav-link" data-scroll-target="#ineq-ge-0">Theil et MLD à la main</a></li>
+  <li><a href="#ineq-ge-1" id="toc-ineq-ge-1" class="nav-link" data-scroll-target="#ineq-ge-1">La famille GE(α) : une seule fonction</a></li>
+  <li><a href="#ineq-decomp-1" id="toc-ineq-decomp-1" class="nav-link" data-scroll-target="#ineq-decomp-1">Décomposition du Theil par groupes</a></li>
+  <li><a href="#entraîne-toi" id="toc-entraîne-toi" class="nav-link" data-scroll-target="#entraîne-toi">Entraîne-toi</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Laboratoire : mesures d’inégalités</h1>
+<p class="subtitle lead">Lorenz, Gini pondéré, famille GE, décompositions</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>On recode les mesures puis on les compare à <code>R/inegalites.R</code> (testé : invariance d’échelle, principe des transferts, identités de décomposition).</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>lorenz(x, w)</code>, <code>gini(x, w)</code></td>
+<td>Courbe de Lorenz, Gini pondéré</td>
+</tr>
+<tr class="even">
+<td><code>ge(x, alpha, w)</code>, <code>theil_T</code>, <code>theil_L</code></td>
+<td>Entropie généralisée GE(α) ; Theil T = GE(1), MLD = GE(0)</td>
+</tr>
+<tr class="odd">
+<td><code>atkinson(x, epsilon, w)</code></td>
+<td>Atkinson</td>
+</tr>
+<tr class="even">
+<td><code>palma(x, w)</code></td>
+<td>Rapport de Palma</td>
+</tr>
+<tr class="odd">
+<td><code>ge_decomp(x, g, alpha, w)</code></td>
+<td>Décomposition intra / inter-groupes</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb1" data-startfrom="45" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 44;"><span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> {</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Générateur pseudo-aléatoire reproductible : graine = jour + id d'exercice + salt.</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="co">// (Source unique : scripts/test_exercices.R évalue cette même cellule avec Node.)</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> today <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>()<span class="op">.</span><span class="fu">toISOString</span>()<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> hash <span class="op">=</span> (s) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> h <span class="op">=</span> <span class="dv">1779033703</span> <span class="op">^</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) { h <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(h <span class="op">^</span> s<span class="op">.</span><span class="fu">charCodeAt</span>(i)<span class="op">,</span> <span class="dv">3432918353</span>)<span class="op">;</span> h <span class="op">=</span> (h <span class="op">&lt;&lt;</span> <span class="dv">13</span>) <span class="op">|</span> (h <span class="op">&gt;&gt;&gt;</span> <span class="dv">19</span>)<span class="op">;</span> }</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> h <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> mulberry32 <span class="op">=</span> (a) <span class="kw">=&gt;</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    a <span class="op">|=</span> <span class="dv">0</span><span class="op">;</span> a <span class="op">=</span> (a <span class="op">+</span> <span class="bn">0x6d2b79f5</span>) <span class="op">|</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> t <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(a <span class="op">^</span> (a <span class="op">&gt;&gt;&gt;</span> <span class="dv">15</span>)<span class="op">,</span> <span class="dv">1</span> <span class="op">|</span> a)<span class="op">;</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> (t <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">7</span>)<span class="op">,</span> <span class="dv">61</span> <span class="op">|</span> t)) <span class="op">^</span> t<span class="op">;</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ((t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">14</span>)) <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span>) <span class="op">/</span> <span class="dv">4294967296</span><span class="op">;</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> (id<span class="op">,</span> salt <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> day <span class="op">=</span> today) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> u <span class="op">=</span> <span class="fu">mulberry32</span>(<span class="fu">hash</span>(<span class="vs">`</span><span class="sc">${</span>day<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>id<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>salt<span class="sc">}</span><span class="vs">`</span>))<span class="op">;</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> int <span class="op">=</span> (a<span class="op">,</span> b) <span class="kw">=&gt;</span> a <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> (b <span class="op">-</span> a <span class="op">+</span> <span class="dv">1</span>))<span class="op">;</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> pick <span class="op">=</span> (arr) <span class="kw">=&gt;</span> arr[<span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> arr<span class="op">.</span><span class="at">length</span>)]<span class="op">;</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> normal <span class="op">=</span> () <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">log</span>(<span class="dv">1</span> <span class="op">-</span> <span class="fu">u</span>())) <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">cos</span>(<span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="cn">PI</span> <span class="op">*</span> <span class="fu">u</span>())<span class="op">;</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { u<span class="op">,</span> int<span class="op">,</span> pick<span class="op">,</span> normal }<span class="op">;</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>viewof salt <span class="op">=</span> {</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> b <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;button class="dojo-btn dojo-reroll"&gt;🎲 Nouveaux énoncés&lt;/button&gt;`</span><span class="op">;</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> n <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>  b<span class="op">.</span><span class="at">onclick</span> <span class="op">=</span> () <span class="kw">=&gt;</span> { b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="op">++</span>n<span class="op">;</span> b<span class="op">.</span><span class="fu">dispatchEvent</span>(<span class="kw">new</span> <span class="bu">Event</span>(<span class="st">"input"</span><span class="op">,</span> { <span class="dt">bubbles</span><span class="op">:</span> <span class="kw">true</span> }))<span class="op">;</span> }<span class="op">;</span></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> b<span class="op">;</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<section id="terrain-de-jeu-comparer-des-distributions" class="level2">
+<h2 class="anchored" data-anchor-id="terrain-de-jeu-comparer-des-distributions">Terrain de jeu : comparer des distributions</h2>
+<div class="cell" data-autorun="true" data-caption="Lorenz et indices pour deux distributions">
+<div>
+<div id="webr-1" class="exercise-cell">
+
+</div>
+<script type="webr-1-contents">
+eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImNhcHRpb24iOiJMb3JlbnogZXQgaW5kaWNlcyBwb3VyIGRldXggZGlzdHJpYnV0aW9ucyIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzb3VyY2UoXCJSL2luZWdhbGl0ZXMuUlwiKVxuc2V0LnNlZWQoNylcbmEgPC0gcmxub3JtKDIwMDAsIDMsIDAuNikgICAgICAgICAgICAgICAgICMgZGlzdHJpYnV0aW9uIHJlc3NlcnLDqWVcbmIgPC0gYyhybG5vcm0oMTkwMCwgMi44LCAwLjQpLCBybG5vcm0oMTAwLCA1LCAwLjUpKSAgICMgcXVldWUgaGF1dGUgw6lwYWlzc2Vcbmx6IDwtIGZ1bmN0aW9uKHgpIGxvcmVueih4KVxucGxvdChseihhKSwgdHlwZSA9IFwibFwiLCBsd2QgPSAyLCBjb2wgPSBcIiMxZjRlOGNcIiwgeGxhYiA9IFwiUGFydCBkZSBsYSBwb3B1bGF0aW9uXCIsIHlsYWIgPSBcIlBhcnQgZHUgcmV2ZW51XCIsIG1haW4gPSBcIkNvdXJiZXMgZGUgTG9yZW56XCIpXG5saW5lcyhseihiKSwgbHdkID0gMiwgY29sID0gXCIjYjA4ZDNjXCIpOyBhYmxpbmUoMCwgMSwgbHR5ID0gMylcbmxlZ2VuZChcInRvcGxlZnRcIiwgYyhcImEgOiByZXNzZXJyw6llXCIsIFwiYiA6IHF1ZXVlIGhhdXRlXCIpLCBjb2wgPSBjKFwiIzFmNGU4Y1wiLCBcIiNiMDhkM2NcIiksIGx3ZCA9IDIsIGJ0eSA9IFwiblwiKVxuc2FwcGx5KGxpc3QoYSA9IGEsIGIgPSBiKSwgZnVuY3Rpb24oeCkgYyhnaW5pID0gZ2luaSh4KSwgR0UwID0gZ2UoeCwgMCksIHRoZWlsID0gdGhlaWxfVCh4KSwgR0UyID0gZ2UoeCwgMiksIGF0azEgPSBhdGtpbnNvbih4LCAxKSwgcGFsbWEgPSBwYWxtYSh4KSkpIn0=
+</script>
+</div>
+</div>
+<div class="dojo-track" data-track="ineq">
+
+</div>
+</section>
+<section id="ineq-gini-0" class="level2">
+<h2 class="anchored" data-anchor-id="ineq-gini-0">Gini sur 6 revenus : la double somme</h2>
+<p><span class="dojo-step">Marche 1 sur 5 · Guidé</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="135" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 134;"><span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>ineq0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"ineq-gini-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Six revenus mensuels (en euros) sont tirés au sort. Calcule leur indice de Gini à partir de sa définition (moyenne des écarts absolus entre toutes les paires, rapportée à deux fois la moyenne), puis la part du revenu total détenue par le plus riche.</p>
+<div class="cell" data-exercise="ineq-gini-0" data-caption="Gini par la double somme" data-input="ineq0">
+<div>
+<div id="webr-2" class="exercise-cell">
+
+</div>
+<script type="webr-2-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJHaW5pIHBhciBsYSBkb3VibGUgc29tbWUiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImluZXEtZ2luaS0wIiwiaW5wdXQiOlsiaW5lcTAiXSwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKGluZXEwJHNlZWQpXG54IDwtIHJvdW5kKHJsbm9ybSg2LCA3LCAwLjcpKSAgICAgICAgICAgICAgICAgIyBzaXggcmV2ZW51cyBtZW5zdWVsc1xubiA8LSBsZW5ndGgoeCk7IG11IDwtIG1lYW4oeClcbmVjYXJ0cyA8LSBvdXRlcih4LCB4LCBcIi1cIikgICAgICAgICAgICAgICAgICAgICMgbWF0cmljZSBuIHggbiBkZXMgw6ljYXJ0cyB4X2kgLSB4X2pcbkcgICA8LSBfX19fX18gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIHNvbW1lIGRlcyB8w6ljYXJ0c3wgLyAoMiAqIG5eMiAqIG11KVxudG9wIDwtIF9fX19fXyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgcGFydCBkdSByZXZlbnUgdG90YWwgZMOpdGVudWUgcGFyIGxlIHBsdXMgcmljaGVcbmMoZ2luaSA9IEcsIHBhcnRfdG9wID0gdG9wKSJ9
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ineq-gini-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Le Gini compare les revenus <strong>deux à deux</strong> : plus ils sont éloignés, plus <span class="math inline">\(G\)</span> est grand. Toutes les différences sont déjà dans la matrice <code>ecarts</code> ; il reste à les agréger et à les ramener à l’échelle de la moyenne.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ineq-gini-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(G = \dfrac{\sum_i\sum_j |x_i - x_j|}{2\,n^2\,\mu}\)</span>, soit <code>sum(abs(ecarts)) / (2 * n^2 * mu)</code>. La part du plus riche est <code>max(x) / sum(x)</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ineq-gini-0">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>Le Gini est la moitié de l’écart moyen relatif : <span class="math inline">\(G = \dfrac{1}{2\mu}\cdot\dfrac{1}{n^2}\sum_i\sum_j |x_i - x_j|\)</span>.</li>
+<li><code>outer(x, x, "-")</code> construit la matrice <span class="math inline">\(n \times n\)</span> des différences ; on en prend la valeur absolue puis la somme. Chaque paire est comptée <strong>deux fois</strong> (une dans chaque sens), d’où le dénominateur en <span class="math inline">\(2n^2\)</span>.</li>
+<li>Cas limites : égalité parfaite, tous les écarts sont nuls et <span class="math inline">\(G = 0\)</span> ; un seul individu détient tout, <span class="math inline">\(G = (n-1)/n\)</span> (qui tend vers 1 quand <span class="math inline">\(n\)</span> grandit). Avec 6 revenus, <span class="math inline">\(G\)</span> ne peut donc pas dépasser <span class="math inline">\(5/6\)</span>.</li>
+<li>La part du plus riche donne une lecture plus concrète de la même inégalité.</li>
+</ol>
+<div class="cell" data-exercise="ineq-gini-0" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ineq-gini-0">
+<code id="interpolate-4" class="solution-code d-none">set.seed(ineq0$seed)
+x &lt;- round(rlnorm(6, 7, 0.7))
+n &lt;- length(x); mu &lt;- mean(x)
+ecarts &lt;- outer(x, x, "-")
+G   &lt;- sum(abs(ecarts)) / (2 * n^2 * mu)      # écart moyen relatif / 2
+top &lt;- max(x) / sum(x)
+c(gini = G, part_top = top)</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-5-1"><a href="#interpolate-5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(ineq0<span class="sc">$</span>seed)</span>
+<span id="interpolate-5-2"><a href="#interpolate-5-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rlnorm</span>(<span class="dv">6</span>, <span class="dv">7</span>, <span class="fl">0.7</span>))</span>
+<span id="interpolate-5-3"><a href="#interpolate-5-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(x); mu <span class="ot">&lt;-</span> <span class="fu">mean</span>(x)</span>
+<span id="interpolate-5-4"><a href="#interpolate-5-4" aria-hidden="true" tabindex="-1"></a>ecarts <span class="ot">&lt;-</span> <span class="fu">outer</span>(x, x, <span class="st">"-"</span>)</span>
+<span id="interpolate-5-5"><a href="#interpolate-5-5" aria-hidden="true" tabindex="-1"></a>G   <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">abs</span>(ecarts)) <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> n<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> mu)      <span class="co"># écart moyen relatif / 2</span></span>
+<span id="interpolate-5-6"><a href="#interpolate-5-6" aria-hidden="true" tabindex="-1"></a>top <span class="ot">&lt;-</span> <span class="fu">max</span>(x) <span class="sc">/</span> <span class="fu">sum</span>(x)</span>
+<span id="interpolate-5-7"><a href="#interpolate-5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">gini =</span> G, <span class="at">part_top =</span> top)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Diviser par <span class="math inline">\(n(n-1)\)</span> au lieu de <span class="math inline">\(n^2\)</span> : on obtient le Gini corrigé pour petit <span class="math inline">\(n\)</span> (égal à <span class="math inline">\(G\times n/(n-1)\)</span>), pas le Gini usuel.</li>
+<li>Oublier <code>abs</code> : la somme des écarts signés est nulle.</li>
+<li>Calculer <code>sum(abs(diff(x)))</code> : ce ne sont que les écarts entre revenus <strong>consécutifs</strong> (après tri) et non toutes les paires.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> L’étape suivante calcule le Gini à partir de la courbe de Lorenz, ce qui le rend utilisable avec des poids de sondage et des milliers d’observations.</p>
+</div>
+<div class="cell" data-exercise="ineq-gini-0" data-check="true">
+<script type="exercise-check-ineq-gini-0-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImluZXEtZ2luaS0wIiwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKGluZXEwJHNlZWQpXG54IDwtIHJvdW5kKHJsbm9ybSg2LCA3LCAwLjcpKTsgbiA8LSBsZW5ndGgoeClcbkcgPC0gc3VtKGFicyhvdXRlcih4LCB4LCBcIi1cIikpKSAvICgyICogbl4yICogbWVhbih4KSk7IHRvcCA8LSBtYXgoeCkgLyBzdW0oeClcbnJlcyA8LSBzdXBwcmVzc1dhcm5pbmdzKGFzLm51bWVyaWMoLnJlc3VsdCkpXG5pZiAobGVuZ3RoKHJlcykgIT0gMiB8fCBhbnlOQShyZXMpKSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJSZW52b2llIGMoZ2luaSA9IC4uLiwgcGFydF90b3AgPSAuLi4pIGNvbW1lIGRhbnMgbGUgZ2FiYXJpdC5cIilcbn0gZWxzZSBpZiAoYWJzKHJlc1sxXSAtIEcgKiBuIC8gKG4gLSAxKSkgPCAxZS05KSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJUdSBhcyBkaXZpc8OpIHBhciBuIChuIC0gMSkgOiBjJ2VzdCBsZSBHaW5pIGNvcnJpZ8OpIGRlIHBldGl0IMOpY2hhbnRpbGxvbi4gSWNpIG9uIHZldXQgbGEgZMOpZmluaXRpb24gdXN1ZWxsZSwgYXZlYyBuXjIuXCIpXG59IGVsc2UgaWYgKGFicyhyZXNbMV0gLSBHKSA+IDFlLTkpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIkdpbmkgaW5jb3JyZWN0IDogc3VtKGFicyhlY2FydHMpKSAvICgyICogbl4yICogbXUpLlwiKVxufSBlbHNlIGlmIChhYnMocmVzWzJdIC0gdG9wKSA+IDFlLTkpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIlBhcnQgZHUgcGx1cyByaWNoZSA6IG1heCh4KSAvIHN1bSh4KS5cIilcbn0gZWxzZSB7XG4gIGxpc3QoY29ycmVjdCA9IFRSVUUsIG1lc3NhZ2UgPSBzcHJpbnRmKFwiQ29ycmVjdCA6IEcgPSAlLjNmIDsgbGUgcGx1cyByaWNoZSBkw6l0aWVudCAlLjBmICUlIGR1IHJldmVudSB0b3RhbCAow6lnYWxpdMOpIDogJS4wZiAlJSkuXCIsIEcsIDEwMCAqIHRvcCwgMTAwIC8gbikpXG59In0=
+</script>
+</div>
+<div class="dojo-done" data-id="ineq-gini-0">
+
+</div>
+</section>
+<section id="ineq-gini-1" class="level2">
+<h2 class="anchored" data-anchor-id="ineq-gini-1">Gini pondéré et courbe de Lorenz</h2>
+<p><span class="dojo-step">Marche 2 sur 5 · À compléter</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="238" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 237;"><span id="cb3-238"><a href="#cb3-238" aria-hidden="true" tabindex="-1"></a>ineq1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"ineq-gini-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">s</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="fl">0.5</span><span class="op">,</span> <span class="fl">0.8</span><span class="op">,</span> <span class="fl">1.1</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Le revenu est lognormal d’écart-type logarithmique <strong><span><span id="ojs-element-id-1"></span></span></strong>, avec des poids de sondage.</p>
+<p>Écris <code>my_gini(x, w)</code> à partir de la courbe de Lorenz : <span class="math inline">\(G = 1 - \sum_i w_i (L_i + L_{i-1})\)</span> avec les poids normalisés et les revenus triés par ordre croissant.</p>
+<div class="cell" data-exercise="ineq-gini-1" data-caption="Gini pondéré" data-input="ineq1">
+<div>
+<div id="webr-7" class="exercise-cell">
+
+</div>
+<script type="webr-7-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJHaW5pIHBvbmTDqXLDqSIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiaW5lcS1naW5pLTEiLCJpbnB1dCI6WyJpbmVxMSJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic291cmNlKFwiUi9pbmVnYWxpdGVzLlJcIilcbnNldC5zZWVkKGluZXExJHNlZWQpXG5uIDwtIDIwMFxueCA8LSBybG5vcm0obiwgMywgaW5lcTEkcyk7IHcgPC0gcnVuaWYobiwgMC41LCAzKVxuXG5teV9naW5pIDwtIGZ1bmN0aW9uKHgsIHcpIHtcbiAgbyA8LSBvcmRlcih4KTsgeCA8LSB4W29dOyB3IDwtIHdbb10gLyBzdW0odylcbiAgTCA8LSBfX19fX18gICAgICAgICAgICAgICAgICAgICAgIyBMb3JlbnogOiBjdW1zdW0odyAqIHgpIC8gc3VtKHcgKiB4KVxuICBMcHJldiA8LSBjKDAsIGhlYWQoTCwgLTEpKVxuICBfX19fX18gICAgICAgICAgICAgICAgICAgICAgICAgICAjIDEgLSBzdW0odyAqIChMICsgTHByZXYpKVxufVxuYyhtb25fZ2luaSA9IG15X2dpbmkoeCwgdyksIGdpbmkgPSBnaW5pKHgsIHcpKSJ9
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ineq-gini-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Le Gini est lié à l’aire entre la diagonale et la courbe de Lorenz. Trie d’abord les revenus <strong>avec leurs poids</strong>, puis construis la courbe de Lorenz cumulée.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ineq-gini-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Aire sous la courbe de Lorenz par la méthode des trapèzes : chaque tranche de population de poids <span class="math inline">\(w_i\)</span> contribue <span class="math inline">\(w_i (L_{i-1} + L_i)/2\)</span> ; <span class="math inline">\(G = 1 - 2\times\text{aire}\)</span>. Test rapide : sans poids sur <span class="math inline">\((1,2,3,4)\)</span> on doit trouver <span class="math inline">\(0{,}25\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ineq-gini-1">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>Trier par revenu croissant est indispensable : Lorenz cumule du plus pauvre au plus riche (on trie <span class="math inline">\(x\)</span> <strong>et</strong> <span class="math inline">\(w\)</span> ensemble).</li>
+<li>Avec des poids normalisés <span class="math inline">\(w_i\)</span>, la part cumulée du revenu est <span class="math inline">\(L_i = \sum_{j \le i} w_j x_j \big/ \sum_j w_j x_j\)</span>.</li>
+<li>L’aire sous la courbe de Lorenz, par trapèzes, vaut <span class="math inline">\(\sum_i w_i\,(L_{i-1} + L_i)/2\)</span>.</li>
+<li><span class="math inline">\(G = 1 - 2\times\text{aire} = 1 - \sum_i w_i\,(L_{i-1} + L_i)\)</span>.</li>
+<li>Cas tests : <span class="math inline">\((1,2,3,4)\)</span> sans poids donne <span class="math inline">\(0{,}25\)</span> ; un poids <span class="math inline">\(w_i\)</span> équivaut à répéter l’observation <span class="math inline">\(i\)</span>, d’où le second cas de test.</li>
+</ol>
+<div class="cell" data-exercise="ineq-gini-1" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ineq-gini-1">
+<code id="interpolate-9" class="solution-code d-none">source("R/inegalites.R")
+set.seed(ineq1$seed)
+n &lt;- 200
+x &lt;- rlnorm(n, 3, ineq1$s); w &lt;- runif(n, 0.5, 3)
+
+my_gini &lt;- function(x, w) {
+  o &lt;- order(x); x &lt;- x[o]; w &lt;- w[o] / sum(w)
+  L &lt;- cumsum(w * x) / sum(w * x)
+  Lprev &lt;- c(0, head(L, -1))
+  1 - sum(w * (L + Lprev))
+}
+c(mon_gini = my_gini(x, w), gini = gini(x, w))</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-10-1"><a href="#interpolate-10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/inegalites.R"</span>)</span>
+<span id="interpolate-10-2"><a href="#interpolate-10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(ineq1<span class="sc">$</span>seed)</span>
+<span id="interpolate-10-3"><a href="#interpolate-10-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="interpolate-10-4"><a href="#interpolate-10-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rlnorm</span>(n, <span class="dv">3</span>, ineq1<span class="sc">$</span>s); w <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="fl">0.5</span>, <span class="dv">3</span>)</span>
+<span id="interpolate-10-5"><a href="#interpolate-10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="interpolate-10-6"><a href="#interpolate-10-6" aria-hidden="true" tabindex="-1"></a>my_gini <span class="ot">&lt;-</span> <span class="cf">function</span>(x, w) {</span>
+<span id="interpolate-10-7"><a href="#interpolate-10-7" aria-hidden="true" tabindex="-1"></a>  o <span class="ot">&lt;-</span> <span class="fu">order</span>(x); x <span class="ot">&lt;-</span> x[o]; w <span class="ot">&lt;-</span> w[o] <span class="sc">/</span> <span class="fu">sum</span>(w)</span>
+<span id="interpolate-10-8"><a href="#interpolate-10-8" aria-hidden="true" tabindex="-1"></a>  L <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(w <span class="sc">*</span> x) <span class="sc">/</span> <span class="fu">sum</span>(w <span class="sc">*</span> x)</span>
+<span id="interpolate-10-9"><a href="#interpolate-10-9" aria-hidden="true" tabindex="-1"></a>  Lprev <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">head</span>(L, <span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="interpolate-10-10"><a href="#interpolate-10-10" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span> <span class="sc">-</span> <span class="fu">sum</span>(w <span class="sc">*</span> (L <span class="sc">+</span> Lprev))</span>
+<span id="interpolate-10-11"><a href="#interpolate-10-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="interpolate-10-12"><a href="#interpolate-10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">mon_gini =</span> <span class="fu">my_gini</span>(x, w), <span class="at">gini =</span> <span class="fu">gini</span>(x, w))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Trier <code>x</code> sans réordonner <code>w</code>.</li>
+<li>Ne pas normaliser les poids (leur somme doit valoir 1).</li>
+<li>Diviser par la moyenne <strong>simple</strong> au lieu de la moyenne <strong>pondérée</strong> : erreur silencieuse fréquente avec des poids d’enquête.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Trace <code>lorenz(x, w)</code> : l’aire de la « lentille » entre la courbe et la diagonale vaut <span class="math inline">\(G/2\)</span>. Compare ensuite le résultat avec et sans poids sur des données d’enquête réelles.</p>
+</div>
+<div class="cell" data-exercise="ineq-gini-1" data-check="true">
+<script type="exercise-check-ineq-gini-1-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImluZXEtZ2luaS0xIiwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNvdXJjZShcIlIvaW5lZ2FsaXRlcy5SXCIpXG5mIDwtIGdldDAoXCJteV9naW5pXCIsIGVudmlyID0gLmVudmlyX3Jlc3VsdCwgaW5oZXJpdHMgPSBGQUxTRSlcbmlmICghaXMuZnVuY3Rpb24oZikpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIkTDqWZpbmlzIGxhIGZvbmN0aW9uIG15X2dpbmkoeCwgdykuXCIpXG59IGVsc2Uge1xuICBzZXQuc2VlZCgxKVxuICBjYXMgPC0gbGlzdChsaXN0KHggPSBjKDEsIDIsIDMsIDQpLCB3ID0gcmVwKDEsIDQpKSxcbiAgICAgICAgICAgICAgbGlzdCh4ID0gYygxLCAyKSwgdyA9IGMoMywgMSkpLFxuICAgICAgICAgICAgICBsaXN0KHggPSBybG5vcm0oNTApLCB3ID0gcnVuaWYoNTAsIDAuNSwgMykpLFxuICAgICAgICAgICAgICBsaXN0KHggPSBybG5vcm0oMzAwLCAzLCBpbmVxMSRzKSwgdyA9IHJ1bmlmKDMwMCkpKVxuICBvayA8LSB2YXBwbHkoY2FzLCBmdW5jdGlvbihrKSBpc1RSVUUoYWxsLmVxdWFsKHRyeUNhdGNoKGYoayR4LCBrJHcpLCBlcnJvciA9IGZ1bmN0aW9uKGUpIE5BX3JlYWxfKSwgZ2luaShrJHgsIGskdykpKSwgbG9naWNhbCgxKSlcbiAgaWYgKGFsbChvaykpIGxpc3QoY29ycmVjdCA9IFRSVUUsIG1lc3NhZ2UgPSBcIkNvcnJlY3QgOiBteV9naW5pIGVzdCBleGFjdGUgYXZlYyBwb2lkcyAoY2FzIGRlIHLDqWbDqXJlbmNlIDogKDEsMiwzLDQpIGRvbm5lIDAsMjUpLlwiKVxuICBlbHNlIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gc3ByaW50ZihcIm15X2dpbmkgw6ljaG91ZSBzdXIgJWQgY2FzLiBQZW5zZSDDoCB0cmllciB4IEVUIHcgZW5zZW1ibGUsIGV0IMOgIG5vcm1hbGlzZXIgbGVzIHBvaWRzLlwiLCBzdW0oIW9rKSkpXG59In0=
+</script>
+</div>
+<div class="dojo-done" data-id="ineq-gini-1">
+
+</div>
+</section>
+<section id="ineq-ge-0" class="level2">
+<h2 class="anchored" data-anchor-id="ineq-ge-0">Theil et MLD à la main</h2>
+<p><span class="dojo-step">Marche 3 sur 5 · Guidé</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="424" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 423;"><span id="cb4-424"><a href="#cb4-424" aria-hidden="true" tabindex="-1"></a>ineq00 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"ineq-ge-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Écris deux fonctions : le <strong>Theil T</strong> (moyenne de r ln r) et l’<strong>écart logarithmique moyen</strong> MLD (moins la moyenne de ln r), où r = x / moyenne est le revenu relatif. Vérifie ensuite qu’elles ne changent pas quand on multiplie tous les revenus par 10.</p>
+<div class="cell" data-exercise="ineq-ge-0" data-caption="Theil T et MLD" data-input="ineq00">
+<div>
+<div id="webr-12" class="exercise-cell">
+
+</div>
+<script type="webr-12-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJUaGVpbCBUIGV0IE1MRCIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiaW5lcS1nZS0wIiwiaW5wdXQiOlsiaW5lcTAwIl0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzZXQuc2VlZChpbmVxMDAkc2VlZClcbnggPC0gcm91bmQocmxub3JtKDgsIDcsIDAuOCkpICAgICAgICAgICAgICAgICAgICAgICMgaHVpdCByZXZlbnVzIG1lbnN1ZWxzXG50aGVpbCA8LSBmdW5jdGlvbih4KSB7IHIgPC0geCAvIG1lYW4oeCk7IF9fX19fXyB9ICAjIG1veWVubmUgZGUgciAqIGxvZyhyKVxubWxkICAgPC0gZnVuY3Rpb24oeCkgeyByIDwtIHggLyBtZWFuKHgpOyBfX19fX18gfSAgIyBtb2lucyBsYSBtb3llbm5lIGRlIGxvZyhyKVxuYyh0aGVpbCA9IHRoZWlsKHgpLCBtbGQgPSBtbGQoeCksIHRoZWlsX3gxMCA9IHRoZWlsKDEwICogeCkpIn0=
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ineq-ge-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Deux manières de pondérer la <strong>même</strong> quantité <span class="math inline">\(\ln r\)</span> : la MLD donne le même poids à chacun, le Theil T pondère chaque individu par son revenu relatif <span class="math inline">\(r\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ineq-ge-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · les formules
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>theil</code> : <code>mean(r * log(r))</code>. <code>mld</code> : <code>-mean(log(r))</code>. Multiplier tous les revenus par 10 ne change pas <code>r</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ineq-ge-0">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>On normalise par la moyenne : <span class="math inline">\(r_i = x_i/\mu\)</span>. Un revenu égal à la moyenne donne <span class="math inline">\(r = 1\)</span> donc <span class="math inline">\(\ln r = 0\)</span> ; l’égalité parfaite donne un indice nul.</li>
+<li><strong>Theil T</strong> <span class="math inline">\(= \overline{r \ln r}\)</span> : chaque individu est pondéré par son revenu relatif, donc l’indice est sensible au <strong>haut</strong> de la distribution.</li>
+<li><strong>MLD</strong> <span class="math inline">\(= -\overline{\ln r}\)</span> : pondération uniforme, sensible au <strong>bas</strong> (un revenu très faible donne un <span class="math inline">\(\ln r\)</span> très négatif).</li>
+<li><strong>Invariance d’échelle</strong> : multiplier tous les revenus par <span class="math inline">\(\lambda\)</span> multiplie <span class="math inline">\(\mu\)</span> par <span class="math inline">\(\lambda\)</span> et laisse <span class="math inline">\(r\)</span> inchangé, donc les deux indices aussi. C’est une propriété requise d’une mesure <em>relative</em>.</li>
+<li>Les deux indices sont des cas particuliers de GE(<span class="math inline">\(\alpha\)</span>) : MLD <span class="math inline">\(=\)</span> GE(0) et Theil T <span class="math inline">\(=\)</span> GE(1).</li>
+</ol>
+<div class="cell" data-exercise="ineq-ge-0" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ineq-ge-0">
+<code id="interpolate-14" class="solution-code d-none">set.seed(ineq00$seed)
+x &lt;- round(rlnorm(8, 7, 0.8))
+theil &lt;- function(x) { r &lt;- x / mean(x); mean(r * log(r)) }
+mld   &lt;- function(x) { r &lt;- x / mean(x); -mean(log(r)) }
+c(theil = theil(x), mld = mld(x), theil_x10 = theil(10 * x))</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-15-1"><a href="#interpolate-15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(ineq00<span class="sc">$</span>seed)</span>
+<span id="interpolate-15-2"><a href="#interpolate-15-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rlnorm</span>(<span class="dv">8</span>, <span class="dv">7</span>, <span class="fl">0.8</span>))</span>
+<span id="interpolate-15-3"><a href="#interpolate-15-3" aria-hidden="true" tabindex="-1"></a>theil <span class="ot">&lt;-</span> <span class="cf">function</span>(x) { r <span class="ot">&lt;-</span> x <span class="sc">/</span> <span class="fu">mean</span>(x); <span class="fu">mean</span>(r <span class="sc">*</span> <span class="fu">log</span>(r)) }</span>
+<span id="interpolate-15-4"><a href="#interpolate-15-4" aria-hidden="true" tabindex="-1"></a>mld   <span class="ot">&lt;-</span> <span class="cf">function</span>(x) { r <span class="ot">&lt;-</span> x <span class="sc">/</span> <span class="fu">mean</span>(x); <span class="sc">-</span><span class="fu">mean</span>(<span class="fu">log</span>(r)) }</span>
+<span id="interpolate-15-5"><a href="#interpolate-15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">theil =</span> <span class="fu">theil</span>(x), <span class="at">mld =</span> <span class="fu">mld</span>(x), <span class="at">theil_x10 =</span> <span class="fu">theil</span>(<span class="dv">10</span> <span class="sc">*</span> x))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Ne pas diviser par la moyenne : l’indice dépend alors de l’unité monétaire.</li>
+<li>Revenus nuls : <span class="math inline">\(\ln 0 = -\infty\)</span> rend la MLD infinie, et <code>log(r) * r</code> vaut <code>NaN</code> (il faut convenir que <span class="math inline">\(0\ln 0 = 0\)</span> pour le Theil T).</li>
+<li>Mettre le signe moins sur le Theil au lieu de la MLD.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> L’étape suivante unifie les deux dans une seule fonction GE(<span class="math inline">\(\alpha\)</span>), et montre comment <span class="math inline">\(\alpha\)</span> règle la sensibilité aux différentes parties de la distribution.</p>
+</div>
+<div class="cell" data-exercise="ineq-ge-0" data-check="true">
+<script type="exercise-check-ineq-ge-0-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImluZXEtZ2UtMCIsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzZXQuc2VlZChpbmVxMDAkc2VlZClcbnggPC0gcm91bmQocmxub3JtKDgsIDcsIDAuOCkpXG5UXyA8LSBmdW5jdGlvbih4KSB7IHIgPC0geCAvIG1lYW4oeCk7IG1lYW4ociAqIGxvZyhyKSkgfVxuTV8gPC0gZnVuY3Rpb24oeCkgeyByIDwtIHggLyBtZWFuKHgpOyAtbWVhbihsb2cocikpIH1cbnJlcyA8LSBzdXBwcmVzc1dhcm5pbmdzKGFzLm51bWVyaWMoLnJlc3VsdCkpXG5pZiAobGVuZ3RoKHJlcykgIT0gMyB8fCBhbnlOQShyZXMpKSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJSZW52b2llIGModGhlaWwgPSAuLi4sIG1sZCA9IC4uLiwgdGhlaWxfeDEwID0gLi4uKSBjb21tZSBkYW5zIGxlIGdhYmFyaXQuXCIpXG59IGVsc2UgaWYgKGFicyhyZXNbMV0gLSBUXyh4KSkgPiAxZS05KSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJUaGVpbCBUIGluY29ycmVjdCA6IG1lYW4ociAqIGxvZyhyKSkgYXZlYyByID0geCAvIG1lYW4oeCkuXCIpXG59IGVsc2UgaWYgKGFicyhyZXNbMl0gLSBNXyh4KSkgPiAxZS05KSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJNTEQgaW5jb3JyZWN0ZSA6IC1tZWFuKGxvZyhyKSkuXCIpXG59IGVsc2UgaWYgKGFicyhyZXNbM10gLSByZXNbMV0pID4gMWUtOSkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiTGUgVGhlaWwgZGUgMTAgeCBkb2l0IMOqdHJlIGlkZW50aXF1ZSDDoCBjZWx1aSBkZSB4IDogbm9ybWFsaXNlIGJpZW4gcGFyIG1lYW4oeCkgZGFucyBsYSBmb25jdGlvbi5cIilcbn0gZWxzZSB7XG4gIGxpc3QoY29ycmVjdCA9IFRSVUUsIG1lc3NhZ2UgPSBzcHJpbnRmKFwiQ29ycmVjdCA6IFRoZWlsIFQgPSAlLjRmLCBNTEQgPSAlLjRmLCBldCBhdWN1bmUgZGVzIGRldXggbmUgY2hhbmdlIHNpIGwnb24gbXVsdGlwbGllIGxlcyByZXZlbnVzIHBhciAxMC5cIiwgVF8oeCksIE1fKHgpKSlcbn0ifQ==
+</script>
+</div>
+<div class="dojo-done" data-id="ineq-ge-0">
+
+</div>
+</section>
+<section id="ineq-ge-1" class="level2">
+<h2 class="anchored" data-anchor-id="ineq-ge-1">La famille GE(α) : une seule fonction</h2>
+<p><span class="dojo-step">Marche 4 sur 5 · À compléter</span></p>
+<p>Écris <code>my_ge(x, alpha)</code> couvrant les cas particuliers : <span class="math inline">\(\alpha = 0\)</span> (écart logarithmique moyen), <span class="math inline">\(\alpha = 1\)</span> (Theil T) et le cas général <span class="math inline">\(\frac{1}{\alpha(\alpha-1)}\left(\overline{(x/\mu)^\alpha} - 1\right)\)</span>.</p>
+<div class="cell" data-exercise="ineq-ge-1" data-caption="GE(alpha)">
+<div>
+<div id="webr-17" class="exercise-cell">
+
+</div>
+<script type="webr-17-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJHRShhbHBoYSkiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImluZXEtZ2UtMSIsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzb3VyY2UoXCJSL2luZWdhbGl0ZXMuUlwiKVxuc2V0LnNlZWQoMylcbnggPC0gcmxub3JtKDUwMCwgMywgMC43KVxuXG5teV9nZSA8LSBmdW5jdGlvbih4LCBhbHBoYSkge1xuICByIDwtIHggLyBtZWFuKHgpXG4gIGlmIChhbHBoYSA9PSAwKSB7XG4gICAgX19fX19fICAgICAgICAgICAgICAgICAgICAgIyAtbWVhbihsb2cocikpXG4gIH0gZWxzZSBpZiAoYWxwaGEgPT0gMSkge1xuICAgIF9fX19fXyAgICAgICAgICAgICAgICAgICAgICMgbWVhbihyICogbG9nKHIpKVxuICB9IGVsc2Uge1xuICAgIF9fX19fXyAgICAgICAgICAgICAgICAgICAgICMgKG1lYW4ocl5hbHBoYSkgLSAxKSAvIChhbHBoYSAqIChhbHBoYSAtIDEpKVxuICB9XG59XG5zYXBwbHkoYygtMSwgMCwgMC41LCAxLCAyKSwgZnVuY3Rpb24oYSkgYyhtb25fZ2UgPSBteV9nZSh4LCBhKSwgZ2UgPSBnZSh4LCBhKSkpIn0=
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ineq-ge-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>La famille GE(<span class="math inline">\(\alpha\)</span>) a une formule générale qui n’est <strong>pas définie</strong> en <span class="math inline">\(\alpha = 0\)</span> et <span class="math inline">\(\alpha = 1\)</span> (division 0/0). Ces deux cas sont des limites : il faut les écrire séparément.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ineq-ge-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Les cas 0 et 1 sont des <strong>limites</strong> du cas général quand <span class="math inline">\(\alpha \to 0\)</span> ou <span class="math inline">\(1\)</span> : la formule générale y est <span class="math inline">\(0/0\)</span>. Sensibilité : un α grand pèse sur le haut de la distribution, un α négatif sur le bas.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ineq-ge-1">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>On travaille sur les revenus relatifs <span class="math inline">\(r_i = x_i/\mu\)</span>, ce qui rend la mesure invariante à l’échelle.</li>
+<li>Pour <span class="math inline">\(\alpha \ne 0, 1\)</span> : <span class="math inline">\(\mathrm{GE}(\alpha) = \dfrac{1}{\alpha(\alpha-1)}\big(\overline{r^\alpha} - 1\big)\)</span>.</li>
+<li>Limite en <span class="math inline">\(\alpha \to 1\)</span> : Theil T <span class="math inline">\(= \overline{r \ln r}\)</span>.</li>
+<li>Limite en <span class="math inline">\(\alpha \to 0\)</span> : MLD <span class="math inline">\(= -\overline{\ln r}\)</span> (sensible au <strong>bas</strong> de la distribution).</li>
+<li>Le paramètre <span class="math inline">\(\alpha\)</span> règle la sensibilité aux transferts : <span class="math inline">\(\alpha\)</span> grand → sensible au haut, <span class="math inline">\(\alpha\)</span> négatif → au bas ; GE(2) vaut la moitié du carré du coefficient de variation.</li>
+</ol>
+<div class="cell" data-exercise="ineq-ge-1" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ineq-ge-1">
+<code id="interpolate-19" class="solution-code d-none">source("R/inegalites.R")
+set.seed(3)
+x &lt;- rlnorm(500, 3, 0.7)
+
+my_ge &lt;- function(x, alpha) {
+  r &lt;- x / mean(x)
+  if (alpha == 0) {
+    -mean(log(r))
+  } else if (alpha == 1) {
+    mean(r * log(r))
+  } else {
+    (mean(r^alpha) - 1) / (alpha * (alpha - 1))
+  }
+}
+sapply(c(-1, 0, 0.5, 1, 2), function(a) c(mon_ge = my_ge(x, a), ge = ge(x, a)))</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-20-1"><a href="#interpolate-20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/inegalites.R"</span>)</span>
+<span id="interpolate-20-2"><a href="#interpolate-20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
+<span id="interpolate-20-3"><a href="#interpolate-20-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rlnorm</span>(<span class="dv">500</span>, <span class="dv">3</span>, <span class="fl">0.7</span>)</span>
+<span id="interpolate-20-4"><a href="#interpolate-20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="interpolate-20-5"><a href="#interpolate-20-5" aria-hidden="true" tabindex="-1"></a>my_ge <span class="ot">&lt;-</span> <span class="cf">function</span>(x, alpha) {</span>
+<span id="interpolate-20-6"><a href="#interpolate-20-6" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> x <span class="sc">/</span> <span class="fu">mean</span>(x)</span>
+<span id="interpolate-20-7"><a href="#interpolate-20-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (alpha <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="interpolate-20-8"><a href="#interpolate-20-8" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="fu">mean</span>(<span class="fu">log</span>(r))</span>
+<span id="interpolate-20-9"><a href="#interpolate-20-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (alpha <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="interpolate-20-10"><a href="#interpolate-20-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mean</span>(r <span class="sc">*</span> <span class="fu">log</span>(r))</span>
+<span id="interpolate-20-11"><a href="#interpolate-20-11" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="interpolate-20-12"><a href="#interpolate-20-12" aria-hidden="true" tabindex="-1"></a>    (<span class="fu">mean</span>(r<span class="sc">^</span>alpha) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (alpha <span class="sc">*</span> (alpha <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="interpolate-20-13"><a href="#interpolate-20-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="interpolate-20-14"><a href="#interpolate-20-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="interpolate-20-15"><a href="#interpolate-20-15" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="cf">function</span>(a) <span class="fu">c</span>(<span class="at">mon_ge =</span> <span class="fu">my_ge</span>(x, a), <span class="at">ge =</span> <span class="fu">ge</span>(x, a)))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Tester <code>alpha == 0</code> sur un <code>alpha</code> calculé : on compare des flottants, ce qui peut échouer (utilise <code>abs(alpha) &lt; 1e-12</code>).</li>
+<li>Prendre le log d’un revenu nul : <span class="math inline">\(-\infty\)</span> pour la MLD, <code>NaN</code> pour Theil T (il faut convenir que <span class="math inline">\(0 \ln 0 = 0\)</span>).</li>
+<li>Oublier le facteur <span class="math inline">\(1/(\alpha(\alpha-1))\)</span>.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Vérifie par <code>ge(x, 1.0001)</code> et <code>ge(x, 0.9999)</code> que la formule générale tend bien vers Theil T quand <span class="math inline">\(\alpha \to 1\)</span>.</p>
+</div>
+<div class="cell" data-exercise="ineq-ge-1" data-check="true">
+<script type="exercise-check-ineq-ge-1-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImluZXEtZ2UtMSIsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzb3VyY2UoXCJSL2luZWdhbGl0ZXMuUlwiKVxuZiA8LSBnZXQwKFwibXlfZ2VcIiwgZW52aXIgPSAuZW52aXJfcmVzdWx0LCBpbmhlcml0cyA9IEZBTFNFKVxuaWYgKCFpcy5mdW5jdGlvbihmKSkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiRMOpZmluaXMgbGEgZm9uY3Rpb24gbXlfZ2UoeCwgYWxwaGEpLlwiKVxufSBlbHNlIHtcbiAgc2V0LnNlZWQoMTEpOyB5IDwtIHJsbm9ybSgyMDAsIDIsIDAuOSlcbiAgYWwgPC0gYygtMSwgMCwgMC41LCAxLCAyLCAzKVxuICBvayA8LSB2YXBwbHkoYWwsIGZ1bmN0aW9uKGEpIGlzVFJVRShhbGwuZXF1YWwodHJ5Q2F0Y2goZih5LCBhKSwgZXJyb3IgPSBmdW5jdGlvbihlKSBOQV9yZWFsXyksIGdlKHksIGEpKSksIGxvZ2ljYWwoMSkpXG4gIGlmIChhbGwob2spKSBsaXN0KGNvcnJlY3QgPSBUUlVFLCBtZXNzYWdlID0gXCJDb3JyZWN0IDogbXlfZ2UgcmVwcm9kdWl0IGdlKCkgcG91ciBhbHBoYSBkYW5zIHstMSwgMCwgMC41LCAxLCAyLCAzfS5cIilcbiAgZWxzZSBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IHNwcmludGYoXCLDiWNoZWMgcG91ciBhbHBoYSA9ICVzLiBSZXZvaXMgbGVzIGNhcyBhbHBoYSA9IDAgZXQgYWxwaGEgPSAxIChsaW1pdGVzKSBldCBsYSBmb3JtdWxlIGfDqW7DqXJhbGUuXCIsIHBhc3RlKGFsWyFva10sIGNvbGxhcHNlID0gXCIsIFwiKSkpXG59In0=
+</script>
+</div>
+<div class="dojo-done" data-id="ineq-ge-1">
+
+</div>
+</section>
+<section id="ineq-decomp-1" class="level2">
+<h2 class="anchored" data-anchor-id="ineq-decomp-1">Décomposition du Theil par groupes</h2>
+<p><span class="dojo-step">Marche 5 sur 5 · Autonome</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="0" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line -1;"><span id="cb5-0"><a href="#cb5-0" aria-hidden="true" tabindex="-1"></a>ineq3 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"ineq-decomp-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Trois groupes (A, B, C) aux revenus moyens différents. Décompose le Theil T en inégalité <strong>intra-groupes</strong> <span class="math inline">\(\sum_g s_g T_g\)</span> (avec <span class="math inline">\(s_g\)</span> la part de revenu du groupe <span class="math inline">\(g\)</span>) et <strong>inter-groupes</strong> (Theil de la distribution où chacun reçoit la moyenne de son groupe).</p>
+<div class="cell" data-exercise="ineq-decomp-1" data-caption="Theil T : intra et inter" data-input="ineq3">
+<div>
+<div id="webr-22" class="exercise-cell">
+
+</div>
+<script type="webr-22-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJUaGVpbCBUIDogaW50cmEgZXQgaW50ZXIiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImluZXEtZGVjb21wLTEiLCJpbnB1dCI6WyJpbmVxMyJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic291cmNlKFwiUi9pbmVnYWxpdGVzLlJcIilcbnNldC5zZWVkKGluZXEzJHNlZWQpXG5uIDwtIDMwMFxuZyA8LSBzYW1wbGUoYyhcIkFcIiwgXCJCXCIsIFwiQ1wiKSwgbiwgVFJVRSwgcHJvYiA9IGMoMC41LCAwLjMsIDAuMikpXG54IDwtIHJsbm9ybShuLCBjKEEgPSAzLCBCID0gMy4zLCBDID0gMi43KVtnXSwgMC43KVxuXG5zICAgPC0gdGFwcGx5KHgsIGcsIHN1bSkgLyBzdW0oeCkgICAgICAgICAgIyBwYXJ0cyBkZSByZXZlbnVcblRfZyA8LSB0YXBwbHkoeCwgZywgdGhlaWxfVCkgICAgICAgICAgICAgICAjIFRoZWlsIGRhbnMgY2hhcXVlIGdyb3VwZVxuaW50cmEgPC0gX19fX19fICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgc3VtKHMgKiBUX2cpXG5tb3kgPC0gdGFwcGx5KHgsIGcsIG1lYW4pOyBmIDwtIGFzLm51bWVyaWModGFibGUoZykpIC8gblxuaW50ZXIgPC0gX19fX19fICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgVGhlaWwgZGVzIG1veWVubmVzIGRlIGdyb3VwZXMgcG9uZMOpcsOpZXMgcGFyIGYgOiBnZShtb3ksIDEsIHcgPSBmKVxuYyhpbnRyYSA9IGludHJhLCBpbnRlciA9IGludGVyLCB0b3RhbCA9IGludHJhICsgaW50ZXIsIGRpcmVjdCA9IHRoZWlsX1QoeCkpIn0=
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ineq-decomp-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>L’inégalité totale a deux sources : l’écart entre les <strong>moyennes</strong> des groupes (inter) et la dispersion <strong>à l’intérieur</strong> de chaque groupe (intra). Calcule d’abord l’indice dans chaque groupe.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ineq-decomp-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>tapply()</code> trie les groupes par ordre alphabétique, comme <code>table()</code> : <code>s</code>, <code>T_g</code>, <code>moy</code> et <code>f</code> sont donc alignés. Les colonnes <code>total</code> et <code>direct</code> doivent être égales.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ineq-decomp-1">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>Le Theil T est additivement décomposable : total = intra + inter.</li>
+<li><strong>Intra</strong> : chaque groupe contribue par son propre Theil <span class="math inline">\(T_g\)</span>, pondéré par sa part de <strong>revenu</strong> <span class="math inline">\(s_g\)</span>.</li>
+<li><strong>Inter</strong> : on remplace chaque revenu par la moyenne de son groupe et l’on calcule le Theil de cette distribution lissée, pondérée par les parts de population.</li>
+<li>L’identité est exacte : <code>total</code> et <code>direct</code> coïncident.</li>
+<li>La part inter (<span class="math inline">\(T_{\text{inter}}/T\)</span>) dit quelle fraction de l’inégalité s’explique par l’appartenance au groupe, à la manière d’un <span class="math inline">\(R^2\)</span>.</li>
+</ol>
+<div class="cell" data-exercise="ineq-decomp-1" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ineq-decomp-1">
+<code id="interpolate-24" class="solution-code d-none">source("R/inegalites.R")
+set.seed(ineq3$seed)
+n &lt;- 300
+g &lt;- sample(c("A", "B", "C"), n, TRUE, prob = c(0.5, 0.3, 0.2))
+x &lt;- rlnorm(n, c(A = 3, B = 3.3, C = 2.7)[g], 0.7)
+
+s   &lt;- tapply(x, g, sum) / sum(x)
+T_g &lt;- tapply(x, g, theil_T)
+intra &lt;- sum(s * T_g)
+moy &lt;- tapply(x, g, mean); f &lt;- as.numeric(table(g)) / n
+inter &lt;- ge(moy, 1, w = f)
+c(intra = intra, inter = inter, total = intra + inter, direct = theil_T(x))</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-25-1"><a href="#interpolate-25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/inegalites.R"</span>)</span>
+<span id="interpolate-25-2"><a href="#interpolate-25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(ineq3<span class="sc">$</span>seed)</span>
+<span id="interpolate-25-3"><a href="#interpolate-25-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">300</span></span>
+<span id="interpolate-25-4"><a href="#interpolate-25-4" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>), n, <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.3</span>, <span class="fl">0.2</span>))</span>
+<span id="interpolate-25-5"><a href="#interpolate-25-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rlnorm</span>(n, <span class="fu">c</span>(<span class="at">A =</span> <span class="dv">3</span>, <span class="at">B =</span> <span class="fl">3.3</span>, <span class="at">C =</span> <span class="fl">2.7</span>)[g], <span class="fl">0.7</span>)</span>
+<span id="interpolate-25-6"><a href="#interpolate-25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="interpolate-25-7"><a href="#interpolate-25-7" aria-hidden="true" tabindex="-1"></a>s   <span class="ot">&lt;-</span> <span class="fu">tapply</span>(x, g, sum) <span class="sc">/</span> <span class="fu">sum</span>(x)</span>
+<span id="interpolate-25-8"><a href="#interpolate-25-8" aria-hidden="true" tabindex="-1"></a>T_g <span class="ot">&lt;-</span> <span class="fu">tapply</span>(x, g, theil_T)</span>
+<span id="interpolate-25-9"><a href="#interpolate-25-9" aria-hidden="true" tabindex="-1"></a>intra <span class="ot">&lt;-</span> <span class="fu">sum</span>(s <span class="sc">*</span> T_g)</span>
+<span id="interpolate-25-10"><a href="#interpolate-25-10" aria-hidden="true" tabindex="-1"></a>moy <span class="ot">&lt;-</span> <span class="fu">tapply</span>(x, g, mean); f <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">table</span>(g)) <span class="sc">/</span> n</span>
+<span id="interpolate-25-11"><a href="#interpolate-25-11" aria-hidden="true" tabindex="-1"></a>inter <span class="ot">&lt;-</span> <span class="fu">ge</span>(moy, <span class="dv">1</span>, <span class="at">w =</span> f)</span>
+<span id="interpolate-25-12"><a href="#interpolate-25-12" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">intra =</span> intra, <span class="at">inter =</span> inter, <span class="at">total =</span> intra <span class="sc">+</span> inter, <span class="at">direct =</span> <span class="fu">theil_T</span>(x))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Pondérer l’intra par les parts de <strong>population</strong> : c’est la règle de la MLD, pas celle du Theil T.</li>
+<li>Désaligner les groupes : <code>tapply</code> et <code>table</code> trient par ordre alphabétique.</li>
+<li>Étendre la logique au Gini : il n’est pas décomposable en deux termes (il reste un terme de chevauchement des distributions).</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Refais l’exercice avec la MLD (<span class="math inline">\(\alpha = 0\)</span>) : les poids intra deviennent les parts de population. C’est pourquoi la MLD est la mesure favorite des comparaisons dans le temps.</p>
+</div>
+<div class="cell" data-exercise="ineq-decomp-1" data-check="true">
+<script type="exercise-check-ineq-decomp-1-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImluZXEtZGVjb21wLTEiLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic291cmNlKFwiUi9pbmVnYWxpdGVzLlJcIilcbnNldC5zZWVkKGluZXEzJHNlZWQpXG5uIDwtIDMwMFxuZyA8LSBzYW1wbGUoYyhcIkFcIiwgXCJCXCIsIFwiQ1wiKSwgbiwgVFJVRSwgcHJvYiA9IGMoMC41LCAwLjMsIDAuMikpXG54IDwtIHJsbm9ybShuLCBjKEEgPSAzLCBCID0gMy4zLCBDID0gMi43KVtnXSwgMC43KVxuZCA8LSBnZV9kZWNvbXAoeCwgZywgMSlcbnJlcyA8LSBzdXBwcmVzc1dhcm5pbmdzKGFzLm51bWVyaWMoLnJlc3VsdCkpXG5pZiAobGVuZ3RoKHJlcykgIT0gNCB8fCBhbnlOQShyZXMpKSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJSZW52b2llIGMoaW50cmEsIGludGVyLCB0b3RhbCwgZGlyZWN0KS5cIilcbn0gZWxzZSBpZiAoYWJzKHJlc1sxXSAtIGRbW1wiaW50cmFcIl1dKSA+IDFlLTkpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIkludHJhIDogcG91ciBsZSBUaGVpbCBUIChhbHBoYSA9IDEpLCBsZXMgcG9pZHMgc29udCBsZXMgcGFydHMgZGUgcmV2ZW51IHNfZywgcGFzIGxlcyBwYXJ0cyBkZSBwb3B1bGF0aW9uLlwiKVxufSBlbHNlIGlmIChhYnMocmVzWzJdIC0gZFtbXCJpbnRlclwiXV0pID4gMWUtOSkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiSW50ZXIgOiBUaGVpbCBUIGRlIGxhIGRpc3RyaWJ1dGlvbiBkZXMgbW95ZW5uZXMgZGUgZ3JvdXBlcywgcG9uZMOpcsOpZSBwYXIgbGVzIHBhcnRzIGRlIHBvcHVsYXRpb24uXCIpXG59IGVsc2Uge1xuICBsaXN0KGNvcnJlY3QgPSBUUlVFLCBtZXNzYWdlID0gc3ByaW50ZihcIkNvcnJlY3QgOiBUID0gJS40ZiA9IGludHJhICUuNGYgKyBpbnRlciAlLjRmIChpbnRlciA9ICUuMGYgJSUgZGUgbCdpbsOpZ2FsaXTDqSkuXCIsIGRbW1widG90YWxcIl1dLCByZXNbMV0sIHJlc1syXSwgMTAwICogZFtbXCJwYXJ0X2ludGVyXCJdXSkpXG59In0=
+</script>
+</div>
+<div class="dojo-done" data-id="ineq-decomp-1">
+
+</div>
+</section>
+<section id="entraîne-toi" class="level2">
+<h2 class="anchored" data-anchor-id="entraîne-toi">Entraîne-toi</h2>
+<div class="dojo-cards" data-course="recherche" data-n="5">
+
+</div>
+<div class="dojo-quiz" data-course="recherche" data-n="3">
+
+</div>
+
+
+<script type="webr-data">
+eyJvcHRpb25zIjp7ImJhc2VVcmwiOiJodHRwczovL3dlYnIuci13YXNtLm9yZy92MC42LjAvIn0sInBhY2thZ2VzIjp7InBrZ3MiOlsiZXZhbHVhdGUiLCJrbml0ciIsImh0bWx0b29scyJdLCJyZXBvcyI6W119LCJyZW5kZXJfZGYiOiJkZWZhdWx0In0=
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0yMiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMjI7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0yMiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzIyID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMjItY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICAvLyBEZWZhdWx0IGV4ZXJjaXNlIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oXG4gICAge1xuICAgICAgaWQ6IFwid2Vici0yMi1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzIyID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8yMiwge2luZXEzfSk7XG5fd2Vicl9mZWVkYmFja18yMiA9IHtcbiAgY29uc3QgeyBXZWJSR3JhZGVyIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBlbXB0eUZlZWRiYWNrID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7XG5cbiAgY29uc3QgZ3JhZGVyID0gbmV3IFdlYlJHcmFkZXIoX3dlYnJfdmFsdWVfMjIuZXZhbHVhdG9yKTtcbiAgY29uc3QgZmVlZGJhY2sgPSBhd2FpdCBncmFkZXIuZ3JhZGVFeGVyY2lzZSgpO1xuICBpZiAoIWZlZWRiYWNrKSByZXR1cm4gZW1wdHlGZWVkYmFjaztcbiAgcmV0dXJuIGZlZWRiYWNrO1xufVxuIn0seyJjZWxsTmFtZSI6IndlYnItd2lkZ2V0LTE3IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICAvLyBXYWl0IGZvciBvdXRwdXQgdG8gYmUgd3JpdHRlbiB0byB0aGUgRE9NLCB0aGVuIHRyaWdnZXIgd2lkZ2V0IHJlbmRlcmluZ1xuICBhd2FpdCBfd2Vicl92YWx1ZV8xNztcbiAgaWYgKHdpbmRvdy5IVE1MV2lkZ2V0cykge1xuICAgIHdpbmRvdy5IVE1MV2lkZ2V0cy5zdGF0aWNSZW5kZXIoKTtcbiAgfVxuICBpZiAod2luZG93LlBhZ2VkVGFibGVEb2MpIHtcbiAgICB3aW5kb3cuUGFnZWRUYWJsZURvYy5pbml0QWxsKCk7XG4gIH1cbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLTE3IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfd2Vicl9lZGl0b3JfMTcgPSB7XG4gIGNvbnN0IHsgV2ViUkV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwid2Vici0xNy1jb250ZW50c1xcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGJsb2NrID0gSlNPTi5wYXJzZShiNjREZWNvZGUoc2NyaXB0Q29udGVudCkpO1xuXG4gIC8vIERlZmF1bHQgZXhlcmNpc2UgY29uZmlndXJhdGlvblxuICBjb25zdCBvcHRpb25zID0gT2JqZWN0LmFzc2lnbihcbiAgICB7XG4gICAgICBpZDogXCJ3ZWJyLTE3LWNvbnRlbnRzXCIsXG4gICAgICBlbnZpcjogYGV4ZXJjaXNlLWVudi0ke2Jsb2NrLmF0dHIuZXhlcmNpc2V9YCxcbiAgICAgIGVycm9yOiBmYWxzZSxcbiAgICAgIGNhcHRpb246ICdFeGVyY2lzZScsXG4gICAgfSxcbiAgICBibG9jay5hdHRyXG4gICk7XG5cbiAgY29uc3QgZWRpdG9yID0gbmV3IFdlYlJFeGVyY2lzZUVkaXRvcih3ZWJST2pzLndlYlJQcm9taXNlLCBibG9jay5jb2RlLCBvcHRpb25zKTtcbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG52aWV3b2YgX3dlYnJfdmFsdWVfMTcgPSB3ZWJST2pzLnByb2Nlc3MoX3dlYnJfZWRpdG9yXzE3LCB7fSk7XG5fd2Vicl9mZWVkYmFja18xNyA9IHtcbiAgY29uc3QgeyBXZWJSR3JhZGVyIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBlbXB0eUZlZWRiYWNrID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7XG5cbiAgY29uc3QgZ3JhZGVyID0gbmV3IFdlYlJHcmFkZXIoX3dlYnJfdmFsdWVfMTcuZXZhbHVhdG9yKTtcbiAgY29uc3QgZmVlZGJhY2sgPSBhd2FpdCBncmFkZXIuZ3JhZGVFeGVyY2lzZSgpO1xuICBpZiAoIWZlZWRiYWNrKSByZXR1cm4gZW1wdHlGZWVkYmFjaztcbiAgcmV0dXJuIGZlZWRiYWNrO1xufVxuIn0seyJjZWxsTmFtZSI6IndlYnItd2lkZ2V0LTEyIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICAvLyBXYWl0IGZvciBvdXRwdXQgdG8gYmUgd3JpdHRlbiB0byB0aGUgRE9NLCB0aGVuIHRyaWdnZXIgd2lkZ2V0IHJlbmRlcmluZ1xuICBhd2FpdCBfd2Vicl92YWx1ZV8xMjtcbiAgaWYgKHdpbmRvdy5IVE1MV2lkZ2V0cykge1xuICAgIHdpbmRvdy5IVE1MV2lkZ2V0cy5zdGF0aWNSZW5kZXIoKTtcbiAgfVxuICBpZiAod2luZG93LlBhZ2VkVGFibGVEb2MpIHtcbiAgICB3aW5kb3cuUGFnZWRUYWJsZURvYy5pbml0QWxsKCk7XG4gIH1cbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLTEyIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfd2Vicl9lZGl0b3JfMTIgPSB7XG4gIGNvbnN0IHsgV2ViUkV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwid2Vici0xMi1jb250ZW50c1xcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGJsb2NrID0gSlNPTi5wYXJzZShiNjREZWNvZGUoc2NyaXB0Q29udGVudCkpO1xuXG4gIC8vIERlZmF1bHQgZXhlcmNpc2UgY29uZmlndXJhdGlvblxuICBjb25zdCBvcHRpb25zID0gT2JqZWN0LmFzc2lnbihcbiAgICB7XG4gICAgICBpZDogXCJ3ZWJyLTEyLWNvbnRlbnRzXCIsXG4gICAgICBlbnZpcjogYGV4ZXJjaXNlLWVudi0ke2Jsb2NrLmF0dHIuZXhlcmNpc2V9YCxcbiAgICAgIGVycm9yOiBmYWxzZSxcbiAgICAgIGNhcHRpb246ICdFeGVyY2lzZScsXG4gICAgfSxcbiAgICBibG9jay5hdHRyXG4gICk7XG5cbiAgY29uc3QgZWRpdG9yID0gbmV3IFdlYlJFeGVyY2lzZUVkaXRvcih3ZWJST2pzLndlYlJQcm9taXNlLCBibG9jay5jb2RlLCBvcHRpb25zKTtcbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG52aWV3b2YgX3dlYnJfdmFsdWVfMTIgPSB3ZWJST2pzLnByb2Nlc3MoX3dlYnJfZWRpdG9yXzEyLCB7aW5lcTAwfSk7XG5fd2Vicl9mZWVkYmFja18xMiA9IHtcbiAgY29uc3QgeyBXZWJSR3JhZGVyIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBlbXB0eUZlZWRiYWNrID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7XG5cbiAgY29uc3QgZ3JhZGVyID0gbmV3IFdlYlJHcmFkZXIoX3dlYnJfdmFsdWVfMTIuZXZhbHVhdG9yKTtcbiAgY29uc3QgZmVlZGJhY2sgPSBhd2FpdCBncmFkZXIuZ3JhZGVFeGVyY2lzZSgpO1xuICBpZiAoIWZlZWRiYWNrKSByZXR1cm4gZW1wdHlGZWVkYmFjaztcbiAgcmV0dXJuIGZlZWRiYWNrO1xufVxuIn0seyJjZWxsTmFtZSI6IndlYnItd2lkZ2V0LTciLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIC8vIFdhaXQgZm9yIG91dHB1dCB0byBiZSB3cml0dGVuIHRvIHRoZSBET00sIHRoZW4gdHJpZ2dlciB3aWRnZXQgcmVuZGVyaW5nXG4gIGF3YWl0IF93ZWJyX3ZhbHVlXzc7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici03IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfd2Vicl9lZGl0b3JfNyA9IHtcbiAgY29uc3QgeyBXZWJSRXhlcmNpc2VFZGl0b3IsIGI2NERlY29kZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJ3ZWJyLTctY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICAvLyBEZWZhdWx0IGV4ZXJjaXNlIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oXG4gICAge1xuICAgICAgaWQ6IFwid2Vici03LWNvbnRlbnRzXCIsXG4gICAgICBlbnZpcjogYGV4ZXJjaXNlLWVudi0ke2Jsb2NrLmF0dHIuZXhlcmNpc2V9YCxcbiAgICAgIGVycm9yOiBmYWxzZSxcbiAgICAgIGNhcHRpb246ICdFeGVyY2lzZScsXG4gICAgfSxcbiAgICBibG9jay5hdHRyXG4gICk7XG5cbiAgY29uc3QgZWRpdG9yID0gbmV3IFdlYlJFeGVyY2lzZUVkaXRvcih3ZWJST2pzLndlYlJQcm9taXNlLCBibG9jay5jb2RlLCBvcHRpb25zKTtcbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG52aWV3b2YgX3dlYnJfdmFsdWVfNyA9IHdlYlJPanMucHJvY2Vzcyhfd2Vicl9lZGl0b3JfNywge2luZXExfSk7XG5fd2Vicl9mZWVkYmFja183ID0ge1xuICBjb25zdCB7IFdlYlJHcmFkZXIgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGVtcHR5RmVlZGJhY2sgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTtcblxuICBjb25zdCBncmFkZXIgPSBuZXcgV2ViUkdyYWRlcihfd2Vicl92YWx1ZV83LmV2YWx1YXRvcik7XG4gIGNvbnN0IGZlZWRiYWNrID0gYXdhaXQgZ3JhZGVyLmdyYWRlRXhlcmNpc2UoKTtcbiAgaWYgKCFmZWVkYmFjaykgcmV0dXJuIGVtcHR5RmVlZGJhY2s7XG4gIHJldHVybiBmZWVkYmFjaztcbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0yIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICAvLyBXYWl0IGZvciBvdXRwdXQgdG8gYmUgd3JpdHRlbiB0byB0aGUgRE9NLCB0aGVuIHRyaWdnZXIgd2lkZ2V0IHJlbmRlcmluZ1xuICBhd2FpdCBfd2Vicl92YWx1ZV8yO1xuICBpZiAod2luZG93LkhUTUxXaWRnZXRzKSB7XG4gICAgd2luZG93LkhUTUxXaWRnZXRzLnN0YXRpY1JlbmRlcigpO1xuICB9XG4gIGlmICh3aW5kb3cuUGFnZWRUYWJsZURvYykge1xuICAgIHdpbmRvdy5QYWdlZFRhYmxlRG9jLmluaXRBbGwoKTtcbiAgfVxufVxuIn0seyJjZWxsTmFtZSI6IndlYnItMiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzIgPSB7XG4gIGNvbnN0IHsgV2ViUkV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwid2Vici0yLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgLy8gRGVmYXVsdCBleGVyY2lzZSBjb25maWd1cmF0aW9uXG4gIGNvbnN0IG9wdGlvbnMgPSBPYmplY3QuYXNzaWduKFxuICAgIHtcbiAgICAgIGlkOiBcIndlYnItMi1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzIgPSB3ZWJST2pzLnByb2Nlc3MoX3dlYnJfZWRpdG9yXzIsIHtpbmVxMH0pO1xuX3dlYnJfZmVlZGJhY2tfMiA9IHtcbiAgY29uc3QgeyBXZWJSR3JhZGVyIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBlbXB0eUZlZWRiYWNrID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7XG5cbiAgY29uc3QgZ3JhZGVyID0gbmV3IFdlYlJHcmFkZXIoX3dlYnJfdmFsdWVfMi5ldmFsdWF0b3IpO1xuICBjb25zdCBmZWVkYmFjayA9IGF3YWl0IGdyYWRlci5ncmFkZUV4ZXJjaXNlKCk7XG4gIGlmICghZmVlZGJhY2spIHJldHVybiBlbXB0eUZlZWRiYWNrO1xuICByZXR1cm4gZmVlZGJhY2s7XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici13aWRnZXQtMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMTtcbiAgaWYgKHdpbmRvdy5IVE1MV2lkZ2V0cykge1xuICAgIHdpbmRvdy5IVE1MV2lkZ2V0cy5zdGF0aWNSZW5kZXIoKTtcbiAgfVxuICBpZiAod2luZG93LlBhZ2VkVGFibGVEb2MpIHtcbiAgICB3aW5kb3cuUGFnZWRUYWJsZURvYy5pbml0QWxsKCk7XG4gIH1cbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLTEiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF93ZWJyX2VkaXRvcl8xID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMS1jb250ZW50c1xcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGJsb2NrID0gSlNPTi5wYXJzZShiNjREZWNvZGUoc2NyaXB0Q29udGVudCkpO1xuXG4gIGNvbnN0IG9wdGlvbnMgPSBPYmplY3QuYXNzaWduKHsgaWQ6IGB3ZWJyLTEtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgV2ViUkV4ZXJjaXNlRWRpdG9yKHdlYlJPanMud2ViUlByb21pc2UsIGJsb2NrLmNvZGUsIG9wdGlvbnMpO1xuXG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxuX3dlYnJfdmFsdWVfMSA9IHdlYlJPanMucHJvY2Vzcyhfd2Vicl9lZGl0b3JfMSwge30pO1xuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTQiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCI0XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJub25lXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTUiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCI1XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJyXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTkiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCI5XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJub25lXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTEwIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICBjb25zdCB7IGludGVycG9sYXRlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBibG9ja19pZCA9IFwiMTBcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcInJcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtMTQiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCIxNFwiO1xuICBjb25zdCBsYW5ndWFnZSA9IFwibm9uZVwiO1xuICBjb25zdCBkZWZfbWFwID0ge1xufTtcbiAgY29uc3QgZWxlbSA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGBpbnRlcnBvbGF0ZS0ke2Jsb2NrX2lkfWApO1xuXG4gIC8vIFN0b3JlIG9yaWdpbmFsIHRlbXBsYXRlZCBIVE1MIGZvciByZWZlcmVuY2UgaW4gZnV0dXJlIHJlYWN0aXZlIHVwZGF0ZXNcbiAgaWYgKCFlbGVtLm9yaWdIVE1MKSBlbGVtLm9yaWdIVE1MID0gZWxlbS5pbm5lckhUTUw7XG5cbiAgLy8gSW50ZXJwb2xhdGUgcmVhY3RpdmUgT0pTIHZhcmlhYmxlcyBpbnRvIGVzdGFibGlzaGVkIEhUTUwgZWxlbWVudFxuICBlbGVtLmlubmVySFRNTCA9IGVsZW0ub3JpZ0hUTUw7XG4gIE9iamVjdC5rZXlzKGRlZl9tYXApLmZvckVhY2goKGRlZikgPT5cbiAgICBpbnRlcnBvbGF0ZShlbGVtLCBcIiR7XCIgKyBkZWYgKyBcIn1cIiwgZGVmX21hcFtkZWZdLCBsYW5ndWFnZSlcbiAgKTtcbn1cbiJ9LHsiY2VsbE5hbWUiOiJpbnRlcnBvbGF0ZS0xNSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgY29uc3QgeyBpbnRlcnBvbGF0ZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgYmxvY2tfaWQgPSBcIjE1XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJyXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTE5IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICBjb25zdCB7IGludGVycG9sYXRlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBibG9ja19pZCA9IFwiMTlcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcIm5vbmVcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtMjAiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCIyMFwiO1xuICBjb25zdCBsYW5ndWFnZSA9IFwiclwiO1xuICBjb25zdCBkZWZfbWFwID0ge1xufTtcbiAgY29uc3QgZWxlbSA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGBpbnRlcnBvbGF0ZS0ke2Jsb2NrX2lkfWApO1xuXG4gIC8vIFN0b3JlIG9yaWdpbmFsIHRlbXBsYXRlZCBIVE1MIGZvciByZWZlcmVuY2UgaW4gZnV0dXJlIHJlYWN0aXZlIHVwZGF0ZXNcbiAgaWYgKCFlbGVtLm9yaWdIVE1MKSBlbGVtLm9yaWdIVE1MID0gZWxlbS5pbm5lckhUTUw7XG5cbiAgLy8gSW50ZXJwb2xhdGUgcmVhY3RpdmUgT0pTIHZhcmlhYmxlcyBpbnRvIGVzdGFibGlzaGVkIEhUTUwgZWxlbWVudFxuICBlbGVtLmlubmVySFRNTCA9IGVsZW0ub3JpZ0hUTUw7XG4gIE9iamVjdC5rZXlzKGRlZl9tYXApLmZvckVhY2goKGRlZikgPT5cbiAgICBpbnRlcnBvbGF0ZShlbGVtLCBcIiR7XCIgKyBkZWYgKyBcIn1cIiwgZGVmX21hcFtkZWZdLCBsYW5ndWFnZSlcbiAgKTtcbn1cbiJ9LHsiY2VsbE5hbWUiOiJpbnRlcnBvbGF0ZS0yNCIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgY29uc3QgeyBpbnRlcnBvbGF0ZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgYmxvY2tfaWQgPSBcIjI0XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJub25lXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTI1IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICBjb25zdCB7IGludGVycG9sYXRlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBibG9ja19pZCA9IFwiMjVcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcInJcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici1wcmVsdWRlIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoid2ViUk9qcyA9IHtcbiAgY29uc3QgeyBXZWJSLCBDaGFubmVsVHlwZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZS5XZWJSO1xuICBjb25zdCB7XG4gICAgV2ViUkV2YWx1YXRvcixcbiAgICBXZWJSRW52aXJvbm1lbnRNYW5hZ2VyLFxuICAgIHNldHVwUixcbiAgICBiNjREZWNvZGUsXG4gICAgY29sbGFwc2VQYXRoXG4gIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHN0YXR1c0NvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwiZXhlcmNpc2UtbG9hZGluZy1zdGF0dXNcIik7XG4gIGNvbnN0IGluZGljYXRvckNvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwiZXhlcmNpc2UtbG9hZGluZy1pbmRpY2F0b3JcIik7XG4gIGluZGljYXRvckNvbnRhaW5lci5jbGFzc0xpc3QucmVtb3ZlKFwiZC1ub25lXCIpO1xuXG4gIGxldCBzdGF0dXNUZXh0ID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudChcImRpdlwiKVxuICBzdGF0dXNUZXh0LmNsYXNzTGlzdCA9IFwiZXhlcmNpc2UtbG9hZGluZy1kZXRhaWxzXCI7XG4gIHN0YXR1c1RleHQgPSBzdGF0dXNDb250YWluZXIuYXBwZW5kQ2hpbGQoc3RhdHVzVGV4dCk7XG4gIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgSW5pdGlhbGlzZWA7XG5cbiAgLy8gSG9pc3QgaW5kaWNhdG9yIG91dCBmcm9tIGZpbmFsIHNsaWRlIHdoZW4gcnVubmluZyB1bmRlciByZXZlYWxcbiAgY29uc3QgcmV2ZWFsU3RhdHVzID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcihcIi5yZXZlYWwgLmV4ZXJjaXNlLWxvYWRpbmctaW5kaWNhdG9yXCIpO1xuICBpZiAocmV2ZWFsU3RhdHVzKSB7XG4gICAgcmV2ZWFsU3RhdHVzLnJlbW92ZSgpO1xuICAgIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIucmV2ZWFsID4gLnNsaWRlc1wiKS5hcHBlbmRDaGlsZChyZXZlYWxTdGF0dXMpO1xuICB9XG5cbiAgLy8gTWFrZSBhbnkgcmV2ZWFsIHNsaWRlcyB3aXRoIGxpdmUgY2VsbHMgc2Nyb2xsYWJsZVxuICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKFwiLnJldmVhbCAuZXhlcmNpc2UtY2VsbFwiKS5mb3JFYWNoKChlbCkgPT4ge1xuICAgIGVsLmNsb3Nlc3QoJ3NlY3Rpb24uc2xpZGUnKS5jbGFzc0xpc3QuYWRkKFwic2Nyb2xsYWJsZVwiKTtcbiAgfSlcblxuICAvLyB3ZWJSIHN1cHBsZW1lbnRhbCBkYXRhIGFuZCBvcHRpb25zXG4gIGNvbnN0IGRhdGFDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItZGF0YVxcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGRhdGEgPSBKU09OLnBhcnNlKGI2NERlY29kZShkYXRhQ29udGVudCkpO1xuXG4gIC8vIEdyYWIgbGlzdCBvZiByZXNvdXJjZXMgdG8gYmUgZG93bmxvYWRlZFxuICBjb25zdCBmaWxlc0NvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwidmZzLWZpbGVcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBmaWxlcyA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKGZpbGVzQ29udGVudCkpO1xuXG4gIC8vIEluaXRpYWxpc2Ugd2ViUiBhbmQgc2V0dXAgZm9yIFIgY29kZSBldmFsdWF0aW9uXG4gIGxldCB3ZWJSUHJvbWlzZSA9IChhc3luYyAod2ViUikgPT4ge1xuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgRG93bmxvYWRpbmcgd2ViUmA7XG4gICAgYXdhaXQgd2ViUi5pbml0KCk7XG5cbiAgICAvLyBJbnN0YWxsIHByb3ZpZGVkIGxpc3Qgb2YgcGFja2FnZXNcbiAgICAvLyBFbnN1cmUgd2ViUiBkZWZhdWx0IHJlcG8gaXMgaW5jbHVkZWRcbiAgICBkYXRhLnBhY2thZ2VzLnJlcG9zLnB1c2goXCJodHRwczovL3JlcG8uci13YXNtLm9yZ1wiKVxuICAgIGF3YWl0IGRhdGEucGFja2FnZXMucGtncy5tYXAoKHBrZykgPT4gKCkgPT4ge1xuICAgICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyBwYWNrYWdlOiAke3BrZ31gO1xuICAgICAgcmV0dXJuIHdlYlIuZXZhbFJWb2lkKGBcbiAgICAgICAgd2Vicjo6aW5zdGFsbChwa2csIHJlcG9zID0gcmVwb3MpXG4gICAgICAgIGxpYnJhcnkocGtnLCBjaGFyYWN0ZXIub25seSA9IFRSVUUpXG4gICAgICBgLCB7IGVudjoge1xuICAgICAgICBwa2c6IHBrZyxcbiAgICAgICAgcmVwb3M6IGRhdGEucGFja2FnZXMucmVwb3MsXG4gICAgICB9fSk7XG4gICAgfSkucmVkdWNlKChjdXIsIG5leHQpID0+IGN1ci50aGVuKG5leHQpLCBQcm9taXNlLnJlc29sdmUoKSk7XG5cbiAgICAvLyBEb3dubG9hZCBhbmQgaW5zdGFsbCByZXNvdXJjZXNcbiAgICBhd2FpdCBmaWxlcy5tYXAoKGZpbGUpID0+IGFzeW5jICgpID0+IHtcbiAgICAgIGNvbnN0IG5hbWUgPSBmaWxlLnN1YnN0cmluZyhmaWxlLmxhc3RJbmRleE9mKCcvJykgKyAxKTtcbiAgICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgRG93bmxvYWRpbmcgcmVzb3VyY2U6ICR7bmFtZX1gO1xuICAgICAgY29uc3QgcmVzcG9uc2UgPSBhd2FpdCBmZXRjaChmaWxlKTtcbiAgICAgIGlmICghcmVzcG9uc2Uub2spIHtcbiAgICAgICAgdGhyb3cgbmV3IEVycm9yKGBDYW4ndCBkb3dubG9hZCBcXGAke2ZpbGV9XFxgLiBFcnJvciAke3Jlc3BvbnNlLnN0YXR1c306IFwiJHtyZXNwb25zZS5zdGF0dXNUZXh0fVwiLmApO1xuICAgICAgfVxuICAgICAgY29uc3QgZGF0YSA9IGF3YWl0IHJlc3BvbnNlLmFycmF5QnVmZmVyKCk7XG5cbiAgICAgIC8vIFN0b3JlIFVSTHMgaW4gdGhlIGN3ZCB3aXRob3V0IGFueSBzdWJkaXJlY3Rvcnkgc3RydWN0dXJlXG4gICAgICBpZiAoZmlsZS5pbmNsdWRlcyhcIjovL1wiKSkge1xuICAgICAgICBmaWxlID0gbmFtZTtcbiAgICAgIH1cblxuICAgICAgLy8gQ29sbGFwc2UgaGlnaGVyIGRpcmVjdG9yeSBzdHJ1Y3R1cmVcbiAgICAgIGZpbGUgPSBjb2xsYXBzZVBhdGgoZmlsZSk7XG5cbiAgICAgIC8vIENyZWF0ZSBkaXJlY3RvcnkgdHJlZSwgaWdub3JpbmcgXCJkaXJlY3RvcnkgZXhpc3RzXCIgVkZTIGVycm9yc1xuICAgICAgY29uc3QgcGFydHMgPSBmaWxlLnNwbGl0KCcvJykuc2xpY2UoMCwgLTEpO1xuICAgICAgbGV0IHBhdGggPSAnJztcbiAgICAgIHdoaWxlIChwYXJ0cy5sZW5ndGggPiAwKSB7XG4gICAgICAgIHBhdGggKz0gcGFydHMuc2hpZnQoKSArICcvJztcbiAgICAgICAgY29uc3QgYW5hbHlzaXMgPSBhd2FpdCB3ZWJSLkZTLmFuYWx5emVQYXRoKHBhdGgpO1xuICAgICAgICBpZiAoIWFuYWx5c2lzLmV4aXN0cykge1xuICAgICAgICAgIHRyeSB7XG4gICAgICAgICAgICBhd2FpdCB3ZWJSLkZTLm1rZGlyKHBhdGgpO1xuICAgICAgICAgIH0gY2F0Y2ggKGUpIHtcbiAgICAgICAgICAgIHRocm93IG5ldyBFcnJvcihgRmlsZXN5c3RlbSBFcnJvcjogXCIke2UubWVzc2FnZX1cIi5gKTtcbiAgICAgICAgICB9XG4gICAgICAgIH1cbiAgICAgIH1cblxuICAgICAgLy8gV3JpdGUgdGhpcyBmaWxlIHRvIHRoZSBWRlNcbiAgICAgIHJldHVybiBhd2FpdCB3ZWJSLkZTLndyaXRlRmlsZShmaWxlLCBuZXcgVWludDhBcnJheShkYXRhKSk7XG4gICAgfSkucmVkdWNlKChjdXIsIG5leHQpID0+IGN1ci50aGVuKG5leHQpLCBQcm9taXNlLnJlc29sdmUoKSk7XG5cbiAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYEluc3RhbGxpbmcgd2ViUiBzaGltc2A7XG4gICAgYXdhaXQgd2ViUi5ldmFsUlZvaWQoYHdlYnI6OnNoaW1faW5zdGFsbCgpYCk7XG5cbiAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYFdlYlIgZW52aXJvbm1lbnQgc2V0dXBgO1xuICAgIGF3YWl0IHNldHVwUih3ZWJSLCBkYXRhKTtcblxuICAgIHN0YXR1c1RleHQucmVtb3ZlKCk7XG4gICAgaWYgKHN0YXR1c0NvbnRhaW5lci5jaGlsZHJlbi5sZW5ndGggPT0gMCkge1xuICAgICAgc3RhdHVzQ29udGFpbmVyLnBhcmVudE5vZGUucmVtb3ZlKCk7XG4gICAgfVxuICAgIHJldHVybiB3ZWJSO1xuICB9KShuZXcgV2ViUihkYXRhLm9wdGlvbnMpKTtcblxuICAvLyBLZWVwIHRyYWNrIG9mIGluaXRpYWwgT0pTIGJsb2NrIHJlbmRlclxuICBjb25zdCByZW5kZXJlZE9qcyA9IHt9O1xuXG4gIGNvbnN0IHByb2Nlc3MgPSBhc3luYyAoY29udGV4dCwgaW5wdXRzKSA9PiB7XG4gICAgY29uc3Qgd2ViUiA9IGF3YWl0IHdlYlJQcm9taXNlO1xuICAgIGNvbnN0IGV2YWx1YXRvciA9IG5ldyBXZWJSRXZhbHVhdG9yKHdlYlIsIGNvbnRleHQpXG4gICAgYXdhaXQgZXZhbHVhdG9yLnByb2Nlc3MoaW5wdXRzKTtcbiAgICByZXR1cm4gZXZhbHVhdG9yLmNvbnRhaW5lcjtcbiAgfVxuXG4gIHJldHVybiB7XG4gICAgcHJvY2VzcyxcbiAgICB3ZWJSUHJvbWlzZSxcbiAgICByZW5kZXJlZE9qcyxcbiAgfTtcbn1cbiJ9XX0=
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+WyIuLi9SL3ZlaWxsZS5SIiwiLi4vUi9zZWdyZWdhdGlvbi5SIiwiLi4vUi9pbmVnYWxpdGVzLlIiLCIuLi9SL2Rvam8uUiJd
+</script>
+<div class="ojs-auto-generated hidden">
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6WyAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7aW5lcTEuc308L3NwYW4+YCIsICJjZWxsTmFtZSI6Im9qcy1lbGVtZW50LWlkLTEifV19
+</script>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script>
+// Charge le module dojo.js depuis la racine du site, quelle que soit la profondeur de la page.
+(function () {
+  var m = document.querySelector('meta[name="quarto:offset"]');
+  var base = m ? m.getAttribute('content') : './';
+  var s = document.createElement('script');
+  s.type = 'module';
+  s.src = base + 'assets/dojo.js';
+  document.body.appendChild(s);
+})();
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InJuZyA9IHtcbiAgLy8gR8OpbsOpcmF0ZXVyIHBzZXVkby1hbMOpYXRvaXJlIHJlcHJvZHVjdGlibGUgOiBncmFpbmUgPSBqb3VyICsgaWQgZCdleGVyY2ljZSArIHNhbHQuXG4gIC8vIChTb3VyY2UgdW5pcXVlIDogc2NyaXB0cy90ZXN0X2V4ZXJjaWNlcy5SIMOpdmFsdWUgY2V0dGUgbcOqbWUgY2VsbHVsZSBhdmVjIE5vZGUuKVxuICBjb25zdCB0b2RheSA9IG5ldyBEYXRlKCkudG9JU09TdHJpbmcoKS5zbGljZSgwLCAxMCk7XG4gIGNvbnN0IGhhc2ggPSAocykgPT4ge1xuICAgIGxldCBoID0gMTc3OTAzMzcwMyBeIHMubGVuZ3RoO1xuICAgIGZvciAobGV0IGkgPSAwOyBpIDwgcy5sZW5ndGg7IGkrKykgeyBoID0gTWF0aC5pbXVsKGggXiBzLmNoYXJDb2RlQXQoaSksIDM0MzI5MTgzNTMpOyBoID0gKGggPDwgMTMpIHwgKGggPj4+IDE5KTsgfVxuICAgIHJldHVybiBoID4+PiAwO1xuICB9O1xuICBjb25zdCBtdWxiZXJyeTMyID0gKGEpID0+ICgpID0+IHtcbiAgICBhIHw9IDA7IGEgPSAoYSArIDB4NmQyYjc5ZjUpIHwgMDtcbiAgICBsZXQgdCA9IE1hdGguaW11bChhIF4gKGEgPj4+IDE1KSwgMSB8IGEpO1xuICAgIHQgPSAodCArIE1hdGguaW11bCh0IF4gKHQgPj4+IDcpLCA2MSB8IHQpKSBeIHQ7XG4gICAgcmV0dXJuICgodCBeICh0ID4+PiAxNCkpID4+PiAwKSAvIDQyOTQ5NjcyOTY7XG4gIH07XG4gIHJldHVybiAoaWQsIHNhbHQgPSAwLCBkYXkgPSB0b2RheSkgPT4ge1xuICAgIGNvbnN0IHUgPSBtdWxiZXJyeTMyKGhhc2goYCR7ZGF5fXwke2lkfXwke3NhbHR9YCkpO1xuICAgIGNvbnN0IGludCA9IChhLCBiKSA9PiBhICsgTWF0aC5mbG9vcih1KCkgKiAoYiAtIGEgKyAxKSk7XG4gICAgY29uc3QgcGljayA9IChhcnIpID0+IGFycltNYXRoLmZsb29yKHUoKSAqIGFyci5sZW5ndGgpXTtcbiAgICBjb25zdCBub3JtYWwgPSAoKSA9PiBNYXRoLnNxcnQoLTIgKiBNYXRoLmxvZygxIC0gdSgpKSkgKiBNYXRoLmNvcygyICogTWF0aC5QSSAqIHUoKSk7XG4gICAgcmV0dXJuIHsgdSwgaW50LCBwaWNrLCBub3JtYWwgfTtcbiAgfTtcbn1cblxudmlld29mIHNhbHQgPSB7XG4gIGNvbnN0IGIgPSBodG1sYDxidXR0b24gY2xhc3M9XCJkb2pvLWJ0biBkb2pvLXJlcm9sbFwiPvCfjrIgTm91dmVhdXggw6lub25jw6lzPC9idXR0b24+YDtcbiAgbGV0IG4gPSAwOyBiLnZhbHVlID0gMDtcbiAgYi5vbmNsaWNrID0gKCkgPT4geyBiLnZhbHVlID0gKytuOyBiLmRpc3BhdGNoRXZlbnQobmV3IEV2ZW50KFwiaW5wdXRcIiwgeyBidWJibGVzOiB0cnVlIH0pKTsgfTtcbiAgcmV0dXJuIGI7XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJpbmVxMCA9IHsgY29uc3QgZyA9IHJuZyhcImluZXEtZ2luaS0wXCIsIHNhbHQpOyByZXR1cm4geyBzZWVkOiBnLmludCgxLCA5OTk5KSB9OyB9XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJpbmVxMSA9IHsgY29uc3QgZyA9IHJuZyhcImluZXEtZ2luaS0xXCIsIHNhbHQpOyByZXR1cm4geyBzZWVkOiBnLmludCgxLCA5OTk5KSwgczogZy5waWNrKFswLjUsIDAuOCwgMS4xXSkgfTsgfVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC00IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiaW5lcTAwID0geyBjb25zdCBnID0gcm5nKFwiaW5lcS1nZS0wXCIsIHNhbHQpOyByZXR1cm4geyBzZWVkOiBnLmludCgxLCA5OTk5KSB9OyB9XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTUiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJpbmVxMyA9IHsgY29uc3QgZyA9IHJuZyhcImluZXEtZGVjb21wLTFcIiwgc2FsdCk7IHJldHVybiB7IHNlZWQ6IGcuaW50KDEsIDk5OTkpIH07IH1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnc2FsdCcpIn1dfQ==
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../recherche";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Le Dojo : un entraînement par jour. Ta progression est stockée dans ton navigateur (voir « Progression » pour l’exporter).</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

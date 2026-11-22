@@ -1,0 +1,11 @@
+<script>
+// Charge le module dojo.js depuis la racine du site, quelle que soit la profondeur de la page.
+(function () {
+  var m = document.querySelector('meta[name="quarto:offset"]');
+  var base = m ? m.getAttribute('content') : './';
+  var s = document.createElement('script');
+  s.type = 'module';
+  s.src = base + 'assets/dojo.js';
+  document.body.appendChild(s);
+})();
+</script>
