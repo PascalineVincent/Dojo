@@ -64,3 +64,20 @@ topics:
       "cluster": 1
       "bootstrap": 1
       "heterogeneous treatment": 2
+
+  - name: Identité de genre
+    queries:
+      - '"gender identity"'
+      - '"gender identity" economics'
+      - '"transgender" labor market'
+      - '"gender identity" discrimination'
+    keywords:
+      "gender identity": 3
+      transgender: 3
+      "non-binary": 3
+      "gender minority": 2
+      "gender minorities": 2
+      lgbt: 2
+      "sexual orientation": 1
+      "gender norms": 1
+      "gender gap": 1
