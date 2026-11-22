@@ -35,6 +35,15 @@ test_that("Scoring : thèmes, poids titre x2", {
   expect_null(r[[1]]$abstract)                         # le résumé n'est pas conservé
 })
 
+test_that("Thème « Identité de genre » : détection et rattachement", {
+  it <- list(title = "Gender identity and labor market outcomes of transgender workers",
+             abstract = "We study non-binary and gender minority workers.")
+  r <- score_items(list(it), cfg$topics)
+  expect_equal(r[[1]]$topic, "Identité de genre")
+  expect_gte(r[[1]]$score, cfg$min_score)
+  expect_true(any(vapply(cfg$topics, function(t) t$name == "Identité de genre" && length(t$queries) >= 3, TRUE)))
+})
+
 test_that("Fusion : dédoublonnage, filtre date et score, tri", {
   mk <- function(id, date, score) list(id = id, date = date, score = score)
   old <- list(mk("a", "2026-11-01", 5), mk("b", "2026-01-01", 9))   # b trop ancien

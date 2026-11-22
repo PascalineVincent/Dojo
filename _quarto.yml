@@ -40,6 +40,8 @@ website:
         menu:
           - text: "Le défi de la semaine"
             href: recherche/index.qmd
+          - text: "Corrigés des défis"
+            href: recherche/defis.qmd
           - text: "Ségrégation"
             href: recherche/segregation.qmd
           - text: "Inégalités"

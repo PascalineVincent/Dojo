@@ -54,7 +54,7 @@ tests/              ← testthat, JS, test d'interface (optionnel)
 ## Ajouter du contenu
 
 - **Une flashcard ou un QCM** : ajoute une entrée dans `content/flashcards.yml` ou `content/quiz.yml` (`id` unique et stable ; cours parmi `micro, stats, econometrie, histoire, contemporaine, recherche, r`). La validation (`scripts/build_data.R`) bloque le build en cas d'erreur.
-- **Un défi de recherche** : `content/defis.yml` (rotation hebdomadaire automatique).
+- **Un défi de recherche** : `content/defis.yml` (rotation hebdomadaire automatique). Chaque défi doit avoir son corrigé dans `recherche/defis.qmd`, sous un titre `{#id-du-defi}` (vérifié par `validate_content`) ; le code est exécuté au rendu avec des `stopifnot()`.
 - **Un exercice** : copie une section existante d'une page `.qmd` (badge `[Marche k sur n · mode]{.dojo-step}`, cellule OJS qui tire les paramètres, énoncé, blocs `{webr}` gabarit / **deux indices** / solution / correction, `{.dojo-done}`), puis déclare-le dans `content/exercices.yml` (`id` = ancre de la section ; `track` et `step` pour l'insérer dans une piste). Le **corrigé détaillé** est le bloc `.solution` : `**Raisonnement.**` avant le code, `**Pièges fréquents.**` et `**Pour aller plus loin.**` après. `make test` exécute la solution et la correction sur 30 tirages, vérifie qu'une mauvaise réponse est refusée, que les deux indices et les rubriques du corrigé sont présents, et que les marches d'une piste sont numérotées sans trou.
 - **Les thèmes de veille** : `content/veille_config.yml` (requêtes, mots-clés pondérés, fenêtre de dates).
 

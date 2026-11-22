@@ -5,7 +5,7 @@ subtitle: "Probabilités, estimation, tests : rappels et simulation"
 
 {{< include ../_extensions/r-wasm/live/_knitr.qmd >}}
 
-Rappels de L1 par la **simulation** : on ne se contente pas de la formule, on la vérifie. Les énoncés changent chaque jour (graine = date).
+Rappels de L1 par la **simulation** : on ne se contente pas de la formule, on la vérifie. Les énoncés changent chaque jour (graine = date). Trois pistes : *estimation et simulation*, *statistiques descriptives* (résumer, comparer des groupes, repérer les valeurs atypiques) et *comparaisons et tests* (Welch, khi-deux, permutation, comparaisons multiples). Une boîte à outils « quelle méthode, quelle fonction ? » termine la page.
 
 {{< include ../_ojs.qmd >}}
 
@@ -279,6 +279,745 @@ if (length(res) != 2 || anyNA(res)) {
 ::: {.dojo-done data-id="stats-couv-1"}
 :::
 
+::: {.dojo-track data-track="stats-desc"}
+:::
+
+## Résumer une série : position, dispersion, forme {#stats-desc-1}
+
+[Marche 1 sur 3 · Guidé]{.dojo-step}
+
+```{ojs}
+//| echo: false
+desc1 = { const g = rng("stats-desc-1", salt); return { seed: g.int(1, 9999), n: g.pick([30, 40, 50]) }; }
+```
+
+Les revenus mensuels (en euros) de ${desc1.n} ménages sont simulés avec une loi lognormale, très asymétrique comme les vrais revenus. Calcule la moyenne, la médiane, l'écart-type, l'écart interquartile et le coefficient d'asymétrie (skewness).
+
+```{webr}
+#| exercise: stats-desc-1
+#| caption: "Statistiques descriptives d'une série"
+#| input:
+#|   - desc1
+set.seed(desc1$seed)
+x <- round(rlnorm(desc1$n, meanlog = 7.4, sdlog = 0.6))      # revenus mensuels
+moy  <- ______       # moyenne
+med  <- ______       # médiane
+sdx  <- ______       # écart-type (fonction sd)
+iqr  <- ______       # écart interquartile : troisième quartile - premier quartile
+asym <- ______       # asymétrie : moyenne de ((x - moyenne) / écart-type) ^ 3
+c(moyenne = moy, mediane = med, ecart_type = sdx, iqr = iqr, asymetrie = asym)
+```
+
+::: {.hint exercise="stats-desc-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Il y a trois familles de résumés : la **position** (autour de quoi se situent les valeurs), la **dispersion** (à quel point elles s'étalent) et la **forme** (symétrique ou étirée d'un côté). Pour chacune, R a une fonction toute prête, sauf l'asymétrie.
+:::
+:::
+
+::: {.hint exercise="stats-desc-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les fonctions
+`mean(x)`, `median(x)`, `sd(x)`, `IQR(x)` (ou `diff(quantile(x, c(0.25, 0.75)))`). Asymétrie : `mean(((x - mean(x)) / sd(x))^3)`.
+:::
+:::
+
+::: {.solution exercise="stats-desc-1"}
+**Raisonnement.**
+
+1. **Position** : la moyenne est tirée par les valeurs extrêmes, la médiane (valeur qui coupe l'échantillon en deux) non. Pour une distribution étirée à droite, comme les revenus, on a moyenne $>$ médiane : l'écart entre les deux est déjà un signal d'asymétrie.
+2. **Dispersion** : l'écart-type $s = \sqrt{\sum (x_i - \bar x)^2/(n-1)}$ est sensible aux extrêmes. L'écart interquartile $Q_3 - Q_1$ décrit la largeur des 50 % centraux : il est robuste.
+3. **Forme** : le moment d'ordre 3 standardisé, $\overline{((x - \bar x)/s)^3}$, est positif quand la queue de droite est plus longue, négatif sinon, proche de 0 pour une distribution symétrique.
+4. Pour résumer honnêtement une variable de revenu, on donne la médiane et l'écart interquartile (ou les déciles), et la moyenne **en complément**.
+
+```{webr}
+#| exercise: stats-desc-1
+#| solution: true
+set.seed(desc1$seed)
+x <- round(rlnorm(desc1$n, meanlog = 7.4, sdlog = 0.6))
+moy  <- mean(x)
+med  <- median(x)
+sdx  <- sd(x)
+iqr  <- IQR(x)                                   # = diff(quantile(x, c(0.25, 0.75)))
+asym <- mean(((x - mean(x)) / sd(x))^3)
+c(moyenne = moy, mediane = med, ecart_type = sdx, iqr = iqr, asymetrie = asym)
+```
+
+**Pièges fréquents.**
+
+- `sd()` divise par $n-1$ (estimateur sans biais de $\sigma$), pas par $n$ : les résultats diffèrent de ceux d'une formule « à la main » avec `mean((x - mean(x))^2)`.
+- Il existe plusieurs définitions de l'asymétrie (avec ou sans correction de petit échantillon : `e1071::skewness` types 1, 2, 3) et neuf définitions des quantiles ; R utilise le type 7 par défaut, Stata ou SAS d'autres. Précise toujours laquelle tu utilises.
+- Décrire une variable très asymétrique par « moyenne $\pm$ écart-type » : la moyenne moins un écart-type peut devenir négative alors que la variable est strictement positive.
+
+**Pour aller plus loin.** Passe les revenus au logarithme (`log(x)`) et recalcule l'asymétrie : elle devient proche de 0. C'est la raison pour laquelle on travaille souvent avec des revenus en logarithme.
+:::
+
+```{webr}
+#| exercise: stats-desc-1
+#| check: true
+set.seed(desc1$seed)
+x <- round(rlnorm(desc1$n, meanlog = 7.4, sdlog = 0.6))
+exp_ <- c(mean(x), median(x), sd(x), IQR(x), mean(((x - mean(x)) / sd(x))^3))
+res <- suppressWarnings(as.numeric(.result))
+noms <- c("moyenne", "médiane", "écart-type", "écart interquartile", "asymétrie")
+if (length(res) != 5 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(moyenne = ..., mediane = ..., ecart_type = ..., iqr = ..., asymetrie = ...) comme dans le gabarit.")
+} else if (any(abs(res - exp_) > 1e-8 * pmax(1, abs(exp_)))) {
+  i <- which(abs(res - exp_) > 1e-8 * pmax(1, abs(exp_)))[1]
+  indic <- c("mean(x)", "median(x)", "sd(x)", "IQR(x) ou diff(quantile(x, c(0.25, 0.75)))", "mean(((x - mean(x)) / sd(x))^3)")
+  list(correct = FALSE, message = sprintf("%s incorrect(e). Piste : %s.", noms[i], indic[i]))
+} else {
+  list(correct = TRUE, message = sprintf("Correct : moyenne %.0f > médiane %.0f, asymétrie %.2f : une queue à droite, comme pour de vrais revenus.", exp_[1], exp_[2], exp_[5]))
+}
+```
+
+::: {.dojo-done data-id="stats-desc-1"}
+:::
+
+## Tableau descriptif par groupe {#stats-desc-2}
+
+[Marche 2 sur 3 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+desc2 = { const g = rng("stats-desc-2", salt); return { seed: g.int(1, 9999) }; }
+```
+
+Un échantillon de 300 salariés (salaire horaire en euros) est réparti en trois niveaux de diplôme. Construis le tableau descriptif par groupe : effectif, moyenne, médiane et écart-type du salaire pour chaque diplôme, puis la part de chaque groupe dans l'échantillon.
+
+```{webr}
+#| exercise: stats-desc-2
+#| caption: "Tableau descriptif par groupe"
+#| input:
+#|   - desc2
+set.seed(desc2$seed)
+n <- 300
+diplome <- sample(c("Bac", "Licence", "Master"), n, replace = TRUE, prob = c(0.5, 0.3, 0.2))
+base <- c(Bac = 12, Licence = 15, Master = 19)[diplome]
+salaire <- round(base * exp(rnorm(n, 0, 0.25)), 2)
+# tapply(valeurs, groupes, fonction) applique la fonction à chaque groupe
+effectif <- ______        # nombre d'observations par diplôme
+moyenne  <- ______
+mediane  <- ______
+ecart    <- ______        # écart-type par diplôme
+tableau <- rbind(effectif = effectif, moyenne = moyenne, mediane = mediane,
+                 ecart_type = ecart, part = effectif / sum(effectif))
+round(tableau, 3)
+```
+
+::: {.hint exercise="stats-desc-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Résumer par groupe, c'est calculer **la même statistique** sur chaque sous-échantillon. Un seul outil (`tapply`) suffit pour les quatre premières lignes du tableau ; la part se déduit de l'effectif.
+:::
+:::
+
+::: {.hint exercise="stats-desc-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les fonctions
+`table(diplome)` ou `tapply(salaire, diplome, length)` ; `tapply(salaire, diplome, mean)` ; avec `median` puis `sd`. La part est `effectif / sum(effectif)`.
+:::
+:::
+
+::: {.solution exercise="stats-desc-2"}
+**Raisonnement.**
+
+1. La logique est « découper, appliquer, recombiner » (*split-apply-combine*). `tapply(salaire, diplome, mean)` découpe `salaire` selon `diplome`, applique `mean` à chaque morceau et recompose le résultat.
+2. Les groupes sont rangés dans l'**ordre alphabétique** (Bac, Licence, Master), pas dans l'ordre d'apparition : c'est important pour aligner plusieurs tableaux.
+3. Compare moyenne et médiane **dans chaque groupe** : l'écart dit où se concentre l'asymétrie.
+4. Affiche toujours l'effectif à côté des moyennes : un écart-type calculé sur 5 observations n'a pas de valeur, et la part dans l'échantillon renseigne sur la représentativité.
+5. Équivalents : `aggregate(salaire ~ diplome, FUN = mean)`, `dplyr::group_by() |> summarise()`, et pour des tableaux publiables `gtsummary::tbl_summary()` ou `modelsummary::datasummary()` (à utiliser en local).
+
+```{webr}
+#| exercise: stats-desc-2
+#| solution: true
+set.seed(desc2$seed)
+n <- 300
+diplome <- sample(c("Bac", "Licence", "Master"), n, replace = TRUE, prob = c(0.5, 0.3, 0.2))
+base <- c(Bac = 12, Licence = 15, Master = 19)[diplome]
+salaire <- round(base * exp(rnorm(n, 0, 0.25)), 2)
+effectif <- table(diplome)                         # ou tapply(salaire, diplome, length)
+moyenne  <- tapply(salaire, diplome, mean)
+mediane  <- tapply(salaire, diplome, median)
+ecart    <- tapply(salaire, diplome, sd)
+tableau <- rbind(effectif = effectif, moyenne = moyenne, mediane = mediane,
+                 ecart_type = ecart, part = effectif / sum(effectif))
+round(tableau, 3)
+```
+
+**Pièges fréquents.**
+
+- Valeurs manquantes : sans `na.rm = TRUE`, une seule `NA` rend toute la moyenne de son groupe `NA`.
+- Confondre la **part du groupe** dans l'échantillon (`effectif / sum(effectif)`) et sa part dans la masse salariale (`tapply(salaire, diplome, sum) / sum(salaire)`).
+- Un groupe sans observation donne `NA` avec `tapply` : définis le facteur avec ses `levels` complets si tu veux conserver la colonne.
+
+**Pour aller plus loin.** Ajoute une ligne « écart à la moyenne générale » (`moyenne - mean(salaire)`) puis une moyenne **pondérée** avec des poids de sondage (`weighted.mean`). La marche suivante apprend à repérer les valeurs atypiques.
+:::
+
+```{webr}
+#| exercise: stats-desc-2
+#| check: true
+set.seed(desc2$seed)
+n <- 300
+diplome <- sample(c("Bac", "Licence", "Master"), n, replace = TRUE, prob = c(0.5, 0.3, 0.2))
+base <- c(Bac = 12, Licence = 15, Master = 19)[diplome]
+salaire <- round(base * exp(rnorm(n, 0, 0.25)), 2)
+ef <- as.numeric(table(diplome))
+exp_ <- round(rbind(ef, as.numeric(tapply(salaire, diplome, mean)), as.numeric(tapply(salaire, diplome, median)),
+                    as.numeric(tapply(salaire, diplome, sd)), ef / sum(ef)), 3)
+res <- suppressWarnings(as.numeric(.result))
+noms <- c("effectif", "moyenne", "médiane", "écart-type", "part")
+if (length(res) != 15 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie round(tableau, 3) : un tableau de 5 lignes (effectif, moyenne, médiane, écart-type, part) et 3 colonnes (Bac, Licence, Master).")
+} else {
+  m <- matrix(res, nrow = 5)
+  bad <- which(rowSums(abs(m - exp_)) > 1e-6)
+  if (length(bad) == 0) {
+    list(correct = TRUE, message = sprintf("Correct : %d bacheliers, %d licenciés, %d masters ; le salaire moyen monte de %.1f à %.1f euros de l'heure.", ef[1], ef[2], ef[3], exp_[2, 1], exp_[2, 3]))
+  } else {
+    list(correct = FALSE, message = sprintf("Ligne « %s » incorrecte : applique la bonne fonction à chaque diplôme avec tapply(salaire, diplome, ...).", noms[bad[1]]))
+  }
+}
+```
+
+::: {.dojo-done data-id="stats-desc-2"}
+:::
+
+## Repérer les valeurs atypiques {#stats-desc-3}
+
+[Marche 3 sur 3 · Autonome]{.dojo-step}
+
+```{ojs}
+//| echo: false
+desc3 = { const g = rng("stats-desc-3", salt); return { seed: g.int(1, 9999), k: g.pick([1.5, 3]) }; }
+```
+
+Une série de 200 valeurs contient une dizaine de valeurs très élevées. Écris `atypiques(x, k)` qui renvoie les positions des valeurs hors des « clôtures » de Tukey (de Q1 − k × IQR à Q3 + k × IQR) avec k = ${desc3.k}, compare avec la règle des 3 écarts-types, et mesure l'effet du retrait sur la moyenne et la médiane.
+
+```{webr}
+#| exercise: stats-desc-3
+#| caption: "Valeurs atypiques"
+#| input:
+#|   - desc3
+set.seed(desc3$seed)
+x <- c(rnorm(190, 50, 8), rnorm(10, 110, 15))      # 190 valeurs ordinaires + 10 valeurs élevées
+k <- desc3$k
+atypiques <- function(x, k) {
+  q <- quantile(x, c(0.25, 0.75))
+  ______         # positions (which) des valeurs hors de [Q1 - k * IQR ; Q3 + k * IQR]
+}
+t_idx <- atypiques(x, k)
+z_idx <- which(abs(x - mean(x)) / sd(x) > 3)       # règle des 3 écarts-types
+sans  <- x[setdiff(seq_along(x), t_idx)]           # série sans les valeurs détectées par Tukey
+c(n_tukey = length(t_idx), n_z3 = length(z_idx),
+  moy_avant = mean(x), moy_apres = mean(sans), med_avant = median(x), med_apres = median(sans))
+```
+
+::: {.hint exercise="stats-desc-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Une valeur est « atypique » si elle sort d'un intervalle construit à partir de la **distribution du cœur des données**. Les quartiles décrivent ce cœur ; l'écart interquartile en donne la largeur.
+:::
+:::
+
+::: {.hint exercise="stats-desc-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les clôtures
+Clôture basse : $Q_1 - k\,\mathrm{IQR}$ ; clôture haute : $Q_3 + k\,\mathrm{IQR}$. En R : `which(x < q[1] - k * IQR(x) | x > q[2] + k * IQR(x))`.
+:::
+:::
+
+::: {.solution exercise="stats-desc-3"}
+**Raisonnement.**
+
+1. La règle de Tukey s'appuie sur des statistiques **robustes** (les quartiles) : les valeurs atypiques n'influencent presque pas leurs propres seuils. $k = 1{,}5$ désigne les valeurs « atypiques », $k = 3$ les valeurs « très atypiques ».
+2. La règle des 3 écarts-types utilise la moyenne et l'écart-type, que les valeurs atypiques **tirent vers elles** : le seuil monte et les valeurs extrêmes se masquent entre elles (*masking*). Elle en détecte donc moins.
+3. Retirer les valeurs détectées déplace nettement la moyenne mais à peine la médiane : c'est la définition de la robustesse.
+4. Détecter n'est pas supprimer. Une valeur atypique peut être une erreur de saisie, mais aussi une vraie observation, souvent la plus intéressante (hauts revenus, ville très ségréguée). On documente, on teste la sensibilité des résultats, on ne supprime pas en silence.
+
+```{webr}
+#| exercise: stats-desc-3
+#| solution: true
+set.seed(desc3$seed)
+x <- c(rnorm(190, 50, 8), rnorm(10, 110, 15))
+k <- desc3$k
+atypiques <- function(x, k) {
+  q <- quantile(x, c(0.25, 0.75))
+  which(x < q[1] - k * IQR(x) | x > q[2] + k * IQR(x))
+}
+t_idx <- atypiques(x, k)
+z_idx <- which(abs(x - mean(x)) / sd(x) > 3)
+sans  <- x[setdiff(seq_along(x), t_idx)]
+c(n_tukey = length(t_idx), n_z3 = length(z_idx),
+  moy_avant = mean(x), moy_apres = mean(sans), med_avant = median(x), med_apres = median(sans))
+```
+
+**Pièges fréquents.**
+
+- Écrire la clôture avec l'écart-type au lieu de l'IQR : on retombe sur la règle qui se laisse masquer.
+- Écrire `x[-t_idx]` : si aucune valeur n'est détectée (`t_idx` vide), `x[-integer(0)]` renvoie une série **vide**. D'où `setdiff()` dans le gabarit.
+- Supprimer les valeurs atypiques d'une variable de revenu avant de mesurer des inégalités : on retire précisément ce que l'on veut mesurer.
+
+**Pour aller plus loin.** Winsorise la série (remplace les valeurs sous le 1er et au-dessus du 99e centile par ces centiles) et compare le Gini avant et après. C'est une pratique courante, qu'il faut toujours déclarer.
+:::
+
+```{webr}
+#| exercise: stats-desc-3
+#| check: true
+set.seed(desc3$seed)
+x <- c(rnorm(190, 50, 8), rnorm(10, 110, 15)); k <- desc3$k
+q <- quantile(x, c(0.25, 0.75))
+ti <- which(x < q[1] - k * IQR(x) | x > q[2] + k * IQR(x))
+zi <- which(abs(x - mean(x)) / sd(x) > 3)
+sans <- x[setdiff(seq_along(x), ti)]
+exp_ <- c(length(ti), length(zi), mean(x), mean(sans), median(x), median(sans))
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 6 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie le vecteur à 6 valeurs du gabarit (n_tukey, n_z3, moy_avant, moy_apres, med_avant, med_apres).")
+} else if (res[1] != exp_[1]) {
+  list(correct = FALSE, message = sprintf("Nombre de valeurs détectées par Tukey incorrect : hors de [Q1 - k IQR ; Q3 + k IQR] avec k = %g (haut ET bas).", k))
+} else if (any(abs(res[-1] - exp_[-1]) > 1e-8 * pmax(1, abs(exp_[-1])))) {
+  list(correct = FALSE, message = "La détection est bonne mais un autre résumé est faux : ne modifie pas les lignes du gabarit hors de la fonction.")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : Tukey détecte %d valeurs, la règle des 3 écarts-types seulement %d ; retirer les valeurs fait passer la moyenne de %.1f à %.1f mais la médiane de %.1f à %.1f.", exp_[1], exp_[2], exp_[3], exp_[4], exp_[5], exp_[6]))
+}
+```
+
+::: {.dojo-done data-id="stats-desc-3"}
+:::
+
+::: {.dojo-track data-track="stats-tests"}
+:::
+
+## Test t de Welch à la main {#stats-t-1}
+
+[Marche 1 sur 4 · Guidé]{.dojo-step}
+
+```{ojs}
+//| echo: false
+tt1 = { const g = rng("stats-t-1", salt); return { seed: g.int(1, 9999), n1: g.pick([15, 20, 30]), n2: g.pick([20, 25, 40]), delta: g.pick([0, 2, 4]) }; }
+```
+
+Deux groupes d'élèves passent le même test. Le groupe A compte ${tt1.n1} élèves, le groupe B en compte ${tt1.n2}. Teste l'égalité des moyennes avec le test t de Welch (les variances ne sont pas supposées égales), puis calcule la taille d'effet de Cohen.
+
+```{webr}
+#| exercise: stats-t-1
+#| caption: "Test t de Welch"
+#| input:
+#|   - tt1
+set.seed(tt1$seed)
+a <- rnorm(tt1$n1, mean = 10 + tt1$delta, sd = 3)
+b <- rnorm(tt1$n2, mean = 10, sd = 5)
+m1 <- mean(a); m2 <- mean(b); v1 <- var(a); v2 <- var(b); n1 <- length(a); n2 <- length(b)
+se <- ______          # erreur-type de la différence de moyennes
+t  <- ______          # statistique de test : différence de moyennes / erreur-type
+df <- (v1 / n1 + v2 / n2)^2 / ((v1 / n1)^2 / (n1 - 1) + (v2 / n2)^2 / (n2 - 1))   # degrés de liberté de Welch (fourni)
+p  <- ______          # p-value bilatérale
+d  <- ______          # d de Cohen : différence de moyennes / écart-type poolé
+c(t = t, df = df, p = p, d = d)
+```
+
+::: {.hint exercise="stats-t-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Sous H0 (moyennes égales), la différence $m_1 - m_2$ est centrée sur 0. Il faut la comparer à sa variabilité d'échantillonnage : l'erreur-type. Pour une différence de deux moyennes indépendantes, les variances des deux moyennes s'**additionnent**.
+:::
+:::
+
+::: {.hint exercise="stats-t-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les formules
+`se = sqrt(v1/n1 + v2/n2)` ; `t = (m1 - m2) / se` ; `p = 2 * pt(-abs(t), df)` ; écart-type poolé : `sqrt(((n1 - 1) * v1 + (n2 - 1) * v2) / (n1 + n2 - 2))`.
+:::
+:::
+
+::: {.solution exercise="stats-t-1"}
+**Raisonnement.**
+
+1. H0 : $\mu_A = \mu_B$. La différence observée $m_1 - m_2$ a pour variance estimée $s_1^2/n_1 + s_2^2/n_2$ : les variances de deux moyennes indépendantes s'additionnent, d'où l'erreur-type $\sqrt{s_1^2/n_1 + s_2^2/n_2}$.
+2. Statistique : $t = (m_1 - m_2)/\mathrm{se}$, un écart exprimé en erreurs-types.
+3. **Welch** n'impose pas des variances égales ; la loi de $t$ est approchée par une Student dont le nombre de degrés de liberté (non entier) est donné par la formule de Welch-Satterthwaite. C'est le test par défaut de `t.test()` en R, et celui à utiliser par défaut.
+4. $p = 2\,P(T_{\mathrm{df}} < -|t|)$ : test bilatéral, on compte les deux queues.
+5. Le $d$ de Cohen exprime la différence en écarts-types poolés, indépendamment de $n$. La p-value dépend de la taille d'échantillon (avec assez d'observations, tout écart est « significatif »), le $d$ non : significatif ne veut pas dire important. Repères indicatifs : 0,2 petit, 0,5 moyen, 0,8 grand.
+
+```{webr}
+#| exercise: stats-t-1
+#| solution: true
+set.seed(tt1$seed)
+a <- rnorm(tt1$n1, mean = 10 + tt1$delta, sd = 3)
+b <- rnorm(tt1$n2, mean = 10, sd = 5)
+m1 <- mean(a); m2 <- mean(b); v1 <- var(a); v2 <- var(b); n1 <- length(a); n2 <- length(b)
+se <- sqrt(v1 / n1 + v2 / n2)
+t  <- (m1 - m2) / se
+df <- (v1 / n1 + v2 / n2)^2 / ((v1 / n1)^2 / (n1 - 1) + (v2 / n2)^2 / (n2 - 1))
+p  <- 2 * pt(-abs(t), df)                                         # bilatéral
+sp <- sqrt(((n1 - 1) * v1 + (n2 - 1) * v2) / (n1 + n2 - 2))       # écart-type poolé
+d  <- (m1 - m2) / sp
+c(t = t, df = df, p = p, d = d)
+```
+
+**Pièges fréquents.**
+
+- `pt(t, df)` sans `abs` ni facteur 2 : c'est une p-value unilatérale (et fausse si $t > 0$).
+- Mettre `v1 / n1` sous la racine **sans** les diviser par $n$ : c'est l'écart-type des observations, pas l'erreur-type de la moyenne.
+- Lire $p > 0{,}05$ comme « les moyennes sont égales » : on n'a pas de preuve suffisante d'une différence, ce qui n'est pas la preuve d'une égalité.
+- Tester d'abord l'égalité des variances pour choisir entre Student et Welch : cette procédure en deux temps dégrade les propriétés du test final. Welch d'emblée.
+
+**Pour aller plus loin.** Mets `delta = 0` et répète l'expérience 1 000 fois avec `replicate` : environ 5 % des p-values sont inférieures à 0,05, c'est la définition du seuil. Compare ensuite avec `t.test(a, b)`.
+:::
+
+```{webr}
+#| exercise: stats-t-1
+#| check: true
+set.seed(tt1$seed)
+a <- rnorm(tt1$n1, mean = 10 + tt1$delta, sd = 3)
+b <- rnorm(tt1$n2, mean = 10, sd = 5)
+tt <- t.test(a, b)
+n1 <- length(a); n2 <- length(b)
+sp <- sqrt(((n1 - 1) * var(a) + (n2 - 1) * var(b)) / (n1 + n2 - 2))
+exp_ <- c(unname(tt$statistic), unname(tt$parameter), tt$p.value, (mean(a) - mean(b)) / sp)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 4 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(t = ..., df = ..., p = ..., d = ...) comme dans le gabarit.")
+} else if (abs(res[1] - exp_[1]) > 1e-8) {
+  list(correct = FALSE, message = "Statistique t incorrecte : (m1 - m2) / se avec se = sqrt(v1/n1 + v2/n2) (les variances des deux moyennes s'additionnent).")
+} else if (abs(res[3] - exp_[3]) > 1e-9 * max(1, abs(exp_[3]))) {
+  list(correct = FALSE, message = "p-value incorrecte : test bilatéral, p = 2 * pt(-abs(t), df).")
+} else if (abs(res[4] - exp_[4]) > 1e-8) {
+  list(correct = FALSE, message = "d de Cohen incorrect : (m1 - m2) divisé par l'écart-type poolé sqrt(((n1-1) v1 + (n2-1) v2) / (n1+n2-2)).")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : t = %.2f (df = %.1f), p = %.4f, d = %.2f : mêmes valeurs que t.test().", exp_[1], exp_[2], exp_[3], exp_[4]))
+}
+```
+
+::: {.dojo-done data-id="stats-t-1"}
+:::
+
+## Test du khi-deux d'indépendance {#stats-chi2-1}
+
+[Marche 2 sur 4 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+chi1 = { const g = rng("stats-chi2-1", salt); return { seed: g.int(1, 9999), effet: g.pick([0, 0.05, 0.1]) }; }
+```
+
+On croise le niveau de diplôme (Bac, Licence, Master) et la situation d'emploi de 400 personnes. Teste l'indépendance des deux variables : calcule les effectifs attendus sous H0, la statistique du khi-deux, ses degrés de liberté et la p-value.
+
+```{webr}
+#| exercise: stats-chi2-1
+#| caption: "Test du khi-deux"
+#| input:
+#|   - chi1
+set.seed(chi1$seed)
+n <- 400
+diplome <- sample(c("Bac", "Licence", "Master"), n, replace = TRUE, prob = c(0.5, 0.3, 0.2))
+p_emploi <- c(Bac = 0.75, Licence = 0.75 + chi1$effet, Master = 0.75 + 2 * chi1$effet)[diplome]
+statut <- ifelse(rbinom(n, 1, p_emploi) == 1, "Emploi", "Chômage")
+tab <- table(diplome, statut)
+attendus <- ______     # effectifs attendus si les variables étaient indépendantes : total ligne x total colonne / total
+chi2 <- ______         # somme de (observé - attendu)^2 / attendu
+ddl  <- ______         # (nombre de lignes - 1) x (nombre de colonnes - 1)
+p    <- ______         # queue droite de la loi du khi-deux
+c(chi2 = chi2, ddl = ddl, p = p)
+```
+
+::: {.hint exercise="stats-chi2-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Si le diplôme et la situation d'emploi étaient indépendants, la proportion de personnes en emploi serait la même dans chaque ligne du tableau. Calcule d'abord **ce tableau-là** (les effectifs attendus) puis mesure son écart au tableau observé.
+:::
+:::
+
+::: {.hint exercise="stats-chi2-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les formules
+`outer(rowSums(tab), colSums(tab)) / sum(tab)` ; `sum((tab - attendus)^2 / attendus)` ; `(nrow(tab) - 1) * (ncol(tab) - 1)` ; `pchisq(chi2, ddl, lower.tail = FALSE)`.
+:::
+:::
+
+::: {.solution exercise="stats-chi2-1"}
+**Raisonnement.**
+
+1. Indépendance : $P(i,j) = P(i)\,P(j)$. Les effectifs attendus sont donc $E_{ij} = (\text{total ligne}_i \times \text{total colonne}_j)/N$ : `outer()` fait tous les produits d'un coup.
+2. $\chi^2 = \sum_{ij} (O_{ij} - E_{ij})^2/E_{ij}$ mesure l'écart entre observé et attendu, normalisé par l'attendu (un écart de 5 pèse plus quand on attend 10 que quand on attend 1 000).
+3. Sous H0, $\chi^2$ suit approximativement une loi du khi-deux à $(l-1)(c-1)$ degrés de liberté ; l'approximation est bonne si tous les effectifs attendus dépassent environ 5.
+4. La p-value est la **queue droite** : seules les grandes valeurs signalent un écart.
+5. Un khi-deux significatif dit qu'il y a association, pas qu'elle est forte. Pour la force, on calcule le V de Cramér, $\sqrt{\chi^2/(N\min(l-1,\,c-1))}$ ; pour savoir **où** est l'écart, les résidus de Pearson $(O-E)/\sqrt{E}$.
+
+```{webr}
+#| exercise: stats-chi2-1
+#| solution: true
+set.seed(chi1$seed)
+n <- 400
+diplome <- sample(c("Bac", "Licence", "Master"), n, replace = TRUE, prob = c(0.5, 0.3, 0.2))
+p_emploi <- c(Bac = 0.75, Licence = 0.75 + chi1$effet, Master = 0.75 + 2 * chi1$effet)[diplome]
+statut <- ifelse(rbinom(n, 1, p_emploi) == 1, "Emploi", "Chômage")
+tab <- table(diplome, statut)
+attendus <- outer(rowSums(tab), colSums(tab)) / sum(tab)
+chi2 <- sum((tab - attendus)^2 / attendus)
+ddl  <- (nrow(tab) - 1) * (ncol(tab) - 1)
+p    <- pchisq(chi2, ddl, lower.tail = FALSE)
+c(chi2 = chi2, ddl = ddl, p = p)
+```
+
+**Pièges fréquents.**
+
+- `pchisq(chi2, ddl)` sans `lower.tail = FALSE` donne $1 - p$ : une p-value de 0,98 devient 0,02.
+- Oublier de diviser par $N$ dans les effectifs attendus : ils sont alors énormes et le $\chi^2$ aussi.
+- Travailler sur des pourcentages au lieu d'effectifs : le $\chi^2$ dépend de $N$ (à pourcentages égaux, un échantillon dix fois plus grand donne un $\chi^2$ dix fois plus grand).
+- Effectifs attendus inférieurs à 5 dans plusieurs cellules : l'approximation est mauvaise ; utilise `fisher.test()` ou `chisq.test(tab, simulate.p.value = TRUE)`.
+
+**Pour aller plus loin.** Compare avec `chisq.test(tab)`, puis calcule le V de Cramér et les résidus de Pearson `(tab - attendus) / sqrt(attendus)` pour voir quelle cellule s'écarte le plus de l'indépendance.
+:::
+
+```{webr}
+#| exercise: stats-chi2-1
+#| check: true
+set.seed(chi1$seed)
+n <- 400
+diplome <- sample(c("Bac", "Licence", "Master"), n, replace = TRUE, prob = c(0.5, 0.3, 0.2))
+p_emploi <- c(Bac = 0.75, Licence = 0.75 + chi1$effet, Master = 0.75 + 2 * chi1$effet)[diplome]
+statut <- ifelse(rbinom(n, 1, p_emploi) == 1, "Emploi", "Chômage")
+tab <- table(diplome, statut)
+ct <- suppressWarnings(chisq.test(tab, correct = FALSE))
+exp_ <- c(unname(ct$statistic), unname(ct$parameter), ct$p.value)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 3 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(chi2 = ..., ddl = ..., p = ...) comme dans le gabarit.")
+} else if (abs(res[1] - exp_[1]) > 1e-8 * max(1, exp_[1])) {
+  list(correct = FALSE, message = "Statistique incorrecte : attendus = outer(rowSums(tab), colSums(tab)) / sum(tab), puis sum((tab - attendus)^2 / attendus).")
+} else if (res[2] != exp_[2]) {
+  list(correct = FALSE, message = "Degrés de liberté : (lignes - 1) x (colonnes - 1).")
+} else if (abs(res[3] - exp_[3]) > 1e-9 * max(1, exp_[3])) {
+  list(correct = FALSE, message = "p-value incorrecte : c'est la queue droite, pchisq(chi2, ddl, lower.tail = FALSE).")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : khi-deux = %.2f à %d ddl, p = %.4f (identique à chisq.test).", exp_[1], exp_[2], exp_[3]))
+}
+```
+
+::: {.dojo-done data-id="stats-chi2-1"}
+:::
+
+## Test de permutation {#stats-perm-1}
+
+[Marche 3 sur 4 · Autonome]{.dojo-step}
+
+```{ojs}
+//| echo: false
+perm1 = { const g = rng("stats-perm-1", salt); return { seed: g.int(1, 9999), delta: g.pick([0, 0.4, 0.8]) }; }
+```
+
+Deux groupes de 12 observations, très asymétriques (loi lognormale) : l'hypothèse de normalité du test t est douteuse. Écris un test de permutation de la différence de moyennes (4 000 permutations) et compare sa p-value à celle du test t de Welch.
+
+```{webr}
+#| exercise: stats-perm-1
+#| caption: "Test de permutation"
+#| input:
+#|   - perm1
+set.seed(perm1$seed)
+a <- round(rlnorm(12, meanlog = 3 + perm1$delta, sdlog = 0.8), 1)
+b <- round(rlnorm(12, meanlog = 3, sdlog = 0.8), 1)
+x <- c(a, b); groupe <- rep(c("A", "B"), each = 12)
+obs <- mean(a) - mean(b)
+perm_p <- function(x, groupe, obs, B = 4000) {
+  set.seed(1)
+  stat <- replicate(B, {
+    g <- ______                                     # ré-étiquetage au hasard des observations
+    mean(x[g == "A"]) - mean(x[g == "B"])
+  })
+  ______                                            # p-value bilatérale : (1 + nombre de |stat| >= |obs|) / (B + 1)
+}
+c(obs = obs, p_perm = perm_p(x, groupe, obs), p_welch = t.test(a, b)$p.value)
+```
+
+::: {.hint exercise="stats-perm-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Si le groupe n'a **aucun effet**, l'étiquette A/B de chaque observation est interchangeable. Mélanger les étiquettes au hasard fabrique donc des données « comme sous H0 ». Reste à voir où se situe la différence observée dans cette distribution fabriquée.
+:::
+:::
+
+::: {.hint exercise="stats-perm-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les formules
+`g <- sample(groupe)` mélange les étiquettes. p-value : `(1 + sum(abs(stat) >= abs(obs))) / (B + 1)`.
+:::
+:::
+
+::: {.solution exercise="stats-perm-1"}
+**Raisonnement.**
+
+1. Sous H0 (pas d'effet du groupe), toutes les façons de répartir les 24 valeurs entre A et B sont également plausibles. `sample(groupe)` en tire une au hasard ; on recalcule à chaque fois la statistique d'intérêt. On obtient ainsi sa distribution **sous H0, sans supposer la normalité**.
+2. La p-value est la proportion de permutations dont la statistique est aussi extrême que celle observée (en valeur absolue pour un test bilatéral).
+3. Le « +1 » au numérateur et au dénominateur compte la répartition observée elle-même, qui est aussi une permutation possible : la p-value ne vaut jamais exactement 0 (minimum $1/(B+1)$).
+4. La précision de la simulation est d'environ $\sqrt{p(1-p)/B}$ : pour $p = 0{,}05$ et $B = 4\,000$, environ 0,3 point.
+5. Résultat : proche du Welch quand les données ne sont pas trop extrêmes ; elle s'en écarte avec des queues épaisses. Un test de permutation s'adapte à **n'importe quelle statistique** (médiane, Gini, indice de ségrégation), alors que le test t est réservé à la moyenne.
+
+```{webr}
+#| exercise: stats-perm-1
+#| solution: true
+set.seed(perm1$seed)
+a <- round(rlnorm(12, meanlog = 3 + perm1$delta, sdlog = 0.8), 1)
+b <- round(rlnorm(12, meanlog = 3, sdlog = 0.8), 1)
+x <- c(a, b); groupe <- rep(c("A", "B"), each = 12)
+obs <- mean(a) - mean(b)
+perm_p <- function(x, groupe, obs, B = 4000) {
+  set.seed(1)
+  stat <- replicate(B, {
+    g <- sample(groupe)                              # étiquettes permutées
+    mean(x[g == "A"]) - mean(x[g == "B"])
+  })
+  (1 + sum(abs(stat) >= abs(obs))) / (B + 1)
+}
+c(obs = obs, p_perm = perm_p(x, groupe, obs), p_welch = t.test(a, b)$p.value)
+```
+
+**Pièges fréquents.**
+
+- Oublier `abs` : on obtient une p-value unilatérale.
+- Omettre le « +1 » : la p-value peut valoir 0, ce qui n'a pas de sens avec un nombre fini de permutations.
+- Placer `set.seed()` à l'intérieur de `replicate` : toutes les permutations seraient identiques.
+- Permuter les observations **dans** chaque groupe au lieu des étiquettes : cela ne change rien à la statistique.
+
+**Pour aller plus loin.** Remplace la différence de moyennes par la différence de médianes : le test reste valide sans autre modification. C'est l'idée générale pour tester une statistique dont on ne connaît pas la loi, y compris un indice de ségrégation ou un Gini.
+:::
+
+```{webr}
+#| exercise: stats-perm-1
+#| check: true
+set.seed(perm1$seed)
+a <- round(rlnorm(12, meanlog = 3 + perm1$delta, sdlog = 0.8), 1)
+b <- round(rlnorm(12, meanlog = 3, sdlog = 0.8), 1)
+x <- c(a, b); groupe <- rep(c("A", "B"), each = 12)
+obs <- mean(a) - mean(b)
+set.seed(1)
+stat <- replicate(4000, { g <- sample(groupe); mean(x[g == "A"]) - mean(x[g == "B"]) })
+pp <- (1 + sum(abs(stat) >= abs(obs))) / 4001
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 3 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(obs = ..., p_perm = ..., p_welch = ...) comme dans le gabarit.")
+} else if (abs(res[1] - obs) > 1e-9 || abs(res[3] - t.test(a, b)$p.value) > 1e-9) {
+  list(correct = FALSE, message = "La différence observée et la p-value de Welch doivent rester celles du gabarit : ne modifie que perm_p().")
+} else if (abs(res[2] - pp) < 1e-12) {
+  list(correct = TRUE, message = sprintf("Correct : p de permutation = %.4f, p de Welch = %.4f. Le premier ne suppose pas la normalité.", pp, res[3]))
+} else if (abs(res[2] - mean(abs(stat) >= abs(obs))) < 1e-12) {
+  list(correct = FALSE, message = "Presque : ajoute 1 au numérateur et au dénominateur, (1 + nombre de |stat| >= |obs|) / (B + 1) ; la répartition observée est elle-même une permutation possible.")
+} else if (abs(res[2] - (1 + sum(stat >= obs)) / 4001) < 1e-12) {
+  list(correct = FALSE, message = "Test unilatéral : compare les valeurs absolues, abs(stat) >= abs(obs).")
+} else {
+  list(correct = FALSE, message = "p-value incorrecte : g <- sample(groupe) pour permuter les étiquettes, puis (1 + sum(abs(stat) >= abs(obs))) / (B + 1).")
+}
+```
+
+::: {.dojo-done data-id="stats-perm-1"}
+:::
+
+## Comparaisons multiples : Bonferroni et Holm {#stats-mult-1}
+
+[Marche 4 sur 4 · Autonome]{.dojo-step}
+
+```{ojs}
+//| echo: false
+mult1 = { const g = rng("stats-mult-1", salt); return { seed: g.int(1, 9999), m: g.pick([10, 20, 40]) }; }
+```
+
+On effectue ${mult1.m} tests au seuil de 5 %. Dans ${mult1.m - 2} d'entre eux, il n'y a aucun effet réel ; dans deux, il y en a un vrai (p-values très petites). Combien de « découvertes » obtient-on sans correction, avec Bonferroni, avec Holm ? Écris les deux corrections de p-values.
+
+```{webr}
+#| exercise: stats-mult-1
+#| caption: "Corrections de p-values"
+#| input:
+#|   - mult1
+set.seed(mult1$seed)
+m <- mult1$m
+p <- c(runif(m - 2), 0.0004, 0.003)             # m - 2 p-values sous H0 (uniformes), puis 2 vrais effets
+bonf <- function(p) ______                       # Bonferroni : m x p, plafonné à 1
+holm <- function(p) {
+  m <- length(p); o <- order(p)
+  aj <- ______                                   # Holm : (m - rang + 1) x p trié, pour les rangs 1..m
+  aj <- pmin(1, cummax(aj))                      # monotonie et plafond à 1
+  aj[order(o)]                                   # retour à l'ordre initial
+}
+c(sans_correction = sum(p < 0.05), bonferroni = sum(bonf(p) < 0.05), holm = sum(holm(p) < 0.05),
+  somme_bonf = sum(bonf(p)), somme_holm = sum(holm(p)))
+```
+
+::: {.hint exercise="stats-mult-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Quand on teste beaucoup d'hypothèses, quelques tests « sortent » par hasard. Pour que le risque d'**au moins un** faux positif reste de 5 %, il faut rendre chaque test plus exigeant. Bonferroni le fait de façon uniforme ; Holm de façon séquentielle, en partant de la p-value la plus petite.
+:::
+:::
+
+::: {.hint exercise="stats-mult-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les corrections
+Bonferroni : `pmin(1, length(p) * p)`. Holm : trie les p-values, multiplie la plus petite par $m$, la suivante par $m-1$, etc. : `(m - seq_len(m) + 1) * p[o]`.
+:::
+:::
+
+::: {.solution exercise="stats-mult-1"}
+**Raisonnement.**
+
+1. Avec $m$ tests indépendants à 5 % et H0 vraie partout, on attend $0{,}05\,m$ faux positifs, et la probabilité d'en avoir au moins un est $1 - 0{,}95^m$ : 64 % pour $m = 20$, 87 % pour $m = 40$.
+2. **Bonferroni** : $p^{\mathrm{aj}}_i = \min(1,\; m\,p_i)$. Il contrôle le FWER (probabilité d'au moins un faux positif) mais devient très conservateur quand $m$ est grand.
+3. **Holm** : on trie les p-values croissantes, $p_{(1)} \le \dots \le p_{(m)}$, et on pose $p^{\mathrm{aj}}_{(k)} = \max_{j \le k}\big[(m-j+1)\,p_{(j)}\big]$ (plafonné à 1). Le `cummax` impose la monotonie. Holm contrôle le même FWER sans hypothèse supplémentaire et rejette **toujours au moins autant** que Bonferroni.
+4. `aj[order(o)]` ramène les valeurs ajustées dans l'ordre initial (`order(o)` est la permutation inverse de `o`).
+5. Quand on explore beaucoup d'hypothèses et qu'on accepte quelques fausses découvertes, on préfère contrôler le FDR (Benjamini-Hochberg, `p.adjust(p, "BH")`) : c'est la proportion de fausses découvertes parmi les rejets qui est maîtrisée.
+
+```{webr}
+#| exercise: stats-mult-1
+#| solution: true
+set.seed(mult1$seed)
+m <- mult1$m
+p <- c(runif(m - 2), 0.0004, 0.003)
+bonf <- function(p) pmin(1, length(p) * p)
+holm <- function(p) {
+  m <- length(p); o <- order(p)
+  aj <- (m - seq_len(m) + 1) * p[o]
+  aj <- pmin(1, cummax(aj))
+  aj[order(o)]
+}
+c(sans_correction = sum(p < 0.05), bonferroni = sum(bonf(p) < 0.05), holm = sum(holm(p) < 0.05),
+  somme_bonf = sum(bonf(p)), somme_holm = sum(holm(p)))
+```
+
+**Pièges fréquents.**
+
+- Oublier `pmin(1, ...)` : une p-value ajustée dépasserait 1.
+- Oublier `cummax` : les p-values ajustées ne sont plus monotones et l'on peut rejeter une hypothèse moins significative qu'une hypothèse acceptée.
+- Oublier de remettre les valeurs dans l'ordre initial : les p-values ajustées ne correspondent plus aux bons tests.
+- Faire plusieurs analyses, ne retenir que celle qui « sort » et ne corriger que celle-là : on ne peut corriger que ce que l'on a **déclaré** avoir testé (p-hacking).
+
+**Pour aller plus loin.** Simule 1 000 jeux de 20 p-values sous H0 : la proportion de jeux avec au moins un $p < 0{,}05$ vaut environ 64 %, contre environ 5 % avec Holm. Compare enfin tes fonctions à `p.adjust(p, "bonferroni")` et `p.adjust(p, "holm")`.
+:::
+
+```{webr}
+#| exercise: stats-mult-1
+#| check: true
+set.seed(mult1$seed)
+m <- mult1$m
+p <- c(runif(m - 2), 0.0004, 0.003)
+pb <- p.adjust(p, "bonferroni"); ph <- p.adjust(p, "holm")
+exp_ <- c(sum(p < 0.05), sum(pb < 0.05), sum(ph < 0.05), sum(pb), sum(ph))
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 5 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie le vecteur à 5 valeurs du gabarit.")
+} else if (abs(res[4] - exp_[4]) > 1e-8) {
+  list(correct = FALSE, message = "Bonferroni incorrect : pmin(1, length(p) * p).")
+} else if (abs(res[5] - exp_[5]) > 1e-8) {
+  list(correct = FALSE, message = "Holm incorrect : multiplie la p-value de rang k (après tri) par m - k + 1, applique cummax puis pmin(1, .), et remets dans l'ordre initial avec aj[order(o)].")
+} else if (any(res[1:3] != exp_[1:3])) {
+  list(correct = FALSE, message = "Les corrections sont bonnes mais pas le décompte : ne modifie pas le gabarit hors des fonctions.")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : %d rejets sans correction, %d avec Bonferroni, %d avec Holm (identique à p.adjust).", exp_[1], exp_[2], exp_[3]))
+}
+```
+
+::: {.dojo-done data-id="stats-mult-1"}
+:::
+
 ## Bayes : valeur prédictive d'un test {#stats-bayes-1}
 
 ```{ojs}
@@ -362,6 +1101,28 @@ if (length(res) != 2 || anyNA(res)) {
 
 ::: {.dojo-done data-id="stats-bayes-1"}
 :::
+
+## Boîte à outils : quelle méthode, quelle fonction ?
+
+| Question | Méthode | Fonction R |
+|---|---|---|
+| Résumer une variable | moyenne, médiane, écart-type, IQR, quantiles | `summary()`, `sd()`, `IQR()`, `quantile()` |
+| Résumer par groupe | découper, appliquer, recombiner | `tapply()`, `aggregate()`, `dplyr::summarise()` |
+| Tableau descriptif publiable | tableau de synthèse automatique | `gtsummary::tbl_summary()`, `modelsummary::datasummary()` (en local) |
+| Comparer deux moyennes (échantillons indépendants) | test t de Welch | `t.test(y ~ groupe)` |
+| Comparer deux moyennes (mêmes individus avant/après) | test t apparié | `t.test(x, y, paired = TRUE)` |
+| Comparer deux distributions sans normalité | Mann-Whitney (rangs), permutation | `wilcox.test()`, boucle `replicate()` |
+| Comparer plus de deux moyennes | ANOVA, puis comparaisons deux à deux corrigées | `aov()`, `TukeyHSD()`, `kruskal.test()` |
+| Comparer des proportions | test de proportions | `prop.test(x, n)` |
+| Lien entre deux variables catégorielles | khi-deux, Fisher si effectifs faibles | `chisq.test()`, `fisher.test()` |
+| Lien entre deux variables numériques | corrélation de Pearson, de Spearman (rangs) | `cor.test(x, y, method = ...)` |
+| Normalité d'une variable | graphique quantile-quantile, Shapiro-Wilk | `qqnorm()`, `qqline()`, `shapiro.test()` |
+| Égalité des variances | Bartlett, Levene | `bartlett.test()`, `car::leveneTest()` |
+| Plusieurs tests à la fois | corriger les p-values | `p.adjust(p, "holm")`, `p.adjust(p, "BH")` |
+| Combien d'observations ? | calcul de puissance | `power.t.test()`, `power.prop.test()` |
+| Incertitude d'une statistique quelconque | bootstrap, permutation | `replicate()` + `sample()`, `boot::boot()` |
+
+**Réflexe de lecture d'un test** : (1) quelle est l'hypothèse nulle ? (2) quelle statistique, quelle loi sous H0 ? (3) la p-value est-elle petite, et l'**effet** (différence, $d$ de Cohen, V de Cramér) est-il important ? (4) combien de tests ai-je faits en tout ?
 
 ## Fiche de rappel
 

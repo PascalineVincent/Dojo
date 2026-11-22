@@ -1,0 +1,268 @@
+---
+title: "Défis de la semaine : corrigés"
+subtitle: "Un corrigé de référence exécuté pour chacun des 8 défis"
+---
+
+Chaque corrigé est **calculé à la compilation du site** (graine fixée) et contient des `stopifnot()` : si un résultat annoncé devenait faux, la page ne se compilerait plus. Essaie d'abord seul·e (≈ 1 h) ; ouvre le corrigé ensuite, compare ta démarche, puis lis « Ce qu'il faut retenir ».
+
+```{r setup}
+#| include: false
+source("../R/inegalites.R")
+source("../R/segregation.R")
+```
+
+## Même Gini, classement opposé {#defi-lorenz-croisement}
+
+::: {.callout-note collapse="true" title="Voir le corrigé"}
+**Idée.** A est lognormale. B mélange un corps resserré et une petite fraction π d'individus 6 fois plus riches : B a un haut plus haut (queue) mais un bas moins bas. On cherche π qui égalise les Gini, puis on compare des indices sensibles au haut (GE(2)) ou au bas (GE(-1), Atkinson ε élevé).
+
+```{r lorenz}
+n <- 20000
+set.seed(11); xA <- rlnorm(n, 0, 0.75)
+mixB <- function(pi_top, n, seed = 1) {
+  set.seed(seed); top <- runif(n) < pi_top
+  x <- rlnorm(n, 0, 0.35); x[top] <- 6 * x[top]; x
+}
+gA <- gini(xA)
+pi_star <- uniroot(function(p) gini(mixB(p, n)) - gA, c(0.001, 0.4), tol = 1e-5)$root
+xB <- mixB(pi_star, n)
+stopifnot(abs(gini(xA) - gini(xB)) < 1e-3)
+
+pp <- seq(0.01, 0.99, by = 0.01)
+interp <- function(x) { l <- lorenz(x); approx(l$p, l$L, pp)$y }
+d <- interp(xA) - interp(xB)
+stopifnot(sum(diff(sign(d)) != 0) == 1)        # les courbes se croisent une fois
+
+tab <- data.frame(
+  indice = c("GE(-1)", "GE(2)", "Atkinson 0,5", "Atkinson 3"),
+  A = c(ge(xA, -1), ge(xA, 2), atkinson(xA, 0.5), atkinson(xA, 3)),
+  B = c(ge(xB, -1), ge(xB, 2), atkinson(xB, 0.5), atkinson(xB, 3)))
+stopifnot(ge(xA, -1) > ge(xB, -1), ge(xA, 2) < ge(xB, 2),
+          atkinson(xA, 3) > atkinson(xB, 3), atkinson(xA, 0.5) < atkinson(xB, 0.5))
+knitr::kable(tab, digits = 3)
+
+eps <- seq(0, 4, by = 0.1)
+ede <- function(x) sapply(eps, function(e) mean(x) * (1 - atkinson(x, e)))
+matplot(eps, cbind(ede(xA), ede(xB)), type = "l", lty = 1, lwd = 2, col = c("#1f4e8c", "#b03a2e"),
+        xlab = expression(epsilon), ylab = "Revenu équivalent également réparti")
+legend("topright", c("A", "B"), col = c("#1f4e8c", "#b03a2e"), lwd = 2, bty = "n")
+```
+
+**Ce qu'il faut retenir.**
+
+- Les deux Gini coïncident mais les courbes de Lorenz se croisent : il n'y a pas de dominance de Lorenz, donc aucun classement unanime n'est garanti.
+- GE(2) (sensible au haut) juge B plus inégal ; GE(-1) et Atkinson ε = 3 (sensibles au bas) jugent A plus inégal. Les revenus équivalents (courbes ci-dessus) se croisent aussi.
+- Le choix de ε est un jugement de valeur explicite : il faut le justifier et présenter une analyse de robustesse.
+:::
+
+## MAUP : combien perd-on en agrégeant ? {#defi-maup}
+
+::: {.callout-note collapse="true" title="Voir le corrigé"}
+**Idée.** Pour toute partition des unités en blocs, M se décompose exactement : M total = M inter-blocs + intra-blocs. Agréger revient à garder l'inter et à perdre l'intra. On trie les unités par part du groupe B (proxy d'autocorrélation spatiale : des voisins se ressemblent) et on forme des blocs contigus, puis des blocs tirés au hasard.
+
+```{r maup}
+tab <- seg_sim_city(U = 256, size = 100, p = 0.3, kappa = 5, seed = 2)
+tab_s <- tab[order(tab[, 2] / rowSums(tab)), ]
+M0 <- seg_M(tab_s)
+res <- do.call(rbind, lapply(c(1, 2, 4, 8, 16, 32), function(k) {
+  z_ord <- ceiling(seq_len(nrow(tab_s)) / k)
+  set.seed(1); z_rnd <- sample(rep(seq_len(256 / k), each = k))
+  d1 <- seg_M_decomp(tab_s, z_ord); d2 <- seg_M_decomp(tab_s, z_rnd)
+  agg <- rowsum(tab_s, z_ord)                              # agrégation explicite
+  stopifnot(abs(seg_M(agg) - d1[["inter"]]) < 1e-10,       # M agrégé = M inter
+            abs(d1[["inter"]] + d1[["intra"]] - M0) < 1e-10, d1[["intra"]] >= -1e-12, d2[["intra"]] >= -1e-12)
+  data.frame(taille_bloc = k, M_agrege_ordre = d1[["inter"]], perte_ordre = d1[["intra"]],
+             M_agrege_hasard = d2[["inter"]], perte_hasard = d2[["intra"]])
+}))
+knitr::kable(res, digits = 4)
+stopifnot(res$perte_hasard[6] > 10 * res$perte_ordre[6])
+```
+
+**Ce qu'il faut retenir.**
+
+- L'identité M agrégé = M inter est exacte (testée au 1e-10) ; la perte est exactement le terme intra, toujours ≥ 0.
+- Des blocs qui regroupent des unités semblables (ordre) perdent peu ; des blocs hétérogènes (hasard) détruisent presque toute la ségrégation mesurée. Le résultat dépend donc du **découpage**, pas seulement de la taille : c'est le MAUP.
+- Conséquence pratique : comparer des villes ou des dates avec des zonages différents n'a pas de sens sans les ramener à la même échelle.
+:::
+
+## Corriger le biais de petites unités {#defi-petites-unites}
+
+::: {.callout-note collapse="true" title="Voir le corrigé"}
+**Idée.** Avec des unités minuscules, le hasard seul crée des écarts de composition : D et M sont positifs même sans ségrégation. On estime cette valeur attendue par permutation (`seg_null`, qui conserve les tailles d'unités et la composition globale) puis on soustrait : (D − E0) / (1 − E0).
+
+```{r petites}
+res <- do.call(rbind, lapply(c(5, 20, 100, 500), function(sz) {
+  do.call(rbind, lapply(c(Inf, 50, 10), function(kap) {
+    tab <- seg_sim_city(U = 200, size = sz, p = 0.3, kappa = kap, seed = 7)
+    D <- seg_D(tab); E0 <- mean(seg_null(tab, B = 200, stat = seg_D, seed = 1))
+    data.frame(taille = sz, kappa = kap, D = D, D_attendu = E0, D_corrige = (D - E0) / (1 - E0))
+  }))
+}))
+knitr::kable(res, digits = 3)
+h0 <- res[is.infinite(res$kappa), ]
+stopifnot(all(abs(h0$D_corrige) < 0.06),                      # ~0 sous H0
+          h0$D_attendu[1] > 5 * h0$D_attendu[4],              # biais énorme pour petites unités
+          res$D_corrige[res$taille == 100 & res$kappa == 10] > res$D_corrige[res$taille == 100 & res$kappa == 50])
+```
+
+**Ce qu'il faut retenir.**
+
+- Sous H0, D brut vaut ≈ 0,40 pour des unités de 5 et ≈ 0,04 pour 500 : sans correction on « mesure » de la ségrégation qui n'existe pas. L'indice corrigé reste proche de 0 et croît quand κ diminue (plus de ségrégation structurelle).
+- **Limites à discuter** : (i) la correction dépend du benchmark (tailles et composition globale conservées) ; (ii) elle corrige le biais, pas la variance, qui reste grande pour de petites unités ; (iii) l'indice corrigé peut être négatif ; (iv) pour des unités de taille 1, D brut vaut quasi 1 et le benchmark aussi : l'information est quasi nulle.
+- Références : Carrington et Troske (1997) ; Allen et al. (2015).
+:::
+
+## Queue de Pareto et inégalités {#defi-pareto}
+
+::: {.callout-note collapse="true" title="Voir le corrigé"}
+**Théorie.** Pour une Pareto de forme α > 1, Gini = 1 / (2α − 1). Pour α ≤ 1 la moyenne est infinie. On réplique l'estimateur pour plusieurs (α, n).
+
+```{r pareto}
+rp <- function(n, a, xm = 1) xm / runif(n)^(1 / a)
+set.seed(3)
+res <- do.call(rbind, lapply(c(1.2, 1.5, 2, 3, 5), function(a) do.call(rbind, lapply(c(100, 1000, 10000), function(n) {
+  g <- replicate(300, gini(rp(n, a)))
+  data.frame(alpha = a, n = n, theorie = 1 / (2 * a - 1), moyenne = mean(g), biais = mean(g) - 1 / (2 * a - 1), ecart_type = sd(g))
+}))))
+knitr::kable(res, digits = 3)
+stopifnot(all(abs(res$biais[res$alpha >= 3 & res$n == 10000]) < 0.003),
+          all(res$biais < 0.01),                                      # biais négatif : on sous-estime
+          res$ecart_type[res$alpha == 1.2 & res$n == 1000] > 5 * res$ecart_type[res$alpha == 5 & res$n == 1000])
+```
+
+**Ce qu'il faut retenir.**
+
+- Avec α ≥ 3, l'estimateur est quasi sans biais dès n = 1000. Avec α = 1,2 il est **biaisé vers le bas** (≈ −0,14 à n = 100 ; encore ≈ −0,04 à n = 10 000) et très dispersé.
+- La cause : les plus grandes valeurs, qui portent l'essentiel de l'inégalité, sont rarement observées dans un échantillon fini. La convergence est lente (queue épaisse, moments d'ordre élevé infinis).
+- En pratique, pour des revenus très hauts, un Gini d'enquête sous-estime l'inégalité ; on complète par des données fiscales ou un ajustement Pareto de la queue.
+:::
+
+## Intervalles de confiance pour H (bootstrap) {#defi-bootstrap}
+
+::: {.callout-note collapse="true" title="Voir le corrigé"}
+**Idée.** Dans la ville simulée, la composition des unités varie (Beta) : les individus d'une même unité sont corrélés. Un bootstrap d'**individus** les traite comme indépendants et sous-estime la variance. Un bootstrap d'**unités** (grappes) la respecte. On mesure la couverture de l'IC à 95 % par Monte-Carlo, la « vraie » valeur de H étant approchée sur une très grande ville de même mécanisme.
+
+```{r bootstrap}
+H_of <- function(unit, grp, U) {
+  tab <- matrix(tabulate(unit + U * (grp - 1L), nbins = 2 * U), U, 2)
+  seg_H(tab[rowSums(tab) > 0, , drop = FALSE])
+}
+make_city <- function(U = 40, m = 30, p = 0.3, kappa = 3) {
+  q <- rbeta(U, p * kappa, (1 - p) * kappa); unit <- rep(seq_len(U), each = m)
+  list(unit = unit, grp = 1L + rbinom(U * m, 1, q[unit]), U = U)
+}
+boot_ind <- function(ci, B = 100) { n <- length(ci$unit)
+  replicate(B, { i <- sample.int(n, replace = TRUE); H_of(ci$unit[i], ci$grp[i], ci$U) }) }
+boot_clu <- function(ci, B = 100) replicate(B, {
+  u <- sample.int(ci$U, replace = TRUE)
+  idx <- unlist(lapply(u, function(j) which(ci$unit == j)))
+  H_of(rep(seq_along(u), times = tabulate(ci$unit, ci$U)[u]), ci$grp[idx], length(u)) })
+
+set.seed(10)
+big <- make_city(U = 4000, m = 30); H_vrai <- H_of(big$unit, big$grp, big$U)
+R <- 100; cov <- matrix(NA, R, 2)
+for (r in seq_len(R)) {
+  ci <- make_city()
+  q1 <- quantile(boot_ind(ci), c(.025, .975)); q2 <- quantile(boot_clu(ci), c(.025, .975))
+  cov[r, ] <- c(q1[1] <= H_vrai && H_vrai <= q1[2], q2[1] <= H_vrai && H_vrai <= q2[2])
+}
+couverture <- setNames(colMeans(cov), c("individus", "unites")); print(couverture)
+stopifnot(couverture["unites"] > 0.8, couverture["individus"] < 0.8)
+```
+
+**Ce qu'il faut retenir.**
+
+- Le bootstrap d'individus ne couvre qu'environ 60 % du temps pour un IC nominal à 95 % ; celui d'unités couvre ≈ 90 % (avec seulement 40 unités, un peu de sous-couverture résiduelle est normal).
+- Le rééchantillonnage doit refléter la **structure de dépendance** : ici, la grappe est l'unité. C'est le même principe que les erreurs-types clusterisées.
+- H a aussi un biais de petit échantillon (voir le défi précédent) : un IC bootstrap ne le corrige pas.
+:::
+
+## Que veut dire « 40 % » pour D ? {#defi-duncan-deplacements}
+
+::: {.callout-note collapse="true" title="Voir le corrigé"}
+**Normalisation.** D = ½ Σ |aᵢ/A − bᵢ/B| est la **part de chacun des deux groupes qui devrait déménager** : ici, la part du groupe B à déplacer vers des unités sous-représentées, **en gardant les effectifs des unités fixes**, pour que B ait la même répartition que A. En nombre d'individus : D × B (et D × A si on déplace des membres de A). Algorithme : on prend l'unité où B est le plus au-dessus de sa cible et celle où il est le plus en dessous, on transfère le minimum des deux écarts, on répète.
+
+```{r duncan}
+deplacer <- function(tab) {
+  a <- tab[, 1]; b <- tab[, 2]
+  cible <- a * sum(b) / sum(a)                 # effectif de B donnant la même répartition que A
+  deplaces <- 0
+  repeat {
+    ex <- b - cible
+    i <- which.max(ex); j <- which.min(ex)
+    pas <- min(ex[i], -ex[j])
+    if (pas < 1e-9) break
+    b[i] <- b[i] - pas; b[j] <- b[j] + pas; deplaces <- deplaces + pas
+  }
+  list(deplaces = deplaces, part_de_B = deplaces / sum(tab[, 2]), D = seg_D(tab), D_apres = seg_D(cbind(a, b)))
+}
+set.seed(5)
+test <- function(U) {
+  s <- round(rlnorm(U, 5, 1.2)); b <- rbinom(U, s, rbeta(U, 1.5, 3.5)); cbind(A = s - b, B = b)
+}
+out <- do.call(rbind, lapply(1:5, function(k) { r <- deplacer(test(40)); unlist(r) }))
+print(round(out, 4))
+stopifnot(all(abs(out[, "part_de_B"] - out[, "D"]) < 1e-8), all(out[, "D_apres"] < 1e-8))
+```
+
+**Ce qu'il faut retenir.**
+
+- La part de B déplacée est exactement D (testée sur 5 villes de tailles très hétérogènes) ; après déplacement, D = 0.
+- « D = 0,40 » signifie : 40 % des membres du groupe B (ou 40 % de A, selon le sens) devraient changer d'unité. Si les groupes ont des tailles différentes, le **nombre** de personnes à déplacer diffère (D × B contre D × A), mais la **part** est la même.
+- C'est une lecture « minimale » : on n'échange pas, on déplace sans changer la taille des unités.
+:::
+
+## Theil : intra, inter et dynamique {#defi-theil-decomp}
+
+::: {.callout-note collapse="true" title="Voir le corrigé"}
+**Idée.** Deux dates, mêmes distributions intra-groupes, mêmes parts de population ; seules les moyennes de groupes changent à t1 (G2 et G3 s'enrichissent). On décompose GE(1) (Theil T) et GE(0) (MLD) aux deux dates.
+
+```{r theil}
+set.seed(8)
+n <- 6000; g <- sample(c("G1", "G2", "G3"), n, TRUE, c(.5, .3, .2))
+base <- rlnorm(n, 0, c(G1 = .6, G2 = .7, G3 = .8)[g])
+mu0 <- c(G1 = 1, G2 = 1.3, G3 = 1.8); mu1 <- c(G1 = 1, G2 = 1.6, G3 = 2.6)
+x0 <- base * mu0[g]; x1 <- base * mu1[g]
+out <- lapply(c(GE1 = 1, GE0 = 0), function(a) {
+  d0 <- ge_decomp(x0, g, a); d1 <- ge_decomp(x1, g, a)
+  stopifnot(abs(d0[["intra"]] + d0[["inter"]] - d0[["total"]]) < 1e-9)
+  rbind(t0 = d0, t1 = d1, variation = d1 - d0)
+})
+print(lapply(out, round, 4))
+stopifnot(abs(out$GE0["variation", "intra"]) < 1e-9,       # MLD : intra inchangé
+          abs(out$GE1["variation", "intra"]) > 1e-3,       # Theil T : intra bouge
+          out$GE0["variation", "inter"] > 0.05)
+```
+
+**Ce qu'il faut retenir.**
+
+- La variation de l'inégalité totale est portée par le terme **inter**, mais avec GE(1) le terme intra bouge aussi, alors que les distributions intra-groupes n'ont pas changé.
+- Raison : l'intra de GE(1) pondère les inégalités de chaque groupe par sa **part de revenu**, qui change quand les moyennes changent. Avec GE(0), les poids sont les **parts de population**, fixes ici. L'intra ne varie donc que si l'inégalité à l'intérieur des groupes change vraiment.
+- C'est pour cela que la MLD est préférée pour une décomposition dynamique propre ; avec Theil T, la variation intra mélange un effet de composition en revenus.
+:::
+
+## Mini-réplication d'un article de ta veille {#defi-replication}
+
+Ce défi n'a pas de solution unique : voici une **grille d'auto-évaluation** et un exemple de calibration.
+
+::: {.callout-note collapse="true" title="Voir le corrigé"}
+**Grille (à cocher).**
+
+1. **Choix** : l'article a des statistiques descriptives publiées (moyennes, écarts-types, tailles, corrélations) et un mécanisme simple à simuler.
+2. **Calibration** : les données simulées reproduisent les moments publiés (à vérifier en code, pas à l'œil).
+3. **Reproduction** : un tableau ou une figure de l'article est reproduit(e), avec la même spécification ; l'écart avec l'original est quantifié et expliqué.
+4. **Fiche de lecture** : question, données, méthode, résultat, limite, ce que je ferais autrement (une page).
+5. **Archivage** : script dans `recherche/replications/`, graine fixée, exécutable de bout en bout.
+
+**Exemple de calibration.** Une lognormale de moyenne *m* et d'écart-type *s* publiés a pour paramètres σ² = ln(1 + s²/m²) et μ = ln(m) − σ²/2.
+
+```{r replication}
+calib_lnorm <- function(m, s) { v <- log(1 + s^2 / m^2); c(meanlog = log(m) - v / 2, sdlog = sqrt(v)) }
+p <- calib_lnorm(m = 30000, s = 25000)
+set.seed(1); x <- rlnorm(5e5, p[["meanlog"]], p[["sdlog"]])
+c(moyenne = mean(x), ecart_type = sd(x))
+stopifnot(abs(mean(x) / 30000 - 1) < 0.02, abs(sd(x) / 25000 - 1) < 0.1)
+```
+
+**Pièges fréquents.** Calibrer sur la moyenne mais pas sur la dispersion ; oublier la sélection d'échantillon décrite dans l'article ; reproduire un coefficient sans reproduire l'erreur-type ; ne pas fixer la graine.
+:::

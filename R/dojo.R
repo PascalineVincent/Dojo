@@ -41,6 +41,11 @@ validate_content <- function(ct, qmd_dir = ".") {
   uniq(vapply(ct$quiz, `[[`, "", "id"), "quiz")
   for (x in ct$defis) need(x, c("id", "titre", "niveau", "minutes", "xp", "enonce", "page"), paste("défi", x$id))
   uniq(vapply(ct$defis, `[[`, "", "id"), "défis")
+  # chaque défi doit avoir son corrigé (ancre dans recherche/defis.qmd)
+  dsrc <- file.path(qmd_dir, "recherche", "defis.qmd")
+  dlines <- if (file.exists(dsrc)) readLines(dsrc, warn = FALSE) else character()
+  for (x in ct$defis) if (!any(grepl(sprintf("{#%s}", x$id), dlines, fixed = TRUE)))
+    err <- c(err, sprintf("défi %s : corrigé absent (ancre {#%s} dans recherche/defis.qmd)", x$id, x$id))
   for (x in ct$exercises) {
     need(x, c("id", "course", "level", "minutes", "xp", "title", "page"), paste("exercice", x$id))
     # l'ancre doit exister dans la page source

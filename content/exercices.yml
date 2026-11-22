@@ -30,3 +30,10 @@
 - {id: ineq-ge-0, course: recherche, level: 2, minutes: 10, xp: 15, title: "Theil et MLD à la main", page: recherche/inegalites.html, track: ineq, step: 3}
 - {id: ineq-ge-1, course: recherche, level: 4, minutes: 20, xp: 45, title: "La famille GE(α) : une seule fonction", page: recherche/inegalites.html, track: ineq, step: 4}
 - {id: ineq-decomp-1, course: recherche, level: 4, minutes: 25, xp: 50, title: "Décomposition du Theil par groupes", page: recherche/inegalites.html, track: ineq, step: 5}
+- {id: stats-desc-1, course: stats, level: 1, minutes: 8, xp: 15, title: "Résumer une série : position, dispersion, forme", page: parcours/stats.html, track: stats-desc, step: 1}
+- {id: stats-desc-2, course: stats, level: 2, minutes: 12, xp: 25, title: "Tableau descriptif par groupe", page: parcours/stats.html, track: stats-desc, step: 2}
+- {id: stats-desc-3, course: stats, level: 3, minutes: 12, xp: 30, title: "Repérer les valeurs atypiques", page: parcours/stats.html, track: stats-desc, step: 3}
+- {id: stats-t-1, course: stats, level: 2, minutes: 10, xp: 20, title: "Test t de Welch à la main", page: parcours/stats.html, track: stats-tests, step: 1}
+- {id: stats-chi2-1, course: stats, level: 2, minutes: 12, xp: 25, title: "Test du khi-deux d'indépendance", page: parcours/stats.html, track: stats-tests, step: 2}
+- {id: stats-perm-1, course: stats, level: 3, minutes: 12, xp: 30, title: "Test de permutation", page: parcours/stats.html, track: stats-tests, step: 3}
+- {id: stats-mult-1, course: stats, level: 3, minutes: 12, xp: 30, title: "Comparaisons multiples : Bonferroni et Holm", page: parcours/stats.html, track: stats-tests, step: 4}

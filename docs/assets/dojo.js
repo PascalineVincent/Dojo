@@ -219,7 +219,7 @@ function mountDone(el) {
 
 // ------------------------------------------------------------------ exercice du jour
 const dayRank = () => { const d = new Date().getDay(); return d === 0 || d === 6; };     // week-end ?
-const TRACK_LABEL = { 'micro-cpp': 'Concurrence parfaite', 'micro-pouvoir': 'Pouvoir de marché', 'stats-est': 'Estimation et simulation',
+const TRACK_LABEL = { 'micro-cpp': 'Concurrence parfaite', 'micro-pouvoir': 'Pouvoir de marché', 'stats-est': 'Estimation et simulation', 'stats-desc': 'Statistiques descriptives', 'stats-tests': 'Comparaisons et tests',
   eco: 'Économétrie', 'con-dette': 'Dette publique', seg: 'Ségrégation', ineq: 'Inégalités' };
 const trackOf = (t) => DATA.exercises.filter((e) => e.track === t).sort((a, b) => a.step - b.step);
 // une marche est accessible quand toutes les précédentes de sa piste ont été réussies au moins une fois
@@ -286,7 +286,8 @@ function mountDefi(el) {
     h('h3', { style: 'margin:.6rem 0' }, d.titre),
     h('ul', {}, [].concat(d.enonce).map((x) => h('li', { html: fmt(x) }))),
     h('details', {}, h('summary', {}, 'Pistes'), h('p', { html: fmt(d.pistes || '') })),
-    h('a', { class: 'dojo-btn primary', href: new URL(d.page, ROOT).href, style: 'text-decoration:none;display:inline-block' }, 'Ouvrir le labo'), done));
+    h('a', { class: 'dojo-btn primary', href: new URL(d.page, ROOT).href, style: 'text-decoration:none;display:inline-block' }, 'Ouvrir le labo'),
+    h('a', { class: 'dojo-btn', href: new URL(`recherche/defis.html#${d.id}`, ROOT).href, style: 'text-decoration:none;display:inline-block;margin-left:.4rem' }, 'Voir le corrigé'), done));
   mountDone(done);
 }
 
