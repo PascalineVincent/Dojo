@@ -1,0 +1,45 @@
+---
+title: "Histoire économique"
+subtitle: "Repères, mécanismes et questions de synthèse"
+---
+
+Ici l'enjeu n'est pas d'apprendre des dates isolées mais de **relier chaque événement à son mécanisme**. Utilise la frise pour te repérer, les cartes pour mémoriser durablement (répétition espacée), puis les questions de synthèse à rédiger en 10 minutes.
+
+## Frise de repères
+
+| Date | Événement | Mécanisme à savoir expliquer |
+|---|---|---|
+| 1846 | Abolition des Corn Laws (Royaume-Uni) | Tournant libre-échangiste ; avantage comparatif |
+| 1870-1914 | Étalon-or classique | Changes fixes, ajustement par les flux d'or |
+| 1919 | Traité de Versailles ; Keynes, *Les conséquences économiques de la paix* | Réparations et stabilité financière |
+| 1929 | Krach de Wall Street | Faillites bancaires, déflation, étalon-or comme canal de transmission |
+| 1944 | Bretton Woods | Changes fixes ajustables ancrés sur le dollar, FMI, Banque mondiale |
+| 1948-1951 | Plan Marshall (annoncé en 1947) | Reconstruction, coopération (OECE) |
+| 1945-1973 | Trente Glorieuses | Rattrapage, fordisme, État-providence |
+| 1957 | Traité de Rome (CEE) | Union douanière, marché commun |
+| 1971 | 15 août : fin de la convertibilité du dollar en or | Fin du système de Bretton Woods ; flottement en 1973 |
+| 1973, 1979 | Chocs pétroliers | Stagflation, fin des Trente Glorieuses |
+| 1992-1993 | Maastricht, marché unique | Critères de convergence, libre circulation |
+| 1999 et 2002 | Euro (scriptural puis pièces et billets) | Politique monétaire unique |
+| 2008 | Faillite de Lehman Brothers (15 septembre) | Crise financière mondiale |
+| 2010-2012 | Crise des dettes souveraines en zone euro | Boucle banques-États, rôle de la BCE |
+
+## Quiz éclair
+
+::: {.dojo-quiz data-course="histoire" data-n="5"}
+:::
+
+## Cartes de répétition
+
+::: {.dojo-cards data-course="histoire" data-n="6"}
+:::
+
+## Questions de synthèse (10 minutes, sans notes)
+
+Rédige en 8 à 12 lignes, puis compare avec tes cours. C'est la **récupération active** qui fixe la mémoire.
+
+1. Pourquoi l'attachement à l'étalon-or a-t-il aggravé et propagé la Grande Dépression ?
+2. Quels facteurs expliquent la forte croissance de 1945 à 1973, et pourquoi s'essouffle-t-elle ?
+3. Que désigne la « Grande Divergence » et pourquoi la date de 1800 est-elle importante ?
+4. La courbe de Kuznets est-elle un mécanisme ou une période particulière de l'histoire ? Qu'en dit Piketty ?
+5. Comparer 1929 et 2008 : qu'est-ce qui diffère dans la réponse des politiques monétaires et budgétaires ?

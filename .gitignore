@@ -1,0 +1,14 @@
+.quarto/
+/.quarto
+*_files/
+*.knit.md
+.Rproj.user/
+.Rhistory
+.RData
+Rplots.pdf
+assets/data.json
+node_modules/
+.DS_Store
+
+/.quarto/
+**/*.quarto_ipynb

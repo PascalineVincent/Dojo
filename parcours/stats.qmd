@@ -1,0 +1,383 @@
+---
+title: "Statistiques (L1)"
+subtitle: "Probabilités, estimation, tests : rappels et simulation"
+---
+
+{{< include ../_extensions/r-wasm/live/_knitr.qmd >}}
+
+Rappels de L1 par la **simulation** : on ne se contente pas de la formule, on la vérifie. Les énoncés changent chaque jour (graine = date).
+
+{{< include ../_ojs.qmd >}}
+
+::: {.dojo-track data-track="stats-est"}
+:::
+
+## TCL par simulation {#stats-tcl-1}
+
+[Marche 1 sur 3 · Guidé]{.dojo-step}
+
+```{ojs}
+//| echo: false
+tcl1 = { const g = rng("stats-tcl-1", salt); return { n: g.pick([10, 25, 50, 100]), m: g.pick([2, 5, 10]) }; }
+```
+
+On tire **n = ${tcl1.n}** observations indépendantes d'une loi exponentielle d'espérance ${tcl1.m} (son écart-type vaut aussi ${tcl1.m}). Simule 2 000 moyennes empiriques et compare leur écart-type à la valeur théorique σ/√n.
+
+```{webr}
+#| exercise: stats-tcl-1
+#| caption: "Écart-type de la moyenne empirique"
+#| input:
+#|   - tcl1
+n <- tcl1$n; m <- tcl1$m
+set.seed(42)
+moyennes <- replicate(2000, mean(______))     # n tirages de rexp(n, rate = 1 / m)
+c(simule = sd(moyennes), theorie = ______)    # sigma / sqrt(n)
+```
+
+::: {.hint exercise="stats-tcl-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Deux ingrédients : (i) simuler un grand nombre de moyennes de $n$ observations ; (ii) écrire ce que la théorie annonce pour l'écart-type d'une moyenne. Tu compares ensuite les deux.
+:::
+:::
+
+::: {.hint exercise="stats-tcl-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+Une loi exponentielle d'espérance $m$ a pour paramètre `rate = 1/m` dans `rexp()`. Pour des observations i.i.d., $\mathrm{sd}(\bar X) = \sigma / \sqrt{n}$.
+:::
+:::
+
+::: {.solution exercise="stats-tcl-1"}
+**Raisonnement.**
+
+1. Une observation exponentielle d'espérance $m$ a pour variance $m^2$ : son écart-type est $m$ (propriété de la loi exponentielle).
+2. Pour la moyenne de $n$ observations indépendantes, $\mathrm{Var}(\bar X) = \sigma^2/n$, donc $\mathrm{sd}(\bar X) = m/\sqrt{n}$.
+3. On répète 2 000 fois l'expérience « tirer $n$ valeurs, en faire la moyenne » avec `replicate`. L'écart-type de ces 2 000 moyennes doit approcher $m/\sqrt{n}$ ; la précision de la simulation est d'environ $1/\sqrt{2\times 2000} \approx 1{,}6\ \%$ en valeur relative.
+4. Le TCL dit en plus que la **forme** devient gaussienne : trace `hist(moyennes)` pour $n$ grand.
+
+```{webr}
+#| exercise: stats-tcl-1
+#| solution: true
+n <- tcl1$n; m <- tcl1$m
+set.seed(42)
+moyennes <- replicate(2000, mean(rexp(n, rate = 1 / m)))
+c(simule = sd(moyennes), theorie = m / sqrt(n))
+```
+
+**Pièges fréquents.**
+
+- `rexp(n, m)` : le second argument est le **taux** $1/m$, pas la moyenne.
+- Écrire `mean(rexp(n, ...))` hors de `replicate` : on obtient 2 000 fois la même valeur.
+- Confondre l'écart-type des observations ($m$) et celui de la moyenne ($m/\sqrt n$).
+
+**Pour aller plus loin.** Compare l'asymétrie des moyennes pour $n = 5$ puis $n = 100$ : le TCL est asymptotique, et la loi exponentielle est très asymétrique. La marche suivante construit un intervalle de confiance.
+:::
+
+```{webr}
+#| exercise: stats-tcl-1
+#| check: true
+n <- tcl1$n; m <- tcl1$m
+res <- suppressWarnings(as.numeric(.result))
+th <- m / sqrt(n)
+if (length(res) != 2 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(simule = ..., theorie = ...).")
+} else if (abs(res[2] - th) > 1e-8) {
+  list(correct = FALSE, message = "La valeur théorique est sigma / sqrt(n), avec sigma = m.")
+} else if (abs(res[1] / th - 1) > 0.12) {
+  list(correct = FALSE, message = "Ta valeur simulée s'écarte de plus de 12 % de la théorie : vérifie les paramètres de rexp() et le nombre de répétitions.")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : simulé %.3f contre théorie %.3f.", res[1], th))
+}
+```
+
+::: {.dojo-done data-id="stats-tcl-1"}
+:::
+
+## Intervalle de confiance d'une moyenne {#stats-ic-1}
+
+[Marche 2 sur 3 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+ic1 = {
+  const g = rng("stats-ic-1", salt);
+  const mu = g.int(50, 120), sd = g.int(5, 20), n = g.int(12, 30);
+  return { x: Array.from({ length: n }, () => Math.round((mu + sd * g.normal()) * 10) / 10) };
+}
+```
+
+Un échantillon de ${ic1.x.length} mesures est tiré d'une loi supposée normale (inconnue). Calcule l'intervalle de confiance à 95 % de la moyenne avec le quantile de Student adapté au petit échantillon.
+
+```{webr}
+#| exercise: stats-ic-1
+#| caption: "IC à 95 % (Student)"
+#| input:
+#|   - ic1
+x <- as.numeric(unlist(ic1$x))
+n <- length(x); m <- mean(x); s <- sd(x)
+marge <- ______ * s / sqrt(n)      # quantile de Student à n - 1 ddl : qt(0.975, df = n - 1)
+c(inf = m - marge, sup = m + marge)
+```
+
+::: {.hint exercise="stats-ic-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Un IC s'écrit « estimation ± marge ». Ici $\sigma$ est inconnu et l'échantillon petit : quelle loi gouverne le rapport $(\bar x - \mu)/(s/\sqrt n)$ ?
+:::
+:::
+
+::: {.hint exercise="stats-ic-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+Pour un IC bilatéral à 95 %, on prend le quantile d'ordre 0,975 de la loi de Student à $n-1$ degrés de liberté : `qt(0.975, df = n - 1)`. Vérifie avec `t.test(x)$conf.int`.
+:::
+:::
+
+::: {.solution exercise="stats-ic-1"}
+**Raisonnement.**
+
+1. Si les données sont normales, $(\bar X - \mu)/(S/\sqrt n)$ suit une loi de **Student** à $n-1$ degrés de liberté.
+2. L'IC à 95 % est donc $\bar x \pm t_{n-1,\,0.975}\; s/\sqrt n$.
+3. Le quantile de Student est supérieur à 1,96 (par exemple 2,26 pour $n = 10$) : il traduit l'incertitude supplémentaire due à l'estimation de $\sigma$ par $s$.
+4. `t.test(x)$conf.int` donne le même intervalle : c'est la vérification utilisée par la correction.
+
+```{webr}
+#| exercise: stats-ic-1
+#| solution: true
+x <- as.numeric(unlist(ic1$x))
+n <- length(x); m <- mean(x); s <- sd(x)
+marge <- qt(0.975, df = n - 1) * s / sqrt(n)
+c(inf = m - marge, sup = m + marge)
+```
+
+**Pièges fréquents.**
+
+- Utiliser 1,96 avec un petit échantillon : l'IC est trop étroit et sa couverture réelle est inférieure à 95 %.
+- Écrire `sd(x) / n` au lieu de `sd(x) / sqrt(n)`.
+- Lire « 95 % de chances que $\mu$ soit dans cet intervalle » : la probabilité porte sur la **procédure** (sur de nombreux échantillons), pas sur l'intervalle calculé.
+
+**Pour aller plus loin.** La marche suivante mesure justement la couverture réelle de cet intervalle par simulation, avec Student et avec 1,96.
+:::
+
+```{webr}
+#| exercise: stats-ic-1
+#| check: true
+x <- as.numeric(unlist(ic1$x))
+ref <- as.numeric(t.test(x)$conf.int)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 2 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(inf = ..., sup = ...).")
+} else if (isTRUE(all.equal(res, ref, tolerance = 1e-8))) {
+  list(correct = TRUE, message = sprintf("Correct : IC95 = [%.2f ; %.2f].", ref[1], ref[2]))
+} else if (isTRUE(all.equal(res, mean(x) + c(-1, 1) * 1.96 * sd(x) / sqrt(length(x)), tolerance = 1e-6))) {
+  list(correct = FALSE, message = "Tu as utilisé 1,96 (loi normale). Avec n petit, utilise le quantile de Student : qt(0.975, n - 1).")
+} else {
+  list(correct = FALSE, message = "Vérifie : marge = quantile * s / sqrt(n), puis moyenne -/+ marge.")
+}
+```
+
+::: {.dojo-done data-id="stats-ic-1"}
+:::
+
+## Couverture réelle de l'intervalle de confiance {#stats-couv-1}
+
+[Marche 3 sur 3 · Autonome]{.dojo-step}
+
+```{ojs}
+//| echo: false
+couv1 = { const g = rng("stats-couv-1", salt); return { n: g.pick([4, 5, 6, 8, 10]) }; }
+```
+
+On observe des échantillons normaux de **n = ${couv1.n}** observations (vraie moyenne 100, écart-type 15). On construit l'IC à 95 % de deux façons : avec le quantile de Student, puis avec la valeur 1,96. Sur 4 000 échantillons simulés, **dans quelle proportion** l'IC contient-il vraiment la vraie moyenne ?
+
+```{webr}
+#| exercise: stats-couv-1
+#| caption: "Taux de couverture"
+#| input:
+#|   - couv1
+mu <- 100; sigma <- 15; n <- couv1$n
+couverture <- function(crit, B = 4000) {
+  set.seed(1)                                   # mêmes échantillons pour les deux IC
+  mean(replicate(B, {
+    x <- rnorm(n, mu, sigma)
+    marge <- ______                             # valeur critique x erreur-type de la moyenne
+    ______                                      # TRUE si l'IC contient mu
+  }))
+}
+c(student = couverture(qt(0.975, n - 1)), normale = couverture(1.96))
+```
+
+::: {.hint exercise="stats-couv-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Pour chaque échantillon simulé, deux choses : la demi-largeur de l'intervalle (la marge), puis un test vrai/faux « l'intervalle contient-il $\mu$ ? ». La moyenne de ces vrai/faux est la couverture.
+:::
+:::
+
+::: {.hint exercise="stats-couv-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+marge = `crit * sd(x) / sqrt(n)` ; l'IC contient $\mu$ si `abs(mean(x) - mu) <= marge`. Pour Student la couverture doit être proche de 0,95.
+:::
+:::
+
+::: {.solution exercise="stats-couv-1"}
+**Raisonnement.**
+
+1. « IC à 95 % » est une promesse sur la **procédure** : sur de nombreux échantillons, 95 % des intervalles doivent contenir la vraie moyenne. La simulation permet de le vérifier parce qu'on connaît $\mu$.
+2. Pour chaque échantillon on calcule la marge `crit * sd(x) / sqrt(n)` puis on teste $|\bar x - \mu| \le$ marge.
+3. Avec le quantile de Student $t_{n-1,\,0.975}$, la couverture est proche de 95 %.
+4. Avec 1,96, la couverture est nettement plus basse (environ 88 % pour $n = 5$) : on ne tient pas compte de l'incertitude sur $\sigma$ (estimé par $s$).
+5. `set.seed(1)` à l'intérieur de la fonction impose les mêmes échantillons aux deux calculs : la comparaison se fait « à données égales ». La précision de la simulation est d'environ $\sqrt{0{,}95 \times 0{,}05/4000} \approx 0{,}35$ point.
+
+```{webr}
+#| exercise: stats-couv-1
+#| solution: true
+mu <- 100; sigma <- 15; n <- couv1$n
+couverture <- function(crit, B = 4000) {
+  set.seed(1)
+  mean(replicate(B, {
+    x <- rnorm(n, mu, sigma)
+    marge <- crit * sd(x) / sqrt(n)             # sd(x), pas sigma : sigma est inconnu en pratique
+    abs(mean(x) - mu) <= marge                  # l'IC [mean(x) - marge ; mean(x) + marge] contient mu
+  }))
+}
+c(student = couverture(qt(0.975, n - 1)), normale = couverture(1.96))
+```
+
+**Pièges fréquents.**
+
+- Utiliser `sigma` (inconnu en pratique) à la place de `sd(x)` : l'IC serait trop précis, et l'on perdrait précisément ce que la loi de Student corrige.
+- Mettre `set.seed()` à l'intérieur de `replicate` : tous les échantillons seraient identiques.
+- Lire 93,6 % comme une « erreur » : avec 4 000 tirages, l'aléa de simulation est d'environ 0,35 point.
+
+**Pour aller plus loin.** Refais avec $n = 30$ puis $n = 200$ : les deux colonnes se rejoignent, c'est la convergence de la loi de Student vers la loi normale.
+:::
+
+```{webr}
+#| exercise: stats-couv-1
+#| check: true
+mu <- 100; sigma <- 15; n <- couv1$n
+cv <- function(crit, B = 4000) {
+  set.seed(1)
+  mean(replicate(B, { x <- rnorm(n, mu, sigma); abs(mean(x) - mu) <= crit * sd(x) / sqrt(n) }))
+}
+exp_ <- c(cv(qt(0.975, n - 1)), cv(1.96))
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 2 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(student = ..., normale = ...) comme dans le gabarit.")
+} else if (abs(res[1] - exp_[1]) > 1e-9) {
+  list(correct = FALSE, message = "Couverture de Student incorrecte : marge = crit * sd(x) / sqrt(n), et l'IC contient mu si abs(mean(x) - mu) <= marge.")
+} else if (abs(res[2] - exp_[2]) > 1e-9) {
+  list(correct = FALSE, message = "La couverture avec 1,96 est incorrecte : utilise la même fonction avec crit = 1,96.")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : pour n = %d, Student couvre %.1f %% des cas, 1,96 seulement %.1f %% (promesse : 95 %%).", n, 100 * exp_[1], 100 * exp_[2]))
+}
+```
+
+::: {.dojo-done data-id="stats-couv-1"}
+:::
+
+## Bayes : valeur prédictive d'un test {#stats-bayes-1}
+
+```{ojs}
+//| echo: false
+bayes1 = { const g = rng("stats-bayes-1", salt); return { prev: g.pick([0.5, 1, 2, 5, 10]), se: g.pick([90, 92, 95, 98, 99]), sp: g.pick([90, 92, 95, 97, 99]) }; }
+```
+
+Une maladie touche ${bayes1.prev} % de la population. Le test a une sensibilité de ${bayes1.se} % (positif si malade) et une spécificité de ${bayes1.sp} % (négatif si sain). Quelle est la probabilité d'être malade quand le test est positif (VPP) ? D'être sain quand il est négatif (VPN) ?
+
+```{webr}
+#| exercise: stats-bayes-1
+#| caption: "VPP et VPN"
+#| input:
+#|   - bayes1
+prev <- bayes1$prev / 100; se <- bayes1$se / 100; sp <- bayes1$sp / 100
+vpp <- ______     # P(malade | positif) par la formule de Bayes
+vpn <- ______     # P(sain | négatif)
+c(VPP = vpp, VPN = vpn)
+```
+
+::: {.hint exercise="stats-bayes-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Imagine 100 000 personnes et dresse un petit tableau : combien de malades ? Parmi eux, combien de positifs ? Combien de positifs parmi les sains ? Le calcul de Bayes est ce tableau lu en colonne.
+:::
+:::
+
+::: {.hint exercise="stats-bayes-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+$P(M \mid +) = \dfrac{P(+ \mid M)\,P(M)}{P(+ \mid M)\,P(M) + P(+ \mid \bar M)\,P(\bar M)}$, où $P(+ \mid \bar M) = 1 - \text{spécificité}$. Même démarche pour le VPN.
+:::
+:::
+
+::: {.solution exercise="stats-bayes-1"}
+**Raisonnement.**
+
+1. Sur 100 000 personnes, $\text{prév} \times 100\,000$ sont malades, les autres sont saines.
+2. Parmi les malades, la sensibilité donne les **vrais positifs** ; parmi les sains, $1 - \text{spécificité}$ donne les **faux positifs**.
+3. $\text{VPP} = \dfrac{\text{vrais positifs}}{\text{vrais positifs} + \text{faux positifs}}$, c'est la formule de Bayes écrite avec des effectifs.
+4. Même logique pour la VPN, avec les négatifs : vrais négatifs = spécificité × sains, faux négatifs = $(1 - \text{sensibilité})$ × malades.
+5. Quand la maladie est rare, les faux positifs (issus d'un grand nombre de sains) dominent les vrais positifs (issus d'un petit nombre de malades) : la VPP est modeste même avec un bon test.
+
+```{webr}
+#| exercise: stats-bayes-1
+#| solution: true
+prev <- bayes1$prev / 100; se <- bayes1$se / 100; sp <- bayes1$sp / 100
+vpp <- se * prev / (se * prev + (1 - sp) * (1 - prev))
+vpn <- sp * (1 - prev) / (sp * (1 - prev) + (1 - se) * prev)
+c(VPP = vpp, VPN = vpn)
+```
+
+**Pièges fréquents.**
+
+- Confondre $P(+ \mid M)$ (sensibilité) et $P(M \mid +)$ (VPP) : c'est l'erreur du procureur.
+- Oublier de multiplier par la prévalence.
+- Utiliser la spécificité à la place de $1 - $ spécificité pour les faux positifs.
+
+**Pour aller plus loin.** Calcule la VPP pour une prévalence de 0,5 %, 5 % puis 50 % avec le même test : elle augmente fortement avec la prévalence.
+:::
+
+```{webr}
+#| exercise: stats-bayes-1
+#| check: true
+prev <- bayes1$prev / 100; se <- bayes1$se / 100; sp <- bayes1$sp / 100
+vpp <- se * prev / (se * prev + (1 - sp) * (1 - prev))
+vpn <- sp * (1 - prev) / (sp * (1 - prev) + (1 - se) * prev)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 2 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(VPP = ..., VPN = ...).")
+} else if (abs(res[1] - se) < 1e-9) {
+  list(correct = FALSE, message = "Tu as renvoyé la sensibilité, qui est P(+|malade). On te demande P(malade|+) : applique Bayes.")
+} else if (abs(res[1] - vpp) > 1e-8) {
+  list(correct = FALSE, message = "VPP incorrecte : au dénominateur, additionne vrais positifs (se x prev) et faux positifs ((1 - sp) x (1 - prev)).")
+} else if (abs(res[2] - vpn) > 1e-8) {
+  list(correct = FALSE, message = "VPP juste, VPN incorrecte : vrais négatifs = sp x (1 - prev), faux négatifs = (1 - se) x prev.")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : VPP = %.1f %% (donc %.1f %% des positifs sont de faux positifs).", 100 * vpp, 100 * (1 - vpp)))
+}
+```
+
+::: {.dojo-done data-id="stats-bayes-1"}
+:::
+
+## Fiche de rappel
+
+| Notion | À retenir |
+|---|---|
+| Variance | $\mathrm{Var}(X) = E[X^2] - E[X]^2$ ; estimateur sans biais : division par $n-1$ |
+| Moyenne empirique | $E[\bar X] = \mu$, $\mathrm{Var}(\bar X) = \sigma^2/n$ |
+| TCL | $\sqrt{n}(\bar X - \mu)/\sigma \to N(0,1)$ |
+| IC à 95 % | $\bar x \pm t_{n-1,\,0.975}\; s/\sqrt{n}$ (≈ 1,96 si $n$ grand) |
+| p-value | $P(\text{statistique au moins aussi extrême} \mid H_0)$ ; **pas** $P(H_0 \mid \text{données})$ |
+| Bayes | $P(A \mid B) = P(B \mid A)P(A)/P(B)$ |
+
+## Entraîne-toi
+
+::: {.dojo-cards data-course="stats" data-n="5"}
+:::
+
+::: {.dojo-quiz data-course="stats" data-n="3"}
+:::

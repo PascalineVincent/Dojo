@@ -1,0 +1,97 @@
+# Défis de recherche hebdomadaires (rotation par semaine ISO). Chaque défi dure ~1 h.
+# Champs : id, titre, niveau (1-5), minutes, xp, enonce (liste de puces), page (lien interne), pistes
+- id: defi-lorenz-croisement
+  titre: "Même Gini, classement opposé"
+  niveau: 4
+  minutes: 60
+  xp: 60
+  page: recherche/inegalites.html
+  enonce:
+    - "Construire deux distributions de revenus (n = 1000) dont les courbes de Lorenz se croisent et qui ont le même Gini."
+    - "Montrer que GE(2) et GE(-1) (ou Atkinson avec ε = 0,5 et ε = 3) les classent en sens opposés."
+    - "Tracer les deux courbes de Lorenz et le « revenu équivalent également réparti » en fonction de ε."
+  pistes: "Mélanger une distribution à queue haute épaisse et une distribution plus resserrée mais avec un bas plus bas. Utiliser `gini()`, `ge()`, `atkinson()` de `R/inegalites.R`."
+
+- id: defi-maup
+  titre: "MAUP : combien perd-on en agrégeant ?"
+  niveau: 4
+  minutes: 60
+  xp: 60
+  page: recherche/segregation.html
+  enonce:
+    - "Simuler une ville de 256 unités (`seg_sim_city`)."
+    - "Agréger les unités par blocs de 2, 4, 8... en suivant l'ordre (spatial) puis en tirant les blocs au hasard."
+    - "Vérifier numériquement que M agrégé = M inter-blocs et que la perte est égale au terme intra de `seg_M_decomp`."
+  pistes: "Utiliser `rowsum()` pour agréger. Le terme intra doit être positif ou nul ; il est plus grand si les blocs regroupent des unités de compositions différentes."
+
+- id: defi-petites-unites
+  titre: "Corriger le biais de petites unités"
+  niveau: 5
+  minutes: 90
+  xp: 80
+  page: recherche/segregation.html
+  enonce:
+    - "Pour des villes sans ségrégation structurelle et des unités de taille 5, 20, 100, 500, calculer D et M attendus sous allocation aléatoire (`seg_null`)."
+    - "Construire un indice corrigé (D - E0) / (1 - E0) et vérifier qu'il vaut ~0 sous H0 et monte avec kappa décroissant."
+    - "Discuter limites : dépend du benchmark, ne corrige pas la variance, comportement pour de très petites unités."
+  pistes: "Le benchmark conditionne sur les tailles d'unités et la composition globale. Comparer à la littérature (Carrington-Troske 1997 ; Allen et al. 2015)."
+
+- id: defi-pareto
+  titre: "Queue de Pareto et inégalités"
+  niveau: 3
+  minutes: 45
+  xp: 50
+  page: recherche/inegalites.html
+  enonce:
+    - "Simuler des échantillons de Pareto (shape α = 1,5 ; 2 ; 3 ; 5) via `x <- xm / runif(n)^(1/alpha)`."
+    - "Vérifier numériquement Gini = 1 / (2α - 1) quand α > 1 et mesurer la vitesse de convergence en n."
+    - "Observer l'instabilité de l'estimateur du Gini quand α est proche de 1 (queue très épaisse)."
+  pistes: "Répliquer 500 fois pour chaque (α, n) et tracer la distribution de l'estimateur."
+
+- id: defi-bootstrap
+  titre: "Intervalles de confiance pour H (bootstrap)"
+  niveau: 4
+  minutes: 75
+  xp: 70
+  page: recherche/segregation.html
+  enonce:
+    - "À partir de micro-données simulées (individu, unité, groupe), calculer H = M / E."
+    - "Construire un IC95 % par bootstrap d'individus ; comparer à un bootstrap d'unités (grappes)."
+    - "Quelle approche a la couverture correcte quand les individus d'une unité sont corrélés ?"
+  pistes: "Le tirage d'individus ignore la corrélation intra-unité ; faire un Monte-Carlo de couverture."
+
+- id: defi-duncan-deplacements
+  titre: "Que veut dire « 40 % » pour D ?"
+  niveau: 3
+  minutes: 45
+  xp: 50
+  page: recherche/segregation.html
+  enonce:
+    - "Écrire un algorithme glouton qui déplace des membres d'un groupe depuis les unités où il est sur-représenté vers celles où il est sous-représenté, jusqu'à égaliser les compositions."
+    - "Vérifier que la part déplacée est bien égale à D (indiquer dans quelle normalisation)."
+    - "Tester sur des villes simulées avec des unités de tailles très différentes."
+  pistes: "Raisonner en parts : D = somme des excès positifs de la part du groupe dans l'unité par rapport à la part de la population."
+
+- id: defi-theil-decomp
+  titre: "Theil : intra, inter et dynamique"
+  niveau: 4
+  minutes: 60
+  xp: 60
+  page: recherche/inegalites.html
+  enonce:
+    - "Simuler deux dates (t0 et t1) où seul l'écart de moyennes entre groupes change."
+    - "Décomposer GE(1) et GE(0) en intra/inter aux deux dates et attribuer la variation totale."
+    - "Pourquoi GE(0) est-il « mieux » pour une décomposition dynamique avec des parts de population fixes ?"
+  pistes: "Pour α = 0 les poids intra sont les parts de population, constantes ; pour α = 1 ce sont les parts de revenu, qui bougent."
+
+- id: defi-replication
+  titre: "Mini-réplication d'un article de ta veille"
+  niveau: 5
+  minutes: 120
+  xp: 100
+  page: veille.html
+  enonce:
+    - "Choisir dans la veille un article avec des données ou une méthode simulable."
+    - "Reproduire une figure ou un tableau avec des données simulées calibrées sur ses statistiques descriptives."
+    - "Rédiger une fiche de lecture : question, données, méthode, résultat, limite, ce que je ferais autrement."
+  pistes: "Utiliser la fiche modèle de la page Veille ; archiver le script dans `recherche/replications/`."

@@ -1,0 +1,66 @@
+# Configuration de la veille documentaire automatisée (scripts/update_veille.R)
+# Chaque entrée de `topics` : nom, requêtes OpenAlex (phrases entre guillemets possibles),
+# mots-clés avec poids pour le score de pertinence (recherche insensible à la casse
+# dans titre + résumé reconstitué).
+
+window_days: 21          # ne garder que les publications des N derniers jours
+max_items: 60            # taille maximale du fichier veille/items.json
+min_score: 2             # score minimal pour apparaître
+
+openalex:
+  per_query: 25
+  # Optionnel : définir la variable d'environnement OPENALEX_MAILTO pour le "polite pool"
+
+arxiv:
+  categories: [econ.EM, econ.GN, stat.AP, physics.soc-ph]
+  max_results: 100
+
+topics:
+  - name: Ségrégation
+    queries:
+      - '"residential segregation"'
+      - '"segregation index"'
+      - '"school segregation"'
+      - '"mutual information index" segregation'
+    keywords:
+      segregation: 3
+      "mutual information": 3
+      dissimilarity: 3
+      "theil index": 2
+      "spatial segregation": 3
+      "residential": 1
+      neighborhood: 1
+      "small unit": 2
+      "entropy": 1
+
+  - name: Inégalités
+    queries:
+      - '"income inequality" measurement'
+      - '"top income shares"'
+      - '"inequality decomposition"'
+      - '"wealth inequality"'
+    keywords:
+      inequality: 3
+      gini: 3
+      "lorenz": 2
+      atkinson: 2
+      "generalized entropy": 3
+      decomposition: 2
+      "top income": 2
+      "income distribution": 2
+      "wealth": 1
+      "poverty": 1
+
+  - name: Méthodes (économétrie appliquée)
+    queries:
+      - '"difference-in-differences" estimator'
+      - '"regression discontinuity"'
+      - '"instrumental variables" inference'
+    keywords:
+      "difference-in-differences": 2
+      "regression discontinuity": 2
+      "instrumental variable": 2
+      "synthetic control": 2
+      "cluster": 1
+      "bootstrap": 1
+      "heterogeneous treatment": 2

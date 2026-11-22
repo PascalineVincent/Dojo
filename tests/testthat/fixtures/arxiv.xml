@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ <entry>
+  <id>http://arxiv.org/abs/0000.00001v1</id>
+  <published>2026-11-15T10:00:00Z</published>
+  <title>Fixture: Income inequality
+   and the Gini coefficient</title>
+  <summary>A synthetic abstract about the generalized entropy family and decomposition.</summary>
+  <author><name>Auteur C</name></author>
+ </entry>
+</feed>

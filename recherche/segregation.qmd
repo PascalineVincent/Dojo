@@ -1,0 +1,606 @@
+---
+title: "Laboratoire : indices de ségrégation"
+subtitle: "Coder, comparer, décomposer, corriger"
+---
+
+{{< include ../_extensions/r-wasm/live/_knitr.qmd >}}
+
+Niveau doctoral : on **recode les indices depuis zéro** puis on les compare à la boîte à outils du dépôt (`R/segregation.R`, testée). Toutes les fonctions prennent une matrice `tab` d'effectifs (**unités × groupes**).
+
+| Fonction | Rôle |
+|---|---|
+| `seg_D(tab)` | Dissimilarité de Duncan (2 groupes) |
+| `seg_M(tab)`, `seg_H(tab)` | Information mutuelle et sa version normalisée (multigroupe) |
+| `seg_isolation(tab, g)` | Isolement du groupe `g` |
+| `seg_M_decomp(tab, zone)` | Décomposition entre/intra zones |
+| `seg_null(tab, B, stat)` | Distribution sous allocation aléatoire |
+| `seg_sim_city(U, size, p, kappa)` | Ville synthétique (kappa petit = quartiers homogènes) |
+
+{{< include ../_ojs.qmd >}}
+
+## Terrain de jeu : simuler une ville
+
+```{webr}
+#| autorun: true
+#| caption: "Villes synthétiques : D et M selon kappa"
+source("R/segregation.R")
+kappas <- c(0.5, 2, 5, 20, 100, Inf)
+res <- t(sapply(kappas, function(k) {
+  tab <- seg_sim_city(U = 100, size = 200, p = 0.3, kappa = k, seed = 1)
+  c(D = seg_D(tab), M = seg_M(tab), H = seg_H(tab), isolement_B = seg_isolation(tab, "B"))
+}))
+rownames(res) <- paste0("kappa = ", kappas)
+round(res, 3)
+```
+
+Avec `kappa = Inf` il n'y a **aucune ségrégation structurelle**, pourtant D et M ne sont pas nuls : c'est le biais d'échantillonnage (voir plus bas).
+
+::: {.dojo-track data-track="seg"}
+:::
+
+## Parts de chaque groupe et indice D sur 6 quartiers {#seg-d-0}
+
+[Marche 1 sur 6 · Guidé]{.dojo-step}
+
+```{ojs}
+//| echo: false
+seg0 = { const g = rng("seg-d-0", salt); return { seed: g.int(1, 9999) }; }
+```
+
+Une ville compte 6 quartiers. Les vecteurs `a` (groupe A) et `b` (groupe B) donnent les effectifs par quartier. Calcule la part de chaque groupe qui vit dans chaque quartier, puis l'indice D de Duncan, et repère le quartier qui contribue le plus.
+
+```{webr}
+#| exercise: seg-d-0
+#| caption: "D sur 6 quartiers"
+#| input:
+#|   - seg0
+set.seed(seg0$seed)
+a <- sample(5:80, 6); b <- sample(5:80, 6)
+pa <- ______      # part du groupe A vivant dans chaque quartier : a / sum(a)
+pb <- ______      # idem pour le groupe B
+D  <- ______      # 0,5 * somme des valeurs absolues des écarts de parts
+c(D = D, quartier_max = which.max(abs(pa - pb)))
+```
+
+::: {.hint exercise="seg-d-0"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+On compare deux **répartitions** : celle du groupe A entre les quartiers, celle du groupe B. Pour cela, divise chaque effectif par le total de **son** groupe.
+:::
+:::
+
+::: {.hint exercise="seg-d-0"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les formules
+`pa <- a / sum(a)` et `pb <- b / sum(b)` ; $D$ est la moitié de `sum(abs(pa - pb))`.
+:::
+:::
+
+::: {.solution exercise="seg-d-0"}
+**Raisonnement.**
+
+1. Les effectifs bruts ne se comparent pas (un quartier peut être plus peuplé) ; on compare des **parts de chaque groupe** : $a_i/A$ et $b_i/B$. Chacun de ces vecteurs somme à 1.
+2. Si les deux groupes se répartissent de la même façon, $a_i/A = b_i/B$ partout et $D = 0$.
+3. Chaque quartier contribue par l'écart absolu $|a_i/A - b_i/B|$ ; $D$ est la **moitié** de la somme de ces écarts.
+4. Lecture : $D$ est la part de A (ou de B) qui devrait déménager pour égaliser les deux répartitions.
+5. `which.max(abs(pa - pb))` désigne le quartier le plus « déséquilibré » : c'est lui qui contribue le plus à $D$.
+
+```{webr}
+#| exercise: seg-d-0
+#| solution: true
+set.seed(seg0$seed)
+a <- sample(5:80, 6); b <- sample(5:80, 6)
+pa <- a / sum(a)                   # répartition du groupe A entre les quartiers
+pb <- b / sum(b)                   # répartition du groupe B
+D  <- 0.5 * sum(abs(pa - pb))
+c(D = D, quartier_max = which.max(abs(pa - pb)))
+```
+
+**Pièges fréquents.**
+
+- Calculer des parts **dans** le quartier ($a_i/(a_i+b_i)$) : c'est une mesure d'exposition ou d'isolement, pas D.
+- Oublier la valeur absolue : la somme des écarts signés vaut toujours 0.
+- Oublier le facteur $1/2$ : D dépasserait 1 en cas de séparation complète.
+
+**Pour aller plus loin.** À l'étape suivante tu écris cette formule comme une **fonction** valable pour n'importe quelle table, et tu la testes sur des cas limites.
+:::
+
+```{webr}
+#| exercise: seg-d-0
+#| check: true
+set.seed(seg0$seed)
+a <- sample(5:80, 6); b <- sample(5:80, 6)
+pa <- a / sum(a); pb <- b / sum(b)
+D <- 0.5 * sum(abs(pa - pb)); q <- which.max(abs(pa - pb))
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 2 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(D = ..., quartier_max = ...) comme dans le gabarit.")
+} else if (abs(res[1] - D) > 1e-9) {
+  list(correct = FALSE, message = "D incorrect : compare a / sum(a) et b / sum(b) (parts de CHAQUE groupe), prends la valeur absolue des écarts, puis la moitié de leur somme.")
+} else if (res[2] != q) {
+  list(correct = FALSE, message = "D est juste mais le quartier désigné non : il maximise la valeur absolue de l'écart de parts abs(pa - pb).")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : D = %.3f, soit %.0f %% d'un groupe à déplacer ; le quartier %d contribue le plus.", D, 100 * D, q))
+}
+```
+
+::: {.dojo-done data-id="seg-d-0"}
+:::
+
+## Coder l'indice D de Duncan {#seg-d-1}
+
+[Marche 2 sur 6 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+seg1 = { const g = rng("seg-d-1", salt); return { seed: g.int(1, 9999), kappa: g.pick([2, 4, 8]) }; }
+```
+
+Pour deux groupes, $D = \frac12 \sum_i \left|\frac{a_i}{A} - \frac{b_i}{B}\right|$ où $a_i, b_i$ sont les effectifs de l'unité $i$ et $A, B$ les totaux. Écris `my_D()` ; elle sera testée sur plusieurs villes, pas seulement sur celle affichée.
+
+```{webr}
+#| exercise: seg-d-1
+#| caption: "D à la main"
+#| input:
+#|   - seg1
+source("R/segregation.R")
+tab <- seg_sim_city(U = 40, size = 150, p = 0.3, kappa = seg1$kappa, seed = seg1$seed)
+
+my_D <- function(tab) {
+  a <- tab[, 1]; b <- tab[, 2]
+  ______     # 0,5 * somme des valeurs absolues des écarts de parts
+}
+c(mon_D = my_D(tab), seg_D = seg_D(tab))
+```
+
+::: {.hint exercise="seg-d-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+D compare, quartier par quartier, la part du groupe A et la part du groupe B. Calcule d'abord ces deux vecteurs de parts (chacun somme à 1), puis agrège les écarts.
+:::
+:::
+
+::: {.hint exercise="seg-d-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+`0.5 * sum(abs(a / sum(a) - b / sum(b)))`. Interprétation : part minimale de l'un des groupes qui devrait déménager pour égaliser les répartitions.
+:::
+:::
+
+::: {.solution exercise="seg-d-1"}
+**Raisonnement.**
+
+1. $a_i/A$ est la part du groupe A qui vit dans l'unité $i$ ; $b_i/B$ celle du groupe B. Chacune somme à 1 sur l'ensemble des unités.
+2. Si les deux groupes sont répartis de la même façon, tous les écarts sont nuls et $D = 0$.
+3. Si les groupes sont totalement séparés, chaque unité n'abrite qu'un groupe : $\sum_i |\cdot| = 2$, et le facteur $1/2$ ramène $D$ à 1.
+4. Lecture : $D$ est la **part minimale** d'un groupe qui devrait déménager pour égaliser les deux répartitions.
+5. La fonction est testée sur quatre tables, dont la séparation totale ($D = 1$) et l'intégration parfaite ($D = 0$).
+
+```{webr}
+#| exercise: seg-d-1
+#| solution: true
+source("R/segregation.R")
+tab <- seg_sim_city(U = 40, size = 150, p = 0.3, kappa = seg1$kappa, seed = seg1$seed)
+
+my_D <- function(tab) {
+  a <- tab[, 1]; b <- tab[, 2]
+  0.5 * sum(abs(a / sum(a) - b / sum(b)))
+}
+c(mon_D = my_D(tab), seg_D = seg_D(tab))
+```
+
+**Pièges fréquents.**
+
+- Oublier la valeur absolue : la somme des écarts signés vaut toujours 0.
+- Calculer des parts **à l'intérieur** de chaque unité ($a_i/(a_i+b_i)$) : c'est une autre famille de mesures (exposition, isolement).
+- Interpréter un D élevé sans tenir compte de la taille des unités : D est biaisé vers le haut quand les unités sont petites (exercice « Biais de petites unités »).
+
+**Pour aller plus loin.** Calcule D sur la même ville après avoir regroupé les unités deux à deux : D baisse. C'est le problème d'unité spatiale modifiable (MAUP), traité par l'exercice de décomposition.
+:::
+
+```{webr}
+#| exercise: seg-d-1
+#| check: true
+source("R/segregation.R")
+f <- get0("my_D", envir = .envir_result, inherits = FALSE)
+if (!is.function(f)) {
+  list(correct = FALSE, message = "Définis la fonction my_D(tab).")
+} else {
+  tabs <- list(seg_sim_city(40, 150, 0.3, as.numeric(seg1$kappa), seed = seg1$seed),
+               seg_sim_city(10, 30, 0.5, 3, seed = 1),
+               cbind(A = c(10, 0), B = c(0, 10)),
+               cbind(A = c(10, 20), B = c(5, 10)))
+  ok <- vapply(tabs, function(t) isTRUE(all.equal(tryCatch(f(t), error = function(e) NA_real_), seg_D(t))), logical(1))
+  if (all(ok)) list(correct = TRUE, message = "Correct : my_D reproduit seg_D sur 4 tables (dont séparation totale = 1 et intégration = 0).")
+  else list(correct = FALSE, message = sprintf("my_D échoue sur %d table(s) de test. Pense aux parts de chaque groupe (a / sum(a)) et à la valeur absolue.", sum(!ok)))
+}
+```
+
+::: {.dojo-done data-id="seg-d-1"}
+:::
+
+## Entropie d'une composition {#seg-m-0}
+
+[Marche 3 sur 6 · Guidé]{.dojo-step}
+
+```{ojs}
+//| echo: false
+seg00 = { const g = rng("seg-m-0", salt); return { p: g.pick([0.1, 0.2, 0.3, 0.4]) }; }
+```
+
+Écris la fonction `entropie(p)` (entropie de Shannon, logarithme naturel, convention 0 ln 0 = 0) puis évalue-la sur quatre compositions : un groupe seul, deux groupes de parts ${seg00.p} et ${1 - seg00.p}, deux groupes égaux, trois groupes égaux.
+
+```{webr}
+#| exercise: seg-m-0
+#| caption: "Entropie de Shannon"
+#| input:
+#|   - seg00
+entropie <- function(p) {
+  p <- p[p > 0]                  # convention 0 * log(0) = 0
+  ______                         # - somme des p * log(p)
+}
+p <- seg00$p
+c(separee = entropie(c(1, 0)), deux_groupes = entropie(c(p, 1 - p)),
+  egal2 = entropie(c(0.5, 0.5)), egal3 = entropie(rep(1 / 3, 3)))
+```
+
+::: {.hint exercise="seg-m-0"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Une composition très diverse (parts égales) doit donner une grande valeur, une composition « pure » doit donner 0. Pense à une somme de termes de la forme $p \ln p$.
+:::
+:::
+
+::: {.hint exercise="seg-m-0"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+$E = -\sum_g p_g \ln p_g$ : en R, `-sum(p * log(p))` après avoir retiré les parts nulles.
+:::
+:::
+
+::: {.solution exercise="seg-m-0"}
+**Raisonnement.**
+
+1. $E(p) = -\sum_g p_g \ln p_g$ est maximale quand tous les groupes sont également présents (elle vaut alors $\ln G$) et nulle quand un seul groupe est présent.
+2. Valeurs de contrôle : composition séparée $0$ ; deux groupes à parts égales $\ln 2 \approx 0{,}693$ ; trois groupes égaux $\ln 3 \approx 1{,}099$.
+3. `p[p > 0]` applique la convention $0\ln 0 = 0$ ; sans elle, `0 * log(0)` vaut `NaN` et le résultat entier est perdu.
+4. Dans l'indice $M$, $E$ est l'entropie de la ville entière et $E_i$ celle du quartier $i$. $M$ mesure de combien les quartiers sont **moins divers** que la ville.
+
+```{webr}
+#| exercise: seg-m-0
+#| solution: true
+entropie <- function(p) {
+  p <- p[p > 0]                  # convention 0 * log(0) = 0
+  -sum(p * log(p))
+}
+p <- seg00$p
+c(separee = entropie(c(1, 0)), deux_groupes = entropie(c(p, 1 - p)),
+  egal2 = entropie(c(0.5, 0.5)), egal3 = entropie(rep(1 / 3, 3)))
+```
+
+**Pièges fréquents.**
+
+- Oublier le signe moins : l'entropie serait négative.
+- Ne pas filtrer les zéros : `NaN` dès qu'une part est nulle (cas très fréquent dans les quartiers homogènes).
+- Mélanger `log`, `log2` et `log10` : cela change l'échelle (nats, bits, dits), pas le classement, à condition de rester cohérent d'un indice à l'autre.
+
+**Pour aller plus loin.** L'étape suivante combine cette fonction quartier par quartier pour construire M, avec un nombre quelconque de groupes.
+:::
+
+```{webr}
+#| exercise: seg-m-0
+#| check: true
+p <- seg00$p
+E <- function(v) { v <- v[v > 0]; -sum(v * log(v)) }
+exp_ <- c(0, E(c(p, 1 - p)), log(2), log(3))
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 4) {
+  list(correct = FALSE, message = "Renvoie les quatre valeurs du gabarit.")
+} else if (any(is.nan(res))) {
+  list(correct = FALSE, message = "Tu obtiens NaN : 0 * log(0) n'est pas défini en R. Retire les parts nulles avec p[p > 0].")
+} else if (anyNA(res)) {
+  list(correct = FALSE, message = "Une valeur est manquante : la fonction doit renvoyer un nombre.")
+} else if (isTRUE(all.equal(res, exp_, tolerance = 1e-9))) {
+  list(correct = TRUE, message = sprintf("Correct : E(séparée) = 0, E(égal 2) = ln 2 = %.3f, E(égal 3) = ln 3 = %.3f.", log(2), log(3)))
+} else if (isTRUE(all.equal(res, -exp_, tolerance = 1e-9))) {
+  list(correct = FALSE, message = "Signe inversé : l'entropie est -somme(p log p), donc positive.")
+} else {
+  list(correct = FALSE, message = "Écart avec les valeurs attendues : -sum(p * log(p)) sur les parts non nulles. Contrôle : séparée = 0, deux groupes égaux = ln 2.")
+}
+```
+
+::: {.dojo-done data-id="seg-m-0"}
+:::
+
+## Coder l'indice d'information mutuelle M {#seg-m-1}
+
+[Marche 4 sur 6 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+seg2 = { const g = rng("seg-m-1", salt); return { seed: g.int(1, 9999) }; }
+```
+
+$M = E - \sum_i t_i E_i$ avec $E$ l'entropie de la composition globale, $E_i$ celle de l'unité $i$, $t_i$ la part de la population dans l'unité $i$ (entropie de Shannon, log naturel). Écris `my_M()` pour un **nombre quelconque de groupes**.
+
+```{webr}
+#| exercise: seg-m-1
+#| caption: "M multigroupe"
+#| input:
+#|   - seg2
+source("R/segregation.R")
+set.seed(seg2$seed)
+tab3 <- matrix(rpois(8 * 3, 25) + 1, 8, 3)       # 8 unités, 3 groupes
+
+entropie <- function(p) { p <- p[p > 0]; -sum(p * log(p)) }
+my_M <- function(tab) {
+  E  <- ______          # entropie de la composition globale (parts des colonnes)
+  Ei <- ______          # entropie de chaque unité : apply(parts par ligne, 1, entropie)
+  ti <- ______          # part de chaque unité dans la population totale
+  E - sum(ti * Ei)
+}
+c(mon_M = my_M(tab3), seg_M = seg_M(tab3))
+```
+
+::: {.hint exercise="seg-m-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+M est une « information mutuelle » : l'entropie globale moins l'entropie moyenne locale. La fonction `entropie` est fournie ; il te faut trois ingrédients : $E$, les $E_i$ et les poids $t_i$.
+:::
+:::
+
+::: {.hint exercise="seg-m-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+`E <- entropie(colSums(tab) / sum(tab))`, `Ei <- apply(tab / rowSums(tab), 1, entropie)`, `ti <- rowSums(tab) / sum(tab)`. Contrôle : si toutes les unités ont la même composition, $M = 0$ ; si les groupes sont totalement séparés, $M = E$.
+:::
+:::
+
+::: {.solution exercise="seg-m-1"}
+**Raisonnement.**
+
+1. $E = -\sum_g p_g \ln p_g$ mesure la diversité de la composition de **toute** la ville.
+2. $E_i$ est la même quantité calculée dans l'unité $i$.
+3. $M = E - \sum_i t_i E_i$ est la réduction moyenne de diversité quand on connaît l'unité : plus les unités sont homogènes, plus $M$ est grand.
+4. Bornes : $M = 0$ si chaque unité a la composition globale ; $M = E$ si chaque unité est « pure ». D'où $H = M/E \in [0,1]$.
+5. Le calcul est valable pour un nombre quelconque de groupes (matrice à $G$ colonnes), contrairement à D.
+
+```{webr}
+#| exercise: seg-m-1
+#| solution: true
+source("R/segregation.R")
+set.seed(seg2$seed)
+tab3 <- matrix(rpois(8 * 3, 25) + 1, 8, 3)
+
+entropie <- function(p) { p <- p[p > 0]; -sum(p * log(p)) }
+my_M <- function(tab) {
+  E  <- entropie(colSums(tab) / sum(tab))
+  Ei <- apply(tab / rowSums(tab), 1, entropie)
+  ti <- rowSums(tab) / sum(tab)
+  E - sum(ti * Ei)
+}
+c(mon_M = my_M(tab3), seg_M = seg_M(tab3))
+```
+
+**Pièges fréquents.**
+
+- Pondérer les $E_i$ par la part du groupe au lieu de la part de population $t_i$ de l'unité.
+- Mélanger `log`, `log2` et `log10` : l'échelle change ; reste cohérent avec `seg_M` (logarithme naturel).
+- Oublier la convention $0 \ln 0 = 0$ : sans `p[p > 0]`, une part nulle donne `NaN`.
+
+**Pour aller plus loin.** M est **décomposable** exactement entre et intra zones : c'est l'exercice de décomposition, en fin de page.
+:::
+
+```{webr}
+#| exercise: seg-m-1
+#| check: true
+source("R/segregation.R")
+f <- get0("my_M", envir = .envir_result, inherits = FALSE)
+if (!is.function(f)) {
+  list(correct = FALSE, message = "Définis la fonction my_M(tab).")
+} else {
+  set.seed(seg2$seed)
+  tabs <- list(matrix(rpois(8 * 3, 25) + 1, 8, 3),
+               seg_sim_city(30, 60, 0.3, 4, seed = 5),
+               cbind(A = c(10, 0), B = c(0, 10)),            # M = log(2)
+               cbind(A = c(10, 20), B = c(5, 10)))           # M = 0
+  ok <- vapply(tabs, function(t) isTRUE(all.equal(tryCatch(f(t), error = function(e) NA_real_), seg_M(t))), logical(1))
+  if (all(ok)) list(correct = TRUE, message = "Correct : my_M coïncide avec seg_M, y compris aux bornes (0 et log 2).")
+  else list(correct = FALSE, message = sprintf("my_M échoue sur %d table(s). Vérifie que Ei est calculée unité par unité et pondérée par ti.", sum(!ok)))
+}
+```
+
+::: {.dojo-done data-id="seg-m-1"}
+:::
+
+## Biais de petites unités par Monte-Carlo {#seg-biais-1}
+
+[Marche 5 sur 6 · Autonome]{.dojo-step}
+
+Dans une ville **sans ségrégation structurelle** (`kappa = Inf`), calcule la valeur moyenne de D sous allocation aléatoire pour des unités de **5** puis de **500** habitants. Instructions exactes (pour que la correction soit déterministe) : `seg_sim_city(U = 100, size = s, p = 0.3, kappa = Inf, seed = 1)` puis `mean(seg_null(tab, B = 100, stat = seg_D, seed = 2))`.
+
+```{webr}
+#| exercise: seg-biais-1
+#| caption: "D attendu sous H0"
+source("R/segregation.R")
+tailles <- c(petit = 5, grand = 500)
+res <- sapply(tailles, function(s) {
+  tab <- seg_sim_city(U = 100, size = s, p = 0.3, kappa = Inf, seed = 1)
+  ______      # moyenne de D sur 100 allocations aléatoires
+})
+round(res, 3)
+```
+
+::: {.hint exercise="seg-biais-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Dans cette ville aucune ségrégation n'a été « mise » : les groupes sont répartis au hasard. Que vaut D « attendu » dans ce cas ? Pas 0. Réfléchis à ce que produit le hasard dans de **petites** unités.
+:::
+:::
+
+::: {.hint exercise="seg-biais-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+`mean(seg_null(tab, B = 100, stat = seg_D, seed = 2))`. Que conclure d'un D observé de 0,25 dans une ville dont les unités comptent 5 habitants ?
+:::
+:::
+
+::: {.solution exercise="seg-biais-1"}
+**Raisonnement.**
+
+1. Avec des unités de 5 habitants, la part du groupe B varie énormément d'une unité à l'autre par pur hasard (0 %, 20 %, 40 %…).
+2. D mesure ces écarts à la moyenne : il est donc mécaniquement positif, même sans ségrégation.
+3. `seg_null` réalloue au hasard les individus entre les unités (en gardant leurs tailles) et recalcule D ; la moyenne sur 100 allocations est le niveau attendu sous H0.
+4. Le biais décroît quand la taille des unités augmente, en gros comme l'inverse de sa racine carrée.
+5. Conséquence pratique : on ne compare jamais deux D sans benchmark quand la taille des unités diffère entre villes ou dates, ou alors on corrige (Carrington-Troske, inférence d'Allen et al.).
+
+```{webr}
+#| exercise: seg-biais-1
+#| solution: true
+source("R/segregation.R")
+tailles <- c(petit = 5, grand = 500)
+res <- sapply(tailles, function(s) {
+  tab <- seg_sim_city(U = 100, size = s, p = 0.3, kappa = Inf, seed = 1)
+  mean(seg_null(tab, B = 100, stat = seg_D, seed = 2))
+})
+round(res, 3)
+```
+
+**Pièges fréquents.**
+
+- Lire un D de 0,25 comme une « forte ségrégation » sans le comparer au D attendu sous H0.
+- Utiliser une seule allocation aléatoire : il faut moyenner sur $B$ allocations (ici 100).
+- Oublier les graines : la correction attend `seed = 1` pour la ville et `seed = 2` pour `seg_null`.
+
+**Pour aller plus loin.** Calcule aussi l'intervalle à 95 % de D sous H0 (quantiles de `seg_null`) et dis si un D observé est significativement supérieur. Cette idée est le point de départ des méthodes d'inférence sur les indices de ségrégation.
+:::
+
+```{webr}
+#| exercise: seg-biais-1
+#| check: true
+source("R/segregation.R")
+ref <- sapply(c(petit = 5, grand = 500), function(s) {
+  tab <- seg_sim_city(U = 100, size = s, p = 0.3, kappa = Inf, seed = 1)
+  mean(seg_null(tab, B = 100, stat = seg_D, seed = 2))
+})
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 2 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie les deux valeurs moyennes (petit, grand).")
+} else if (all(abs(res - ref) < 0.0015)) {
+  list(correct = TRUE, message = sprintf("Correct : D attendu sous H0 = %.3f pour des unités de 5 habitants, mais %.3f pour 500. Le biais de petites unités est %.0f fois plus grand.", ref[1], ref[2], ref[1] / ref[2]))
+} else {
+  list(correct = FALSE, message = "Écart par rapport à la référence : utilise exactement seg_sim_city(..., seed = 1) puis seg_null(..., B = 100, seed = 2) et prends la moyenne.")
+}
+```
+
+::: {.dojo-done data-id="seg-biais-1"}
+:::
+
+## Décomposer M entre et intra zones {#seg-decomp-1}
+
+[Marche 6 sur 6 · Autonome]{.dojo-step}
+
+```{ojs}
+//| echo: false
+seg4 = { const g = rng("seg-decomp-1", salt); return { seed: g.int(1, 9999) }; }
+```
+
+Une ville a 12 unités regroupées en 3 zones. Vérifie à la main l'identité $M = M_{\text{inter}} + \sum_r \frac{N_r}{N} M_r$ où $M_{\text{inter}}$ est le $M$ calculé sur les **zones agrégées** et $M_r$ le $M$ à l'intérieur de la zone $r$.
+
+```{webr}
+#| exercise: seg-decomp-1
+#| caption: "Entre / intra"
+#| input:
+#|   - seg4
+source("R/segregation.R")
+tab <- seg_sim_city(U = 12, size = 80, p = 0.4, kappa = 3, seed = seg4$seed)
+zone <- rep(c("nord", "centre", "sud"), each = 4)
+
+agg <- ______                        # effectifs agrégés par zone : rowsum(tab, zone)
+M_inter <- seg_M(agg)
+N_r <- ______                        # population de chaque zone (même ordre que agg)
+M_r <- ______                        # M dans chaque zone : sapply(split(seq_len(nrow(tab)), zone), function(i) seg_M(tab[i, , drop = FALSE]))
+M_intra <- sum(N_r / sum(N_r) * M_r)
+c(inter = M_inter, intra = M_intra, total = M_inter + M_intra, direct = seg_M(tab))
+```
+
+::: {.hint exercise="seg-decomp-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Deux regards sur la même ville : à l'échelle des zones (unités agrégées) et à l'intérieur de chaque zone. Prépare d'abord la table des effectifs **agrégés par zone**.
+:::
+:::
+
+::: {.hint exercise="seg-decomp-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+`rowsum(tab, zone)` trie les zones par ordre alphabétique ; `split()` aussi, donc `N_r <- rowSums(agg)` reste cohérent avec `M_r`. Les deux dernières colonnes doivent coïncider.
+:::
+:::
+
+::: {.solution exercise="seg-decomp-1"}
+**Raisonnement.**
+
+1. $M_{\text{inter}}$ est le $M$ calculé après avoir sommé les unités de chaque zone : on perd la ségrégation qui existe **à l'intérieur** des zones.
+2. $M_r$ est le $M$ calculé sur les seules unités de la zone $r$.
+3. Les poids sont les parts de population des zones, $N_r/N$.
+4. L'identité $M = M_{\text{inter}} + \sum_r (N_r/N)\,M_r$ est **exacte** pour M (additivité de l'entropie) ; elle ne l'est ni pour D ni pour H.
+5. Conséquence : agréger ne peut que **réduire** M, et la perte vaut exactement le terme intra. C'est une lecture directe du MAUP.
+
+```{webr}
+#| exercise: seg-decomp-1
+#| solution: true
+source("R/segregation.R")
+tab <- seg_sim_city(U = 12, size = 80, p = 0.4, kappa = 3, seed = seg4$seed)
+zone <- rep(c("nord", "centre", "sud"), each = 4)
+
+agg <- rowsum(tab, zone)
+M_inter <- seg_M(agg)
+N_r <- rowSums(agg)
+M_r <- sapply(split(seq_len(nrow(tab)), zone), function(i) seg_M(tab[i, , drop = FALSE]))
+M_intra <- sum(N_r / sum(N_r) * M_r)
+c(inter = M_inter, intra = M_intra, total = M_inter + M_intra, direct = seg_M(tab))
+```
+
+**Pièges fréquents.**
+
+- Désaligner les zones : `rowsum` et `split` trient par ordre alphabétique ; garde le même ordre pour les poids.
+- Pondérer par le nombre d'unités au lieu de la population.
+- Croire que l'identité vaut pour D : seul M (et les indices de la famille entropique) se décompose ainsi.
+
+**Pour aller plus loin.** Pour des agrégations successives (12 → 6 → 3 → 1 zones), calcule la part « inter » : tu obtiens une courbe de MAUP, avec ses plateaux et ses sauts.
+:::
+
+```{webr}
+#| exercise: seg-decomp-1
+#| check: true
+source("R/segregation.R")
+tab <- seg_sim_city(U = 12, size = 80, p = 0.4, kappa = 3, seed = seg4$seed)
+zone <- rep(c("nord", "centre", "sud"), each = 4)
+d <- seg_M_decomp(tab, zone)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 4 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(inter, intra, total, direct).")
+} else if (abs(res[1] - d[["inter"]]) > 1e-9) {
+  list(correct = FALSE, message = "M inter : calcule M sur la table agrégée par zone (rowsum).")
+} else if (abs(res[2] - d[["intra"]]) > 1e-9) {
+  list(correct = FALSE, message = "M intra : moyenne des M_r pondérée par la part de population N_r / N de chaque zone (même ordre des zones).")
+} else if (abs(res[3] - res[4]) > 1e-9) {
+  list(correct = FALSE, message = "Total et direct devraient coïncider : vérifie l'alignement des zones.")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : M = %.4f = inter %.4f + intra %.4f (part inter : %.0f %%).", res[4], res[1], res[2], 100 * res[1] / res[4]))
+}
+```
+
+::: {.dojo-done data-id="seg-decomp-1"}
+:::
+
+## Aller plus loin
+
+Les **défis hebdomadaires** de [la page Recherche](index.qmd) prolongent ces exercices : MAUP par agrégations successives, correction du biais de petites unités, bootstrap de H, algorithme de déplacement de Duncan.
+
+::: {.dojo-cards data-course="recherche" data-n="5"}
+:::
+
+::: {.dojo-quiz data-course="recherche" data-n="3"}
+:::

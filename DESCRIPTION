@@ -1,0 +1,13 @@
+Package: dojo
+Title: Le Dojo : plateforme d'entrainement quotidien (Quarto + R)
+Version: 0.1.0
+Description: Dependances R du site (build, veille, tests). Ce depot n'est pas un paquet R.
+License: MIT + file LICENSE
+Imports:
+    yaml,
+    jsonlite,
+    knitr,
+    rmarkdown,
+    httr2,
+    xml2,
+    testthat

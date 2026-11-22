@@ -1,0 +1,288 @@
+---
+title: "Économie contemporaine"
+subtitle: "Concepts macro, identités et ordres de grandeur"
+---
+
+{{< include ../_extensions/r-wasm/live/_knitr.qmd >}}
+
+Les **identités** et les **mécanismes** valent mieux que les chiffres du jour : pour tout chiffre d'actualité, va chercher la source officielle (INSEE, Eurostat, BCE, OFCE) au moment où tu en as besoin.
+
+{{< include ../_ojs.qmd >}}
+
+::: {.dojo-track data-track="con-dette"}
+:::
+
+## Un an de dette : l'effet boule de neige {#con-dette-0}
+
+[Marche 1 sur 3 · Guidé]{.dojo-step}
+
+```{ojs}
+//| echo: false
+dette0 = { const g = rng("con-dette-0", salt); return { d0: g.int(60, 120), r: g.pick([1, 2, 3, 4]), g: g.pick([0, 1, 2, 3]), pb: g.int(-3, 2) }; }
+```
+
+La dette publique représente ${dette0.d0} % du PIB. Le taux d'intérêt nominal moyen est de ${dette0.r} %, la croissance nominale du PIB de ${dette0.g} % et le solde primaire de ${dette0.pb} % du PIB (positif = excédent). Calcule la part de la variation du ratio due à l'écart entre le taux d'intérêt et la croissance (effet boule de neige), puis le ratio de l'année suivante.
+
+```{webr}
+#| exercise: con-dette-0
+#| caption: "Un an de dette"
+#| input:
+#|   - dette0
+d0 <- dette0$d0; r <- dette0$r / 100; g <- dette0$g / 100; pb <- dette0$pb
+boule <- ______      # effet de l'écart r - g : d0 * (r - g) / (1 + g)
+d1 <- ______         # ratio de l'an prochain : d0 + boule - pb
+c(boule = boule, d1 = d1)
+```
+
+::: {.hint exercise="con-dette-0"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Pars de la récurrence $d' = d\,(1+r)/(1+g) - pb$ et isole le terme qui dépend de l'écart $r - g$ du reste.
+:::
+:::
+
+::: {.hint exercise="con-dette-0"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+$(1+r)/(1+g) = 1 + (r-g)/(1+g)$, donc `boule` $= d_0\,(r-g)/(1+g)$ et $d_1 = d_0 + \text{boule} - pb$.
+:::
+:::
+
+::: {.solution exercise="con-dette-0"}
+**Raisonnement.**
+
+1. En niveau, la dette grossit des intérêts : $D' = (1+r)D - PB$. Le PIB grossit de $g$ ; le ratio devient $d' = \dfrac{1+r}{1+g}\,d - pb$.
+2. On sépare l'effet de l'écart $r-g$ : comme $\dfrac{1+r}{1+g} = 1 + \dfrac{r-g}{1+g}$, on obtient $d' = d + \dfrac{r-g}{1+g}\,d - pb$.
+3. Le terme $\dfrac{r-g}{1+g}\,d$ est l'**effet boule de neige**. Si $r > g$, la dette gonfle même sans déficit primaire ; si $r < g$, elle se dilue spontanément.
+4. Le solde primaire est en points de PIB : un excédent ($pb > 0$) se retranche directement du ratio.
+
+```{webr}
+#| exercise: con-dette-0
+#| solution: true
+d0 <- dette0$d0; r <- dette0$r / 100; g <- dette0$g / 100; pb <- dette0$pb
+boule <- d0 * (r - g) / (1 + g)       # effet boule de neige
+d1 <- d0 + boule - pb                 # = d0 * (1 + r) / (1 + g) - pb
+c(boule = boule, d1 = d1)
+```
+
+**Pièges fréquents.**
+
+- Garder $r$ et $g$ en pourcentage : le terme serait cent fois trop grand.
+- Oublier le dénominateur $1+g$ : pour de faibles taux l'écart est minime, mais l'identité exacte l'inclut.
+- Inverser le signe du solde primaire : un excédent réduit la dette.
+
+**Pour aller plus loin.** La marche suivante répète ce calcul sur dix ans.
+:::
+
+```{webr}
+#| exercise: con-dette-0
+#| check: true
+d0 <- dette0$d0; r <- dette0$r / 100; g <- dette0$g / 100; pb <- dette0$pb
+boule <- d0 * (r - g) / (1 + g); d1 <- d0 * (1 + r) / (1 + g) - pb
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 2 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(boule = ..., d1 = ...).")
+} else if (abs(res[1] - boule) > 1e-8) {
+  list(correct = FALSE, message = "Effet boule de neige : d0 * (r - g) / (1 + g), avec r et g en décimal (déjà converti dans le gabarit).")
+} else if (abs(res[2] - d1) > 1e-8) {
+  list(correct = FALSE, message = "Ratio de l'an prochain : d0 + boule - pb.")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : boule de neige = %+.2f point de PIB ; ratio suivant = %.2f %%.", boule, d1))
+}
+```
+
+::: {.dojo-done data-id="con-dette-0"}
+:::
+
+## Dynamique de la dette publique {#con-dette-1}
+
+[Marche 2 sur 3 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+dette1 = { const g = rng("con-dette-1", salt); return { d0: g.int(60, 120), r: g.pick([1, 2, 3, 4]), g: g.pick([0, 1, 2, 3]), pb: g.int(-3, 2) }; }
+```
+
+La dette publique représente ${dette1.d0} % du PIB. Le taux d'intérêt nominal moyen est de ${dette1.r} %, la croissance nominale du PIB de ${dette1.g} % et le solde primaire de ${dette1.pb} % du PIB (positif = excédent). Simule 10 ans d'évolution du ratio dette/PIB avec la récurrence : d(t+1) = d(t) × (1 + r) / (1 + g) − pb.
+
+```{webr}
+#| exercise: con-dette-1
+#| caption: "Ratio dette/PIB sur 10 ans"
+#| input:
+#|   - dette1
+d0 <- dette1$d0; r <- dette1$r / 100; g <- dette1$g / 100; pb <- dette1$pb
+d <- numeric(11); d[1] <- d0
+for (t in 1:10) d[t + 1] <- ______      # d[t] * (1 + r) / (1 + g) - pb
+c(d_final = d[11], variation = d[11] - d0)
+```
+
+::: {.hint exercise="con-dette-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+C'est un calcul **récursif** : la dette de l'année suivante dépend de celle de l'année en cours. Écris d'abord le passage de $t$ à $t+1$, puis répète-le dix fois avec une boucle.
+:::
+:::
+
+::: {.hint exercise="con-dette-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+Le premier terme est l'effet « boule de neige » : si $r > g$ il fait croître le ratio même sans nouveau déficit primaire. Le solde primaire est exprimé **en points de PIB** : il se retranche directement.
+:::
+:::
+
+::: {.solution exercise="con-dette-1"}
+**Raisonnement.**
+
+1. En niveau, la dette s'accroît des intérêts et diminue de l'excédent primaire : $D_{t+1} = (1+r)\,D_t - PB_t$.
+2. Le PIB nominal croît de $g$ : $Y_{t+1} = (1+g)\,Y_t$.
+3. En divisant, le ratio suit $d_{t+1} = d_t\,\dfrac{1+r}{1+g} - pb$.
+4. Décomposition : $d_{t+1} - d_t = \dfrac{r-g}{1+g}\,d_t - pb$ : un effet « boule de neige » moins le solde primaire.
+5. On itère dix fois avec une boucle : chaque ligne utilise la valeur de la ligne précédente (`d[t]`). À long terme le ratio se stabilise à $d^* = \dfrac{(1+g)\,pb}{r-g}$ si $r>g$ et $pb>0$.
+
+```{webr}
+#| exercise: con-dette-1
+#| solution: true
+d0 <- dette1$d0; r <- dette1$r / 100; g <- dette1$g / 100; pb <- dette1$pb
+d <- numeric(11); d[1] <- d0
+for (t in 1:10) d[t + 1] <- d[t] * (1 + r) / (1 + g) - pb
+c(d_final = d[11], variation = d[11] - d0)
+```
+
+**Pièges fréquents.**
+
+- Mettre $r$ et $g$ en pourcentage (2 au lieu de 0,02) : le gabarit les convertit déjà.
+- Écrire `d0` au lieu de `d[t]` dans la boucle : la dette ne « s'accumule » plus.
+- Lire $pb > 0$ comme un déficit : ici un solde primaire positif est un **excédent**, qui réduit la dette.
+
+**Pour aller plus loin.** La marche suivante inverse la question : quel solde primaire maintient le ratio constant ?
+:::
+
+```{webr}
+#| exercise: con-dette-1
+#| check: true
+d0 <- dette1$d0; r <- dette1$r / 100; g <- dette1$g / 100; pb <- dette1$pb
+d <- d0; for (t in 1:10) d <- d * (1 + r) / (1 + g) - pb
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 2 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(d_final = ..., variation = ...).")
+} else if (abs(res[1] - d) < 1e-6 && abs(res[2] - (d - d0)) < 1e-6) {
+  list(correct = TRUE, message = sprintf("Correct : après 10 ans, dette = %.1f %% du PIB (%+.1f points).", d, d - d0))
+} else if (abs(res[1] - (d0 * (1 + r) / (1 + g) - pb)) < 1e-6) {
+  list(correct = FALSE, message = "Tu n'as appliqué la récurrence qu'une fois : la boucle doit itérer 10 années.")
+} else {
+  list(correct = FALSE, message = "Vérifie la récurrence : d[t+1] = d[t] * (1 + r) / (1 + g) - pb.")
+}
+```
+
+::: {.dojo-done data-id="con-dette-1"}
+:::
+
+## Solde primaire stabilisant {#con-dette-2}
+
+[Marche 3 sur 3 · Autonome]{.dojo-step}
+
+```{ojs}
+//| echo: false
+dette2 = { const g = rng("con-dette-2", salt); return { d0: g.int(60, 120), r: g.pick([1, 2, 3, 4]), g: g.pick([0, 1, 2, 3]) }; }
+```
+
+La dette représente ${dette2.d0} % du PIB, avec un taux d'intérêt nominal de ${dette2.r} % et une croissance nominale de ${dette2.g} %. Écris la fonction `pb_stab(d, r, g)` qui donne le solde primaire (en points de PIB) maintenant le ratio constant, puis vérifie par simulation sur 10 ans.
+
+```{webr}
+#| exercise: con-dette-2
+#| caption: "Solde primaire stabilisant"
+#| input:
+#|   - dette2
+d0 <- dette2$d0; r <- dette2$r / 100; g <- dette2$g / 100
+pb_stab <- function(d, r, g) ______          # solde primaire qui laisse d inchangé d'une année à l'autre
+pb <- pb_stab(d0, r, g)
+d <- d0; for (t in 1:10) d <- d * (1 + r) / (1 + g) - pb
+c(pb_stabilisant = pb, d_apres_10_ans = d)
+```
+
+::: {.hint exercise="con-dette-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Un ratio stable signifie $d_{t+1} = d_t$. Écris cette égalité dans la récurrence $d_{t+1} = d_t\,(1+r)/(1+g) - pb$ et isole $pb$.
+:::
+:::
+
+::: {.hint exercise="con-dette-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+$pb^* = d\left(\dfrac{1+r}{1+g} - 1\right) = d\,\dfrac{r-g}{1+g}$.
+:::
+:::
+
+::: {.solution exercise="con-dette-2"}
+**Raisonnement.**
+
+1. On veut $d_{t+1} = d_t = d$ : $d\,\dfrac{1+r}{1+g} - pb = d$.
+2. D'où $pb^* = d\left(\dfrac{1+r}{1+g} - 1\right) = d\,\dfrac{r-g}{1+g}$.
+3. Lecture : stabiliser le ratio coûte d'autant plus que la dette est élevée et que l'écart $r-g$ est grand. Si $r < g$, le solde primaire stabilisant est **négatif** : on peut supporter un déficit primaire sans que le ratio monte.
+4. La simulation confirme : avec $pb^*$, le ratio reste exactement à $d_0$ après dix ans.
+5. $pb^*$ ne fait que **stabiliser** : pour réduire le ratio, il faut un solde primaire supérieur.
+
+```{webr}
+#| exercise: con-dette-2
+#| solution: true
+d0 <- dette2$d0; r <- dette2$r / 100; g <- dette2$g / 100
+pb_stab <- function(d, r, g) d * (r - g) / (1 + g)     # stabilisation : d_{t+1} = d_t
+pb <- pb_stab(d0, r, g)
+d <- d0; for (t in 1:10) d <- d * (1 + r) / (1 + g) - pb
+c(pb_stabilisant = pb, d_apres_10_ans = d)
+```
+
+**Pièges fréquents.**
+
+- Donner $d\,(r-g)$ sans le facteur $1/(1+g)$ : l'écart est faible, mais la simulation à dix ans le révèle.
+- Confondre solde **primaire** (hors intérêts) et solde public **total** (qui inclut les intérêts).
+- Utiliser un taux d'intérêt réel avec une croissance nominale : $r$ et $g$ doivent être exprimés de la même façon (tous deux nominaux, ou tous deux réels).
+
+**Pour aller plus loin.** Trace $pb^*$ en fonction de $r-g$ pour des dettes de 60, 100 et 120 % du PIB : la pente vaut $d/(1+g)$. Prolongement : que devient $pb^*$ si le taux d'intérêt dépend lui-même du niveau de dette ?
+:::
+
+```{webr}
+#| exercise: con-dette-2
+#| check: true
+d0 <- dette2$d0; r <- dette2$r / 100; g <- dette2$g / 100
+pb <- d0 * (r - g) / (1 + g)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 2 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(pb_stabilisant = ..., d_apres_10_ans = ...).")
+} else if (abs(res[1] - pb) > 1e-8) {
+  list(correct = FALSE, message = "Solde primaire stabilisant : résous d (1 + r) / (1 + g) - pb = d, ce qui donne d (r - g) / (1 + g).")
+} else if (abs(res[2] - d0) > 1e-6) {
+  list(correct = FALSE, message = "Le ratio doit rester égal à d0 après 10 ans : vérifie le calcul de pb dans pb_stab().")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : pour garder une dette à %g %% du PIB, il faut un solde primaire de %+.2f point de PIB.", d0, pb))
+}
+```
+
+::: {.dojo-done data-id="con-dette-2"}
+:::
+
+## Identités et mécanismes à savoir réciter
+
+| Notion | Formule ou idée |
+|---|---|
+| Balance courante | Solde courant = épargne nationale − investissement |
+| Multiplicateur simple | $1/(1 - c)$ ; plus faible avec impôts et importations |
+| Dette/PIB | $\Delta d \approx (r - g)\,d - pb$ |
+| Taux de change réel | $e\,P^*/P$ |
+| Courbe de Phillips | Arbitrage de court terme ; pas d'arbitrage durable avec anticipations |
+| Politique monétaire | Taux directeur ; QE quand il est proche de zéro |
+
+## Quiz éclair
+
+::: {.dojo-quiz data-course="contemporaine" data-n="5"}
+:::
+
+## Cartes de répétition
+
+::: {.dojo-cards data-course="contemporaine" data-n="6"}
+:::
+
+## Exercice de veille active (10 minutes)
+
+Choisis **un** chiffre d'actualité (inflation, chômage, déficit, croissance), retrouve la **définition exacte** et la **source officielle**, et écris deux phrases : ce qu'il mesure, ce qu'il ne mesure pas.

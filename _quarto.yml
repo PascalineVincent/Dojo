@@ -1,0 +1,70 @@
+project:
+  type: website
+  output-dir: docs          # GitHub Pages : Settings → Pages → Deploy from a branch → /docs
+  pre-render: Rscript scripts/build_data.R
+  resources:
+    - R/
+    - assets/
+    - .nojekyll
+  render:
+    - "*.qmd"
+    - "parcours/*.qmd"
+    - "recherche/*.qmd"
+
+lang: fr
+engine: knitr
+
+website:
+  title: "Le Dojo"
+  description: "Entraînement quotidien d'économiste : micro, stats, économétrie, histoire, recherche."
+  favicon: assets/favicon.svg
+  navbar:
+    background: primary
+    search: false
+    left:
+      - text: "Aujourd'hui"
+        href: index.qmd
+      - text: "Parcours"
+        menu:
+          - text: "Micro (L1/L2)"
+            href: parcours/micro.qmd
+          - text: "Statistiques (L1)"
+            href: parcours/stats.qmd
+          - text: "Économétrie"
+            href: parcours/econometrie.qmd
+          - text: "Histoire économique"
+            href: parcours/histoire.qmd
+          - text: "Économie contemporaine"
+            href: parcours/contemporaine.qmd
+      - text: "Recherche"
+        menu:
+          - text: "Le défi de la semaine"
+            href: recherche/index.qmd
+          - text: "Ségrégation"
+            href: recherche/segregation.qmd
+          - text: "Inégalités"
+            href: recherche/inegalites.qmd
+      - text: "Veille"
+        href: veille.qmd
+      - text: "Progression"
+        href: progression.qmd
+  page-footer:
+    center: "Le Dojo : un entraînement par jour. Ta progression est stockée dans ton navigateur (voir « Progression » pour l'exporter)."
+
+format:
+  live-html:
+    theme:
+      light: [cosmo, assets/dojo.scss]
+      dark: [darkly, assets/dojo-dark.scss]
+    css: assets/dojo.css
+    include-after-body: assets/footer.html
+    toc: true
+    toc-title: "Sur cette page"
+    code-copy: true
+    code-line-numbers: false
+    smooth-scroll: true
+    webr:
+      cell-options:
+        timelimit: 60
+      resources:
+        - R

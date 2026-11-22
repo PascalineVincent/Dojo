@@ -1,0 +1,9 @@
+{"results":[
+ {"id":"https://openalex.org/W0000001","doi":"https://doi.org/10.0000/fixture.1","title":"Fixture: Residential segregation and the mutual information index",
+  "publication_date":"2026-11-10",
+  "authorships":[{"author":{"display_name":"Auteur A"}},{"author":{"display_name":"Auteur B"}}],
+  "primary_location":{"source":{"display_name":"Journal de test"}},
+  "abstract_inverted_index":{"We":[0],"study":[1],"segregation":[2,6],"and":[3],"inequality":[4],"measures":[5],"decomposition":[7]}},
+ {"id":"https://openalex.org/W0000002","doi":null,"title":"Fixture: un article sans rapport",
+  "publication_date":"2026-11-12","authorships":[],"primary_location":null,"abstract_inverted_index":null}
+]}

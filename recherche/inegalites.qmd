@@ -1,0 +1,528 @@
+---
+title: "Laboratoire : mesures d'inégalités"
+subtitle: "Lorenz, Gini pondéré, famille GE, décompositions"
+---
+
+{{< include ../_extensions/r-wasm/live/_knitr.qmd >}}
+
+On recode les mesures puis on les compare à `R/inegalites.R` (testé : invariance d'échelle, principe des transferts, identités de décomposition).
+
+| Fonction | Rôle |
+|---|---|
+| `lorenz(x, w)`, `gini(x, w)` | Courbe de Lorenz, Gini pondéré |
+| `ge(x, alpha, w)`, `theil_T`, `theil_L` | Entropie généralisée GE(α) ; Theil T = GE(1), MLD = GE(0) |
+| `atkinson(x, epsilon, w)` | Atkinson |
+| `palma(x, w)` | Rapport de Palma |
+| `ge_decomp(x, g, alpha, w)` | Décomposition intra / inter-groupes |
+
+{{< include ../_ojs.qmd >}}
+
+## Terrain de jeu : comparer des distributions
+
+```{webr}
+#| autorun: true
+#| caption: "Lorenz et indices pour deux distributions"
+source("R/inegalites.R")
+set.seed(7)
+a <- rlnorm(2000, 3, 0.6)                 # distribution resserrée
+b <- c(rlnorm(1900, 2.8, 0.4), rlnorm(100, 5, 0.5))   # queue haute épaisse
+lz <- function(x) lorenz(x)
+plot(lz(a), type = "l", lwd = 2, col = "#1f4e8c", xlab = "Part de la population", ylab = "Part du revenu", main = "Courbes de Lorenz")
+lines(lz(b), lwd = 2, col = "#b08d3c"); abline(0, 1, lty = 3)
+legend("topleft", c("a : resserrée", "b : queue haute"), col = c("#1f4e8c", "#b08d3c"), lwd = 2, bty = "n")
+sapply(list(a = a, b = b), function(x) c(gini = gini(x), GE0 = ge(x, 0), theil = theil_T(x), GE2 = ge(x, 2), atk1 = atkinson(x, 1), palma = palma(x)))
+```
+
+::: {.dojo-track data-track="ineq"}
+:::
+
+## Gini sur 6 revenus : la double somme {#ineq-gini-0}
+
+[Marche 1 sur 5 · Guidé]{.dojo-step}
+
+```{ojs}
+//| echo: false
+ineq0 = { const g = rng("ineq-gini-0", salt); return { seed: g.int(1, 9999) }; }
+```
+
+Six revenus mensuels (en euros) sont tirés au sort. Calcule leur indice de Gini à partir de sa définition (moyenne des écarts absolus entre toutes les paires, rapportée à deux fois la moyenne), puis la part du revenu total détenue par le plus riche.
+
+```{webr}
+#| exercise: ineq-gini-0
+#| caption: "Gini par la double somme"
+#| input:
+#|   - ineq0
+set.seed(ineq0$seed)
+x <- round(rlnorm(6, 7, 0.7))                 # six revenus mensuels
+n <- length(x); mu <- mean(x)
+ecarts <- outer(x, x, "-")                    # matrice n x n des écarts x_i - x_j
+G   <- ______                                 # somme des |écarts| / (2 * n^2 * mu)
+top <- ______                                 # part du revenu total détenue par le plus riche
+c(gini = G, part_top = top)
+```
+
+::: {.hint exercise="ineq-gini-0"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Le Gini compare les revenus **deux à deux** : plus ils sont éloignés, plus $G$ est grand. Toutes les différences sont déjà dans la matrice `ecarts` ; il reste à les agréger et à les ramener à l'échelle de la moyenne.
+:::
+:::
+
+::: {.hint exercise="ineq-gini-0"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+$G = \dfrac{\sum_i\sum_j |x_i - x_j|}{2\,n^2\,\mu}$, soit `sum(abs(ecarts)) / (2 * n^2 * mu)`. La part du plus riche est `max(x) / sum(x)`.
+:::
+:::
+
+::: {.solution exercise="ineq-gini-0"}
+**Raisonnement.**
+
+1. Le Gini est la moitié de l'écart moyen relatif : $G = \dfrac{1}{2\mu}\cdot\dfrac{1}{n^2}\sum_i\sum_j |x_i - x_j|$.
+2. `outer(x, x, "-")` construit la matrice $n \times n$ des différences ; on en prend la valeur absolue puis la somme. Chaque paire est comptée **deux fois** (une dans chaque sens), d'où le dénominateur en $2n^2$.
+3. Cas limites : égalité parfaite, tous les écarts sont nuls et $G = 0$ ; un seul individu détient tout, $G = (n-1)/n$ (qui tend vers 1 quand $n$ grandit). Avec 6 revenus, $G$ ne peut donc pas dépasser $5/6$.
+4. La part du plus riche donne une lecture plus concrète de la même inégalité.
+
+```{webr}
+#| exercise: ineq-gini-0
+#| solution: true
+set.seed(ineq0$seed)
+x <- round(rlnorm(6, 7, 0.7))
+n <- length(x); mu <- mean(x)
+ecarts <- outer(x, x, "-")
+G   <- sum(abs(ecarts)) / (2 * n^2 * mu)      # écart moyen relatif / 2
+top <- max(x) / sum(x)
+c(gini = G, part_top = top)
+```
+
+**Pièges fréquents.**
+
+- Diviser par $n(n-1)$ au lieu de $n^2$ : on obtient le Gini corrigé pour petit $n$ (égal à $G\times n/(n-1)$), pas le Gini usuel.
+- Oublier `abs` : la somme des écarts signés est nulle.
+- Calculer `sum(abs(diff(x)))` : ce ne sont que les écarts entre revenus **consécutifs** (après tri) et non toutes les paires.
+
+**Pour aller plus loin.** L'étape suivante calcule le Gini à partir de la courbe de Lorenz, ce qui le rend utilisable avec des poids de sondage et des milliers d'observations.
+:::
+
+```{webr}
+#| exercise: ineq-gini-0
+#| check: true
+set.seed(ineq0$seed)
+x <- round(rlnorm(6, 7, 0.7)); n <- length(x)
+G <- sum(abs(outer(x, x, "-"))) / (2 * n^2 * mean(x)); top <- max(x) / sum(x)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 2 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(gini = ..., part_top = ...) comme dans le gabarit.")
+} else if (abs(res[1] - G * n / (n - 1)) < 1e-9) {
+  list(correct = FALSE, message = "Tu as divisé par n (n - 1) : c'est le Gini corrigé de petit échantillon. Ici on veut la définition usuelle, avec n^2.")
+} else if (abs(res[1] - G) > 1e-9) {
+  list(correct = FALSE, message = "Gini incorrect : sum(abs(ecarts)) / (2 * n^2 * mu).")
+} else if (abs(res[2] - top) > 1e-9) {
+  list(correct = FALSE, message = "Part du plus riche : max(x) / sum(x).")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : G = %.3f ; le plus riche détient %.0f %% du revenu total (égalité : %.0f %%).", G, 100 * top, 100 / n))
+}
+```
+
+::: {.dojo-done data-id="ineq-gini-0"}
+:::
+
+## Gini pondéré et courbe de Lorenz {#ineq-gini-1}
+
+[Marche 2 sur 5 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+ineq1 = { const g = rng("ineq-gini-1", salt); return { seed: g.int(1, 9999), s: g.pick([0.5, 0.8, 1.1]) }; }
+```
+
+Le revenu est lognormal d'écart-type logarithmique **${ineq1.s}**, avec des poids de sondage.
+
+Écris `my_gini(x, w)` à partir de la courbe de Lorenz : $G = 1 - \sum_i w_i (L_i + L_{i-1})$ avec les poids normalisés et les revenus triés par ordre croissant.
+
+```{webr}
+#| exercise: ineq-gini-1
+#| caption: "Gini pondéré"
+#| input:
+#|   - ineq1
+source("R/inegalites.R")
+set.seed(ineq1$seed)
+n <- 200
+x <- rlnorm(n, 3, ineq1$s); w <- runif(n, 0.5, 3)
+
+my_gini <- function(x, w) {
+  o <- order(x); x <- x[o]; w <- w[o] / sum(w)
+  L <- ______                      # Lorenz : cumsum(w * x) / sum(w * x)
+  Lprev <- c(0, head(L, -1))
+  ______                           # 1 - sum(w * (L + Lprev))
+}
+c(mon_gini = my_gini(x, w), gini = gini(x, w))
+```
+
+::: {.hint exercise="ineq-gini-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Le Gini est lié à l'aire entre la diagonale et la courbe de Lorenz. Trie d'abord les revenus **avec leurs poids**, puis construis la courbe de Lorenz cumulée.
+:::
+:::
+
+::: {.hint exercise="ineq-gini-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+Aire sous la courbe de Lorenz par la méthode des trapèzes : chaque tranche de population de poids $w_i$ contribue $w_i (L_{i-1} + L_i)/2$ ; $G = 1 - 2\times\text{aire}$. Test rapide : sans poids sur $(1,2,3,4)$ on doit trouver $0{,}25$.
+:::
+:::
+
+::: {.solution exercise="ineq-gini-1"}
+**Raisonnement.**
+
+1. Trier par revenu croissant est indispensable : Lorenz cumule du plus pauvre au plus riche (on trie $x$ **et** $w$ ensemble).
+2. Avec des poids normalisés $w_i$, la part cumulée du revenu est $L_i = \sum_{j \le i} w_j x_j \big/ \sum_j w_j x_j$.
+3. L'aire sous la courbe de Lorenz, par trapèzes, vaut $\sum_i w_i\,(L_{i-1} + L_i)/2$.
+4. $G = 1 - 2\times\text{aire} = 1 - \sum_i w_i\,(L_{i-1} + L_i)$.
+5. Cas tests : $(1,2,3,4)$ sans poids donne $0{,}25$ ; un poids $w_i$ équivaut à répéter l'observation $i$, d'où le second cas de test.
+
+```{webr}
+#| exercise: ineq-gini-1
+#| solution: true
+source("R/inegalites.R")
+set.seed(ineq1$seed)
+n <- 200
+x <- rlnorm(n, 3, ineq1$s); w <- runif(n, 0.5, 3)
+
+my_gini <- function(x, w) {
+  o <- order(x); x <- x[o]; w <- w[o] / sum(w)
+  L <- cumsum(w * x) / sum(w * x)
+  Lprev <- c(0, head(L, -1))
+  1 - sum(w * (L + Lprev))
+}
+c(mon_gini = my_gini(x, w), gini = gini(x, w))
+```
+
+**Pièges fréquents.**
+
+- Trier `x` sans réordonner `w`.
+- Ne pas normaliser les poids (leur somme doit valoir 1).
+- Diviser par la moyenne **simple** au lieu de la moyenne **pondérée** : erreur silencieuse fréquente avec des poids d'enquête.
+
+**Pour aller plus loin.** Trace `lorenz(x, w)` : l'aire de la « lentille » entre la courbe et la diagonale vaut $G/2$. Compare ensuite le résultat avec et sans poids sur des données d'enquête réelles.
+:::
+
+```{webr}
+#| exercise: ineq-gini-1
+#| check: true
+source("R/inegalites.R")
+f <- get0("my_gini", envir = .envir_result, inherits = FALSE)
+if (!is.function(f)) {
+  list(correct = FALSE, message = "Définis la fonction my_gini(x, w).")
+} else {
+  set.seed(1)
+  cas <- list(list(x = c(1, 2, 3, 4), w = rep(1, 4)),
+              list(x = c(1, 2), w = c(3, 1)),
+              list(x = rlnorm(50), w = runif(50, 0.5, 3)),
+              list(x = rlnorm(300, 3, ineq1$s), w = runif(300)))
+  ok <- vapply(cas, function(k) isTRUE(all.equal(tryCatch(f(k$x, k$w), error = function(e) NA_real_), gini(k$x, k$w))), logical(1))
+  if (all(ok)) list(correct = TRUE, message = "Correct : my_gini est exacte avec poids (cas de référence : (1,2,3,4) donne 0,25).")
+  else list(correct = FALSE, message = sprintf("my_gini échoue sur %d cas. Pense à trier x ET w ensemble, et à normaliser les poids.", sum(!ok)))
+}
+```
+
+::: {.dojo-done data-id="ineq-gini-1"}
+:::
+
+## Theil et MLD à la main {#ineq-ge-0}
+
+[Marche 3 sur 5 · Guidé]{.dojo-step}
+
+```{ojs}
+//| echo: false
+ineq00 = { const g = rng("ineq-ge-0", salt); return { seed: g.int(1, 9999) }; }
+```
+
+Écris deux fonctions : le **Theil T** (moyenne de r ln r) et l'**écart logarithmique moyen** MLD (moins la moyenne de ln r), où r = x / moyenne est le revenu relatif. Vérifie ensuite qu'elles ne changent pas quand on multiplie tous les revenus par 10.
+
+```{webr}
+#| exercise: ineq-ge-0
+#| caption: "Theil T et MLD"
+#| input:
+#|   - ineq00
+set.seed(ineq00$seed)
+x <- round(rlnorm(8, 7, 0.8))                      # huit revenus mensuels
+theil <- function(x) { r <- x / mean(x); ______ }  # moyenne de r * log(r)
+mld   <- function(x) { r <- x / mean(x); ______ }  # moins la moyenne de log(r)
+c(theil = theil(x), mld = mld(x), theil_x10 = theil(10 * x))
+```
+
+::: {.hint exercise="ineq-ge-0"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Deux manières de pondérer la **même** quantité $\ln r$ : la MLD donne le même poids à chacun, le Theil T pondère chaque individu par son revenu relatif $r$.
+:::
+:::
+
+::: {.hint exercise="ineq-ge-0"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les formules
+`theil` : `mean(r * log(r))`. `mld` : `-mean(log(r))`. Multiplier tous les revenus par 10 ne change pas `r`.
+:::
+:::
+
+::: {.solution exercise="ineq-ge-0"}
+**Raisonnement.**
+
+1. On normalise par la moyenne : $r_i = x_i/\mu$. Un revenu égal à la moyenne donne $r = 1$ donc $\ln r = 0$ ; l'égalité parfaite donne un indice nul.
+2. **Theil T** $= \overline{r \ln r}$ : chaque individu est pondéré par son revenu relatif, donc l'indice est sensible au **haut** de la distribution.
+3. **MLD** $= -\overline{\ln r}$ : pondération uniforme, sensible au **bas** (un revenu très faible donne un $\ln r$ très négatif).
+4. **Invariance d'échelle** : multiplier tous les revenus par $\lambda$ multiplie $\mu$ par $\lambda$ et laisse $r$ inchangé, donc les deux indices aussi. C'est une propriété requise d'une mesure *relative*.
+5. Les deux indices sont des cas particuliers de GE($\alpha$) : MLD $=$ GE(0) et Theil T $=$ GE(1).
+
+```{webr}
+#| exercise: ineq-ge-0
+#| solution: true
+set.seed(ineq00$seed)
+x <- round(rlnorm(8, 7, 0.8))
+theil <- function(x) { r <- x / mean(x); mean(r * log(r)) }
+mld   <- function(x) { r <- x / mean(x); -mean(log(r)) }
+c(theil = theil(x), mld = mld(x), theil_x10 = theil(10 * x))
+```
+
+**Pièges fréquents.**
+
+- Ne pas diviser par la moyenne : l'indice dépend alors de l'unité monétaire.
+- Revenus nuls : $\ln 0 = -\infty$ rend la MLD infinie, et `log(r) * r` vaut `NaN` (il faut convenir que $0\ln 0 = 0$ pour le Theil T).
+- Mettre le signe moins sur le Theil au lieu de la MLD.
+
+**Pour aller plus loin.** L'étape suivante unifie les deux dans une seule fonction GE($\alpha$), et montre comment $\alpha$ règle la sensibilité aux différentes parties de la distribution.
+:::
+
+```{webr}
+#| exercise: ineq-ge-0
+#| check: true
+set.seed(ineq00$seed)
+x <- round(rlnorm(8, 7, 0.8))
+T_ <- function(x) { r <- x / mean(x); mean(r * log(r)) }
+M_ <- function(x) { r <- x / mean(x); -mean(log(r)) }
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 3 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(theil = ..., mld = ..., theil_x10 = ...) comme dans le gabarit.")
+} else if (abs(res[1] - T_(x)) > 1e-9) {
+  list(correct = FALSE, message = "Theil T incorrect : mean(r * log(r)) avec r = x / mean(x).")
+} else if (abs(res[2] - M_(x)) > 1e-9) {
+  list(correct = FALSE, message = "MLD incorrecte : -mean(log(r)).")
+} else if (abs(res[3] - res[1]) > 1e-9) {
+  list(correct = FALSE, message = "Le Theil de 10 x doit être identique à celui de x : normalise bien par mean(x) dans la fonction.")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : Theil T = %.4f, MLD = %.4f, et aucune des deux ne change si l'on multiplie les revenus par 10.", T_(x), M_(x)))
+}
+```
+
+::: {.dojo-done data-id="ineq-ge-0"}
+:::
+
+## La famille GE(α) : une seule fonction {#ineq-ge-1}
+
+[Marche 4 sur 5 · À compléter]{.dojo-step}
+
+Écris `my_ge(x, alpha)` couvrant les cas particuliers : $\alpha = 0$ (écart logarithmique moyen), $\alpha = 1$ (Theil T) et le cas général $\frac{1}{\alpha(\alpha-1)}\left(\overline{(x/\mu)^\alpha} - 1\right)$.
+
+```{webr}
+#| exercise: ineq-ge-1
+#| caption: "GE(alpha)"
+source("R/inegalites.R")
+set.seed(3)
+x <- rlnorm(500, 3, 0.7)
+
+my_ge <- function(x, alpha) {
+  r <- x / mean(x)
+  if (alpha == 0) {
+    ______                     # -mean(log(r))
+  } else if (alpha == 1) {
+    ______                     # mean(r * log(r))
+  } else {
+    ______                     # (mean(r^alpha) - 1) / (alpha * (alpha - 1))
+  }
+}
+sapply(c(-1, 0, 0.5, 1, 2), function(a) c(mon_ge = my_ge(x, a), ge = ge(x, a)))
+```
+
+::: {.hint exercise="ineq-ge-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+La famille GE($\alpha$) a une formule générale qui n'est **pas définie** en $\alpha = 0$ et $\alpha = 1$ (division 0/0). Ces deux cas sont des limites : il faut les écrire séparément.
+:::
+:::
+
+::: {.hint exercise="ineq-ge-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+Les cas 0 et 1 sont des **limites** du cas général quand $\alpha \to 0$ ou $1$ : la formule générale y est $0/0$. Sensibilité : un α grand pèse sur le haut de la distribution, un α négatif sur le bas.
+:::
+:::
+
+::: {.solution exercise="ineq-ge-1"}
+**Raisonnement.**
+
+1. On travaille sur les revenus relatifs $r_i = x_i/\mu$, ce qui rend la mesure invariante à l'échelle.
+2. Pour $\alpha \ne 0, 1$ : $\mathrm{GE}(\alpha) = \dfrac{1}{\alpha(\alpha-1)}\big(\overline{r^\alpha} - 1\big)$.
+3. Limite en $\alpha \to 1$ : Theil T $= \overline{r \ln r}$.
+4. Limite en $\alpha \to 0$ : MLD $= -\overline{\ln r}$ (sensible au **bas** de la distribution).
+5. Le paramètre $\alpha$ règle la sensibilité aux transferts : $\alpha$ grand → sensible au haut, $\alpha$ négatif → au bas ; GE(2) vaut la moitié du carré du coefficient de variation.
+
+```{webr}
+#| exercise: ineq-ge-1
+#| solution: true
+source("R/inegalites.R")
+set.seed(3)
+x <- rlnorm(500, 3, 0.7)
+
+my_ge <- function(x, alpha) {
+  r <- x / mean(x)
+  if (alpha == 0) {
+    -mean(log(r))
+  } else if (alpha == 1) {
+    mean(r * log(r))
+  } else {
+    (mean(r^alpha) - 1) / (alpha * (alpha - 1))
+  }
+}
+sapply(c(-1, 0, 0.5, 1, 2), function(a) c(mon_ge = my_ge(x, a), ge = ge(x, a)))
+```
+
+**Pièges fréquents.**
+
+- Tester `alpha == 0` sur un `alpha` calculé : on compare des flottants, ce qui peut échouer (utilise `abs(alpha) < 1e-12`).
+- Prendre le log d'un revenu nul : $-\infty$ pour la MLD, `NaN` pour Theil T (il faut convenir que $0 \ln 0 = 0$).
+- Oublier le facteur $1/(\alpha(\alpha-1))$.
+
+**Pour aller plus loin.** Vérifie par `ge(x, 1.0001)` et `ge(x, 0.9999)` que la formule générale tend bien vers Theil T quand $\alpha \to 1$.
+:::
+
+```{webr}
+#| exercise: ineq-ge-1
+#| check: true
+source("R/inegalites.R")
+f <- get0("my_ge", envir = .envir_result, inherits = FALSE)
+if (!is.function(f)) {
+  list(correct = FALSE, message = "Définis la fonction my_ge(x, alpha).")
+} else {
+  set.seed(11); y <- rlnorm(200, 2, 0.9)
+  al <- c(-1, 0, 0.5, 1, 2, 3)
+  ok <- vapply(al, function(a) isTRUE(all.equal(tryCatch(f(y, a), error = function(e) NA_real_), ge(y, a))), logical(1))
+  if (all(ok)) list(correct = TRUE, message = "Correct : my_ge reproduit ge() pour alpha dans {-1, 0, 0.5, 1, 2, 3}.")
+  else list(correct = FALSE, message = sprintf("Échec pour alpha = %s. Revois les cas alpha = 0 et alpha = 1 (limites) et la formule générale.", paste(al[!ok], collapse = ", ")))
+}
+```
+
+::: {.dojo-done data-id="ineq-ge-1"}
+:::
+
+## Décomposition du Theil par groupes {#ineq-decomp-1}
+
+[Marche 5 sur 5 · Autonome]{.dojo-step}
+
+```{ojs}
+//| echo: false
+ineq3 = { const g = rng("ineq-decomp-1", salt); return { seed: g.int(1, 9999) }; }
+```
+
+Trois groupes (A, B, C) aux revenus moyens différents. Décompose le Theil T en inégalité **intra-groupes** $\sum_g s_g T_g$ (avec $s_g$ la part de revenu du groupe $g$) et **inter-groupes** (Theil de la distribution où chacun reçoit la moyenne de son groupe).
+
+```{webr}
+#| exercise: ineq-decomp-1
+#| caption: "Theil T : intra et inter"
+#| input:
+#|   - ineq3
+source("R/inegalites.R")
+set.seed(ineq3$seed)
+n <- 300
+g <- sample(c("A", "B", "C"), n, TRUE, prob = c(0.5, 0.3, 0.2))
+x <- rlnorm(n, c(A = 3, B = 3.3, C = 2.7)[g], 0.7)
+
+s   <- tapply(x, g, sum) / sum(x)          # parts de revenu
+T_g <- tapply(x, g, theil_T)               # Theil dans chaque groupe
+intra <- ______                            # sum(s * T_g)
+moy <- tapply(x, g, mean); f <- as.numeric(table(g)) / n
+inter <- ______                            # Theil des moyennes de groupes pondérées par f : ge(moy, 1, w = f)
+c(intra = intra, inter = inter, total = intra + inter, direct = theil_T(x))
+```
+
+::: {.hint exercise="ineq-decomp-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+L'inégalité totale a deux sources : l'écart entre les **moyennes** des groupes (inter) et la dispersion **à l'intérieur** de chaque groupe (intra). Calcule d'abord l'indice dans chaque groupe.
+:::
+:::
+
+::: {.hint exercise="ineq-decomp-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+`tapply()` trie les groupes par ordre alphabétique, comme `table()` : `s`, `T_g`, `moy` et `f` sont donc alignés. Les colonnes `total` et `direct` doivent être égales.
+:::
+:::
+
+::: {.solution exercise="ineq-decomp-1"}
+**Raisonnement.**
+
+1. Le Theil T est additivement décomposable : total = intra + inter.
+2. **Intra** : chaque groupe contribue par son propre Theil $T_g$, pondéré par sa part de **revenu** $s_g$.
+3. **Inter** : on remplace chaque revenu par la moyenne de son groupe et l'on calcule le Theil de cette distribution lissée, pondérée par les parts de population.
+4. L'identité est exacte : `total` et `direct` coïncident.
+5. La part inter ($T_{\text{inter}}/T$) dit quelle fraction de l'inégalité s'explique par l'appartenance au groupe, à la manière d'un $R^2$.
+
+```{webr}
+#| exercise: ineq-decomp-1
+#| solution: true
+source("R/inegalites.R")
+set.seed(ineq3$seed)
+n <- 300
+g <- sample(c("A", "B", "C"), n, TRUE, prob = c(0.5, 0.3, 0.2))
+x <- rlnorm(n, c(A = 3, B = 3.3, C = 2.7)[g], 0.7)
+
+s   <- tapply(x, g, sum) / sum(x)
+T_g <- tapply(x, g, theil_T)
+intra <- sum(s * T_g)
+moy <- tapply(x, g, mean); f <- as.numeric(table(g)) / n
+inter <- ge(moy, 1, w = f)
+c(intra = intra, inter = inter, total = intra + inter, direct = theil_T(x))
+```
+
+**Pièges fréquents.**
+
+- Pondérer l'intra par les parts de **population** : c'est la règle de la MLD, pas celle du Theil T.
+- Désaligner les groupes : `tapply` et `table` trient par ordre alphabétique.
+- Étendre la logique au Gini : il n'est pas décomposable en deux termes (il reste un terme de chevauchement des distributions).
+
+**Pour aller plus loin.** Refais l'exercice avec la MLD ($\alpha = 0$) : les poids intra deviennent les parts de population. C'est pourquoi la MLD est la mesure favorite des comparaisons dans le temps.
+:::
+
+```{webr}
+#| exercise: ineq-decomp-1
+#| check: true
+source("R/inegalites.R")
+set.seed(ineq3$seed)
+n <- 300
+g <- sample(c("A", "B", "C"), n, TRUE, prob = c(0.5, 0.3, 0.2))
+x <- rlnorm(n, c(A = 3, B = 3.3, C = 2.7)[g], 0.7)
+d <- ge_decomp(x, g, 1)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 4 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(intra, inter, total, direct).")
+} else if (abs(res[1] - d[["intra"]]) > 1e-9) {
+  list(correct = FALSE, message = "Intra : pour le Theil T (alpha = 1), les poids sont les parts de revenu s_g, pas les parts de population.")
+} else if (abs(res[2] - d[["inter"]]) > 1e-9) {
+  list(correct = FALSE, message = "Inter : Theil T de la distribution des moyennes de groupes, pondérée par les parts de population.")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : T = %.4f = intra %.4f + inter %.4f (inter = %.0f %% de l'inégalité).", d[["total"]], res[1], res[2], 100 * d[["part_inter"]]))
+}
+```
+
+::: {.dojo-done data-id="ineq-decomp-1"}
+:::
+
+## Entraîne-toi
+
+::: {.dojo-cards data-course="recherche" data-n="5"}
+:::
+
+::: {.dojo-quiz data-course="recherche" data-n="3"}
+:::

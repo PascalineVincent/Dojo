@@ -1,0 +1,698 @@
+---
+title: "Micro : concurrence parfaite et imparfaite"
+subtitle: "L1 / L2, rappels et entraînement"
+format:
+  live-html:
+    toc-depth: 2
+---
+
+{{< include ../_extensions/r-wasm/live/_knitr.qmd >}}
+
+Les énoncés sont **tirés au sort chaque jour** (graine = date) : les chiffres changent d'un jour à l'autre, on ne peut donc pas retenir les réponses par cœur. Le bouton ci-dessous redonne de nouveaux énoncés à la demande. Le code R s'exécute dans ton navigateur ; **Vérifier** corrige ta réponse.
+
+{{< include ../_ojs.qmd >}}
+
+## Laboratoire : comparer les structures de marché
+
+Demande linéaire $P = A - bQ$ et coût marginal constant $c$ (sans coût fixe). Fais varier les paramètres et compare **prix, quantités, surplus et perte sèche** entre concurrence, monopole, Cournot et Stackelberg.
+
+::: {.dojo-lab data-lab="market"}
+:::
+
+::: {.callout-note collapse="true" title="Ce qu'il faut observer"}
+- Le prix suit l'ordre **concurrence < Stackelberg < Cournot (N = 2) < monopole**, et la quantité l'ordre inverse.
+- Quand $N$ augmente, Cournot tend vers la concurrence parfaite.
+- La perte sèche est le triangle entre la demande et le coût marginal, à droite de la quantité produite.
+:::
+
+::: {.dojo-track data-track="micro-cpp"}
+:::
+
+## Offre d'une firme preneuse de prix {#micro-cpp-1}
+
+[Marche 1 sur 3 · Guidé]{.dojo-step}
+
+```{ojs}
+//| echo: false
+micro1 = { const g = rng("micro-cpp-1", salt); const a = g.int(2, 8); return { a, F: g.int(20, 60), p: a + g.int(6, 20) }; }
+```
+
+Une firme preneuse de prix a pour coût total **C(q) = 0,5 q² + ${micro1.a} q + ${micro1.F}** et le prix de marché est **p = ${micro1.p}**. Calcule la quantité qui maximise son profit et ce profit.
+
+```{webr}
+#| exercise: micro-cpp-1
+#| caption: "Quantité et profit"
+#| input:
+#|   - micro1
+a <- micro1$a; F <- micro1$F; p <- micro1$p
+# Coût marginal : Cm(q) = q + a. Condition de premier ordre : p = Cm(q)
+q_star <- ______
+profit <- ______      # recette - coût total (n'oublie pas le coût fixe)
+c(q = q_star, profit = profit)
+```
+
+::: {.hint exercise="micro-cpp-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Une firme preneuse de prix choisit la quantité $q$ qui maximise $\pi(q) = pq - C(q)$. Écris la condition du premier ordre **en mots** avant de la mettre en formule : à l'optimum, le prix doit égaler le coût de la dernière unité produite.
+:::
+:::
+
+::: {.hint exercise="micro-cpp-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+Dérive $C(q)$ : $C'(q) = q + a$. Pose $p = C'(q)$ et résous en $q$. Le profit est $pq - C(q)$.
+:::
+:::
+
+::: {.solution exercise="micro-cpp-1"}
+**Raisonnement.**
+
+1. La firme est preneuse de prix : $p$ est une donnée, seule la quantité $q$ est choisie.
+2. Profit : $\pi(q) = pq - C(q)$. Condition du premier ordre : $p = C'(q)$ (la recette marginale d'une firme preneuse de prix est $p$).
+3. Ici $C'(q) = q + a$, donc $q^* = p - a$.
+4. Condition du second ordre : $C''(q) = 1 > 0$, le coût marginal est croissant, c'est bien un maximum.
+5. Le profit se calcule en remplaçant $q^*$ dans $pq - C(q)$, **sans oublier le coût fixe** $F$ : il peut être négatif tout en étant supérieur à $-F$, auquel cas la firme produit quand même à court terme.
+
+```{webr}
+#| exercise: micro-cpp-1
+#| solution: true
+a <- micro1$a; F <- micro1$F; p <- micro1$p
+q_star <- p - a
+profit <- p * q_star - (0.5 * q_star^2 + a * q_star + F)
+c(q = q_star, profit = profit)
+```
+
+**Pièges fréquents.**
+
+- Oublier $F$ dans le profit : on conclut à tort que la firme gagne de l'argent.
+- Résoudre $p = CM(q)$ (coût moyen) au lieu de $p = Cm(q)$ (coût marginal) : le coût moyen sert à décider d'**entrer ou sortir**, pas de combien produire.
+- Conclure qu'un profit négatif impose de fermer : à court terme, la firme produit tant que le prix couvre le coût variable (voir la marche suivante).
+
+**Pour aller plus loin.** Trace $\pi(q)$ sur une grille de valeurs de $q$ et vérifie que son sommet est bien en $q^*$. Puis passe à la marche suivante : que devient la décision de la firme quand $p$ devient très bas ?
+:::
+
+```{webr}
+#| exercise: micro-cpp-1
+#| check: true
+a <- micro1$a; F <- micro1$F; p <- micro1$p
+q <- p - a
+prof <- p * q - (0.5 * q^2 + a * q + F)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 2 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un vecteur de deux nombres : c(q = ..., profit = ...).")
+} else if (abs(res[1] - q) > 1e-6) {
+  list(correct = FALSE, message = "La quantité n'est pas la bonne. Écris p = Cm(q), avec Cm(q) = q + a.")
+} else if (abs(res[2] - prof) > 1e-6) {
+  list(correct = FALSE, message = "Quantité correcte, profit incorrect : profit = p q - C(q), coût fixe compris.")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : q* = %g et profit = %g.", q, prof))
+}
+```
+
+::: {.dojo-done data-id="micro-cpp-1"}
+:::
+
+## Offre de court terme et seuil de fermeture {#micro-cpp-3}
+
+[Marche 2 sur 3 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+cpp3 = { const g = rng("micro-cpp-3", salt); return { a: g.int(2, 8), F: g.pick([18, 32, 50, 72]) }; }
+```
+
+Une firme preneuse de prix a pour coût total **C(q) = 0,5 q² + ${cpp3.a} q + ${cpp3.F}**. Le coût fixe est d'abord **irrécupérable** (court terme : la firme ne peut pas le récupérer en fermant), puis **évitable** (long terme : elle peut quitter le marché). Écris les deux fonctions d'offre et compare-les sur une grille de prix.
+
+```{webr}
+#| exercise: micro-cpp-3
+#| caption: "Deux courbes d'offre"
+#| input:
+#|   - cpp3
+a <- cpp3$a; F <- cpp3$F
+# Quand la firme produit, elle égalise p et Cm(q) = q + a, donc q = p - a.
+# Reste à décider SI elle produit.
+offre_ct <- function(p) {
+  # court terme : F est irrécupérable. On produit tant que p couvre le coût variable moyen (minimum : a)
+  ______
+}
+offre_lt <- function(p) {
+  # long terme : F est évitable. On produit seulement si le profit est positif ou nul (p >= a + sqrt(2F))
+  ______
+}
+prix <- seq(0.25, 30, by = 2.5)
+rbind(court = sapply(prix, offre_ct), long = sapply(prix, offre_lt))
+```
+
+::: {.hint exercise="micro-cpp-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Dans les deux cas, quand la firme produit, $q = p - a$. Seule la condition « produit-elle ? » change. Pour la trouver, demande-toi ce que la firme **perd** si elle ferme.
+:::
+:::
+
+::: {.hint exercise="micro-cpp-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+Court terme : fermer fait perdre exactement $F$ (irrécupérable) ; produire rapporte un profit variable $\tfrac12(p-a)^2 \ge 0$ dès que $p \ge a$. Long terme : fermer fait gagner $0$ ; la firme produit seulement si $\pi = \tfrac12(p-a)^2 - F \ge 0$, soit $p \ge a + \sqrt{2F}$.
+:::
+:::
+
+::: {.solution exercise="micro-cpp-3"}
+**Raisonnement.**
+
+1. Quand elle produit, la firme égalise $p$ et $Cm(q) = q + a$ : $q = p - a$. La vraie question est : **produit-elle ?**
+2. **Court terme.** $F$ est payé quoi qu'il arrive. Produire $q = p - a$ rapporte un profit *variable* $\tfrac12(p-a)^2$, positif dès que $p > a$ ; fermer ne rapporte rien. Donc elle produit pour tout $p \ge a$ (minimum du coût variable moyen, le « seuil de fermeture »), soit $q = \max(p-a,\,0)$. Sa perte totale peut être négative (jusqu'à $-F$) sans qu'elle ferme.
+3. **Long terme.** $F$ est évitable : la firme n'est active que si $\pi = \tfrac12(p-a)^2 - F \ge 0$, soit $p \ge a + \sqrt{2F}$ (minimum du coût moyen, le « seuil de rentabilité »). Sous ce prix, l'offre est nulle.
+4. L'offre de long terme présente un **saut** : elle passe de 0 à la production $\sqrt{2F}$ au prix $a + \sqrt{2F}$. Entre $a$ et ce seuil, la firme produit à court terme en perdant de l'argent, ce que le long terme ne tolère pas.
+
+```{webr}
+#| exercise: micro-cpp-3
+#| solution: true
+a <- cpp3$a; F <- cpp3$F
+offre_ct <- function(p) {
+  if (p >= a) p - a else 0                       # seuil de fermeture : p = a
+}
+offre_lt <- function(p) {
+  if (p >= a + sqrt(2 * F)) p - a else 0         # seuil de rentabilité : p = a + sqrt(2F)
+}
+prix <- seq(0.25, 30, by = 2.5)
+rbind(court = sapply(prix, offre_ct), long = sapply(prix, offre_lt))
+```
+
+**Pièges fréquents.**
+
+- Fermer dès que le profit total est négatif **à court terme** : tant que $p$ couvre le coût variable, produire réduit la perte.
+- Utiliser le coût moyen *total* pour la décision de court terme : seul le coût moyen *variable* compte quand $F$ est irrécupérable.
+- Écrire `p - a` sans condition : sous le seuil on obtiendrait une production négative.
+
+**Pour aller plus loin.** Repère sur un graphique le seuil de fermeture ($p = a$) et le seuil de rentabilité ($p = a + \sqrt{2F}$). La marche suivante s'appuie sur ce second seuil pour trouver le prix et le nombre de firmes de long terme.
+:::
+
+```{webr}
+#| exercise: micro-cpp-3
+#| check: true
+a <- cpp3$a; F <- cpp3$F
+prix <- seq(0.25, 30, by = 2.5)
+ct <- pmax(prix - a, 0)
+lt <- ifelse(prix >= a + sqrt(2 * F), prix - a, 0)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 2 * length(prix) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie le tableau rbind(court = ..., long = ...) du gabarit, avec les deux fonctions complétées.")
+} else {
+  m <- matrix(res, nrow = 2)
+  ok_ct <- isTRUE(all.equal(m[1, ], ct, tolerance = 1e-8)); ok_lt <- isTRUE(all.equal(m[2, ], lt, tolerance = 1e-8))
+  if (ok_ct && ok_lt) {
+    list(correct = TRUE, message = sprintf("Correct : seuil de fermeture p = %g, seuil de rentabilité p = %g.", a, a + sqrt(2 * F)))
+  } else if (!ok_ct) {
+    list(correct = FALSE, message = "Offre de court terme incorrecte : F est irrécupérable, la firme produit q = p - a dès que p >= a (coût variable moyen minimal).")
+  } else {
+    list(correct = FALSE, message = "Offre de long terme incorrecte : F est évitable, la firme ne produit que si le profit 0,5 (p - a)^2 - F est >= 0, c'est-à-dire p >= a + sqrt(2F).")
+  }
+}
+```
+
+::: {.dojo-done data-id="micro-cpp-3"}
+:::
+
+## Équilibre de long terme et nombre de firmes {#micro-cpp-2}
+
+[Marche 3 sur 3 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+micro2 = {
+  const g = rng("micro-cpp-2", salt);
+  const s = g.pick([4, 6, 8, 10]);                       // s = sqrt(2F), caché
+  const a = g.int(2, 6), b = g.int(2, 4), N0 = g.int(10, 40);
+  return { a, F: s * s / 2, b, D0: b * (a + s) + N0 * s };
+}
+```
+
+Dans une industrie en concurrence parfaite avec libre entrée, toutes les firmes ont le coût **C(q) = 0,5 q² + ${micro2.a} q + ${micro2.F}**. La demande de marché est **Q = ${micro2.D0} − ${micro2.b} p**. Trouve l'équilibre de long terme : prix, production par firme et nombre de firmes.
+
+```{webr}
+#| exercise: micro-cpp-2
+#| caption: "Équilibre de long terme"
+#| input:
+#|   - micro2
+a <- micro2$a; F <- micro2$F; b <- micro2$b; D0 <- micro2$D0
+# Coût moyen : CM(q) = 0,5 q + a + F/q ; son minimum est atteint en q = sqrt(2F)
+q_lr <- ______
+p_lr <- ______      # profit nul : p = CM minimum
+Q_lr <- ______      # demande de marché au prix p_lr
+N_lr <- ______      # nombre de firmes
+c(p = p_lr, q = q_lr, N = N_lr)
+```
+
+::: {.hint exercise="micro-cpp-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+À long terme deux conditions tiennent en même temps : la libre entrée pousse le profit à zéro, et la concurrence fait produire chaque firme là où prix = coût marginal. Ensemble, elles fixent la production d'**une** firme. Commence par elle.
+:::
+:::
+
+::: {.hint exercise="micro-cpp-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+Le minimum de $CM(q) = 0{,}5\,q + a + F/q$ se trouve en annulant sa dérivée : $0{,}5 - F/q^2 = 0$. Ensuite $p = CM(q_{lr})$, $Q = D_0 - b\,p$ et $N = Q / q_{lr}$.
+:::
+:::
+
+::: {.solution exercise="micro-cpp-2"}
+**Raisonnement.**
+
+1. Libre entrée : profit nul, donc $p = CM(q)$.
+2. Concurrence : $p = Cm(q)$. Les deux conditions imposent $Cm(q) = CM(q)$, ce qui n'arrive qu'au **minimum du coût moyen**.
+3. $CM(q) = 0{,}5\,q + a + F/q$ ; $CM'(q) = 0{,}5 - F/q^2 = 0$ donne $q = \sqrt{2F}$ (échelle efficace minimale).
+4. Prix de long terme : $p = CM_{\min} = a + \sqrt{2F}$, indépendant de la demande.
+5. La demande de marché fixe seulement la quantité totale : $Q = D_0 - b\,p$, d'où $N = Q/q$. (En pratique on arrondit $N$ à l'entier inférieur ; l'énoncé est construit pour que $N$ soit entier.)
+
+```{webr}
+#| exercise: micro-cpp-2
+#| solution: true
+a <- micro2$a; F <- micro2$F; b <- micro2$b; D0 <- micro2$D0
+q_lr <- sqrt(2 * F)
+p_lr <- a + sqrt(2 * F)
+Q_lr <- D0 - b * p_lr
+N_lr <- Q_lr / q_lr
+c(p = p_lr, q = q_lr, N = N_lr)
+```
+
+**Pièges fréquents.**
+
+- Résoudre $p = Cm(q)$ sans imposer le profit nul : on obtient la production de court terme, pas celle de long terme.
+- Diviser la demande **de marché** par $N$ avant de connaître $N$ : $N$ est justement l'inconnue.
+- Penser que la demande influence le prix de long terme : avec libre entrée et des coûts identiques, l'offre de long terme est horizontale, seul $N$ s'ajuste.
+
+**Pour aller plus loin.** Que devient le prix si la demande double ? Rien : c'est $N$ qui double. Reprends la marche précédente pour retrouver le seuil $p = a + \sqrt{2F}$ sur la courbe d'offre.
+:::
+
+```{webr}
+#| exercise: micro-cpp-2
+#| check: true
+a <- micro2$a; F <- micro2$F; b <- micro2$b; D0 <- micro2$D0
+q <- sqrt(2 * F); p <- a + q; N <- (D0 - b * p) / q
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 3 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(p = ..., q = ..., N = ...).")
+} else if (abs(res[2] - q) > 1e-6) {
+  list(correct = FALSE, message = "La production par firme n'est pas bonne : minimise le coût moyen (CM'(q) = 0).")
+} else if (abs(res[1] - p) > 1e-6) {
+  list(correct = FALSE, message = "Le prix de long terme est égal au coût moyen minimum : p = CM(q).")
+} else if (abs(res[3] - N) > 1e-6) {
+  list(correct = FALSE, message = "Le nombre de firmes vaut Q / q, avec Q = D0 - b p.")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : p = %g, q = %g, N = %g firmes.", p, q, N))
+}
+```
+
+::: {.dojo-done data-id="micro-cpp-2"}
+:::
+
+::: {.dojo-track data-track="micro-pouvoir"}
+:::
+
+## Recette totale et recette marginale {#micro-mono-0}
+
+[Marche 1 sur 4 · Guidé]{.dojo-step}
+
+```{ojs}
+//| echo: false
+micro0 = { const g = rng("micro-mono-0", salt); return { A: g.int(40, 100), b: g.pick([1, 2, 3]), Q: g.int(3, 9) }; }
+```
+
+La demande inverse d'un monopole est **P = ${micro0.A} − ${micro0.b} Q**. Pour la quantité **Q = ${micro0.Q}**, calcule le prix, la recette totale et la recette marginale, puis vérifie la recette marginale par un calcul numérique (vendre 0,001 unité de plus).
+
+```{webr}
+#| exercise: micro-mono-0
+#| caption: "Recette marginale"
+#| input:
+#|   - micro0
+A <- micro0$A; b <- micro0$b; Q <- micro0$Q
+P  <- ______       # prix auquel se vendent Q unités (lu sur la demande)
+R  <- ______       # recette totale : prix x quantité
+Rm <- ______       # recette marginale : dérivée de R(Q) par rapport à Q
+h <- 0.001
+Rm_num <- ((A - b * (Q + h)) * (Q + h) - R) / h     # vérification numérique (ne pas modifier)
+c(P = P, R = R, Rm = Rm, Rm_num = Rm_num)
+```
+
+::: {.hint exercise="micro-mono-0"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Trois grandeurs s'enchaînent : le prix se lit sur la demande, la recette totale est prix × quantité, et la recette marginale est la **variation** de la recette totale quand on vend une unité de plus.
+:::
+:::
+
+::: {.hint exercise="micro-mono-0"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les formules
+$P = A - bQ$ ; $R = P \times Q$ ; $R_m = dR/dQ = A - 2bQ$. Le calcul numérique du gabarit doit donner à peu près la même chose (il diffère de $bh$).
+:::
+:::
+
+::: {.solution exercise="micro-mono-0"}
+**Raisonnement.**
+
+1. Le prix se lit sur la demande : $P = A - bQ$.
+2. La recette totale est $R(Q) = P \times Q = AQ - bQ^2$.
+3. La recette marginale est sa dérivée : $R_m(Q) = A - 2bQ$. Elle part du même point que la demande mais **descend deux fois plus vite** : pour vendre une unité de plus, le monopole doit baisser le prix, et cette baisse s'applique à toutes les unités déjà vendues.
+4. Le calcul numérique confirme : $[R(Q+h) - R(Q)]/h \approx R_m$ (l'écart est de $-bh$).
+5. Conséquence : $R_m < P$ dès que $Q > 0$. C'est la source du pouvoir de marché : le monopole ne retire de la dernière unité que $R_m$, pas $P$.
+
+```{webr}
+#| exercise: micro-mono-0
+#| solution: true
+A <- micro0$A; b <- micro0$b; Q <- micro0$Q
+P  <- A - b * Q
+R  <- P * Q
+Rm <- A - 2 * b * Q
+h <- 0.001
+Rm_num <- ((A - b * (Q + h)) * (Q + h) - R) / h
+c(P = P, R = R, Rm = Rm, Rm_num = Rm_num)
+```
+
+**Pièges fréquents.**
+
+- Confondre recette marginale et prix : pour une firme en concurrence parfaite elles coïncident, pas pour un monopole.
+- Oublier le 2 : $R_m = A - bQ$ serait la demande elle-même.
+- Dériver par rapport à $P$ au lieu de $Q$.
+
+**Pour aller plus loin.** Cherche la quantité où $R_m$ s'annule : c'est le maximum de la recette totale. La marche suivante égalise $R_m$ au coût marginal pour trouver l'équilibre du monopole.
+:::
+
+```{webr}
+#| exercise: micro-mono-0
+#| check: true
+A <- micro0$A; b <- micro0$b; Q <- micro0$Q
+P <- A - b * Q; R <- P * Q; Rm <- A - 2 * b * Q
+h <- 0.001; Rm_num <- ((A - b * (Q + h)) * (Q + h) - R) / h
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 4 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(P = ..., R = ..., Rm = ..., Rm_num = ...) : garde la dernière ligne du gabarit.")
+} else if (abs(res[1] - P) > 1e-8) {
+  list(correct = FALSE, message = "Le prix se lit sur la demande : P = A - b Q.")
+} else if (abs(res[2] - R) > 1e-8) {
+  list(correct = FALSE, message = "Recette totale = prix x quantité = P Q.")
+} else if (abs(res[3] - Rm) > 1e-8) {
+  list(correct = FALSE, message = "Recette marginale = dérivée de R(Q) = A - 2 b Q (pente double de celle de la demande).")
+} else if (abs(res[4] - Rm_num) > 1e-6) {
+  list(correct = FALSE, message = "La ligne de vérification numérique doit rester celle du gabarit.")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : à Q = %g, le prix est %g mais la recette marginale seulement %g.", Q, P, Rm))
+}
+```
+
+::: {.dojo-done data-id="micro-mono-0"}
+:::
+
+## Monopole et perte sèche {#micro-mono-1}
+
+[Marche 2 sur 4 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+micro3 = { const g = rng("micro-mono-1", salt); const b = g.pick([1, 2, 4]), c = g.int(2, 10), k = g.int(5, 15); return { A: c + 2 * b * k, b, c }; }
+```
+
+Un monopole fait face à la demande inverse **P = ${micro3.A} − ${micro3.b} Q** avec un coût total **C(Q) = ${micro3.c} Q**. Calcule l'équilibre de monopole, son profit et la perte sèche par rapport à la concurrence parfaite.
+
+```{webr}
+#| exercise: micro-mono-1
+#| caption: "Monopole"
+#| input:
+#|   - micro3
+A <- micro3$A; b <- micro3$b; c <- micro3$c
+# Recette totale R(Q) = (A - bQ) Q, donc Rm(Q) = A - 2bQ. Condition : Rm = Cm = c
+Q_m <- ______
+P_m <- ______        # lu sur la demande
+profit <- ______
+Q_c <- ______        # quantité concurrentielle (P = Cm)
+dwl <- ______        # triangle de perte sèche : 0,5 * (P_m - c) * (Q_c - Q_m)
+c(Q = Q_m, P = P_m, profit = profit, DWL = dwl)
+```
+
+::: {.hint exercise="micro-mono-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Un monopole choisit la **quantité** et laisse la demande fixer le prix. Il compare ce que lui rapporte la dernière unité vendue (recette marginale) à ce qu'elle lui coûte (coût marginal).
+:::
+:::
+
+::: {.hint exercise="micro-mono-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+$R_m = A - 2bQ = c$ donne $Q_m = (A-c)/(2b)$. Remplace dans la demande pour $P_m$. La quantité concurrentielle résout $A - bQ = c$.
+:::
+:::
+
+::: {.solution exercise="micro-mono-1"}
+**Raisonnement.**
+
+1. $R(Q) = (A - bQ)\,Q$ ; en dérivant, $R_m(Q) = A - 2bQ$ : pour vendre une unité de plus il faut baisser le prix de **toutes** les unités, d'où une pente deux fois plus forte que celle de la demande.
+2. Condition de premier ordre : $R_m = c$, donc $Q_m = (A-c)/(2b)$.
+3. Le prix se lit **sur la demande** (pas sur $R_m$) : $P_m = A - bQ_m = (A+c)/2$.
+4. Profit : $(P_m - c)\,Q_m$.
+5. Référence concurrentielle : $P = c$ donne $Q_c = (A-c)/b = 2Q_m$. Le monopole produit la moitié de la quantité concurrentielle.
+6. Perte sèche : triangle de base $Q_c - Q_m$ et de hauteur $P_m - c$, soit $\tfrac12 (P_m-c)(Q_c-Q_m) = (A-c)^2/(8b)$.
+
+```{webr}
+#| exercise: micro-mono-1
+#| solution: true
+A <- micro3$A; b <- micro3$b; c <- micro3$c
+Q_m <- (A - c) / (2 * b)
+P_m <- A - b * Q_m
+profit <- (P_m - c) * Q_m
+Q_c <- (A - c) / b
+dwl <- 0.5 * (P_m - c) * (Q_c - Q_m)
+c(Q = Q_m, P = P_m, profit = profit, DWL = dwl)
+```
+
+**Pièges fréquents.**
+
+- Lire le prix sur la courbe de recette marginale : elle donne la valeur de la dernière unité pour le monopole, pas le prix payé.
+- Oublier le facteur 2 dans $R_m = A - 2bQ$ (on retombe sur la demande).
+- Prendre le profit pour la perte sèche : le profit est un transfert du consommateur vers le producteur ; seul le triangle est détruit pour la société.
+
+**Pour aller plus loin.** Vérifie que ta perte sèche vaut $(A-c)^2/(8b)$, puis fais varier $c$ dans le laboratoire en haut de page. La marche suivante passe à plusieurs firmes.
+:::
+
+```{webr}
+#| exercise: micro-mono-1
+#| check: true
+A <- micro3$A; b <- micro3$b; c <- micro3$c
+Qm <- (A - c) / (2 * b); Pm <- (A + c) / 2; Qc <- (A - c) / b
+exp_ <- c(Qm, Pm, (Pm - c) * Qm, 0.5 * (Pm - c) * (Qc - Qm))
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 4 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(Q = ..., P = ..., profit = ..., DWL = ...).")
+} else if (abs(res[1] - exp_[1]) > 1e-6) {
+  list(correct = FALSE, message = "Quantité incorrecte : égalise la recette marginale A - 2bQ au coût marginal c.")
+} else if (abs(res[2] - exp_[2]) > 1e-6) {
+  list(correct = FALSE, message = "Le prix se lit sur la demande : P = A - b Q_m.")
+} else if (abs(res[3] - exp_[3]) > 1e-6) {
+  list(correct = FALSE, message = "Profit = (P - c) Q (pas de coût fixe ici).")
+} else if (abs(res[4] - exp_[4]) > 1e-6) {
+  list(correct = FALSE, message = "Perte sèche = 0,5 (P_m - c)(Q_c - Q_m) : triangle entre demande et Cm.")
+} else {
+  list(correct = TRUE, message = sprintf("Correct. Le monopole produit %g au lieu de %g et détruit %g de surplus.", Qm, Qc, exp_[4]))
+}
+```
+
+::: {.dojo-done data-id="micro-mono-1"}
+:::
+
+## Duopole de Cournot : meilleures réponses {#micro-cournot-0}
+
+[Marche 3 sur 4 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+micro5 = { const g = rng("micro-cournot-0", salt); return { A: g.int(60, 120), b: g.int(1, 3), c: g.int(5, 20) }; }
+```
+
+Deux firmes de coût marginal **c = ${micro5.c}** se font concurrence en quantités sur la demande **P = ${micro5.A} − ${micro5.b} Q**. Écris la fonction de meilleure réponse, puis laisse les deux firmes s'ajuster tour à tour jusqu'à l'équilibre et compare avec la formule fermée.
+
+```{webr}
+#| exercise: micro-cournot-0
+#| caption: "Meilleures réponses"
+#| input:
+#|   - micro5
+A <- micro5$A; b <- micro5$b; c <- micro5$c
+# Meilleure réponse : quantité qui maximise le profit en prenant celle de l'autre comme donnée
+br <- function(q_autre) ______
+q1 <- 0; q2 <- 0
+for (k in 1:60) { q1 <- br(q2); q2 <- br(q1) }       # ajustements successifs
+q_formule <- ______                                    # solution symétrique en forme fermée
+c(q1 = q1, q2 = q2, formule = q_formule)
+```
+
+::: {.hint exercise="micro-cournot-0"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+La meilleure réponse maximise $\big(A - b(q_1 + q_2) - c\big)\,q_1$ par rapport à $q_1$, avec $q_2$ **donné**. Dérive, annule, isole $q_1$ en fonction de $q_2$.
+:::
+:::
+
+::: {.hint exercise="micro-cournot-0"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les formules
+$q_1 = \dfrac{A - c - b\,q_2}{2b}$. À l'équilibre symétrique $q_1 = q_2 = q$, donc $3bq = A - c$, soit $q = \dfrac{A-c}{3b}$.
+:::
+:::
+
+::: {.solution exercise="micro-cournot-0"}
+**Raisonnement.**
+
+1. La firme 1 prend $q_2$ comme donné : $\pi_1 = (A - b(q_1+q_2) - c)\,q_1$.
+2. Condition du premier ordre : $A - bq_2 - 2bq_1 - c = 0$, d'où la meilleure réponse $q_1 = \dfrac{A - c - bq_2}{2b}$. Elle est décroissante : si l'autre produit plus, je produis moins.
+3. Un équilibre de Nash est un point fixe des deux meilleures réponses. La boucle l'atteint car la pente de la meilleure réponse vaut $-1/2$ : chaque tour divise l'erreur par 2 (60 tours suffisent largement).
+4. Par symétrie $q_1 = q_2 = q$ : $q = \dfrac{A-c-bq}{2b}$, donc $q^* = \dfrac{A-c}{3b}$.
+5. Production totale : $2(A-c)/(3b)$, soit les deux tiers de la quantité concurrentielle $(A-c)/b$ (un cartel produirait la moitié, la concurrence parfaite le tout).
+
+```{webr}
+#| exercise: micro-cournot-0
+#| solution: true
+A <- micro5$A; b <- micro5$b; c <- micro5$c
+br <- function(q_autre) (A - c - b * q_autre) / (2 * b)
+q1 <- 0; q2 <- 0
+for (k in 1:60) { q1 <- br(q2); q2 <- br(q1) }
+q_formule <- (A - c) / (3 * b)
+c(q1 = q1, q2 = q2, formule = q_formule)
+```
+
+**Pièges fréquents.**
+
+- Oublier de diviser par $2b$ : on ignore l'effet de sa propre quantité sur le prix.
+- Croire que l'équilibre est le monopole partagé : chaque firme ignore l'effet de sa quantité sur le **profit de l'autre**, d'où une production totale supérieure à celle du cartel.
+- Mélanger `q_autre` et sa propre quantité dans `br` : la fonction ne doit dépendre que de la quantité de l'adversaire.
+
+**Pour aller plus loin.** La marche suivante généralise à $N$ firmes avec une fonction de $N$ ; pour $N=2$ on doit retrouver $(A-c)/(3b)$. Essaie d'autres points de départ pour $q_1, q_2$ : l'équilibre ne change pas.
+:::
+
+```{webr}
+#| exercise: micro-cournot-0
+#| check: true
+A <- micro5$A; b <- micro5$b; c <- micro5$c
+q <- (A - c) / (3 * b)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 3 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(q1 = ..., q2 = ..., formule = ...).")
+} else if (abs(res[1] - q) > 1e-6 || abs(res[2] - q) > 1e-6) {
+  list(correct = FALSE, message = "Les ajustements ne convergent pas vers l'équilibre : la meilleure réponse est (A - c - b q_autre) / (2 b).")
+} else if (abs(res[3] - q) > 1e-8) {
+  list(correct = FALSE, message = "Formule fermée : par symétrie q = (A - c) / (3 b).")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : chaque firme produit %.3f ; les ajustements atteignent la formule fermée.", q))
+}
+```
+
+::: {.dojo-done data-id="micro-cournot-0"}
+:::
+
+## Cournot à N firmes : prix d'équilibre {#micro-cournot-1}
+
+[Marche 4 sur 4 · Autonome]{.dojo-step}
+
+```{ojs}
+//| echo: false
+micro4 = { const g = rng("micro-cournot-1", salt); return { A: g.int(60, 120), b: g.int(1, 3), c: g.int(5, 20) }; }
+```
+
+N firmes identiques, de coût marginal constant **c = ${micro4.c}** et sans coût fixe, se font concurrence en quantités (Cournot) sur le marché de demande **P = ${micro4.A} − ${micro4.b} Q**. Écris la fonction `cournot_price(N)` qui renvoie le prix d'équilibre, puis évalue-la pour N = 1, …, 6.
+
+```{webr}
+#| exercise: micro-cournot-1
+#| caption: "Une fonction de N"
+#| input:
+#|   - micro4
+A <- micro4$A; b <- micro4$b; c <- micro4$c
+cournot_price <- function(N) {
+  # Meilleure réponse : q_i = (A - c - b * Q_autres) / (2b). Par symétrie, q_i = (A - c) / ((N + 1) b)
+  q_i <- ______
+  ______   # prix d'équilibre : P = A - b * N * q_i
+}
+sapply(1:6, cournot_price)
+```
+
+::: {.hint exercise="micro-cournot-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Écris d'abord le problème d'**une** firme en prenant la quantité des autres comme donnée, puis impose la symétrie : toutes les firmes produisent la même quantité $q$. Le résultat sera une fonction de $N$.
+:::
+:::
+
+::: {.hint exercise="micro-cournot-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+La condition de premier ordre de la firme $i$ est $A - bQ - b q_i = c$. Avec $Q = N q$ et des firmes symétriques : $A - c = b(N+1) q$.
+:::
+:::
+
+::: {.solution exercise="micro-cournot-1"}
+**Raisonnement.**
+
+1. Profit de la firme $i$ : $\big(A - b(q_i + Q_{-i}) - c\big)\,q_i$.
+2. Condition du premier ordre : $A - bQ_{-i} - 2bq_i = c$, d'où la meilleure réponse $q_i = (A - c - bQ_{-i})/(2b)$.
+3. Symétrie : $Q_{-i} = (N-1)q$ et $q_i = q$, donc $(N+1)\,b\,q = A - c$ et $q = \dfrac{A-c}{(N+1)b}$.
+4. Quantité totale $Q = Nq = \tfrac{N}{N+1}\,Q_c$, prix $P = A - bQ = \dfrac{A + Nc}{N+1}$.
+5. Contrôles : $N=1$ redonne le monopole $(A+c)/2$ ; quand $N\to\infty$, $P\to c$ (concurrence parfaite).
+
+```{webr}
+#| exercise: micro-cournot-1
+#| solution: true
+A <- micro4$A; b <- micro4$b; c <- micro4$c
+cournot_price <- function(N) {
+  q_i <- (A - c) / ((N + 1) * b)
+  A - b * N * q_i
+}
+sapply(1:6, cournot_price)
+```
+
+**Pièges fréquents.**
+
+- Écrire $q_i = (A-c)/(2b)$ : on oublie la réaction aux autres firmes (c'est la quantité de monopole).
+- Remplacer $Q$ par $q$ au lieu de $Nq$ dans la demande.
+- Confondre $N+1$ et $N$ : le « +1 » vient de la dérivée de $q_i^2$ (la firme internalise l'effet de sa propre quantité sur le prix).
+
+**Pour aller plus loin.** Ajoute le profit par firme $(P-c)q$ et la perte sèche pour $N = 1, \dots, 6$ : elle décroît comme $1/(N+1)^2$. Compare avec le laboratoire en haut de page.
+:::
+
+```{webr}
+#| exercise: micro-cournot-1
+#| check: true
+A <- micro4$A; b <- micro4$b; c <- micro4$c
+exp_ <- (A + (1:6) * c) / ((1:6) + 1)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 6 || anyNA(res)) {
+  list(correct = FALSE, message = "Termine la fonction puis renvoie sapply(1:6, cournot_price).")
+} else if (isTRUE(all.equal(res, exp_, tolerance = 1e-8))) {
+  list(correct = TRUE, message = sprintf("Correct : P(1) = %g (monopole) et P(6) = %.2f, déjà proche du coût marginal %g.", exp_[1], exp_[6], c))
+} else if (abs(res[1] - (A + c) / 2) > 1e-6) {
+  list(correct = FALSE, message = "Pour N = 1 tu devrais retrouver le prix de monopole (A + c) / 2.")
+} else {
+  list(correct = FALSE, message = "Vérifie la formule : P = A - b N q_i avec q_i = (A - c) / ((N + 1) b).")
+}
+```
+
+::: {.dojo-done data-id="micro-cournot-1"}
+:::
+
+## Fiche de rappel
+
+| Structure | Quantité | Prix | Remarque |
+|---|---|---|---|
+| Concurrence parfaite | $Q_c = (A-c)/b$ | $c$ | Surplus total maximal |
+| Monopole | $Q_c/2$ | $(A+c)/2$ | Perte sèche = $(A-c)^2/(8b)$ |
+| Cournot, $N$ firmes | $\frac{N}{N+1}Q_c$ | $\frac{A+Nc}{N+1}$ | Tend vers $c$ quand $N \to \infty$ |
+| Stackelberg (1+1) | $\frac{3}{4}Q_c$ | $\frac{A+3c}{4}$ | Leader : $Q_c/2$, suiveur : $Q_c/4$ |
+| Bertrand (homogène, $c$ égal) | $Q_c$ | $c$ | Profit nul avec deux firmes |
+
+## Entraîne-toi sur les cartes
+
+::: {.dojo-cards data-course="micro" data-n="5"}
+:::
+
+::: {.dojo-quiz data-course="micro" data-n="3"}
+:::

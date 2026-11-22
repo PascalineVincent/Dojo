@@ -1,0 +1,10 @@
+---
+title: "Progression"
+subtitle: "Niveau, série, radar de maîtrise et sauvegarde"
+toc: false
+---
+
+Ta progression vit **dans ce navigateur** (stockage local). Exporte-la régulièrement pour la sauvegarder ou la retrouver sur un autre appareil.
+
+::: {.dojo-progress}
+:::

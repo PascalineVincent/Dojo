@@ -1,0 +1,32 @@
+# Catalogue des exercices interactifs (utilisé par « Aujourd'hui » et « Progression »).
+# `id` = identifiant de la section (ancre) dans la page ; `course` = parcours ; level 1-5.
+# `track` + `step` : piste ordonnée (marche 1 = guidée, puis à compléter, puis autonome). Le badge « Marche k sur n » est vérifié dans la page.
+- {id: micro-cpp-1, course: micro, level: 1, minutes: 8, xp: 15, title: "Offre d'une firme preneuse de prix", page: parcours/micro.html, track: micro-cpp, step: 1}
+- {id: micro-cpp-3, course: micro, level: 2, minutes: 12, xp: 25, title: "Offre de court terme et seuil de fermeture", page: parcours/micro.html, track: micro-cpp, step: 2}
+- {id: micro-cpp-2, course: micro, level: 2, minutes: 12, xp: 25, title: "Équilibre de long terme et nombre de firmes", page: parcours/micro.html, track: micro-cpp, step: 3}
+- {id: micro-mono-0, course: micro, level: 1, minutes: 6, xp: 10, title: "Recette totale et recette marginale", page: parcours/micro.html, track: micro-pouvoir, step: 1}
+- {id: micro-mono-1, course: micro, level: 2, minutes: 10, xp: 25, title: "Monopole et perte sèche", page: parcours/micro.html, track: micro-pouvoir, step: 2}
+- {id: micro-cournot-0, course: micro, level: 2, minutes: 12, xp: 25, title: "Duopole de Cournot : meilleures réponses", page: parcours/micro.html, track: micro-pouvoir, step: 3}
+- {id: micro-cournot-1, course: micro, level: 3, minutes: 12, xp: 30, title: "Cournot à N firmes : prix d'équilibre", page: parcours/micro.html, track: micro-pouvoir, step: 4}
+- {id: stats-tcl-1, course: stats, level: 1, minutes: 8, xp: 15, title: "TCL par simulation", page: parcours/stats.html, track: stats-est, step: 1}
+- {id: stats-ic-1, course: stats, level: 1, minutes: 8, xp: 15, title: "Intervalle de confiance d'une moyenne", page: parcours/stats.html, track: stats-est, step: 2}
+- {id: stats-couv-1, course: stats, level: 2, minutes: 12, xp: 25, title: "Couverture réelle de l'intervalle de confiance", page: parcours/stats.html, track: stats-est, step: 3}
+- {id: stats-bayes-1, course: stats, level: 1, minutes: 6, xp: 15, title: "Bayes : valeur prédictive d'un test", page: parcours/stats.html}
+- {id: con-dette-0, course: contemporaine, level: 1, minutes: 6, xp: 10, title: "Un an de dette : l'effet boule de neige", page: parcours/contemporaine.html, track: con-dette, step: 1}
+- {id: con-dette-1, course: contemporaine, level: 2, minutes: 10, xp: 25, title: "Dynamique du ratio dette/PIB", page: parcours/contemporaine.html, track: con-dette, step: 2}
+- {id: con-dette-2, course: contemporaine, level: 3, minutes: 10, xp: 30, title: "Solde primaire stabilisant", page: parcours/contemporaine.html, track: con-dette, step: 3}
+- {id: eco-ols-0, course: econometrie, level: 1, minutes: 10, xp: 15, title: "MCO à la main : l'algèbre matricielle", page: parcours/econometrie.html, track: eco, step: 1}
+- {id: eco-ovb-1, course: econometrie, level: 2, minutes: 12, xp: 25, title: "Biais de variable omise", page: parcours/econometrie.html, track: eco, step: 2}
+- {id: eco-hc-1, course: econometrie, level: 3, minutes: 15, xp: 30, title: "Erreurs-types robustes (HC1) à la main", page: parcours/econometrie.html, track: eco, step: 3}
+- {id: eco-iv-1, course: econometrie, level: 3, minutes: 15, xp: 30, title: "Variables instrumentales : Wald et 2SLS", page: parcours/econometrie.html, track: eco, step: 4}
+- {id: seg-d-0, course: recherche, level: 2, minutes: 8, xp: 15, title: "Parts de chaque groupe et indice D", page: recherche/segregation.html, track: seg, step: 1}
+- {id: seg-d-1, course: recherche, level: 3, minutes: 15, xp: 35, title: "Coder l'indice D de Duncan", page: recherche/segregation.html, track: seg, step: 2}
+- {id: seg-m-0, course: recherche, level: 2, minutes: 8, xp: 15, title: "Entropie d'une composition", page: recherche/segregation.html, track: seg, step: 3}
+- {id: seg-m-1, course: recherche, level: 4, minutes: 20, xp: 45, title: "Coder l'indice d'information mutuelle M", page: recherche/segregation.html, track: seg, step: 4}
+- {id: seg-biais-1, course: recherche, level: 4, minutes: 20, xp: 45, title: "Biais de petites unités par Monte-Carlo", page: recherche/segregation.html, track: seg, step: 5}
+- {id: seg-decomp-1, course: recherche, level: 4, minutes: 20, xp: 45, title: "Décomposer M entre et intra zones", page: recherche/segregation.html, track: seg, step: 6}
+- {id: ineq-gini-0, course: recherche, level: 2, minutes: 10, xp: 15, title: "Gini sur 6 revenus : la double somme", page: recherche/inegalites.html, track: ineq, step: 1}
+- {id: ineq-gini-1, course: recherche, level: 3, minutes: 15, xp: 35, title: "Gini pondéré et courbe de Lorenz", page: recherche/inegalites.html, track: ineq, step: 2}
+- {id: ineq-ge-0, course: recherche, level: 2, minutes: 10, xp: 15, title: "Theil et MLD à la main", page: recherche/inegalites.html, track: ineq, step: 3}
+- {id: ineq-ge-1, course: recherche, level: 4, minutes: 20, xp: 45, title: "La famille GE(α) : une seule fonction", page: recherche/inegalites.html, track: ineq, step: 4}
+- {id: ineq-decomp-1, course: recherche, level: 4, minutes: 25, xp: 50, title: "Décomposition du Theil par groupes", page: recherche/inegalites.html, track: ineq, step: 5}

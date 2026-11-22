@@ -1,0 +1,52 @@
+---
+title: "Veille documentaire"
+subtitle: "Ce qui sort sur la ségrégation, les inégalités et les méthodes"
+---
+
+```{r}
+#| echo: false
+#| results: asis
+source("R/dojo.R")
+path <- "veille/items.json"
+v <- if (file.exists(path)) jsonlite::fromJSON(path, simplifyVector = FALSE) else list(items = list())
+items <- v$items
+if (length(items) == 0) {
+  cat("::: {.callout-note title=\"La veille n'a pas encore été récupérée\"}\nLe script `scripts/update_veille.R` interroge OpenAlex et arXiv, filtre par mots-clés (`content/veille_config.yml`) et alimente cette page à chaque `quarto render`. En attendant, voir le **socle de lectures** plus bas.\n:::\n")
+} else {
+  cat(sprintf("*Dernière mise à jour : %s. %d références retenues (publications récentes, triées par pertinence).*\n\n", v$updated, length(items)))
+  topics <- unique(vapply(items, function(x) x$topic, ""))
+  for (tp in topics) {
+    cat(sprintf("### %s\n\n", tp))
+    for (it in Filter(function(x) x$topic == tp, items)) {
+      au <- unlist(it$authors); au <- if (length(au) > 3) paste0(paste(au[1:3], collapse = ", "), " et al.") else paste(au, collapse = ", ")
+      cat(sprintf("- [%s](%s)  \n  %s · %s · %s · score %s\n", gsub("([\\[\\]])", "\\\\\\1", it$title, perl = TRUE), it$url, au, if (nzchar(it$venue)) it$venue else it$source, it$date, it$score))
+    }
+    cat("\n")
+  }
+}
+```
+
+## Socle de lectures
+
+Les références classiques à relire régulièrement (ségrégation, inégalités, mesure) :
+
+```{r}
+#| echo: false
+#| results: asis
+bib <- read_yaml_utf8("content/biblio_socle.yml")
+for (b in bib) cat(sprintf("- %s  \n  *%s*\n", b$ref, b$pourquoi))
+```
+
+## Fiche de lecture (modèle)
+
+::: {.callout-tip title="À copier dans ton carnet" collapse="true"}
+- **Référence** :
+- **Question** (une phrase) :
+- **Données** (source, unité d'observation, taille) :
+- **Méthode** (identification, indice, hypothèses) :
+- **Résultat principal** (chiffre + incertitude) :
+- **Limite principale** :
+- **Ce que je ferais autrement** :
+- **Lien avec mon travail** (mesure de la ségrégation et des inégalités) :
+- **À simuler ?** oui / non (si oui : défi « mini-réplication »)
+:::

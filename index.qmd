@@ -1,0 +1,51 @@
+---
+title: "Séance du jour"
+toc: false
+---
+
+::: {.dojo-hero}
+<div class="kicker" id="today-date"></div>
+
+**Un entraînement par jour pour tenir tes bases et garder le niveau doctoral.** Compte environ 25 minutes : rappels, QCM, un exercice, un coup d'œil à la veille. Le défi de recherche change chaque semaine.
+:::
+
+```{=html}
+<script>
+  document.getElementById('today-date').textContent =
+    new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+</script>
+```
+
+::: {.dojo-plan}
+:::
+
+## 1. Rappels (répétition espacée)
+
+Les cartes dues reviennent d'abord ; les nouvelles viennent des cours où ta maîtrise est la plus basse.
+
+::: {.dojo-cards data-n="5"}
+:::
+
+## 2. Quiz éclair
+
+::: {.dojo-quiz data-n="3"}
+:::
+
+## 3. Exercice du jour
+
+Les énoncés sont paramétrés : les chiffres changent chaque jour. Le week-end, la recherche est mise en avant.
+
+::: {.dojo-exo}
+:::
+
+## 4. Veille
+
+::: {.dojo-veille data-n="3"}
+:::
+
+## 5. Défi de la semaine
+
+::: {.dojo-defi}
+:::
+
+*Ta série et tes XP sont visibles en haut à droite. Détails et sauvegarde dans [Progression](progression.qmd).*

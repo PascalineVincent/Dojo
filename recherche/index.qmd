@@ -1,0 +1,40 @@
+---
+title: "Recherche : le défi de la semaine"
+subtitle: "Maintenir la curiosité : un problème ouvert par semaine"
+---
+
+Chaque semaine, un défi change automatiquement. Il dure **une heure environ**, n'a pas de correction automatique et se termine par une **trace écrite** (quelques lignes dans ton carnet ou un script archivé). L'objectif est de garder le réflexe du chercheur : *formuler, simuler, vérifier, douter*.
+
+::: {.dojo-defi}
+:::
+
+## Méthode en 5 temps
+
+1. **Reformuler** le problème en une phrase et écrire ce que tu *attends* comme résultat (hypothèse).
+2. **Simuler** : construire un jeu de données où la vérité est connue (`seg_sim_city()`, lognormales, Pareto...).
+3. **Mesurer** : calculer les indices avec les fonctions testées du dépôt, ou recodées.
+4. **Casser** : chercher le cas limite qui contredit l'intuition (unités minuscules, groupe rare, queue épaisse).
+5. **Écrire** : trois lignes : *ce que j'ai montré, ce qui m'a surpris, ce que je ferais ensuite*.
+
+## Toutes les pistes
+
+```{r}
+#| echo: false
+#| results: asis
+source("../R/dojo.R")
+defis <- read_yaml_utf8("../content/defis.yml")
+cat("| Défi | Niveau | Durée | XP |\n|---|---|---|---|\n")
+for (d in defis) {
+  cat(sprintf("| [%s](../%s) | %s | %d min | %d |\n", d$titre, d$page,
+              strrep("★", d$niveau), as.integer(d$minutes), as.integer(d$xp)))
+}
+```
+
+::: {.callout-note title="Où archiver les traces ?"}
+Dans le dépôt : `recherche/traces/AAAA-MM-JJ-titre.md` (hypothèse, méthode, résultat, doute). Un fichier par défi suffit ; relis-les en fin de mois.
+:::
+
+## Labos
+
+- [Ségrégation](segregation.qmd) : D, M, H, biais de petites unités, décomposition, MAUP
+- [Inégalités](inegalites.qmd) : Lorenz, Gini pondéré, famille GE, décomposition de Theil

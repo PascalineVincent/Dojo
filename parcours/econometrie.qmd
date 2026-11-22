@@ -1,0 +1,436 @@
+---
+title: "Économétrie"
+subtitle: "MCO, endogénéité, inférence : démonstrations par simulation"
+---
+
+{{< include ../_extensions/r-wasm/live/_knitr.qmd >}}
+
+Pour chaque notion : un **processus générateur de données connu**, donc une vérité à retrouver. C'est la meilleure façon de garder l'intuition des biais en tête. Les graines changent chaque jour.
+
+{{< include ../_ojs.qmd >}}
+
+::: {.dojo-track data-track="eco"}
+:::
+
+## MCO à la main : l'algèbre matricielle {#eco-ols-0}
+
+[Marche 1 sur 4 · Guidé]{.dojo-step}
+
+```{ojs}
+//| echo: false
+ols0 = { const g = rng("eco-ols-0", salt); return { seed: g.int(1, 9999), pente: g.pick([0.5, 1, 2, -1]) }; }
+```
+
+Les données suivent **y = 1 + ${ols0.pente} x + u**. Retrouve les coefficients MCO sans `lm()`, avec l'algèbre matricielle, puis calcule le R².
+
+Formule : $\hat\beta = (X'X)^{-1}X'y$ ; équations normales $X'X\hat\beta = X'y$.
+
+```{webr}
+#| exercise: eco-ols-0
+#| caption: "MCO matriciels"
+#| input:
+#|   - ols0
+set.seed(ols0$seed)
+n <- 100
+x <- rnorm(n)
+y <- 1 + ols0$pente * x + rnorm(n)
+X <- cbind(1, x)                    # régresseurs : une constante et x
+beta <- ______                      # résous les équations normales : solve(crossprod(X), crossprod(X, y))
+e    <- ______                      # résidus : y - X %*% beta
+R2   <- ______                      # 1 - somme des carrés résiduels / somme des carrés totaux
+c(const = beta[1], pente = beta[2], R2 = R2)
+```
+
+::: {.hint exercise="eco-ols-0"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Écris le modèle sous forme matricielle $y = X\beta + u$ où $X$ contient une colonne de 1 et la colonne de $x$. Les MCO choisissent $\beta$ pour que les résidus soient **orthogonaux** aux colonnes de $X$.
+:::
+:::
+
+::: {.hint exercise="eco-ols-0"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les formules
+Équations normales : $X'X\hat\beta = X'y$, soit `solve(crossprod(X), crossprod(X, y))`. Résidus : `y - X %*% beta`. $R^2 = 1 - \sum e^2 / \sum (y - \bar y)^2$.
+:::
+:::
+
+::: {.solution exercise="eco-ols-0"}
+**Raisonnement.**
+
+1. On minimise la somme des carrés des résidus $\sum_i e_i^2 = e'e$. La condition du premier ordre est $X'(y - X\hat\beta) = 0$ : les résidus sont orthogonaux à chaque colonne de $X$.
+2. Cela donne les équations normales $X'X\hat\beta = X'y$. `solve(crossprod(X), crossprod(X, y))` les résout directement, ce qui est plus stable que d'inverser $X'X$ puis de multiplier.
+3. Les résidus $e = y - X\hat\beta$ somment à zéro (parce qu'il y a une constante) et sont orthogonaux à $x$ : tu peux le vérifier avec `sum(e)` et `sum(e * x)`.
+4. $R^2 = 1 - \dfrac{\sum e_i^2}{\sum (y_i - \bar y)^2}$ : la part de la variance de $y$ expliquée par la régression.
+5. Les résultats coïncident avec `lm(y ~ x)` à l'arrondi machine près : c'est ce que vérifie la correction.
+
+```{webr}
+#| exercise: eco-ols-0
+#| solution: true
+set.seed(ols0$seed)
+n <- 100
+x <- rnorm(n)
+y <- 1 + ols0$pente * x + rnorm(n)
+X <- cbind(1, x)
+beta <- solve(crossprod(X), crossprod(X, y))          # équations normales X'X b = X'y
+e    <- y - X %*% beta                                # résidus
+R2   <- 1 - sum(e^2) / sum((y - mean(y))^2)           # part de variance expliquée
+c(const = beta[1], pente = beta[2], R2 = R2)
+```
+
+**Pièges fréquents.**
+
+- Oublier la colonne de 1 : on estime un modèle sans constante (et le $R^2$ n'est plus comparable).
+- Écrire `X %*% y` : il faut `crossprod(X, y)` ou `t(X) %*% y`.
+- Calculer le $R^2$ avec une variance non centrée (sans `mean(y)`).
+
+**Pour aller plus loin.** La marche suivante se sert de cette mécanique pour montrer ce qui se passe quand on **omet** une variable pertinente.
+:::
+
+```{webr}
+#| exercise: eco-ols-0
+#| check: true
+set.seed(ols0$seed)
+n <- 100; x <- rnorm(n); y <- 1 + ols0$pente * x + rnorm(n)
+fit <- lm(y ~ x)
+exp_ <- c(unname(coef(fit)), summary(fit)$r.squared)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 3 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(const = ..., pente = ..., R2 = ...) comme dans le gabarit.")
+} else if (abs(res[1] - exp_[1]) > 1e-8 || abs(res[2] - exp_[2]) > 1e-8) {
+  list(correct = FALSE, message = "Coefficients incorrects : résous les équations normales X'X b = X'y avec solve(crossprod(X), crossprod(X, y)).")
+} else if (abs(res[3] - exp_[3]) > 1e-8) {
+  list(correct = FALSE, message = "Coefficients justes, R2 incorrect : 1 - sum(e^2) / sum((y - mean(y))^2).")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : constante = %.3f, pente = %.3f, R2 = %.3f (identiques à lm).", exp_[1], exp_[2], exp_[3]))
+}
+```
+
+::: {.dojo-done data-id="eco-ols-0"}
+:::
+
+## Biais de variable omise {#eco-ovb-1}
+
+[Marche 2 sur 4 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+ovb1 = { const g = rng("eco-ovb-1", salt); return { seed: g.int(1, 9999), rho: g.pick([0.3, 0.5, 0.7]) }; }
+```
+
+Le vrai modèle est **y = 1 + 2x + 3z + u**, avec une corrélation de **${ovb1.rho}** entre x et z. Estime la régression « longue » (avec z) puis la régression « courte » (sans z) et vérifie la formule du biais : coefficient court = coefficient long de x + (coefficient long de z) × δ, où δ est la pente de la régression auxiliaire de z sur x.
+
+```{webr}
+#| exercise: eco-ovb-1
+#| caption: "Régression courte vs longue"
+#| input:
+#|   - ovb1
+set.seed(ovb1$seed)
+n <- 500
+z <- rnorm(n)
+x <- ovb1$rho * z + sqrt(1 - ovb1$rho^2) * rnorm(n)
+y <- 1 + 2 * x + 3 * z + rnorm(n)
+
+longue <- coef(lm(y ~ x + z))
+court   <- ______                 # pente de x dans la régression courte y ~ x
+delta   <- ______                 # pente de x dans la régression auxiliaire z ~ x
+formule <- unname(longue["x"] + longue["z"] * delta)
+c(long = unname(longue["x"]), court = unname(court), formule = formule)
+```
+
+::: {.hint exercise="eco-ovb-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Trois régressions interviennent : la **longue** (y sur x et z), la **courte** (y sur x seulement) et une **auxiliaire** (z sur x) qui mesure à quel point x et z vont de pair.
+:::
+:::
+
+::: {.hint exercise="eco-ovb-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+`coef(lm(y ~ x))["x"]` et `coef(lm(z ~ x))["x"]`. La formule est une **identité exacte** sur l'échantillon : `court` et `formule` doivent être égaux au dernier chiffre.
+:::
+:::
+
+::: {.solution exercise="eco-ovb-1"}
+**Raisonnement.**
+
+1. Dans la régression longue, $\hat\beta_x$ est l'effet de x **à z fixé**.
+2. Dans la courte, x « récupère » l'effet de z dans la mesure où x et z sont corrélés.
+3. Régression auxiliaire $z = \delta_0 + \delta\,x + \text{résidu}$ ; en remplaçant dans le modèle long on trouve $\tilde\beta_x = \hat\beta_x + \hat\beta_z\,\hat\delta$.
+4. C'est une **identité algébrique** des MCO (pas une approximation) : `court` et `formule` coïncident au dernier chiffre.
+5. Dans la simulation, le biais vaut environ $3\rho$ : positif, car z agit positivement sur y et est positivement corrélé à x. Il disparaît si $\rho = 0$ ou si z n'agit pas sur y.
+
+```{webr}
+#| exercise: eco-ovb-1
+#| solution: true
+set.seed(ovb1$seed)
+n <- 500
+z <- rnorm(n)
+x <- ovb1$rho * z + sqrt(1 - ovb1$rho^2) * rnorm(n)
+y <- 1 + 2 * x + 3 * z + rnorm(n)
+
+longue <- coef(lm(y ~ x + z))
+court   <- coef(lm(y ~ x))["x"]
+delta   <- coef(lm(z ~ x))["x"]
+formule <- unname(longue["x"] + longue["z"] * delta)
+c(long = unname(longue["x"]), court = unname(court), formule = formule)
+```
+
+**Pièges fréquents.**
+
+- Régresser x sur z pour la régression auxiliaire : on obtient une autre pente (covariance divisée par la variance de z), pas $\delta$.
+- Croire que le biais disparaît quand $n$ grandit : c'est un biais de **convergence**, pas de petit échantillon.
+- Ne regarder que la corrélation entre x et z : le sens du biais est le produit de deux signes, celui de $\beta_z$ et celui de $\delta$.
+
+**Pour aller plus loin.** Mets $\rho = 0$ puis le coefficient de z à 0 dans la simulation : le biais disparaît dans les deux cas. Le même raisonnement donne l'effet d'une variable de contrôle « mauvaise » (collider) dans l'autre sens.
+:::
+
+```{webr}
+#| exercise: eco-ovb-1
+#| check: true
+set.seed(ovb1$seed)
+n <- 500
+z <- rnorm(n); x <- ovb1$rho * z + sqrt(1 - ovb1$rho^2) * rnorm(n); y <- 1 + 2 * x + 3 * z + rnorm(n)
+lg <- coef(lm(y ~ x + z)); ct <- coef(lm(y ~ x))[["x"]]; dl <- coef(lm(z ~ x))[["x"]]
+exp_ <- c(lg[["x"]], ct, lg[["x"]] + lg[["z"]] * dl)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 3 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(long = ..., court = ..., formule = ...).")
+} else if (abs(res[2] - ct) > 1e-8) {
+  list(correct = FALSE, message = "Le coefficient court est la pente de x dans lm(y ~ x), sans z.")
+} else if (abs(res[3] - exp_[3]) > 1e-8) {
+  list(correct = FALSE, message = "La formule est : coef. long de x + coef. long de z * delta, avec delta issu de lm(z ~ x).")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : long = %.3f, court = %.3f = formule. Biais = %.3f.", exp_[1], ct, ct - exp_[1]))
+}
+```
+
+::: {.dojo-done data-id="eco-ovb-1"}
+:::
+
+## Erreurs-types robustes (HC1) à la main {#eco-hc-1}
+
+[Marche 3 sur 4 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+hc1 = { const g = rng("eco-hc-1", salt); return { seed: g.int(1, 9999) }; }
+```
+
+Ici la variance des erreurs **augmente avec |x|** (hétéroscédasticité). Calcule l'erreur-type MCO usuelle et l'erreur-type robuste de White (HC1) de la pente, **sans** `sandwich` : $\hat V = \frac{n}{n-k}(X'X)^{-1}\big(\sum_i e_i^2 x_i x_i'\big)(X'X)^{-1}$.
+
+```{webr}
+#| exercise: eco-hc-1
+#| caption: "Sandwich de White"
+#| input:
+#|   - hc1
+set.seed(hc1$seed)
+n <- 200; k <- 2
+x <- rnorm(n)
+y <- 1 + 0.5 * x + (0.5 + abs(x)) * rnorm(n)
+X <- cbind(1, x)
+XtXi <- solve(crossprod(X))
+beta <- XtXi %*% crossprod(X, y)
+e <- as.numeric(y - X %*% beta)
+
+meat  <- ______                    # somme des e_i^2 x_i x_i' : crossprod(X * e)
+V_hc1 <- ______                    # n / (n - k) * XtXi %*% meat %*% XtXi
+se_ols <- sqrt(sum(e^2) / (n - k) * XtXi[2, 2])
+c(ols = se_ols, hc1 = sqrt(V_hc1[2, 2]))
+```
+
+::: {.hint exercise="eco-hc-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Les coefficients MCO ne changent pas : seule la **variance estimée** change. Repère la forme « sandwich » : deux fois $(X'X)^{-1}$ autour d'un cœur qui contient les résidus au carré.
+:::
+:::
+
+::: {.hint exercise="eco-hc-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+`X * e` multiplie chaque ligne de `X` par le résidu correspondant ; `crossprod(X * e)` donne alors $\sum_i e_i^2 x_i x_i'$.
+:::
+:::
+
+::: {.solution exercise="eco-hc-1"}
+**Raisonnement.**
+
+1. $\hat\beta - \beta = (X'X)^{-1}X'u$, donc $\mathrm{Var}(\hat\beta) = (X'X)^{-1}X'\,\mathrm{Var}(u)\,X(X'X)^{-1}$.
+2. Sous homoscédasticité, $\mathrm{Var}(u) = \sigma^2 I$ et la formule se simplifie en $\sigma^2 (X'X)^{-1}$ : c'est l'erreur-type usuelle.
+3. Sous hétéroscédasticité, on remplace $\mathrm{Var}(u)$ par la matrice diagonale des $e_i^2$ : le cœur devient $\sum_i e_i^2\, x_i x_i'$.
+4. `crossprod(X * e)` le calcule d'un coup, car `X * e` multiplie chaque ligne de `X` par son résidu.
+5. Le facteur $n/(n-k)$ est la correction de petit échantillon de HC1 (celle de Stata et de `sandwich::vcovHC(type = "HC1")`).
+
+```{webr}
+#| exercise: eco-hc-1
+#| solution: true
+set.seed(hc1$seed)
+n <- 200; k <- 2
+x <- rnorm(n)
+y <- 1 + 0.5 * x + (0.5 + abs(x)) * rnorm(n)
+X <- cbind(1, x)
+XtXi <- solve(crossprod(X))
+beta <- XtXi %*% crossprod(X, y)
+e <- as.numeric(y - X %*% beta)
+
+meat  <- crossprod(X * e)
+V_hc1 <- n / (n - k) * XtXi %*% meat %*% XtXi
+se_ols <- sqrt(sum(e^2) / (n - k) * XtXi[2, 2])
+c(ols = se_ols, hc1 = sqrt(V_hc1[2, 2]))
+```
+
+**Pièges fréquents.**
+
+- Diviser par $n$ au lieu de $n-k$ : on obtient HC0.
+- Écrire `crossprod(X) * e^2` : la multiplication par $e$ doit se faire **ligne par ligne** sur `X`.
+- Penser que les erreurs-types robustes sont toujours plus grandes : ici l'hétéroscédasticité croît avec $|x|$ et l'erreur-type usuelle sous-estime ; dans d'autres configurations, c'est l'inverse.
+
+**Pour aller plus loin.** Compare avec `sandwich::vcovHC(lm(y ~ x), type = "HC1")` sur ton ordinateur. Pour des données groupées, remplace le cœur par la somme sur les grappes de $(X_g'e_g)(X_g'e_g)'$ : ce sont les erreurs-types clusterisées.
+:::
+
+```{webr}
+#| exercise: eco-hc-1
+#| check: true
+set.seed(hc1$seed)
+n <- 200; k <- 2
+x <- rnorm(n); y <- 1 + 0.5 * x + (0.5 + abs(x)) * rnorm(n)
+fit <- lm(y ~ x); e <- resid(fit); X <- model.matrix(fit)
+XtXi <- solve(t(X) %*% X)
+meat <- matrix(0, 2, 2)
+for (i in seq_len(n)) meat <- meat + e[i]^2 * tcrossprod(X[i, ])     # autre chemin de calcul
+V <- n / (n - k) * XtXi %*% meat %*% XtXi
+exp_ <- c(summary(fit)$coefficients[2, 2], sqrt(V[2, 2]))
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 2 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(ols = ..., hc1 = ...).")
+} else if (abs(res[1] - exp_[1]) > 1e-8) {
+  list(correct = FALSE, message = "L'erreur-type MCO usuelle est déjà fournie dans le gabarit : ne la modifie pas.")
+} else if (abs(res[2] - exp_[2]) > 1e-8) {
+  list(correct = FALSE, message = "HC1 incorrecte : vérifie le coeur du sandwich crossprod(X * e) et le facteur n / (n - k).")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : ES usuelle = %.4f, ES robuste HC1 = %.4f (ratio %.2f).", exp_[1], exp_[2], exp_[2] / exp_[1]))
+}
+```
+
+::: {.dojo-done data-id="eco-hc-1"}
+:::
+
+## Variables instrumentales : Wald et 2SLS {#eco-iv-1}
+
+[Marche 4 sur 4 · Autonome]{.dojo-step}
+
+```{ojs}
+//| echo: false
+iv1 = { const g = rng("eco-iv-1", salt); return { seed: g.int(1, 9999) }; }
+```
+
+La variable **x est endogène** : une cause non observée `e` affecte à la fois x et y. On dispose d'un instrument `z`. Le vrai effet de x sur y est **2**. Compare l'estimateur MCO (biaisé), le **2SLS en deux étapes** et l'estimateur de **Wald** cov(z, y) / cov(z, x) : dans le cas juste-identifié, les deux derniers sont identiques.
+
+```{webr}
+#| exercise: eco-iv-1
+#| caption: "MCO vs VI"
+#| input:
+#|   - iv1
+set.seed(iv1$seed)
+n <- 1000
+z <- rnorm(n); e <- rnorm(n)
+x <- 0.8 * z + 0.8 * e + rnorm(n)
+y <- 1 + 2 * x + e
+
+mco   <- ______                      # pente MCO de y sur x
+x_hat <- ______                      # première étape : valeurs ajustées de x ~ z
+iv    <- ______                      # seconde étape : pente de y sur x_hat
+wald  <- cov(z, y) / cov(z, x)
+c(mco = unname(mco), iv = unname(iv), wald = wald)
+```
+
+::: {.hint exercise="eco-iv-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Deux chemins mènent au même nombre : un rapport de covariances (Wald) et deux régressions emboîtées (2SLS). Pour la première étape, demande-toi quelle variable on régresse sur l'instrument $z$.
+:::
+:::
+
+::: {.hint exercise="eco-iv-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+`fitted(lm(x ~ z))` pour la première étape, puis `coef(lm(y ~ x_hat))["x_hat"]`. Attention : les erreurs-types de cette seconde étape « à la main » ne sont pas valides (il faut `AER::ivreg` ou `fixest::feols`), mais le coefficient est correct.
+:::
+:::
+
+::: {.solution exercise="eco-iv-1"}
+**Raisonnement.**
+
+1. $x$ contient une partie corrélée à l'erreur $e$ (elle est **endogène**), donc le MCO est biaisé.
+2. L'instrument $z$ doit être **pertinent** (corrélé à $x$) et **exclu** (non corrélé à $e$ : il n'agit sur $y$ qu'à travers $x$).
+3. Première étape : $\hat x = \hat\pi_0 + \hat\pi z$ extrait la part de $x$ qui ne dépend que de $z$, donc exogène.
+4. Seconde étape : régresser $y$ sur $\hat x$ donne $\hat\beta_{IV}$.
+5. Dans le cas juste-identifié, $\hat\beta_{IV} = \mathrm{cov}(z,y)/\mathrm{cov}(z,x)$ : c'est la forme de Wald, le rapport entre la « forme réduite » et la « première étape ».
+
+```{webr}
+#| exercise: eco-iv-1
+#| solution: true
+set.seed(iv1$seed)
+n <- 1000
+z <- rnorm(n); e <- rnorm(n)
+x <- 0.8 * z + 0.8 * e + rnorm(n)
+y <- 1 + 2 * x + e
+
+mco   <- coef(lm(y ~ x))["x"]
+x_hat <- fitted(lm(x ~ z))
+iv    <- coef(lm(y ~ x_hat))["x_hat"]
+wald  <- cov(z, y) / cov(z, x)
+c(mco = unname(mco), iv = unname(iv), wald = wald)
+```
+
+**Pièges fréquents.**
+
+- Régresser $y$ sur $x$ à la seconde étape : on retombe sur le MCO.
+- Se fier aux erreurs-types de `lm(y ~ x_hat)` : elles sont fausses (x_hat est estimé) ; utilise `AER::ivreg(y ~ x | z)`.
+- Ne pas vérifier la pertinence : avec un instrument faible, le rapport est instable et le biais tend vers celui du MCO.
+
+**Pour aller plus loin.** Réduis le coefficient de $z$ dans la première étape (0,8 puis 0,05) et regarde la dispersion de l'estimateur VI sur 500 simulations : c'est le problème des instruments faibles.
+:::
+
+```{webr}
+#| exercise: eco-iv-1
+#| check: true
+set.seed(iv1$seed)
+n <- 1000
+z <- rnorm(n); e <- rnorm(n); x <- 0.8 * z + 0.8 * e + rnorm(n); y <- 1 + 2 * x + e
+ols <- coef(lm(y ~ x))[["x"]]; w <- cov(z, y) / cov(z, x)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != 3 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(mco = ..., iv = ..., wald = ...).")
+} else if (abs(res[1] - ols) > 1e-8) {
+  list(correct = FALSE, message = "MCO : pente de lm(y ~ x).")
+} else if (abs(res[2] - w) > 1e-8) {
+  list(correct = FALSE, message = "Le 2SLS doit régresser y sur les valeurs ajustées de la première étape (x_hat), pas sur x.")
+} else {
+  list(correct = TRUE, message = sprintf("Correct : MCO = %.3f (biaisé), VI = %.3f (vrai effet : 2). 2SLS = Wald.", ols, w))
+}
+```
+
+::: {.dojo-done data-id="eco-iv-1"}
+:::
+
+## Fiche de rappel
+
+| Problème | Conséquence | Remède |
+|---|---|---|
+| Variable omise corrélée à $x$ | Biais $=\gamma\,\delta$ | Contrôler, panel (effets fixes), VI |
+| Hétéroscédasticité | ES usuelles fausses, MCO non biaisé | ES robustes (HC), WLS |
+| Autocorrélation / grappes | ES trop petites | ES clusterisées (niveau du traitement) |
+| Endogénéité | MCO non convergent | VI : pertinence et exclusion |
+| Instrument faible | Biais vers MCO, inférence fragile | Tests robustes (Anderson-Rubin) |
+| DiD | Biais si pré-tendances différentes | Event study, hypothèse de tendances parallèles |
+
+## Entraîne-toi
+
+::: {.dojo-cards data-course="econometrie" data-n="5"}
+:::
+
+::: {.dojo-quiz data-course="econometrie" data-n="3"}
+:::
