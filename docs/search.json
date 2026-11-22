@@ -4,7 +4,7 @@
     "href": "veille.html",
     "title": "Veille documentaire",
     "section": "",
-    "text": "NoteLa veille n’a pas encore été récupérée\n\n\n\nLe script scripts/update_veille.R interroge OpenAlex et arXiv, filtre par mots-clés (content/veille_config.yml) et alimente cette page à chaque quarto render. En attendant, voir le socle de lectures plus bas."
+    "text": "Dernière mise à jour : 2026-11-22T12:49:08Z. 60 références retenues (publications récentes, triées par pertinence)."
   },
   {
     "objectID": "veille.html#socle-de-lectures",
