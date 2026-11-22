@@ -1,0 +1,715 @@
+---
+title: "R : les bases et les graphiques"
+subtitle: "Vecteurs, tableaux, fonctions, puis graphiques de base pas à pas"
+---
+
+{{< include ../_extensions/r-wasm/live/_knitr.qmd >}}
+
+Deux pistes progressives, avec indices et corrigés. *R : bases* couvre les vecteurs, les tableaux de données et les fonctions ; *R : graphiques* part de `plot()` et va jusqu'aux figures à plusieurs panneaux. Les graphiques se vérifient par ce que R **renvoie** (limites des axes avec `par("usr")`, objets renvoyés par `hist()`, `boxplot()`, `barplot()`), pas par l'œil. Les énoncés changent chaque jour.
+
+{{< include ../_ojs.qmd >}}
+
+::: {.dojo-track data-track="r-base"}
+:::
+
+## Vecteurs : indexer, filtrer, compter {#r-base-0}
+
+[Marche 1 sur 3 · Guidé]{.dojo-step}
+
+```{ojs}
+//| echo: false
+rb0 = { const g = rng("r-base-0", salt); return { seed: g.int(1, 9999), s: g.int(25, 50) }; }
+```
+
+Un vecteur de 15 valeurs est tiré avec la graine ${rb0.seed}. Avec le seuil s = ${rb0.s}, compte les valeurs strictement supérieures à s, calcule leur moyenne, trouve la position de la plus grande valeur, puis plafonne le vecteur à s (toute valeur au-dessus de s devient s) et renvoie la somme du vecteur plafonné.
+
+```{webr}
+#| exercise: r-base-0
+#| caption: "Vecteurs"
+#| input:
+#|   - rb0
+set.seed(rb0$seed)
+x <- round(runif(15, 10, 100))
+s <- rb0$s
+n_sup   <- ______     # nombre de valeurs > s
+moy_sup <- ______     # moyenne des valeurs > s
+pos_max <- ______     # position de la plus grande valeur
+plafond <- ______     # x plafonné à s
+c(n_sup = n_sup, moy_sup = moy_sup, pos_max = pos_max, somme_plafond = sum(plafond))
+```
+
+::: {.hint exercise="r-base-0"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Une comparaison comme `x > s` renvoie un vecteur de TRUE/FALSE. On peut le **sommer** (TRUE vaut 1) pour compter, ou l'utiliser dans des crochets pour **filtrer**.
+:::
+:::
+
+::: {.hint exercise="r-base-0"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+`n_sup = sum(x > s)` ; `moy_sup = mean(x[x > s])` ; `pos_max = which.max(x)` ; `plafond = ifelse(x > s, s, x)` (ou `pmin(x, s)`).
+:::
+:::
+
+::: {.solution exercise="r-base-0"}
+**Raisonnement.**
+
+1. `x > s` est vectorisé : il compare chaque élément à `s` et renvoie un vecteur logique de même longueur.
+2. `sum()` d'un logique compte les TRUE ; `x[x > s]` extrait les éléments pour lesquels la condition est vraie.
+3. `which.max(x)` renvoie la **position** du maximum, `max(x)` sa valeur : ne pas confondre.
+4. `ifelse(test, oui, non)` applique un choix élément par élément. `pmin(x, s)` fait la même chose pour un plafond.
+
+```{webr}
+#| exercise: r-base-0
+#| solution: true
+set.seed(rb0$seed)
+x <- round(runif(15, 10, 100))
+s <- rb0$s
+n_sup   <- sum(x > s)
+moy_sup <- mean(x[x > s])
+pos_max <- which.max(x)
+plafond <- ifelse(x > s, s, x)
+c(n_sup = n_sup, moy_sup = moy_sup, pos_max = pos_max, somme_plafond = sum(plafond))
+```
+
+**Pièges fréquents.**
+
+- `x[x > s]` sans la comparaison entre crochets, ou `x[> s]` : erreur de syntaxe.
+- `max(x)` à la place de `which.max(x)` : la valeur n'est pas la position.
+- `if (x > s)` au lieu de `ifelse(x > s, ...)` : `if` n'accepte qu'une seule condition, pas un vecteur.
+
+**Pour aller plus loin.** Écris `x[order(x, decreasing = TRUE)][1:3]` : à quoi sert chaque partie ? Compare avec `sort(x, decreasing = TRUE)[1:3]`.
+:::
+
+```{webr}
+#| exercise: r-base-0
+#| check: true
+set.seed(rb0$seed); x <- round(runif(15, 10, 100)); s <- rb0$s
+ref <- c(sum(x > s), mean(x[x > s]), which.max(x), sum(pmin(x, s)))
+res <- suppressWarnings(as.numeric(.result))
+msgs <- c("Nombre : sum(x > s).", "Moyenne des valeurs supérieures : mean(x[x > s]).", "Position du maximum : which.max(x).", "Plafond : ifelse(x > s, s, x) ou pmin(x, s).")
+if (length(res) != 4 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(n_sup = ..., moy_sup = ..., pos_max = ..., somme_plafond = ...).")
+} else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = msgs[which(bad)[1]])
+} else {
+  list(correct = TRUE, message = sprintf("Correct : %d valeurs au-dessus de %g, de moyenne %.1f ; maximum en position %d.", as.integer(ref[1]), rb0$s, ref[2], as.integer(ref[3])))
+}
+```
+
+::: {.dojo-done data-id="r-base-0"}
+:::
+
+## Tableaux de données : sélectionner, résumer, comparer {#r-base-1}
+
+[Marche 2 sur 3 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+rb1 = { const g = rng("r-base-1", salt); return { seed: g.int(1, 9999), ecart: g.int(10, 40) * 10 }; }
+```
+
+Un tableau de 80 individus (âge, sexe, revenu) est simulé avec la graine ${rb1.seed}. Sélectionne les femmes de 30 ans ou plus, donne leur nombre et leur revenu moyen, calcule l'écart de revenu moyen hommes − femmes (tous âges), et donne l'âge de la personne au revenu le plus élevé.
+
+```{webr}
+#| exercise: r-base-1
+#| caption: "Data frame"
+#| input:
+#|   - rb1
+set.seed(rb1$seed)
+df <- data.frame(age = sample(18:65, 80, replace = TRUE), sexe = sample(c("F", "H"), 80, replace = TRUE))
+df$revenu <- round(1200 + 25 * df$age + ifelse(df$sexe == "H", rb1$ecart, 0) + rnorm(80, 0, 150))
+cible <- ______                  # df[condition_sur_les_lignes, ] : sexe "F" et age >= 30
+moy_sexe <- ______               # revenu moyen par sexe (tapply)
+c(n_cible = nrow(cible), moy_cible = mean(cible$revenu),
+  ecart_HF = moy_sexe[["H"]] - moy_sexe[["F"]], age_plus_riche = ______)
+```
+
+::: {.hint exercise="r-base-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Un data frame s'indexe `df[lignes, colonnes]`. Pour **filtrer des lignes**, mets une condition logique dans le premier emplacement et laisse le second vide : `df[condition, ]`. Combine les conditions avec `&`.
+:::
+:::
+
+::: {.hint exercise="r-base-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+`cible <- df[df$sexe == "F" & df$age >= 30, ]` ; `moy_sexe <- tapply(df$revenu, df$sexe, mean)` ; `age_plus_riche = df$age[which.max(df$revenu)]`.
+:::
+:::
+
+::: {.solution exercise="r-base-1"}
+**Raisonnement.**
+
+1. La virgule dans `df[lignes, ]` est essentielle : sans elle, R sélectionne des **colonnes**.
+2. On combine deux conditions avec `&` (et), pas `&&` : `&` agit élément par élément, `&&` ne regarde que le premier.
+3. `tapply(valeur, groupe, fonction)` résume un vecteur par modalité d'un facteur et renvoie un vecteur nommé : on extrait ensuite avec `[["H"]]`.
+4. `which.max()` donne la position de la ligne la mieux payée ; on l'utilise pour lire l'âge correspondant dans la même ligne.
+
+```{webr}
+#| exercise: r-base-1
+#| solution: true
+set.seed(rb1$seed)
+df <- data.frame(age = sample(18:65, 80, replace = TRUE), sexe = sample(c("F", "H"), 80, replace = TRUE))
+df$revenu <- round(1200 + 25 * df$age + ifelse(df$sexe == "H", rb1$ecart, 0) + rnorm(80, 0, 150))
+cible    <- df[df$sexe == "F" & df$age >= 30, ]
+moy_sexe <- tapply(df$revenu, df$sexe, mean)
+c(n_cible = nrow(cible), moy_cible = mean(cible$revenu),
+  ecart_HF = moy_sexe[["H"]] - moy_sexe[["F"]], age_plus_riche = df$age[which.max(df$revenu)])
+```
+
+**Pièges fréquents.**
+
+- Oublier la virgule : `df[df$sexe == "F", ]` filtre les lignes ; `df[df$sexe == "F"]` déclenche une erreur.
+- Utiliser `=` au lieu de `==` dans une condition : `=` affecte, `==` compare.
+- `&&` au lieu de `&` dans un filtre de lignes.
+
+**Pour aller plus loin.** Refais le résumé par groupe avec `aggregate(revenu ~ sexe, data = df, FUN = mean)` : quelle différence de format pour le résultat ?
+:::
+
+```{webr}
+#| exercise: r-base-1
+#| check: true
+set.seed(rb1$seed)
+df <- data.frame(age = sample(18:65, 80, replace = TRUE), sexe = sample(c("F", "H"), 80, replace = TRUE))
+df$revenu <- round(1200 + 25 * df$age + ifelse(df$sexe == "H", rb1$ecart, 0) + rnorm(80, 0, 150))
+k <- df$sexe == "F" & df$age >= 30
+ref <- c(sum(k), mean(df$revenu[k]), mean(df$revenu[df$sexe == "H"]) - mean(df$revenu[df$sexe == "F"]), df$age[which.max(df$revenu)])
+res <- suppressWarnings(as.numeric(.result))
+msgs <- c("Sélection : df[df$sexe == \"F\" & df$age >= 30, ].", "Revenu moyen de la cible.", "Écart H - F : tapply(df$revenu, df$sexe, mean) puis [[\"H\"]] - [[\"F\"]].", "Âge du plus riche : df$age[which.max(df$revenu)].")
+if (length(res) != 4 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(n_cible = ..., moy_cible = ..., ecart_HF = ..., age_plus_riche = ...).")
+} else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = msgs[which(bad)[1]])
+} else {
+  list(correct = TRUE, message = sprintf("Correct : %d femmes de 30 ans ou plus, revenu moyen %.0f ; écart hommes - femmes %+.0f.", as.integer(ref[1]), ref[2], ref[3]))
+}
+```
+
+::: {.dojo-done data-id="r-base-1"}
+:::
+
+## Écrire une fonction et l'appliquer à une liste {#r-base-2}
+
+[Marche 3 sur 3 · Autonome]{.dojo-step}
+
+```{ojs}
+//| echo: false
+rb2 = { const g = rng("r-base-2", salt); return { seed: g.int(1, 9999), k: g.int(1, 3) }; }
+```
+
+On simule 5 séries de prix (graine ${rb2.seed}, facteur de bruit ${rb2.k}). Écris une fonction `volatilite(x)` qui renvoie l'écart-type des **variations relatives** successives (diff(x) divisé par les valeurs précédentes), applique-la aux 5 séries avec `vapply`, et renvoie le numéro de la série la plus volatile, la volatilité maximale et la volatilité minimale.
+
+```{webr}
+#| exercise: r-base-2
+#| caption: "Fonction + vapply"
+#| input:
+#|   - rb2
+set.seed(rb2$seed)
+series <- lapply(1:5, function(i) round(100 * cumprod(1 + rnorm(20, 0.01, 0.005 * i * rb2$k)), 2))
+______     # définis ici : volatilite <- function(x) { ... }
+vol <- vapply(series, volatilite, numeric(1))
+c(plus_volatile = which.max(vol), vol_max = max(vol), vol_min = min(vol))
+```
+
+::: {.hint exercise="r-base-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Une fonction se définit `nom <- function(argument) { ... }` et renvoie sa **dernière expression**. Ici, calcule d'abord les variations relatives de `x` (différences successives rapportées au niveau précédent), puis leur écart-type.
+:::
+:::
+
+::: {.hint exercise="r-base-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+`volatilite <- function(x) sd(diff(x) / x[-length(x)])` ; `x[-length(x)]` retire le dernier élément, donc aligne chaque variation avec la valeur de départ. `vapply(liste, f, numeric(1))` applique `f` à chaque élément et exige un nombre en retour.
+:::
+:::
+
+::: {.solution exercise="r-base-2"}
+**Raisonnement.**
+
+1. `diff(x)` renvoie $x_{t+1} - x_t$ (un élément de moins que `x`) ; on divise par `x[-length(x)]`, les valeurs de départ, pour obtenir des variations relatives.
+2. Une fonction renvoie la valeur de sa dernière expression : pas besoin de `return()`.
+3. `vapply(series, volatilite, numeric(1))` est une version **sûre** de `sapply` : elle échoue clairement si la fonction ne renvoie pas un nombre.
+4. `which.max(vol)` donne l'indice de la série la plus volatile : les séries ont été construites avec un bruit croissant, la 5e devrait gagner en moyenne.
+
+```{webr}
+#| exercise: r-base-2
+#| solution: true
+set.seed(rb2$seed)
+series <- lapply(1:5, function(i) round(100 * cumprod(1 + rnorm(20, 0.01, 0.005 * i * rb2$k)), 2))
+volatilite <- function(x) sd(diff(x) / x[-length(x)])
+vol <- vapply(series, volatilite, numeric(1))
+c(plus_volatile = which.max(vol), vol_max = max(vol), vol_min = min(vol))
+```
+
+**Pièges fréquents.**
+
+- Diviser `diff(x)` par `x` entier : les longueurs diffèrent (recyclage silencieux ou avertissement).
+- Calculer `sd(diff(x))` sans rapporter au niveau : la volatilité absolue dépend de l'échelle de la série.
+- Utiliser `sapply` partout : un résultat de mauvais type passe inaperçu, alors que `vapply` l'attrape.
+
+**Pour aller plus loin.** Ajoute un argument `fenetre = 5` pour calculer la volatilité sur les `fenetre` dernières observations seulement, avec une valeur par défaut.
+:::
+
+```{webr}
+#| exercise: r-base-2
+#| check: true
+set.seed(rb2$seed)
+series <- lapply(1:5, function(i) round(100 * cumprod(1 + rnorm(20, 0.01, 0.005 * i * rb2$k)), 2))
+v <- sapply(series, function(x) sd(diff(x) / x[-length(x)]))
+ref <- c(which.max(v), max(v), min(v))
+res <- suppressWarnings(as.numeric(.result))
+msgs <- c("Série la plus volatile : which.max(vol).", "Volatilité maximale : max(vol), avec volatilite(x) = sd(diff(x) / x[-length(x)]).", "Volatilité minimale : min(vol).")
+if (length(res) != 3 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(plus_volatile = ..., vol_max = ..., vol_min = ...).")
+} else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = msgs[which(bad)[1]])
+} else {
+  list(correct = TRUE, message = sprintf("Correct : la série %d est la plus volatile (écart-type des variations de %.2f %%).", as.integer(ref[1]), 100 * ref[2]))
+}
+```
+
+::: {.dojo-done data-id="r-base-2"}
+:::
+
+::: {.dojo-track data-track="r-graph"}
+:::
+
+## Premier graphique : une série temporelle propre {#r-graph-0}
+
+[Marche 1 sur 4 · Guidé]{.dojo-step}
+
+```{ojs}
+//| echo: false
+rg0 = { const g = rng("r-graph-0", salt); return { seed: g.int(1, 9999), g: g.int(1, 4) }; }
+```
+
+Trace l'évolution du PIB (indice) entre 2010 et 2024 avec la **fonction `plot()`** : lignes et points, points pleins, couleur `steelblue`, un axe vertical qui **commence à 0**, des titres d'axes et un titre. Puis lis les limites réelles des axes avec `par("usr")` : c'est ainsi qu'on vérifie un graphique sans le regarder.
+
+```{webr}
+#| exercise: r-graph-0
+#| caption: "plot()"
+#| input:
+#|   - rg0
+set.seed(rg0$seed)
+annee <- 2010:2024
+pib <- round(100 * cumprod(1 + rnorm(15, rg0$g / 100, 0.01)), 1)
+plot(annee, pib, ______)     # type, pch, col, ylim, xlab, ylab, main
+par("usr")                   # [xmin, xmax, ymin, ymax] réels de la zone de tracé
+```
+
+::: {.hint exercise="r-graph-0"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`plot(x, y, ...)` accepte des arguments nommés qui règlent l'apparence : `type` ("p" points, "l" lignes, "b" les deux), `pch` (symbole), `col`, `xlab`, `ylab`, `main`, et `ylim = c(min, max)` pour fixer l'étendue verticale.
+:::
+:::
+
+::: {.hint exercise="r-graph-0"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+`plot(annee, pib, type = "b", pch = 19, col = "steelblue", ylim = c(0, max(pib)), xlab = "Année", ylab = "PIB (indice)", main = "Évolution du PIB")`.
+:::
+:::
+
+::: {.solution exercise="r-graph-0"}
+**Raisonnement.**
+
+1. `plot(x, y)` dessine un nuage de points ; l'argument `type` change la représentation : `"b"` relie les points par des segments.
+2. Par défaut, R choisit l'étendue de l'axe vertical à partir des données : une série proche de 100 serait tronquée loin de 0. Pour **ne pas exagérer** les variations visuelles, on impose `ylim = c(0, max(pib))`.
+3. R ajoute toujours 4 % de marge de chaque côté : `par("usr")` renvoie donc `ylim` élargi de 4 %.
+4. Le titre et les libellés des axes font partie du graphique, pas de la légende : un graphique sans unités ni titre est difficile à lire seul.
+
+```{webr}
+#| exercise: r-graph-0
+#| solution: true
+set.seed(rg0$seed)
+annee <- 2010:2024
+pib <- round(100 * cumprod(1 + rnorm(15, rg0$g / 100, 0.01)), 1)
+plot(annee, pib, type = "b", pch = 19, col = "steelblue", ylim = c(0, max(pib)),
+     xlab = "Année", ylab = "PIB (indice)", main = "Évolution du PIB")
+par("usr")
+```
+
+**Pièges fréquents.**
+
+- Écrire `plot(pib ~ annee)` puis oublier `ylim` : le graphique s'ouvre sur un axe tronqué, qui exagère la croissance.
+- Mettre `col = steelblue` sans guillemets : R cherche un objet nommé `steelblue`.
+- Confondre `type = "l"` (ligne seule) et `type = "b"` (ligne et points) ; `"o"` superpose les points à la ligne.
+
+**Pour aller plus loin.** Essaie `type = "s"` (escalier) et `col = adjustcolor("steelblue", 0.5)` (transparence). Pour la liste des couleurs, `colors()` et `hcl.colors(5)`.
+:::
+
+```{webr}
+#| exercise: r-graph-0
+#| check: true
+set.seed(rg0$seed); a <- 2010:2024; p <- round(100 * cumprod(1 + rnorm(15, rg0$g / 100, 0.01)), 1)
+ref <- c(2010 - 0.04 * 14, 2024 + 0.04 * 14, -0.04 * max(p), 1.04 * max(p))
+res <- suppressWarnings(as.numeric(.result))
+msgs <- c("Axe x : laisse la valeur par défaut (xlim automatique).", "Axe x : laisse la valeur par défaut (xlim automatique).", "L'axe vertical doit partir de 0 : ylim = c(0, max(pib)).", "L'axe vertical doit aller jusqu'à max(pib) : ylim = c(0, max(pib)).")
+if (length(res) != 4 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(xmin = ..., xmax = ..., ymin = ..., ymax = ...).")
+} else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = msgs[which(bad)[1]])
+} else {
+  list(correct = TRUE, message = sprintf("Correct : l'axe vertical va de %.1f à %.1f (marge de 4 %% incluse) ; il part bien de 0.", ref[3], ref[4]))
+}
+```
+
+::: {.dojo-done data-id="r-graph-0"}
+:::
+
+## Histogramme en densité et courbe de densité {#r-graph-1}
+
+[Marche 2 sur 4 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+rg1 = { const g = rng("r-graph-1", salt); return { seed: g.int(1, 9999), L: g.pick([0.5, 1]) }; }
+```
+
+Représente la distribution de 500 revenus (milliers d'euros, graine ${rg1.seed}) par un histogramme **en densité** (l'aire totale vaut 1) avec des classes de largeur ${rg1.L}, de 0 jusqu'à la première borne au-dessus du maximum. Superpose la courbe de densité estimée. Renvoie le nombre de classes, l'aire totale de l'histogramme et la limite haute de l'axe vertical.
+
+```{webr}
+#| exercise: r-graph-1
+#| caption: "hist() et density()"
+#| input:
+#|   - rg1
+set.seed(rg1$seed)
+x <- rlnorm(500, 0.5, 0.6)
+L <- rg1$L
+h <- hist(x, ______)                       # breaks = seq(0, borne_haute, by = L), freq = FALSE, col, main, xlab
+lines(______)                              # courbe de densité : density(x), en rouge
+c(classes = length(h$counts), aire = sum(h$density * diff(h$breaks)), ymax_axe = par("usr")[4])
+```
+
+::: {.hint exercise="r-graph-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`hist(x, breaks = ...)` accepte un **vecteur de bornes** pour des classes de largeur choisie ; `freq = FALSE` affiche des densités au lieu d'effectifs. La borne haute doit couvrir le maximum : arrondis `max(x) / L` à l'entier supérieur.
+:::
+:::
+
+::: {.hint exercise="r-graph-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+`h <- hist(x, breaks = seq(0, ceiling(max(x) / L) * L, by = L), freq = FALSE, col = "grey85", main = "Revenus", xlab = "Milliers d'euros")` ; `lines(density(x), col = "red", lwd = 2)`.
+:::
+:::
+
+::: {.solution exercise="r-graph-1"}
+**Raisonnement.**
+
+1. Avec `breaks = seq(0, borne, by = L)`, chaque classe a la même largeur ; `ceiling(max(x) / L) * L` donne la première borne au-dessus du maximum.
+2. `freq = FALSE` normalise : la hauteur d'une barre est l'effectif divisé par (n × largeur), donc l'aire totale vaut 1. C'est ce qui permet de **superposer** une densité estimée.
+3. `lines()` ajoute une courbe au graphique courant, sans en créer un nouveau ; `density(x)` fournit les coordonnées.
+4. L'objet renvoyé par `hist()` contient `counts`, `density` et `breaks` : utile pour vérifier ou réutiliser le calcul.
+
+```{webr}
+#| exercise: r-graph-1
+#| solution: true
+set.seed(rg1$seed)
+x <- rlnorm(500, 0.5, 0.6)
+L <- rg1$L
+h <- hist(x, breaks = seq(0, ceiling(max(x) / L) * L, by = L), freq = FALSE,
+          col = "grey85", main = "Distribution des revenus", xlab = "Milliers d'euros")
+lines(density(x), col = "red", lwd = 2)
+c(classes = length(h$counts), aire = sum(h$density * diff(h$breaks)), ymax_axe = par("usr")[4])
+```
+
+**Pièges fréquents.**
+
+- Oublier `freq = FALSE` : la courbe de densité (valeurs autour de 0,3) serait écrasée par des barres de hauteur 100.
+- Laisser R choisir `breaks` quand on compare deux histogrammes : les classes diffèrent, la comparaison est trompeuse.
+- Appeler `plot(density(x))` après `hist()` : cela ouvre un nouveau graphique au lieu d'ajouter la courbe.
+
+**Pour aller plus loin.** Essaie `breaks = "FD"` (règle de Freedman-Diaconis) ou `"Sturges"` : combien de classes obtiens-tu ? Pourquoi les résultats diffèrent-ils ?
+:::
+
+```{webr}
+#| exercise: r-graph-1
+#| check: true
+set.seed(rg1$seed); x <- rlnorm(500, 0.5, 0.6); L <- rg1$L
+hr <- hist(x, breaks = seq(0, ceiling(max(x) / L) * L, by = L), plot = FALSE)
+ref <- c(length(hr$counts), 1, 1.04 * max(hr$density))
+res <- suppressWarnings(as.numeric(.result))
+msgs <- c("Nombre de classes : breaks = seq(0, ceiling(max(x) / L) * L, by = L).", "L'aire doit valoir 1 : ajoute freq = FALSE (ou probability = TRUE).", "L'axe vertical doit afficher des densités : freq = FALSE, sans changer les classes.")
+if (length(res) != 3 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(classes = ..., aire = ..., ymax_axe = ...).")
+} else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = msgs[which(bad)[1]])
+} else {
+  list(correct = TRUE, message = sprintf("Correct : %d classes, aire = 1, axe vertical jusqu'à %.2f (densité).", as.integer(ref[1]), ref[3]))
+}
+```
+
+::: {.dojo-done data-id="r-graph-1"}
+:::
+
+## Comparer des groupes : boîtes à moustaches et barres {#r-graph-2}
+
+[Marche 3 sur 4 · À compléter]{.dojo-step}
+
+```{ojs}
+//| echo: false
+rg2 = { const g = rng("r-graph-2", salt); return { seed: g.int(1, 9999), b: g.int(10, 14) }; }
+```
+
+Un échantillon de 200 salaires horaires (graine ${rg2.seed}) selon le diplôme (Bac, Licence, Master). Trace les **boîtes à moustaches** du salaire par diplôme avec la notation formule `salaire ~ diplome`, puis un diagramme en barres des moyennes par diplôme. Renvoie les trois médianes (lues dans l'objet renvoyé par `boxplot`), le nombre de valeurs atypiques et le nombre de barres.
+
+```{webr}
+#| exercise: r-graph-2
+#| caption: "boxplot() et barplot()"
+#| input:
+#|   - rg2
+set.seed(rg2$seed)
+n <- 200
+diplome <- factor(sample(c("Bac", "Licence", "Master"), n, replace = TRUE, prob = c(0.5, 0.3, 0.2)),
+                  levels = c("Bac", "Licence", "Master"))
+salaire <- round(c(Bac = rg2$b, Licence = rg2$b + 3, Master = rg2$b + 7)[diplome] * exp(rnorm(n, 0, 0.3)), 2)
+b <- boxplot(______)           # formule salaire ~ diplome, data = ..., col, ylab
+moy <- tapply(salaire, diplome, mean)
+bp <- barplot(______)          # barres des moyennes : moy, ylab, ylim
+c(b$stats[3, ], n_atypiques = length(b$out), barres = length(bp))
+```
+
+::: {.hint exercise="r-graph-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`boxplot()` accepte une **formule** `y ~ groupe` avec l'argument `data`, ou deux vecteurs séparés (`boxplot(salaire ~ diplome)` fonctionne directement car les deux sont dans l'environnement). `barplot()` prend un vecteur de hauteurs, avec `names.arg` ou un vecteur nommé.
+:::
+:::
+
+::: {.hint exercise="r-graph-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+`b <- boxplot(salaire ~ diplome, col = "grey85", ylab = "Salaire horaire (euros)")` ; `bp <- barplot(moy, ylab = "Salaire moyen (euros)", ylim = c(0, max(moy) * 1.1))`. La ligne 3 de `b$stats` contient les médianes.
+:::
+:::
+
+::: {.solution exercise="r-graph-2"}
+**Raisonnement.**
+
+1. La formule `y ~ g` se lit « y expliqué par g » : `boxplot` trace une boîte par modalité de `g`. Elle fonctionne avec presque toutes les fonctions graphiques et statistiques de R (`plot`, `t.test`, `lm`, `aggregate`).
+2. `boxplot()` **renvoie** ses statistiques invisiblement : `b$stats` (5 lignes : minimum, Q1, médiane, Q3, maximum hors atypiques), `b$out` (les valeurs atypiques), `b$n`.
+3. Une boîte résume la distribution (médiane, quartiles, valeurs atypiques) ; une barre de moyenne cache la dispersion. Pour des comparaisons de groupes, la boîte est plus informative.
+4. `barplot()` renvoie les abscisses des barres : on peut s'en servir pour ajouter du texte ou des barres d'erreur au bon endroit.
+
+```{webr}
+#| exercise: r-graph-2
+#| solution: true
+set.seed(rg2$seed)
+n <- 200
+diplome <- factor(sample(c("Bac", "Licence", "Master"), n, replace = TRUE, prob = c(0.5, 0.3, 0.2)),
+                  levels = c("Bac", "Licence", "Master"))
+salaire <- round(c(Bac = rg2$b, Licence = rg2$b + 3, Master = rg2$b + 7)[diplome] * exp(rnorm(n, 0, 0.3)), 2)
+b <- boxplot(salaire ~ diplome, col = "grey85", ylab = "Salaire horaire (euros)")
+moy <- tapply(salaire, diplome, mean)
+bp <- barplot(moy, ylab = "Salaire moyen (euros)", ylim = c(0, max(moy) * 1.1))
+c(b$stats[3, ], n_atypiques = length(b$out), barres = length(bp))
+```
+
+**Pièges fréquents.**
+
+- Écrire `boxplot(diplome, salaire)` : les arguments sont dans le mauvais ordre ; utilise la formule `salaire ~ diplome`.
+- Oublier de donner des **niveaux ordonnés** au facteur : sinon R trie les modalités par ordre alphabétique (Bac, Licence, Master ici par chance).
+- Tronquer l'axe vertical d'un barplot : la hauteur des barres est interprétée comme une quantité, il faut que l'axe parte de 0.
+
+**Pour aller plus loin.** Ajoute les points individuels par-dessus : `stripchart(salaire ~ diplome, vertical = TRUE, method = "jitter", add = TRUE, pch = 16, col = rgb(0, 0, 0, 0.25))`.
+:::
+
+```{webr}
+#| exercise: r-graph-2
+#| check: true
+set.seed(rg2$seed); n <- 200
+diplome <- factor(sample(c("Bac", "Licence", "Master"), n, replace = TRUE, prob = c(0.5, 0.3, 0.2)), levels = c("Bac", "Licence", "Master"))
+salaire <- round(c(Bac = rg2$b, Licence = rg2$b + 3, Master = rg2$b + 7)[diplome] * exp(rnorm(n, 0, 0.3)), 2)
+br <- boxplot(salaire ~ diplome, plot = FALSE)
+ref <- c(br$stats[3, ], length(br$out), 3)
+res <- suppressWarnings(as.numeric(.result))
+msgs <- c("Les médianes sont dans b$stats[3, ] : vérifie que b contient bien boxplot(salaire ~ diplome).", "Médiane Licence : b$stats[3, 2].", "Médiane Master : b$stats[3, 3].", "Valeurs atypiques : length(b$out).", "Il doit y avoir 3 barres : barplot(moy).")
+if (length(res) != 5 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(med_Bac = ..., med_Licence = ..., med_Master = ..., n_atypiques = ..., barres = ...).")
+} else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = msgs[which(bad)[1]])
+} else {
+  list(correct = TRUE, message = sprintf("Correct : médianes %.1f / %.1f / %.1f €, %d valeur(s) atypique(s).", ref[1], ref[2], ref[3], as.integer(ref[4])))
+}
+```
+
+::: {.dojo-done data-id="r-graph-2"}
+:::
+
+## Plusieurs graphiques : droite de régression et diagnostic des résidus {#r-graph-3}
+
+[Marche 4 sur 4 · Autonome]{.dojo-step}
+
+```{ojs}
+//| echo: false
+rg3 = { const g = rng("r-graph-3", salt); return { seed: g.int(1, 9999), b: g.int(5, 20) / 10 }; }
+```
+
+Deux graphiques côte à côte (une ligne, deux colonnes) pour 80 observations (graine ${rg3.seed}) : à gauche le nuage de points de y contre x avec la droite des moindres carrés et une légende ; à droite le diagramme quantile-quantile des résidus avec sa droite de référence. Restaure ensuite la disposition initiale. Renvoie la pente, l'ordonnée à l'origine et la disposition (lignes, colonnes) lue avant restauration.
+
+```{webr}
+#| exercise: r-graph-3
+#| caption: "par(mfrow), abline(), legend()"
+#| input:
+#|   - rg3
+set.seed(rg3$seed)
+x <- rnorm(80, 10, 2); y <- 3 + rg3$b * x + rnorm(80, 0, 2)
+op <- par(mfrow = ______)          # 1 ligne, 2 colonnes
+m  <- par("mfrow")                  # lu avant restauration
+plot(x, y, pch = 19, col = "grey40", main = "Nuage et droite MCO")
+fit <- lm(______)                   # y expliqué par x
+abline(______, col = "red", lwd = 2)             # ajoute la droite estimée
+legend("topleft", legend = ______, col = "red", lwd = 2, bty = "n")
+qqnorm(resid(fit)); qqline(resid(fit))
+par(op)                             # restaure la disposition
+c(pente = coef(fit)[[2]], ordonnee = coef(fit)[[1]], lignes = m[1], colonnes = m[2])
+```
+
+::: {.hint exercise="r-graph-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`par(mfrow = c(lignes, colonnes))` découpe la fenêtre en panneaux, remplis ligne par ligne. `par()` **renvoie l'ancienne valeur** : la garder dans `op` permet de restaurer avec `par(op)`. `abline()` accepte directement un objet `lm` pour tracer sa droite.
+:::
+:::
+
+::: {.hint exercise="r-graph-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la formule
+`par(mfrow = c(1, 2))` ; `fit <- lm(y ~ x)` ; `abline(fit, col = "red", lwd = 2)` ; `legend("topleft", legend = "Droite MCO", ...)`. `qqline()` trace la droite de référence d'un `qqnorm`.
+:::
+:::
+
+::: {.solution exercise="r-graph-3"}
+**Raisonnement.**
+
+1. `par(mfrow = c(1, 2))` modifie un réglage **global** de la fenêtre graphique ; sans restauration, tous les graphiques suivants garderaient cette disposition.
+2. `op <- par(...)` mémorise les anciennes valeurs, et `par(op)` les remet : le réflexe à adopter dans toute fonction qui change `par()`.
+3. `abline(fit)` utilise les coefficients du modèle : plus fiable que de recopier `a` et `b` à la main. `legend()` se place par mot-clé de position (`"topleft"`) ou par coordonnées.
+4. `qqnorm(resid(fit))` compare les quantiles des résidus à ceux d'une loi normale : si les points suivent la droite de `qqline()`, l'hypothèse de normalité est plausible. C'est un diagnostic **visuel**, à compléter par l'examen d'autres hypothèses.
+
+```{webr}
+#| exercise: r-graph-3
+#| solution: true
+set.seed(rg3$seed)
+x <- rnorm(80, 10, 2); y <- 3 + rg3$b * x + rnorm(80, 0, 2)
+op <- par(mfrow = c(1, 2))
+m  <- par("mfrow")
+plot(x, y, pch = 19, col = "grey40", main = "Nuage et droite MCO")
+fit <- lm(y ~ x)
+abline(fit, col = "red", lwd = 2)
+legend("topleft", legend = "Droite MCO", col = "red", lwd = 2, bty = "n")
+qqnorm(resid(fit)); qqline(resid(fit))
+par(op)
+c(pente = coef(fit)[[2]], ordonnee = coef(fit)[[1]], lignes = m[1], colonnes = m[2])
+```
+
+**Pièges fréquents.**
+
+- Oublier `par(op)` : les graphiques suivants restent coupés en deux panneaux.
+- `c(2, 1)` au lieu de `c(1, 2)` : deux lignes, une colonne, soit l'inverse de la disposition voulue.
+- Appeler `plot()` à la place de `abline()` pour ajouter la droite : cela ouvre un nouveau panneau au lieu de compléter celui-ci.
+
+**Pour aller plus loin.** Remplace `par(mfrow = ...)` par `layout(matrix(c(1, 1, 2, 3), 2, byrow = TRUE))` pour obtenir un grand panneau en haut et deux petits en bas.
+:::
+
+```{webr}
+#| exercise: r-graph-3
+#| check: true
+set.seed(rg3$seed); x <- rnorm(80, 10, 2); y <- 3 + rg3$b * x + rnorm(80, 0, 2)
+b <- cov(x, y) / var(x)
+ref <- c(b, mean(y) - b * mean(x), 1, 2)
+res <- suppressWarnings(as.numeric(.result))
+msgs <- c("Pente : lm(y ~ x), coefficient de x.", "Ordonnée à l'origine : premier coefficient de lm(y ~ x).", "Une seule ligne : par(mfrow = c(1, 2)).", "Deux colonnes : par(mfrow = c(1, 2)).")
+if (length(res) != 4 || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie c(pente = ..., ordonnee = ..., lignes = ..., colonnes = ...).")
+} else if (any(bad <- abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = msgs[which(bad)[1]])
+} else {
+  list(correct = TRUE, message = sprintf("Correct : y = %.2f + %.2f x ; disposition %d x %d lue avant restauration.", ref[2], ref[1], as.integer(ref[3]), as.integer(ref[4])))
+}
+```
+
+::: {.dojo-done data-id="r-graph-3"}
+:::
+
+## Galerie : six graphiques de base en un coup d'œil
+
+Chaque case ci-dessous utilise une seule fonction, avec ses arguments essentiels. Modifie un argument, relance, regarde l'effet.
+
+```{webr}
+#| autorun: true
+#| caption: "Galerie de graphiques de base"
+set.seed(3)
+x <- rnorm(150, 50, 10); y <- 20 + 0.8 * x + rnorm(150, 0, 8)
+g <- factor(sample(c("A", "B", "C"), 150, TRUE))
+op <- par(mfrow = c(2, 3), mar = c(4, 4, 2.5, 1))
+plot(x, y, pch = 19, col = adjustcolor("steelblue", 0.5), main = "plot : nuage", xlab = "x", ylab = "y")
+hist(x, breaks = 15, col = "grey85", border = "white", main = "hist : histogramme", xlab = "x")
+boxplot(y ~ g, col = "grey85", main = "boxplot : par groupe", xlab = "groupe", ylab = "y")
+barplot(table(g), col = hcl.colors(3, "Blues 3"), main = "barplot : effectifs", ylab = "n")
+plot(sort(x), type = "l", lwd = 2, col = "firebrick", main = "plot type = l : série triée", ylab = "x trié")
+plot(density(x), main = "density : densité", lwd = 2); rug(x)
+par(op)
+```
+
+## Aide-mémoire : arguments graphiques les plus utiles
+
+| Pour… | Argument | Exemple |
+|---|---|---|
+| Choisir points, lignes ou les deux | `type` | `"p"`, `"l"`, `"b"`, `"s"` (escalier) |
+| Symbole du point | `pch` | `19` (plein), `1` (rond vide), `15` (carré) |
+| Style et épaisseur de ligne | `lty`, `lwd` | `lty = 2` (tirets), `lwd = 2` |
+| Couleur | `col`, `bg`, `border` | `"steelblue"`, `rgb(0, 0, 0, 0.3)`, `adjustcolor("red", 0.4)` |
+| Fixer les limites des axes | `xlim`, `ylim` | `ylim = c(0, max(y))` |
+| Titres | `main`, `xlab`, `ylab`, `sub` | `main = "Titre"` |
+| Taille du texte et des symboles | `cex`, `cex.axis`, `cex.main` | `cex = 1.2` |
+| Orientation des étiquettes | `las` | `las = 1` (horizontales), `las = 2` (verticales) |
+| Échelle logarithmique | `log` | `log = "y"` ou `"xy"` |
+| Ajouter une droite, une courbe, du texte | `abline()`, `lines()`, `text()`, `points()` | `abline(h = 0, lty = 2)` ; `lines(x, f(x))` |
+| Légende | `legend()` | `legend("topright", legend = c("A", "B"), col = 1:2, lwd = 2, bty = "n")` |
+| Plusieurs panneaux | `par(mfrow = c(l, c))`, `layout()` | restaurer avec `par(op)` |
+| Marges | `par(mar = c(bas, gauche, haut, droite))` | `par(mar = c(4, 4, 2, 1))` |
+
+**Bonnes pratiques.** (1) L'axe d'un diagramme en barres part de 0. (2) Chaque axe a un libellé avec son **unité**. (3) Ne distingue pas les groupes par la seule couleur si le graphique sera imprimé en noir et blanc : ajoute `pch` ou `lty`. (4) Préfère une boîte à moustaches ou les points individuels à une simple barre de moyenne pour comparer des groupes. (5) Fixe `set.seed()` pour qu'un graphique simulé soit reproductible.
+
+## Exporter un graphique et passer à ggplot2 (sur ton ordinateur)
+
+Dans le navigateur (webR), les graphiques s'affichent dans la page. Sur ton ordinateur (RStudio), tu les enregistres ainsi, en ouvrant un fichier, en dessinant, puis en le fermant :
+
+```r
+png("figure1.png", width = 1600, height = 1000, res = 200)   # ou pdf("figure1.pdf", width = 8, height = 5)
+plot(annee, pib, type = "b", pch = 19, col = "steelblue", ylim = c(0, max(pib)))
+dev.off()                                                    # indispensable : écrit le fichier
+```
+
+Le même graphique avec **ggplot2** (à installer en local : `install.packages("ggplot2")`) :
+
+```r
+library(ggplot2)
+ggplot(data.frame(annee, pib), aes(annee, pib)) +
+  geom_line(colour = "steelblue") + geom_point() +
+  scale_y_continuous(limits = c(0, NA)) +
+  labs(x = "Année", y = "PIB (indice)", title = "Évolution du PIB") +
+  theme_minimal()
+ggsave("figure1.png", width = 8, height = 5, dpi = 200)
+```
+
+La syntaxe de base (`plot`, `hist`, `boxplot`) est **rapide pour explorer** ; ggplot2 est plus économe pour des figures publiables avec plusieurs groupes. Les deux s'appuient sur les mêmes idées : données, axes, couleurs, légende.
+
+## Quiz éclair
+
+::: {.dojo-quiz data-course="r" data-n="4"}
+:::
+
+## Cartes de répétition
+
+::: {.dojo-cards data-course="r" data-n="6"}
+:::

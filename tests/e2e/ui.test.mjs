@@ -79,4 +79,14 @@ await go("http://localhost:8765/index.html");
 { const t = await ev(pick); const seg = t.filter((x) => x.startsWith("Ségrégation"));
   ok(seg.length === 0 || seg.every((x) => /marche [12]\//.test(x)), "après la marche 1 de la piste Ségrégation, jamais au-delà de la marche 2 : " + [...new Set(seg)].join(" | "));
   ok(seg.some((x) => /marche 2\//.test(x)), "la marche 2 de Ségrégation est devenue accessible"); }
+// nouvelles pages : pistes R et Économie contemporaine, lien vers le corrigé du défi
+await go("http://localhost:8765/parcours/r.html");
+ok(await ev("document.querySelectorAll('.dojo-ladder').length === 2 && document.querySelectorAll('.dojo-steps li').length === 7"), "page R : 2 pistes, 7 marches");
+await go("http://localhost:8765/parcours/contemporaine.html");
+ok(await ev("document.querySelectorAll('.dojo-ladder').length === 6 && document.querySelectorAll('.dojo-steps li').length === 18"), "contemporaine : 6 pistes, 18 marches");
+await go("http://localhost:8765/index.html");
+{ const href = await ev("(document.querySelector('.dojo-panel a[href*=\"recherche/defis.html#defi-\"]') || {}).href || ''");
+  ok(/recherche\/defis\.html#defi-/.test(href), "défi de la semaine : lien « Voir le corrigé » " + href); }
+await go("http://localhost:8765/recherche/defis.html");
+ok(await ev("document.querySelectorAll('.callout').length >= 8 && document.querySelectorAll('section[id^=defi-]').length === 8"), "page des corrigés : 8 défis");
 ws.close(); process.exit(process.exitCode || 0);

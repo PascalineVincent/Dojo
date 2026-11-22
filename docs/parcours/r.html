@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>R : les bases et les graphiques – Le Dojo</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../assets/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-80558751abe2b985a76e6f6f417f2174.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-bde8d0188a8d44dff803acbb058a059b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-80558751abe2b985a76e6f6f417f2174.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../assets/dojo.css">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Le Dojo</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Basculer la navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Aujourd’hui</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parcours" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Parcours</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-parcours">    
+        <li>
+    <a class="dropdown-item" href="../parcours/micro.html">
+ <span class="dropdown-text">Micro (L1/L2)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/stats.html">
+ <span class="dropdown-text">Statistiques (L1)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/econometrie.html">
+ <span class="dropdown-text">Économétrie</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/histoire.html">
+ <span class="dropdown-text">Histoire économique</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/contemporaine.html">
+ <span class="dropdown-text">Économie contemporaine</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../parcours/r.html">
+ <span class="dropdown-text">R : bases et graphiques</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-recherche" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Recherche</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-recherche">    
+        <li>
+    <a class="dropdown-item" href="../recherche/index.html">
+ <span class="dropdown-text">Le défi de la semaine</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../recherche/defis.html">
+ <span class="dropdown-text">Corrigés des défis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../recherche/segregation.html">
+ <span class="dropdown-text">Ségrégation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../recherche/inegalites.html">
+ <span class="dropdown-text">Inégalités</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../veille.html"> 
+<span class="menu-text">Veille</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../progression.html"> 
+<span class="menu-text">Progression</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Basculer le mode sombre"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sur cette page</h2>
+   
+  <ul>
+  <li><a href="#r-base-0" id="toc-r-base-0" class="nav-link active" data-scroll-target="#r-base-0">Vecteurs : indexer, filtrer, compter</a></li>
+  <li><a href="#r-base-1" id="toc-r-base-1" class="nav-link" data-scroll-target="#r-base-1">Tableaux de données : sélectionner, résumer, comparer</a></li>
+  <li><a href="#r-base-2" id="toc-r-base-2" class="nav-link" data-scroll-target="#r-base-2">Écrire une fonction et l’appliquer à une liste</a></li>
+  <li><a href="#r-graph-0" id="toc-r-graph-0" class="nav-link" data-scroll-target="#r-graph-0">Premier graphique : une série temporelle propre</a></li>
+  <li><a href="#r-graph-1" id="toc-r-graph-1" class="nav-link" data-scroll-target="#r-graph-1">Histogramme en densité et courbe de densité</a></li>
+  <li><a href="#r-graph-2" id="toc-r-graph-2" class="nav-link" data-scroll-target="#r-graph-2">Comparer des groupes : boîtes à moustaches et barres</a></li>
+  <li><a href="#r-graph-3" id="toc-r-graph-3" class="nav-link" data-scroll-target="#r-graph-3">Plusieurs graphiques : droite de régression et diagnostic des résidus</a></li>
+  <li><a href="#galerie-six-graphiques-de-base-en-un-coup-dœil" id="toc-galerie-six-graphiques-de-base-en-un-coup-dœil" class="nav-link" data-scroll-target="#galerie-six-graphiques-de-base-en-un-coup-dœil">Galerie : six graphiques de base en un coup d’œil</a></li>
+  <li><a href="#aide-mémoire-arguments-graphiques-les-plus-utiles" id="toc-aide-mémoire-arguments-graphiques-les-plus-utiles" class="nav-link" data-scroll-target="#aide-mémoire-arguments-graphiques-les-plus-utiles">Aide-mémoire : arguments graphiques les plus utiles</a></li>
+  <li><a href="#exporter-un-graphique-et-passer-à-ggplot2-sur-ton-ordinateur" id="toc-exporter-un-graphique-et-passer-à-ggplot2-sur-ton-ordinateur" class="nav-link" data-scroll-target="#exporter-un-graphique-et-passer-à-ggplot2-sur-ton-ordinateur">Exporter un graphique et passer à ggplot2 (sur ton ordinateur)</a></li>
+  <li><a href="#quiz-éclair" id="toc-quiz-éclair" class="nav-link" data-scroll-target="#quiz-éclair">Quiz éclair</a></li>
+  <li><a href="#cartes-de-répétition" id="toc-cartes-de-répétition" class="nav-link" data-scroll-target="#cartes-de-répétition">Cartes de répétition</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">R : les bases et les graphiques</h1>
+<p class="subtitle lead">Vecteurs, tableaux, fonctions, puis graphiques de base pas à pas</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Deux pistes progressives, avec indices et corrigés. <em>R : bases</em> couvre les vecteurs, les tableaux de données et les fonctions ; <em>R : graphiques</em> part de <code>plot()</code> et va jusqu’aux figures à plusieurs panneaux. Les graphiques se vérifient par ce que R <strong>renvoie</strong> (limites des axes avec <code>par("usr")</code>, objets renvoyés par <code>hist()</code>, <code>boxplot()</code>, <code>barplot()</code>), pas par l’œil. Les énoncés changent chaque jour.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb1" data-startfrom="21" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 20;"><span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> {</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Générateur pseudo-aléatoire reproductible : graine = jour + id d'exercice + salt.</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">// (Source unique : scripts/test_exercices.R évalue cette même cellule avec Node.)</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> today <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>()<span class="op">.</span><span class="fu">toISOString</span>()<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> hash <span class="op">=</span> (s) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> h <span class="op">=</span> <span class="dv">1779033703</span> <span class="op">^</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) { h <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(h <span class="op">^</span> s<span class="op">.</span><span class="fu">charCodeAt</span>(i)<span class="op">,</span> <span class="dv">3432918353</span>)<span class="op">;</span> h <span class="op">=</span> (h <span class="op">&lt;&lt;</span> <span class="dv">13</span>) <span class="op">|</span> (h <span class="op">&gt;&gt;&gt;</span> <span class="dv">19</span>)<span class="op">;</span> }</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> h <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> mulberry32 <span class="op">=</span> (a) <span class="kw">=&gt;</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    a <span class="op">|=</span> <span class="dv">0</span><span class="op">;</span> a <span class="op">=</span> (a <span class="op">+</span> <span class="bn">0x6d2b79f5</span>) <span class="op">|</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> t <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(a <span class="op">^</span> (a <span class="op">&gt;&gt;&gt;</span> <span class="dv">15</span>)<span class="op">,</span> <span class="dv">1</span> <span class="op">|</span> a)<span class="op">;</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> (t <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">7</span>)<span class="op">,</span> <span class="dv">61</span> <span class="op">|</span> t)) <span class="op">^</span> t<span class="op">;</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ((t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">14</span>)) <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span>) <span class="op">/</span> <span class="dv">4294967296</span><span class="op">;</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> (id<span class="op">,</span> salt <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> day <span class="op">=</span> today) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> u <span class="op">=</span> <span class="fu">mulberry32</span>(<span class="fu">hash</span>(<span class="vs">`</span><span class="sc">${</span>day<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>id<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>salt<span class="sc">}</span><span class="vs">`</span>))<span class="op">;</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> int <span class="op">=</span> (a<span class="op">,</span> b) <span class="kw">=&gt;</span> a <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> (b <span class="op">-</span> a <span class="op">+</span> <span class="dv">1</span>))<span class="op">;</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> pick <span class="op">=</span> (arr) <span class="kw">=&gt;</span> arr[<span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> arr<span class="op">.</span><span class="at">length</span>)]<span class="op">;</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> normal <span class="op">=</span> () <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">log</span>(<span class="dv">1</span> <span class="op">-</span> <span class="fu">u</span>())) <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">cos</span>(<span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="cn">PI</span> <span class="op">*</span> <span class="fu">u</span>())<span class="op">;</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { u<span class="op">,</span> int<span class="op">,</span> pick<span class="op">,</span> normal }<span class="op">;</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>viewof salt <span class="op">=</span> {</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> b <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;button class="dojo-btn dojo-reroll"&gt;🎲 Nouveaux énoncés&lt;/button&gt;`</span><span class="op">;</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> n <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  b<span class="op">.</span><span class="at">onclick</span> <span class="op">=</span> () <span class="kw">=&gt;</span> { b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="op">++</span>n<span class="op">;</span> b<span class="op">.</span><span class="fu">dispatchEvent</span>(<span class="kw">new</span> <span class="bu">Event</span>(<span class="st">"input"</span><span class="op">,</span> { <span class="dt">bubbles</span><span class="op">:</span> <span class="kw">true</span> }))<span class="op">;</span> }<span class="op">;</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> b<span class="op">;</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="dojo-track" data-track="r-base">
+
+</div>
+<section id="r-base-0" class="level2">
+<h2 class="anchored" data-anchor-id="r-base-0">Vecteurs : indexer, filtrer, compter</h2>
+<p><span class="dojo-step">Marche 1 sur 3 · Guidé</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="109" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 108;"><span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>rb0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-base-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">s</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">25</span><span class="op">,</span> <span class="dv">50</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Un vecteur de 15 valeurs est tiré avec la graine <span><span id="ojs-element-id-1"></span>.</span> Avec le seuil s = <span><span id="ojs-element-id-2"></span>,</span> compte les valeurs strictement supérieures à s, calcule leur moyenne, trouve la position de la plus grande valeur, puis plafonne le vecteur à s (toute valeur au-dessus de s devient s) et renvoie la somme du vecteur plafonné.</p>
+<div class="cell" data-exercise="r-base-0" data-caption="Vecteurs" data-input="rb0">
+<div>
+<div id="webr-1" class="exercise-cell">
+
+</div>
+<script type="webr-1-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJWZWN0ZXVycyIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoici1iYXNlLTAiLCJpbnB1dCI6WyJyYjAiXSwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKHJiMCRzZWVkKVxueCA8LSByb3VuZChydW5pZigxNSwgMTAsIDEwMCkpXG5zIDwtIHJiMCRzXG5uX3N1cCAgIDwtIF9fX19fXyAgICAgIyBub21icmUgZGUgdmFsZXVycyA+IHNcbm1veV9zdXAgPC0gX19fX19fICAgICAjIG1veWVubmUgZGVzIHZhbGV1cnMgPiBzXG5wb3NfbWF4IDwtIF9fX19fXyAgICAgIyBwb3NpdGlvbiBkZSBsYSBwbHVzIGdyYW5kZSB2YWxldXJcbnBsYWZvbmQgPC0gX19fX19fICAgICAjIHggcGxhZm9ubsOpIMOgIHNcbmMobl9zdXAgPSBuX3N1cCwgbW95X3N1cCA9IG1veV9zdXAsIHBvc19tYXggPSBwb3NfbWF4LCBzb21tZV9wbGFmb25kID0gc3VtKHBsYWZvbmQpKSJ9
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-base-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Une comparaison comme <code>x &gt; s</code> renvoie un vecteur de TRUE/FALSE. On peut le <strong>sommer</strong> (TRUE vaut 1) pour compter, ou l’utiliser dans des crochets pour <strong>filtrer</strong>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-base-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>n_sup = sum(x &gt; s)</code> ; <code>moy_sup = mean(x[x &gt; s])</code> ; <code>pos_max = which.max(x)</code> ; <code>plafond = ifelse(x &gt; s, s, x)</code> (ou <code>pmin(x, s)</code>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="r-base-0">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li><code>x &gt; s</code> est vectorisé : il compare chaque élément à <code>s</code> et renvoie un vecteur logique de même longueur.</li>
+<li><code>sum()</code> d’un logique compte les TRUE ; <code>x[x &gt; s]</code> extrait les éléments pour lesquels la condition est vraie.</li>
+<li><code>which.max(x)</code> renvoie la <strong>position</strong> du maximum, <code>max(x)</code> sa valeur : ne pas confondre.</li>
+<li><code>ifelse(test, oui, non)</code> applique un choix élément par élément. <code>pmin(x, s)</code> fait la même chose pour un plafond.</li>
+</ol>
+<div class="cell" data-exercise="r-base-0" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="r-base-0">
+<code id="interpolate-3" class="solution-code d-none">set.seed(rb0$seed)
+x &lt;- round(runif(15, 10, 100))
+s &lt;- rb0$s
+n_sup   &lt;- sum(x &gt; s)
+moy_sup &lt;- mean(x[x &gt; s])
+pos_max &lt;- which.max(x)
+plafond &lt;- ifelse(x &gt; s, s, x)
+c(n_sup = n_sup, moy_sup = moy_sup, pos_max = pos_max, somme_plafond = sum(plafond))</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-4-1"><a href="#interpolate-4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(rb0<span class="sc">$</span>seed)</span>
+<span id="interpolate-4-2"><a href="#interpolate-4-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">15</span>, <span class="dv">10</span>, <span class="dv">100</span>))</span>
+<span id="interpolate-4-3"><a href="#interpolate-4-3" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> rb0<span class="sc">$</span>s</span>
+<span id="interpolate-4-4"><a href="#interpolate-4-4" aria-hidden="true" tabindex="-1"></a>n_sup   <span class="ot">&lt;-</span> <span class="fu">sum</span>(x <span class="sc">&gt;</span> s)</span>
+<span id="interpolate-4-5"><a href="#interpolate-4-5" aria-hidden="true" tabindex="-1"></a>moy_sup <span class="ot">&lt;-</span> <span class="fu">mean</span>(x[x <span class="sc">&gt;</span> s])</span>
+<span id="interpolate-4-6"><a href="#interpolate-4-6" aria-hidden="true" tabindex="-1"></a>pos_max <span class="ot">&lt;-</span> <span class="fu">which.max</span>(x)</span>
+<span id="interpolate-4-7"><a href="#interpolate-4-7" aria-hidden="true" tabindex="-1"></a>plafond <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(x <span class="sc">&gt;</span> s, s, x)</span>
+<span id="interpolate-4-8"><a href="#interpolate-4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">n_sup =</span> n_sup, <span class="at">moy_sup =</span> moy_sup, <span class="at">pos_max =</span> pos_max, <span class="at">somme_plafond =</span> <span class="fu">sum</span>(plafond))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li><code>x[x &gt; s]</code> sans la comparaison entre crochets, ou <code>x[&gt; s]</code> : erreur de syntaxe.</li>
+<li><code>max(x)</code> à la place de <code>which.max(x)</code> : la valeur n’est pas la position.</li>
+<li><code>if (x &gt; s)</code> au lieu de <code>ifelse(x &gt; s, ...)</code> : <code>if</code> n’accepte qu’une seule condition, pas un vecteur.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Écris <code>x[order(x, decreasing = TRUE)][1:3]</code> : à quoi sert chaque partie ? Compare avec <code>sort(x, decreasing = TRUE)[1:3]</code>.</p>
+</div>
+<div class="cell" data-exercise="r-base-0" data-check="true">
+<script type="exercise-check-r-base-0-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InItYmFzZS0wIiwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKHJiMCRzZWVkKTsgeCA8LSByb3VuZChydW5pZigxNSwgMTAsIDEwMCkpOyBzIDwtIHJiMCRzXG5yZWYgPC0gYyhzdW0oeCA+IHMpLCBtZWFuKHhbeCA+IHNdKSwgd2hpY2gubWF4KHgpLCBzdW0ocG1pbih4LCBzKSkpXG5yZXMgPC0gc3VwcHJlc3NXYXJuaW5ncyhhcy5udW1lcmljKC5yZXN1bHQpKVxubXNncyA8LSBjKFwiTm9tYnJlIDogc3VtKHggPiBzKS5cIiwgXCJNb3llbm5lIGRlcyB2YWxldXJzIHN1cMOpcmlldXJlcyA6IG1lYW4oeFt4ID4gc10pLlwiLCBcIlBvc2l0aW9uIGR1IG1heGltdW0gOiB3aGljaC5tYXgoeCkuXCIsIFwiUGxhZm9uZCA6IGlmZWxzZSh4ID4gcywgcywgeCkgb3UgcG1pbih4LCBzKS5cIilcbmlmIChsZW5ndGgocmVzKSAhPSA0IHx8IGFueU5BKHJlcykpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIlJlbnZvaWUgYyhuX3N1cCA9IC4uLiwgbW95X3N1cCA9IC4uLiwgcG9zX21heCA9IC4uLiwgc29tbWVfcGxhZm9uZCA9IC4uLikuXCIpXG59IGVsc2UgaWYgKGFueShiYWQgPC0gYWJzKHJlcyAtIHJlZikgPiAxZS0wNiAqICgxICsgYWJzKHJlZikpKSkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IG1zZ3Nbd2hpY2goYmFkKVsxXV0pXG59IGVsc2Uge1xuICBsaXN0KGNvcnJlY3QgPSBUUlVFLCBtZXNzYWdlID0gc3ByaW50ZihcIkNvcnJlY3QgOiAlZCB2YWxldXJzIGF1LWRlc3N1cyBkZSAlZywgZGUgbW95ZW5uZSAlLjFmIDsgbWF4aW11bSBlbiBwb3NpdGlvbiAlZC5cIiwgYXMuaW50ZWdlcihyZWZbMV0pLCByYjAkcywgcmVmWzJdLCBhcy5pbnRlZ2VyKHJlZlszXSkpKVxufSJ9
+</script>
+</div>
+<div class="dojo-done" data-id="r-base-0">
+
+</div>
+</section>
+<section id="r-base-1" class="level2">
+<h2 class="anchored" data-anchor-id="r-base-1">Tableaux de données : sélectionner, résumer, comparer</h2>
+<p><span class="dojo-step">Marche 2 sur 3 · À compléter</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="199" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 198;"><span id="cb3-199"><a href="#cb3-199" aria-hidden="true" tabindex="-1"></a>rb1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-base-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">ecart</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">10</span><span class="op">,</span> <span class="dv">40</span>) <span class="op">*</span> <span class="dv">10</span> }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Un tableau de 80 individus (âge, sexe, revenu) est simulé avec la graine <span><span id="ojs-element-id-3"></span>.</span> Sélectionne les femmes de 30 ans ou plus, donne leur nombre et leur revenu moyen, calcule l’écart de revenu moyen hommes − femmes (tous âges), et donne l’âge de la personne au revenu le plus élevé.</p>
+<div class="cell" data-exercise="r-base-1" data-caption="Data frame" data-input="rb1">
+<div>
+<div id="webr-6" class="exercise-cell">
+
+</div>
+<script type="webr-6-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJEYXRhIGZyYW1lIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhlcmNpc2UiOiJyLWJhc2UtMSIsImlucHV0IjpbInJiMSJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic2V0LnNlZWQocmIxJHNlZWQpXG5kZiA8LSBkYXRhLmZyYW1lKGFnZSA9IHNhbXBsZSgxODo2NSwgODAsIHJlcGxhY2UgPSBUUlVFKSwgc2V4ZSA9IHNhbXBsZShjKFwiRlwiLCBcIkhcIiksIDgwLCByZXBsYWNlID0gVFJVRSkpXG5kZiRyZXZlbnUgPC0gcm91bmQoMTIwMCArIDI1ICogZGYkYWdlICsgaWZlbHNlKGRmJHNleGUgPT0gXCJIXCIsIHJiMSRlY2FydCwgMCkgKyBybm9ybSg4MCwgMCwgMTUwKSlcbmNpYmxlIDwtIF9fX19fXyAgICAgICAgICAgICAgICAgICMgZGZbY29uZGl0aW9uX3N1cl9sZXNfbGlnbmVzLCBdIDogc2V4ZSBcIkZcIiBldCBhZ2UgPj0gMzBcbm1veV9zZXhlIDwtIF9fX19fXyAgICAgICAgICAgICAgICMgcmV2ZW51IG1veWVuIHBhciBzZXhlICh0YXBwbHkpXG5jKG5fY2libGUgPSBucm93KGNpYmxlKSwgbW95X2NpYmxlID0gbWVhbihjaWJsZSRyZXZlbnUpLFxuICBlY2FydF9IRiA9IG1veV9zZXhlW1tcIkhcIl1dIC0gbW95X3NleGVbW1wiRlwiXV0sIGFnZV9wbHVzX3JpY2hlID0gX19fX19fKSJ9
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-base-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Un data frame s’indexe <code>df[lignes, colonnes]</code>. Pour <strong>filtrer des lignes</strong>, mets une condition logique dans le premier emplacement et laisse le second vide : <code>df[condition, ]</code>. Combine les conditions avec <code>&amp;</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-base-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>cible &lt;- df[df$sexe == "F" &amp; df$age &gt;= 30, ]</code> ; <code>moy_sexe &lt;- tapply(df$revenu, df$sexe, mean)</code> ; <code>age_plus_riche = df$age[which.max(df$revenu)]</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="r-base-1">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>La virgule dans <code>df[lignes, ]</code> est essentielle : sans elle, R sélectionne des <strong>colonnes</strong>.</li>
+<li>On combine deux conditions avec <code>&amp;</code> (et), pas <code>&amp;&amp;</code> : <code>&amp;</code> agit élément par élément, <code>&amp;&amp;</code> ne regarde que le premier.</li>
+<li><code>tapply(valeur, groupe, fonction)</code> résume un vecteur par modalité d’un facteur et renvoie un vecteur nommé : on extrait ensuite avec <code>[["H"]]</code>.</li>
+<li><code>which.max()</code> donne la position de la ligne la mieux payée ; on l’utilise pour lire l’âge correspondant dans la même ligne.</li>
+</ol>
+<div class="cell" data-exercise="r-base-1" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="r-base-1">
+<code id="interpolate-8" class="solution-code d-none">set.seed(rb1$seed)
+df &lt;- data.frame(age = sample(18:65, 80, replace = TRUE), sexe = sample(c("F", "H"), 80, replace = TRUE))
+df$revenu &lt;- round(1200 + 25 * df$age + ifelse(df$sexe == "H", rb1$ecart, 0) + rnorm(80, 0, 150))
+cible    &lt;- df[df$sexe == "F" &amp; df$age &gt;= 30, ]
+moy_sexe &lt;- tapply(df$revenu, df$sexe, mean)
+c(n_cible = nrow(cible), moy_cible = mean(cible$revenu),
+  ecart_HF = moy_sexe[["H"]] - moy_sexe[["F"]], age_plus_riche = df$age[which.max(df$revenu)])</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-9-1"><a href="#interpolate-9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(rb1<span class="sc">$</span>seed)</span>
+<span id="interpolate-9-2"><a href="#interpolate-9-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">age =</span> <span class="fu">sample</span>(<span class="dv">18</span><span class="sc">:</span><span class="dv">65</span>, <span class="dv">80</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>), <span class="at">sexe =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"F"</span>, <span class="st">"H"</span>), <span class="dv">80</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>))</span>
+<span id="interpolate-9-3"><a href="#interpolate-9-3" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>revenu <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="dv">1200</span> <span class="sc">+</span> <span class="dv">25</span> <span class="sc">*</span> df<span class="sc">$</span>age <span class="sc">+</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>sexe <span class="sc">==</span> <span class="st">"H"</span>, rb1<span class="sc">$</span>ecart, <span class="dv">0</span>) <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">80</span>, <span class="dv">0</span>, <span class="dv">150</span>))</span>
+<span id="interpolate-9-4"><a href="#interpolate-9-4" aria-hidden="true" tabindex="-1"></a>cible    <span class="ot">&lt;-</span> df[df<span class="sc">$</span>sexe <span class="sc">==</span> <span class="st">"F"</span> <span class="sc">&amp;</span> df<span class="sc">$</span>age <span class="sc">&gt;=</span> <span class="dv">30</span>, ]</span>
+<span id="interpolate-9-5"><a href="#interpolate-9-5" aria-hidden="true" tabindex="-1"></a>moy_sexe <span class="ot">&lt;-</span> <span class="fu">tapply</span>(df<span class="sc">$</span>revenu, df<span class="sc">$</span>sexe, mean)</span>
+<span id="interpolate-9-6"><a href="#interpolate-9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">n_cible =</span> <span class="fu">nrow</span>(cible), <span class="at">moy_cible =</span> <span class="fu">mean</span>(cible<span class="sc">$</span>revenu),</span>
+<span id="interpolate-9-7"><a href="#interpolate-9-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ecart_HF =</span> moy_sexe[[<span class="st">"H"</span>]] <span class="sc">-</span> moy_sexe[[<span class="st">"F"</span>]], <span class="at">age_plus_riche =</span> df<span class="sc">$</span>age[<span class="fu">which.max</span>(df<span class="sc">$</span>revenu)])</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Oublier la virgule : <code>df[df$sexe == "F", ]</code> filtre les lignes ; <code>df[df$sexe == "F"]</code> déclenche une erreur.</li>
+<li>Utiliser <code>=</code> au lieu de <code>==</code> dans une condition : <code>=</code> affecte, <code>==</code> compare.</li>
+<li><code>&amp;&amp;</code> au lieu de <code>&amp;</code> dans un filtre de lignes.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Refais le résumé par groupe avec <code>aggregate(revenu ~ sexe, data = df, FUN = mean)</code> : quelle différence de format pour le résultat ?</p>
+</div>
+<div class="cell" data-exercise="r-base-1" data-check="true">
+<script type="exercise-check-r-base-1-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InItYmFzZS0xIiwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKHJiMSRzZWVkKVxuZGYgPC0gZGF0YS5mcmFtZShhZ2UgPSBzYW1wbGUoMTg6NjUsIDgwLCByZXBsYWNlID0gVFJVRSksIHNleGUgPSBzYW1wbGUoYyhcIkZcIiwgXCJIXCIpLCA4MCwgcmVwbGFjZSA9IFRSVUUpKVxuZGYkcmV2ZW51IDwtIHJvdW5kKDEyMDAgKyAyNSAqIGRmJGFnZSArIGlmZWxzZShkZiRzZXhlID09IFwiSFwiLCByYjEkZWNhcnQsIDApICsgcm5vcm0oODAsIDAsIDE1MCkpXG5rIDwtIGRmJHNleGUgPT0gXCJGXCIgJiBkZiRhZ2UgPj0gMzBcbnJlZiA8LSBjKHN1bShrKSwgbWVhbihkZiRyZXZlbnVba10pLCBtZWFuKGRmJHJldmVudVtkZiRzZXhlID09IFwiSFwiXSkgLSBtZWFuKGRmJHJldmVudVtkZiRzZXhlID09IFwiRlwiXSksIGRmJGFnZVt3aGljaC5tYXgoZGYkcmV2ZW51KV0pXG5yZXMgPC0gc3VwcHJlc3NXYXJuaW5ncyhhcy5udW1lcmljKC5yZXN1bHQpKVxubXNncyA8LSBjKFwiU8OpbGVjdGlvbiA6IGRmW2RmJHNleGUgPT0gXFxcIkZcXFwiICYgZGYkYWdlID49IDMwLCBdLlwiLCBcIlJldmVudSBtb3llbiBkZSBsYSBjaWJsZS5cIiwgXCLDiWNhcnQgSCAtIEYgOiB0YXBwbHkoZGYkcmV2ZW51LCBkZiRzZXhlLCBtZWFuKSBwdWlzIFtbXFxcIkhcXFwiXV0gLSBbW1xcXCJGXFxcIl1dLlwiLCBcIsOCZ2UgZHUgcGx1cyByaWNoZSA6IGRmJGFnZVt3aGljaC5tYXgoZGYkcmV2ZW51KV0uXCIpXG5pZiAobGVuZ3RoKHJlcykgIT0gNCB8fCBhbnlOQShyZXMpKSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJSZW52b2llIGMobl9jaWJsZSA9IC4uLiwgbW95X2NpYmxlID0gLi4uLCBlY2FydF9IRiA9IC4uLiwgYWdlX3BsdXNfcmljaGUgPSAuLi4pLlwiKVxufSBlbHNlIGlmIChhbnkoYmFkIDwtIGFicyhyZXMgLSByZWYpID4gMWUtMDYgKiAoMSArIGFicyhyZWYpKSkpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBtc2dzW3doaWNoKGJhZClbMV1dKVxufSBlbHNlIHtcbiAgbGlzdChjb3JyZWN0ID0gVFJVRSwgbWVzc2FnZSA9IHNwcmludGYoXCJDb3JyZWN0IDogJWQgZmVtbWVzIGRlIDMwIGFucyBvdSBwbHVzLCByZXZlbnUgbW95ZW4gJS4wZiA7IMOpY2FydCBob21tZXMgLSBmZW1tZXMgJSsuMGYuXCIsIGFzLmludGVnZXIocmVmWzFdKSwgcmVmWzJdLCByZWZbM10pKVxufSJ9
+</script>
+</div>
+<div class="dojo-done" data-id="r-base-1">
+
+</div>
+</section>
+<section id="r-base-2" class="level2">
+<h2 class="anchored" data-anchor-id="r-base-2">Écrire une fonction et l’appliquer à une liste</h2>
+<p><span class="dojo-step">Marche 3 sur 3 · Autonome</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="287" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 286;"><span id="cb4-287"><a href="#cb4-287" aria-hidden="true" tabindex="-1"></a>rb2 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-base-2"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">k</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">3</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>On simule 5 séries de prix (graine <span><span id="ojs-element-id-4"></span>,</span> facteur de bruit <span><span id="ojs-element-id-5"></span>).</span> Écris une fonction <code>volatilite(x)</code> qui renvoie l’écart-type des <strong>variations relatives</strong> successives (diff(x) divisé par les valeurs précédentes), applique-la aux 5 séries avec <code>vapply</code>, et renvoie le numéro de la série la plus volatile, la volatilité maximale et la volatilité minimale.</p>
+<div class="cell" data-exercise="r-base-2" data-caption="Fonction + vapply" data-input="rb2">
+<div>
+<div id="webr-11" class="exercise-cell">
+
+</div>
+<script type="webr-11-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJGb25jdGlvbiArIHZhcHBseSIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoici1iYXNlLTIiLCJpbnB1dCI6WyJyYjIiXSwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKHJiMiRzZWVkKVxuc2VyaWVzIDwtIGxhcHBseSgxOjUsIGZ1bmN0aW9uKGkpIHJvdW5kKDEwMCAqIGN1bXByb2QoMSArIHJub3JtKDIwLCAwLjAxLCAwLjAwNSAqIGkgKiByYjIkaykpLCAyKSlcbl9fX19fXyAgICAgIyBkw6lmaW5pcyBpY2kgOiB2b2xhdGlsaXRlIDwtIGZ1bmN0aW9uKHgpIHsgLi4uIH1cbnZvbCA8LSB2YXBwbHkoc2VyaWVzLCB2b2xhdGlsaXRlLCBudW1lcmljKDEpKVxuYyhwbHVzX3ZvbGF0aWxlID0gd2hpY2gubWF4KHZvbCksIHZvbF9tYXggPSBtYXgodm9sKSwgdm9sX21pbiA9IG1pbih2b2wpKSJ9
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-base-2">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Une fonction se définit <code>nom &lt;- function(argument) { ... }</code> et renvoie sa <strong>dernière expression</strong>. Ici, calcule d’abord les variations relatives de <code>x</code> (différences successives rapportées au niveau précédent), puis leur écart-type.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-base-2">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>volatilite &lt;- function(x) sd(diff(x) / x[-length(x)])</code> ; <code>x[-length(x)]</code> retire le dernier élément, donc aligne chaque variation avec la valeur de départ. <code>vapply(liste, f, numeric(1))</code> applique <code>f</code> à chaque élément et exige un nombre en retour.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="r-base-2">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li><code>diff(x)</code> renvoie <span class="math inline">\(x_{t+1} - x_t\)</span> (un élément de moins que <code>x</code>) ; on divise par <code>x[-length(x)]</code>, les valeurs de départ, pour obtenir des variations relatives.</li>
+<li>Une fonction renvoie la valeur de sa dernière expression : pas besoin de <code>return()</code>.</li>
+<li><code>vapply(series, volatilite, numeric(1))</code> est une version <strong>sûre</strong> de <code>sapply</code> : elle échoue clairement si la fonction ne renvoie pas un nombre.</li>
+<li><code>which.max(vol)</code> donne l’indice de la série la plus volatile : les séries ont été construites avec un bruit croissant, la 5e devrait gagner en moyenne.</li>
+</ol>
+<div class="cell" data-exercise="r-base-2" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="r-base-2">
+<code id="interpolate-13" class="solution-code d-none">set.seed(rb2$seed)
+series &lt;- lapply(1:5, function(i) round(100 * cumprod(1 + rnorm(20, 0.01, 0.005 * i * rb2$k)), 2))
+volatilite &lt;- function(x) sd(diff(x) / x[-length(x)])
+vol &lt;- vapply(series, volatilite, numeric(1))
+c(plus_volatile = which.max(vol), vol_max = max(vol), vol_min = min(vol))</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-14-1"><a href="#interpolate-14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(rb2<span class="sc">$</span>seed)</span>
+<span id="interpolate-14-2"><a href="#interpolate-14-2" aria-hidden="true" tabindex="-1"></a>series <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="cf">function</span>(i) <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> <span class="fu">cumprod</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">20</span>, <span class="fl">0.01</span>, <span class="fl">0.005</span> <span class="sc">*</span> i <span class="sc">*</span> rb2<span class="sc">$</span>k)), <span class="dv">2</span>))</span>
+<span id="interpolate-14-3"><a href="#interpolate-14-3" aria-hidden="true" tabindex="-1"></a>volatilite <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">sd</span>(<span class="fu">diff</span>(x) <span class="sc">/</span> x[<span class="sc">-</span><span class="fu">length</span>(x)])</span>
+<span id="interpolate-14-4"><a href="#interpolate-14-4" aria-hidden="true" tabindex="-1"></a>vol <span class="ot">&lt;-</span> <span class="fu">vapply</span>(series, volatilite, <span class="fu">numeric</span>(<span class="dv">1</span>))</span>
+<span id="interpolate-14-5"><a href="#interpolate-14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">plus_volatile =</span> <span class="fu">which.max</span>(vol), <span class="at">vol_max =</span> <span class="fu">max</span>(vol), <span class="at">vol_min =</span> <span class="fu">min</span>(vol))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Diviser <code>diff(x)</code> par <code>x</code> entier : les longueurs diffèrent (recyclage silencieux ou avertissement).</li>
+<li>Calculer <code>sd(diff(x))</code> sans rapporter au niveau : la volatilité absolue dépend de l’échelle de la série.</li>
+<li>Utiliser <code>sapply</code> partout : un résultat de mauvais type passe inaperçu, alors que <code>vapply</code> l’attrape.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Ajoute un argument <code>fenetre = 5</code> pour calculer la volatilité sur les <code>fenetre</code> dernières observations seulement, avec une valeur par défaut.</p>
+</div>
+<div class="cell" data-exercise="r-base-2" data-check="true">
+<script type="exercise-check-r-base-2-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InItYmFzZS0yIiwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKHJiMiRzZWVkKVxuc2VyaWVzIDwtIGxhcHBseSgxOjUsIGZ1bmN0aW9uKGkpIHJvdW5kKDEwMCAqIGN1bXByb2QoMSArIHJub3JtKDIwLCAwLjAxLCAwLjAwNSAqIGkgKiByYjIkaykpLCAyKSlcbnYgPC0gc2FwcGx5KHNlcmllcywgZnVuY3Rpb24oeCkgc2QoZGlmZih4KSAvIHhbLWxlbmd0aCh4KV0pKVxucmVmIDwtIGMod2hpY2gubWF4KHYpLCBtYXgodiksIG1pbih2KSlcbnJlcyA8LSBzdXBwcmVzc1dhcm5pbmdzKGFzLm51bWVyaWMoLnJlc3VsdCkpXG5tc2dzIDwtIGMoXCJTw6lyaWUgbGEgcGx1cyB2b2xhdGlsZSA6IHdoaWNoLm1heCh2b2wpLlwiLCBcIlZvbGF0aWxpdMOpIG1heGltYWxlIDogbWF4KHZvbCksIGF2ZWMgdm9sYXRpbGl0ZSh4KSA9IHNkKGRpZmYoeCkgLyB4Wy1sZW5ndGgoeCldKS5cIiwgXCJWb2xhdGlsaXTDqSBtaW5pbWFsZSA6IG1pbih2b2wpLlwiKVxuaWYgKGxlbmd0aChyZXMpICE9IDMgfHwgYW55TkEocmVzKSkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiUmVudm9pZSBjKHBsdXNfdm9sYXRpbGUgPSAuLi4sIHZvbF9tYXggPSAuLi4sIHZvbF9taW4gPSAuLi4pLlwiKVxufSBlbHNlIGlmIChhbnkoYmFkIDwtIGFicyhyZXMgLSByZWYpID4gMWUtMDYgKiAoMSArIGFicyhyZWYpKSkpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBtc2dzW3doaWNoKGJhZClbMV1dKVxufSBlbHNlIHtcbiAgbGlzdChjb3JyZWN0ID0gVFJVRSwgbWVzc2FnZSA9IHNwcmludGYoXCJDb3JyZWN0IDogbGEgc8OpcmllICVkIGVzdCBsYSBwbHVzIHZvbGF0aWxlICjDqWNhcnQtdHlwZSBkZXMgdmFyaWF0aW9ucyBkZSAlLjJmICUlKS5cIiwgYXMuaW50ZWdlcihyZWZbMV0pLCAxMDAgKiByZWZbMl0pKVxufSJ9
+</script>
+</div>
+<div class="dojo-done" data-id="r-base-2">
+
+</div>
+<div class="dojo-track" data-track="r-graph">
+
+</div>
+</section>
+<section id="r-graph-0" class="level2">
+<h2 class="anchored" data-anchor-id="r-graph-0">Premier graphique : une série temporelle propre</h2>
+<p><span class="dojo-step">Marche 1 sur 4 · Guidé</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="371" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 370;"><span id="cb5-371"><a href="#cb5-371" aria-hidden="true" tabindex="-1"></a>rg0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-graph-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">g</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">4</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Trace l’évolution du PIB (indice) entre 2010 et 2024 avec la <strong>fonction <code>plot()</code></strong> : lignes et points, points pleins, couleur <code>steelblue</code>, un axe vertical qui <strong>commence à 0</strong>, des titres d’axes et un titre. Puis lis les limites réelles des axes avec <code>par("usr")</code> : c’est ainsi qu’on vérifie un graphique sans le regarder.</p>
+<div class="cell" data-exercise="r-graph-0" data-caption="plot()" data-input="rg0">
+<div>
+<div id="webr-16" class="exercise-cell">
+
+</div>
+<script type="webr-16-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJwbG90KCkiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InItZ3JhcGgtMCIsImlucHV0IjpbInJnMCJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic2V0LnNlZWQocmcwJHNlZWQpXG5hbm5lZSA8LSAyMDEwOjIwMjRcbnBpYiA8LSByb3VuZCgxMDAgKiBjdW1wcm9kKDEgKyBybm9ybSgxNSwgcmcwJGcgLyAxMDAsIDAuMDEpKSwgMSlcbnBsb3QoYW5uZWUsIHBpYiwgX19fX19fKSAgICAgIyB0eXBlLCBwY2gsIGNvbCwgeWxpbSwgeGxhYiwgeWxhYiwgbWFpblxucGFyKFwidXNyXCIpICAgICAgICAgICAgICAgICAgICMgW3htaW4sIHhtYXgsIHltaW4sIHltYXhdIHLDqWVscyBkZSBsYSB6b25lIGRlIHRyYWPDqSJ9
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>plot(x, y, ...)</code> accepte des arguments nommés qui règlent l’apparence : <code>type</code> (“p” points, “l” lignes, “b” les deux), <code>pch</code> (symbole), <code>col</code>, <code>xlab</code>, <code>ylab</code>, <code>main</code>, et <code>ylim = c(min, max)</code> pour fixer l’étendue verticale.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-0">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>plot(annee, pib, type = "b", pch = 19, col = "steelblue", ylim = c(0, max(pib)), xlab = "Année", ylab = "PIB (indice)", main = "Évolution du PIB")</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="r-graph-0">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li><code>plot(x, y)</code> dessine un nuage de points ; l’argument <code>type</code> change la représentation : <code>"b"</code> relie les points par des segments.</li>
+<li>Par défaut, R choisit l’étendue de l’axe vertical à partir des données : une série proche de 100 serait tronquée loin de 0. Pour <strong>ne pas exagérer</strong> les variations visuelles, on impose <code>ylim = c(0, max(pib))</code>.</li>
+<li>R ajoute toujours 4 % de marge de chaque côté : <code>par("usr")</code> renvoie donc <code>ylim</code> élargi de 4 %.</li>
+<li>Le titre et les libellés des axes font partie du graphique, pas de la légende : un graphique sans unités ni titre est difficile à lire seul.</li>
+</ol>
+<div class="cell" data-exercise="r-graph-0" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="r-graph-0">
+<code id="interpolate-18" class="solution-code d-none">set.seed(rg0$seed)
+annee &lt;- 2010:2024
+pib &lt;- round(100 * cumprod(1 + rnorm(15, rg0$g / 100, 0.01)), 1)
+plot(annee, pib, type = "b", pch = 19, col = "steelblue", ylim = c(0, max(pib)),
+     xlab = "Année", ylab = "PIB (indice)", main = "Évolution du PIB")
+par("usr")</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-19-1"><a href="#interpolate-19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(rg0<span class="sc">$</span>seed)</span>
+<span id="interpolate-19-2"><a href="#interpolate-19-2" aria-hidden="true" tabindex="-1"></a>annee <span class="ot">&lt;-</span> <span class="dv">2010</span><span class="sc">:</span><span class="dv">2024</span></span>
+<span id="interpolate-19-3"><a href="#interpolate-19-3" aria-hidden="true" tabindex="-1"></a>pib <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> <span class="fu">cumprod</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">15</span>, rg0<span class="sc">$</span>g <span class="sc">/</span> <span class="dv">100</span>, <span class="fl">0.01</span>)), <span class="dv">1</span>)</span>
+<span id="interpolate-19-4"><a href="#interpolate-19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(annee, pib, <span class="at">type =</span> <span class="st">"b"</span>, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">"steelblue"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(pib)),</span>
+<span id="interpolate-19-5"><a href="#interpolate-19-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Année"</span>, <span class="at">ylab =</span> <span class="st">"PIB (indice)"</span>, <span class="at">main =</span> <span class="st">"Évolution du PIB"</span>)</span>
+<span id="interpolate-19-6"><a href="#interpolate-19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="st">"usr"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Écrire <code>plot(pib ~ annee)</code> puis oublier <code>ylim</code> : le graphique s’ouvre sur un axe tronqué, qui exagère la croissance.</li>
+<li>Mettre <code>col = steelblue</code> sans guillemets : R cherche un objet nommé <code>steelblue</code>.</li>
+<li>Confondre <code>type = "l"</code> (ligne seule) et <code>type = "b"</code> (ligne et points) ; <code>"o"</code> superpose les points à la ligne.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Essaie <code>type = "s"</code> (escalier) et <code>col = adjustcolor("steelblue", 0.5)</code> (transparence). Pour la liste des couleurs, <code>colors()</code> et <code>hcl.colors(5)</code>.</p>
+</div>
+<div class="cell" data-exercise="r-graph-0" data-check="true">
+<script type="exercise-check-r-graph-0-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InItZ3JhcGgtMCIsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzZXQuc2VlZChyZzAkc2VlZCk7IGEgPC0gMjAxMDoyMDI0OyBwIDwtIHJvdW5kKDEwMCAqIGN1bXByb2QoMSArIHJub3JtKDE1LCByZzAkZyAvIDEwMCwgMC4wMSkpLCAxKVxucmVmIDwtIGMoMjAxMCAtIDAuMDQgKiAxNCwgMjAyNCArIDAuMDQgKiAxNCwgLTAuMDQgKiBtYXgocCksIDEuMDQgKiBtYXgocCkpXG5yZXMgPC0gc3VwcHJlc3NXYXJuaW5ncyhhcy5udW1lcmljKC5yZXN1bHQpKVxubXNncyA8LSBjKFwiQXhlIHggOiBsYWlzc2UgbGEgdmFsZXVyIHBhciBkw6lmYXV0ICh4bGltIGF1dG9tYXRpcXVlKS5cIiwgXCJBeGUgeCA6IGxhaXNzZSBsYSB2YWxldXIgcGFyIGTDqWZhdXQgKHhsaW0gYXV0b21hdGlxdWUpLlwiLCBcIkwnYXhlIHZlcnRpY2FsIGRvaXQgcGFydGlyIGRlIDAgOiB5bGltID0gYygwLCBtYXgocGliKSkuXCIsIFwiTCdheGUgdmVydGljYWwgZG9pdCBhbGxlciBqdXNxdSfDoCBtYXgocGliKSA6IHlsaW0gPSBjKDAsIG1heChwaWIpKS5cIilcbmlmIChsZW5ndGgocmVzKSAhPSA0IHx8IGFueU5BKHJlcykpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBcIlJlbnZvaWUgYyh4bWluID0gLi4uLCB4bWF4ID0gLi4uLCB5bWluID0gLi4uLCB5bWF4ID0gLi4uKS5cIilcbn0gZWxzZSBpZiAoYW55KGJhZCA8LSBhYnMocmVzIC0gcmVmKSA+IDFlLTA2ICogKDEgKyBhYnMocmVmKSkpKSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gbXNnc1t3aGljaChiYWQpWzFdXSlcbn0gZWxzZSB7XG4gIGxpc3QoY29ycmVjdCA9IFRSVUUsIG1lc3NhZ2UgPSBzcHJpbnRmKFwiQ29ycmVjdCA6IGwnYXhlIHZlcnRpY2FsIHZhIGRlICUuMWYgw6AgJS4xZiAobWFyZ2UgZGUgNCAlJSBpbmNsdXNlKSA7IGlsIHBhcnQgYmllbiBkZSAwLlwiLCByZWZbM10sIHJlZls0XSkpXG59In0=
+</script>
+</div>
+<div class="dojo-done" data-id="r-graph-0">
+
+</div>
+</section>
+<section id="r-graph-1" class="level2">
+<h2 class="anchored" data-anchor-id="r-graph-1">Histogramme en densité et courbe de densité</h2>
+<p><span class="dojo-step">Marche 2 sur 4 · À compléter</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb6" data-startfrom="458" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 457;"><span id="cb6-458"><a href="#cb6-458" aria-hidden="true" tabindex="-1"></a>rg1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-graph-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">L</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="fl">0.5</span><span class="op">,</span> <span class="dv">1</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Représente la distribution de 500 revenus (milliers d’euros, graine <span><span id="ojs-element-id-6"></span>)</span> par un histogramme <strong>en densité</strong> (l’aire totale vaut 1) avec des classes de largeur <span><span id="ojs-element-id-7"></span>,</span> de 0 jusqu’à la première borne au-dessus du maximum. Superpose la courbe de densité estimée. Renvoie le nombre de classes, l’aire totale de l’histogramme et la limite haute de l’axe vertical.</p>
+<div class="cell" data-exercise="r-graph-1" data-caption="hist() et density()" data-input="rg1">
+<div>
+<div id="webr-21" class="exercise-cell">
+
+</div>
+<script type="webr-21-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJoaXN0KCkgZXQgZGVuc2l0eSgpIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhlcmNpc2UiOiJyLWdyYXBoLTEiLCJpbnB1dCI6WyJyZzEiXSwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKHJnMSRzZWVkKVxueCA8LSBybG5vcm0oNTAwLCAwLjUsIDAuNilcbkwgPC0gcmcxJExcbmggPC0gaGlzdCh4LCBfX19fX18pICAgICAgICAgICAgICAgICAgICAgICAjIGJyZWFrcyA9IHNlcSgwLCBib3JuZV9oYXV0ZSwgYnkgPSBMKSwgZnJlcSA9IEZBTFNFLCBjb2wsIG1haW4sIHhsYWJcbmxpbmVzKF9fX19fXykgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIGNvdXJiZSBkZSBkZW5zaXTDqSA6IGRlbnNpdHkoeCksIGVuIHJvdWdlXG5jKGNsYXNzZXMgPSBsZW5ndGgoaCRjb3VudHMpLCBhaXJlID0gc3VtKGgkZGVuc2l0eSAqIGRpZmYoaCRicmVha3MpKSwgeW1heF9heGUgPSBwYXIoXCJ1c3JcIilbNF0pIn0=
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>hist(x, breaks = ...)</code> accepte un <strong>vecteur de bornes</strong> pour des classes de largeur choisie ; <code>freq = FALSE</code> affiche des densités au lieu d’effectifs. La borne haute doit couvrir le maximum : arrondis <code>max(x) / L</code> à l’entier supérieur.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>h &lt;- hist(x, breaks = seq(0, ceiling(max(x) / L) * L, by = L), freq = FALSE, col = "grey85", main = "Revenus", xlab = "Milliers d'euros")</code> ; <code>lines(density(x), col = "red", lwd = 2)</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="r-graph-1">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>Avec <code>breaks = seq(0, borne, by = L)</code>, chaque classe a la même largeur ; <code>ceiling(max(x) / L) * L</code> donne la première borne au-dessus du maximum.</li>
+<li><code>freq = FALSE</code> normalise : la hauteur d’une barre est l’effectif divisé par (n × largeur), donc l’aire totale vaut 1. C’est ce qui permet de <strong>superposer</strong> une densité estimée.</li>
+<li><code>lines()</code> ajoute une courbe au graphique courant, sans en créer un nouveau ; <code>density(x)</code> fournit les coordonnées.</li>
+<li>L’objet renvoyé par <code>hist()</code> contient <code>counts</code>, <code>density</code> et <code>breaks</code> : utile pour vérifier ou réutiliser le calcul.</li>
+</ol>
+<div class="cell" data-exercise="r-graph-1" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="r-graph-1">
+<code id="interpolate-23" class="solution-code d-none">set.seed(rg1$seed)
+x &lt;- rlnorm(500, 0.5, 0.6)
+L &lt;- rg1$L
+h &lt;- hist(x, breaks = seq(0, ceiling(max(x) / L) * L, by = L), freq = FALSE,
+          col = "grey85", main = "Distribution des revenus", xlab = "Milliers d'euros")
+lines(density(x), col = "red", lwd = 2)
+c(classes = length(h$counts), aire = sum(h$density * diff(h$breaks)), ymax_axe = par("usr")[4])</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-24-1"><a href="#interpolate-24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(rg1<span class="sc">$</span>seed)</span>
+<span id="interpolate-24-2"><a href="#interpolate-24-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rlnorm</span>(<span class="dv">500</span>, <span class="fl">0.5</span>, <span class="fl">0.6</span>)</span>
+<span id="interpolate-24-3"><a href="#interpolate-24-3" aria-hidden="true" tabindex="-1"></a>L <span class="ot">&lt;-</span> rg1<span class="sc">$</span>L</span>
+<span id="interpolate-24-4"><a href="#interpolate-24-4" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fu">hist</span>(x, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fu">ceiling</span>(<span class="fu">max</span>(x) <span class="sc">/</span> L) <span class="sc">*</span> L, <span class="at">by =</span> L), <span class="at">freq =</span> <span class="cn">FALSE</span>,</span>
+<span id="interpolate-24-5"><a href="#interpolate-24-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">col =</span> <span class="st">"grey85"</span>, <span class="at">main =</span> <span class="st">"Distribution des revenus"</span>, <span class="at">xlab =</span> <span class="st">"Milliers d'euros"</span>)</span>
+<span id="interpolate-24-6"><a href="#interpolate-24-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">density</span>(x), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="interpolate-24-7"><a href="#interpolate-24-7" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">classes =</span> <span class="fu">length</span>(h<span class="sc">$</span>counts), <span class="at">aire =</span> <span class="fu">sum</span>(h<span class="sc">$</span>density <span class="sc">*</span> <span class="fu">diff</span>(h<span class="sc">$</span>breaks)), <span class="at">ymax_axe =</span> <span class="fu">par</span>(<span class="st">"usr"</span>)[<span class="dv">4</span>])</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Oublier <code>freq = FALSE</code> : la courbe de densité (valeurs autour de 0,3) serait écrasée par des barres de hauteur 100.</li>
+<li>Laisser R choisir <code>breaks</code> quand on compare deux histogrammes : les classes diffèrent, la comparaison est trompeuse.</li>
+<li>Appeler <code>plot(density(x))</code> après <code>hist()</code> : cela ouvre un nouveau graphique au lieu d’ajouter la courbe.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Essaie <code>breaks = "FD"</code> (règle de Freedman-Diaconis) ou <code>"Sturges"</code> : combien de classes obtiens-tu ? Pourquoi les résultats diffèrent-ils ?</p>
+</div>
+<div class="cell" data-exercise="r-graph-1" data-check="true">
+<script type="exercise-check-r-graph-1-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InItZ3JhcGgtMSIsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzZXQuc2VlZChyZzEkc2VlZCk7IHggPC0gcmxub3JtKDUwMCwgMC41LCAwLjYpOyBMIDwtIHJnMSRMXG5ociA8LSBoaXN0KHgsIGJyZWFrcyA9IHNlcSgwLCBjZWlsaW5nKG1heCh4KSAvIEwpICogTCwgYnkgPSBMKSwgcGxvdCA9IEZBTFNFKVxucmVmIDwtIGMobGVuZ3RoKGhyJGNvdW50cyksIDEsIDEuMDQgKiBtYXgoaHIkZGVuc2l0eSkpXG5yZXMgPC0gc3VwcHJlc3NXYXJuaW5ncyhhcy5udW1lcmljKC5yZXN1bHQpKVxubXNncyA8LSBjKFwiTm9tYnJlIGRlIGNsYXNzZXMgOiBicmVha3MgPSBzZXEoMCwgY2VpbGluZyhtYXgoeCkgLyBMKSAqIEwsIGJ5ID0gTCkuXCIsIFwiTCdhaXJlIGRvaXQgdmFsb2lyIDEgOiBham91dGUgZnJlcSA9IEZBTFNFIChvdSBwcm9iYWJpbGl0eSA9IFRSVUUpLlwiLCBcIkwnYXhlIHZlcnRpY2FsIGRvaXQgYWZmaWNoZXIgZGVzIGRlbnNpdMOpcyA6IGZyZXEgPSBGQUxTRSwgc2FucyBjaGFuZ2VyIGxlcyBjbGFzc2VzLlwiKVxuaWYgKGxlbmd0aChyZXMpICE9IDMgfHwgYW55TkEocmVzKSkge1xuICBsaXN0KGNvcnJlY3QgPSBGQUxTRSwgbWVzc2FnZSA9IFwiUmVudm9pZSBjKGNsYXNzZXMgPSAuLi4sIGFpcmUgPSAuLi4sIHltYXhfYXhlID0gLi4uKS5cIilcbn0gZWxzZSBpZiAoYW55KGJhZCA8LSBhYnMocmVzIC0gcmVmKSA+IDFlLTA2ICogKDEgKyBhYnMocmVmKSkpKSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gbXNnc1t3aGljaChiYWQpWzFdXSlcbn0gZWxzZSB7XG4gIGxpc3QoY29ycmVjdCA9IFRSVUUsIG1lc3NhZ2UgPSBzcHJpbnRmKFwiQ29ycmVjdCA6ICVkIGNsYXNzZXMsIGFpcmUgPSAxLCBheGUgdmVydGljYWwganVzcXUnw6AgJS4yZiAoZGVuc2l0w6kpLlwiLCBhcy5pbnRlZ2VyKHJlZlsxXSksIHJlZlszXSkpXG59In0=
+</script>
+</div>
+<div class="dojo-done" data-id="r-graph-1">
+
+</div>
+</section>
+<section id="r-graph-2" class="level2">
+<h2 class="anchored" data-anchor-id="r-graph-2">Comparer des groupes : boîtes à moustaches et barres</h2>
+<p><span class="dojo-step">Marche 3 sur 4 · À compléter</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb7" data-startfrom="552" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 551;"><span id="cb7-552"><a href="#cb7-552" aria-hidden="true" tabindex="-1"></a>rg2 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-graph-2"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">b</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">10</span><span class="op">,</span> <span class="dv">14</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Un échantillon de 200 salaires horaires (graine <span><span id="ojs-element-id-8"></span>)</span> selon le diplôme (Bac, Licence, Master). Trace les <strong>boîtes à moustaches</strong> du salaire par diplôme avec la notation formule <code>salaire ~ diplome</code>, puis un diagramme en barres des moyennes par diplôme. Renvoie les trois médianes (lues dans l’objet renvoyé par <code>boxplot</code>), le nombre de valeurs atypiques et le nombre de barres.</p>
+<div class="cell" data-exercise="r-graph-2" data-caption="boxplot() et barplot()" data-input="rg2">
+<div>
+<div id="webr-26" class="exercise-cell">
+
+</div>
+<script type="webr-26-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJib3hwbG90KCkgZXQgYmFycGxvdCgpIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhlcmNpc2UiOiJyLWdyYXBoLTIiLCJpbnB1dCI6WyJyZzIiXSwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKHJnMiRzZWVkKVxubiA8LSAyMDBcbmRpcGxvbWUgPC0gZmFjdG9yKHNhbXBsZShjKFwiQmFjXCIsIFwiTGljZW5jZVwiLCBcIk1hc3RlclwiKSwgbiwgcmVwbGFjZSA9IFRSVUUsIHByb2IgPSBjKDAuNSwgMC4zLCAwLjIpKSxcbiAgICAgICAgICAgICAgICAgIGxldmVscyA9IGMoXCJCYWNcIiwgXCJMaWNlbmNlXCIsIFwiTWFzdGVyXCIpKVxuc2FsYWlyZSA8LSByb3VuZChjKEJhYyA9IHJnMiRiLCBMaWNlbmNlID0gcmcyJGIgKyAzLCBNYXN0ZXIgPSByZzIkYiArIDcpW2RpcGxvbWVdICogZXhwKHJub3JtKG4sIDAsIDAuMykpLCAyKVxuYiA8LSBib3hwbG90KF9fX19fXykgICAgICAgICAgICMgZm9ybXVsZSBzYWxhaXJlIH4gZGlwbG9tZSwgZGF0YSA9IC4uLiwgY29sLCB5bGFiXG5tb3kgPC0gdGFwcGx5KHNhbGFpcmUsIGRpcGxvbWUsIG1lYW4pXG5icCA8LSBiYXJwbG90KF9fX19fXykgICAgICAgICAgIyBiYXJyZXMgZGVzIG1veWVubmVzIDogbW95LCB5bGFiLCB5bGltXG5jKGIkc3RhdHNbMywgXSwgbl9hdHlwaXF1ZXMgPSBsZW5ndGgoYiRvdXQpLCBiYXJyZXMgPSBsZW5ndGgoYnApKSJ9
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-2">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>boxplot()</code> accepte une <strong>formule</strong> <code>y ~ groupe</code> avec l’argument <code>data</code>, ou deux vecteurs séparés (<code>boxplot(salaire ~ diplome)</code> fonctionne directement car les deux sont dans l’environnement). <code>barplot()</code> prend un vecteur de hauteurs, avec <code>names.arg</code> ou un vecteur nommé.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-2">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>b &lt;- boxplot(salaire ~ diplome, col = "grey85", ylab = "Salaire horaire (euros)")</code> ; <code>bp &lt;- barplot(moy, ylab = "Salaire moyen (euros)", ylim = c(0, max(moy) * 1.1))</code>. La ligne 3 de <code>b$stats</code> contient les médianes.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="r-graph-2">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li>La formule <code>y ~ g</code> se lit « y expliqué par g » : <code>boxplot</code> trace une boîte par modalité de <code>g</code>. Elle fonctionne avec presque toutes les fonctions graphiques et statistiques de R (<code>plot</code>, <code>t.test</code>, <code>lm</code>, <code>aggregate</code>).</li>
+<li><code>boxplot()</code> <strong>renvoie</strong> ses statistiques invisiblement : <code>b$stats</code> (5 lignes : minimum, Q1, médiane, Q3, maximum hors atypiques), <code>b$out</code> (les valeurs atypiques), <code>b$n</code>.</li>
+<li>Une boîte résume la distribution (médiane, quartiles, valeurs atypiques) ; une barre de moyenne cache la dispersion. Pour des comparaisons de groupes, la boîte est plus informative.</li>
+<li><code>barplot()</code> renvoie les abscisses des barres : on peut s’en servir pour ajouter du texte ou des barres d’erreur au bon endroit.</li>
+</ol>
+<div class="cell" data-exercise="r-graph-2" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="r-graph-2">
+<code id="interpolate-28" class="solution-code d-none">set.seed(rg2$seed)
+n &lt;- 200
+diplome &lt;- factor(sample(c("Bac", "Licence", "Master"), n, replace = TRUE, prob = c(0.5, 0.3, 0.2)),
+                  levels = c("Bac", "Licence", "Master"))
+salaire &lt;- round(c(Bac = rg2$b, Licence = rg2$b + 3, Master = rg2$b + 7)[diplome] * exp(rnorm(n, 0, 0.3)), 2)
+b &lt;- boxplot(salaire ~ diplome, col = "grey85", ylab = "Salaire horaire (euros)")
+moy &lt;- tapply(salaire, diplome, mean)
+bp &lt;- barplot(moy, ylab = "Salaire moyen (euros)", ylim = c(0, max(moy) * 1.1))
+c(b$stats[3, ], n_atypiques = length(b$out), barres = length(bp))</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-29-1"><a href="#interpolate-29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(rg2<span class="sc">$</span>seed)</span>
+<span id="interpolate-29-2"><a href="#interpolate-29-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="interpolate-29-3"><a href="#interpolate-29-3" aria-hidden="true" tabindex="-1"></a>diplome <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"Bac"</span>, <span class="st">"Licence"</span>, <span class="st">"Master"</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.3</span>, <span class="fl">0.2</span>)),</span>
+<span id="interpolate-29-4"><a href="#interpolate-29-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Bac"</span>, <span class="st">"Licence"</span>, <span class="st">"Master"</span>))</span>
+<span id="interpolate-29-5"><a href="#interpolate-29-5" aria-hidden="true" tabindex="-1"></a>salaire <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="at">Bac =</span> rg2<span class="sc">$</span>b, <span class="at">Licence =</span> rg2<span class="sc">$</span>b <span class="sc">+</span> <span class="dv">3</span>, <span class="at">Master =</span> rg2<span class="sc">$</span>b <span class="sc">+</span> <span class="dv">7</span>)[diplome] <span class="sc">*</span> <span class="fu">exp</span>(<span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="fl">0.3</span>)), <span class="dv">2</span>)</span>
+<span id="interpolate-29-6"><a href="#interpolate-29-6" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">boxplot</span>(salaire <span class="sc">~</span> diplome, <span class="at">col =</span> <span class="st">"grey85"</span>, <span class="at">ylab =</span> <span class="st">"Salaire horaire (euros)"</span>)</span>
+<span id="interpolate-29-7"><a href="#interpolate-29-7" aria-hidden="true" tabindex="-1"></a>moy <span class="ot">&lt;-</span> <span class="fu">tapply</span>(salaire, diplome, mean)</span>
+<span id="interpolate-29-8"><a href="#interpolate-29-8" aria-hidden="true" tabindex="-1"></a>bp <span class="ot">&lt;-</span> <span class="fu">barplot</span>(moy, <span class="at">ylab =</span> <span class="st">"Salaire moyen (euros)"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(moy) <span class="sc">*</span> <span class="fl">1.1</span>))</span>
+<span id="interpolate-29-9"><a href="#interpolate-29-9" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(b<span class="sc">$</span>stats[<span class="dv">3</span>, ], <span class="at">n_atypiques =</span> <span class="fu">length</span>(b<span class="sc">$</span>out), <span class="at">barres =</span> <span class="fu">length</span>(bp))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Écrire <code>boxplot(diplome, salaire)</code> : les arguments sont dans le mauvais ordre ; utilise la formule <code>salaire ~ diplome</code>.</li>
+<li>Oublier de donner des <strong>niveaux ordonnés</strong> au facteur : sinon R trie les modalités par ordre alphabétique (Bac, Licence, Master ici par chance).</li>
+<li>Tronquer l’axe vertical d’un barplot : la hauteur des barres est interprétée comme une quantité, il faut que l’axe parte de 0.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Ajoute les points individuels par-dessus : <code>stripchart(salaire ~ diplome, vertical = TRUE, method = "jitter", add = TRUE, pch = 16, col = rgb(0, 0, 0, 0.25))</code>.</p>
+</div>
+<div class="cell" data-exercise="r-graph-2" data-check="true">
+<script type="exercise-check-r-graph-2-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InItZ3JhcGgtMiIsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzZXQuc2VlZChyZzIkc2VlZCk7IG4gPC0gMjAwXG5kaXBsb21lIDwtIGZhY3RvcihzYW1wbGUoYyhcIkJhY1wiLCBcIkxpY2VuY2VcIiwgXCJNYXN0ZXJcIiksIG4sIHJlcGxhY2UgPSBUUlVFLCBwcm9iID0gYygwLjUsIDAuMywgMC4yKSksIGxldmVscyA9IGMoXCJCYWNcIiwgXCJMaWNlbmNlXCIsIFwiTWFzdGVyXCIpKVxuc2FsYWlyZSA8LSByb3VuZChjKEJhYyA9IHJnMiRiLCBMaWNlbmNlID0gcmcyJGIgKyAzLCBNYXN0ZXIgPSByZzIkYiArIDcpW2RpcGxvbWVdICogZXhwKHJub3JtKG4sIDAsIDAuMykpLCAyKVxuYnIgPC0gYm94cGxvdChzYWxhaXJlIH4gZGlwbG9tZSwgcGxvdCA9IEZBTFNFKVxucmVmIDwtIGMoYnIkc3RhdHNbMywgXSwgbGVuZ3RoKGJyJG91dCksIDMpXG5yZXMgPC0gc3VwcHJlc3NXYXJuaW5ncyhhcy5udW1lcmljKC5yZXN1bHQpKVxubXNncyA8LSBjKFwiTGVzIG3DqWRpYW5lcyBzb250IGRhbnMgYiRzdGF0c1szLCBdIDogdsOpcmlmaWUgcXVlIGIgY29udGllbnQgYmllbiBib3hwbG90KHNhbGFpcmUgfiBkaXBsb21lKS5cIiwgXCJNw6lkaWFuZSBMaWNlbmNlIDogYiRzdGF0c1szLCAyXS5cIiwgXCJNw6lkaWFuZSBNYXN0ZXIgOiBiJHN0YXRzWzMsIDNdLlwiLCBcIlZhbGV1cnMgYXR5cGlxdWVzIDogbGVuZ3RoKGIkb3V0KS5cIiwgXCJJbCBkb2l0IHkgYXZvaXIgMyBiYXJyZXMgOiBiYXJwbG90KG1veSkuXCIpXG5pZiAobGVuZ3RoKHJlcykgIT0gNSB8fCBhbnlOQShyZXMpKSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJSZW52b2llIGMobWVkX0JhYyA9IC4uLiwgbWVkX0xpY2VuY2UgPSAuLi4sIG1lZF9NYXN0ZXIgPSAuLi4sIG5fYXR5cGlxdWVzID0gLi4uLCBiYXJyZXMgPSAuLi4pLlwiKVxufSBlbHNlIGlmIChhbnkoYmFkIDwtIGFicyhyZXMgLSByZWYpID4gMWUtMDYgKiAoMSArIGFicyhyZWYpKSkpIHtcbiAgbGlzdChjb3JyZWN0ID0gRkFMU0UsIG1lc3NhZ2UgPSBtc2dzW3doaWNoKGJhZClbMV1dKVxufSBlbHNlIHtcbiAgbGlzdChjb3JyZWN0ID0gVFJVRSwgbWVzc2FnZSA9IHNwcmludGYoXCJDb3JyZWN0IDogbcOpZGlhbmVzICUuMWYgLyAlLjFmIC8gJS4xZiDigqwsICVkIHZhbGV1cihzKSBhdHlwaXF1ZShzKS5cIiwgcmVmWzFdLCByZWZbMl0sIHJlZlszXSwgYXMuaW50ZWdlcihyZWZbNF0pKSlcbn0ifQ==
+</script>
+</div>
+<div class="dojo-done" data-id="r-graph-2">
+
+</div>
+</section>
+<section id="r-graph-3" class="level2">
+<h2 class="anchored" data-anchor-id="r-graph-3">Plusieurs graphiques : droite de régression et diagnostic des résidus</h2>
+<p><span class="dojo-step">Marche 4 sur 4 · Autonome</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb8" data-startfrom="0" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line -1;"><span id="cb8-0"><a href="#cb8-0" aria-hidden="true" tabindex="-1"></a>rg3 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-graph-3"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">b</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">5</span><span class="op">,</span> <span class="dv">20</span>) <span class="op">/</span> <span class="dv">10</span> }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-8" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Deux graphiques côte à côte (une ligne, deux colonnes) pour 80 observations (graine <span><span id="ojs-element-id-9"></span>)</span> : à gauche le nuage de points de y contre x avec la droite des moindres carrés et une légende ; à droite le diagramme quantile-quantile des résidus avec sa droite de référence. Restaure ensuite la disposition initiale. Renvoie la pente, l’ordonnée à l’origine et la disposition (lignes, colonnes) lue avant restauration.</p>
+<div class="cell" data-exercise="r-graph-3" data-caption="par(mfrow), abline(), legend()" data-input="rg3">
+<div>
+<div id="webr-31" class="exercise-cell">
+
+</div>
+<script type="webr-31-contents">
+eyJhdHRyIjp7ImNhcHRpb24iOiJwYXIobWZyb3cpLCBhYmxpbmUoKSwgbGVnZW5kKCkiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InItZ3JhcGgtMyIsImlucHV0IjpbInJnMyJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic2V0LnNlZWQocmczJHNlZWQpXG54IDwtIHJub3JtKDgwLCAxMCwgMik7IHkgPC0gMyArIHJnMyRiICogeCArIHJub3JtKDgwLCAwLCAyKVxub3AgPC0gcGFyKG1mcm93ID0gX19fX19fKSAgICAgICAgICAjIDEgbGlnbmUsIDIgY29sb25uZXNcbm0gIDwtIHBhcihcIm1mcm93XCIpICAgICAgICAgICAgICAgICAgIyBsdSBhdmFudCByZXN0YXVyYXRpb25cbnBsb3QoeCwgeSwgcGNoID0gMTksIGNvbCA9IFwiZ3JleTQwXCIsIG1haW4gPSBcIk51YWdlIGV0IGRyb2l0ZSBNQ09cIilcbmZpdCA8LSBsbShfX19fX18pICAgICAgICAgICAgICAgICAgICMgeSBleHBsaXF1w6kgcGFyIHhcbmFibGluZShfX19fX18sIGNvbCA9IFwicmVkXCIsIGx3ZCA9IDIpICAgICAgICAgICAgICMgYWpvdXRlIGxhIGRyb2l0ZSBlc3RpbcOpZVxubGVnZW5kKFwidG9wbGVmdFwiLCBsZWdlbmQgPSBfX19fX18sIGNvbCA9IFwicmVkXCIsIGx3ZCA9IDIsIGJ0eSA9IFwiblwiKVxucXFub3JtKHJlc2lkKGZpdCkpOyBxcWxpbmUocmVzaWQoZml0KSlcbnBhcihvcCkgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgcmVzdGF1cmUgbGEgZGlzcG9zaXRpb25cbmMocGVudGUgPSBjb2VmKGZpdClbWzJdXSwgb3Jkb25uZWUgPSBjb2VmKGZpdClbWzFdXSwgbGlnbmVzID0gbVsxXSwgY29sb25uZXMgPSBtWzJdKSJ9
+</script>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-3">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 1 · par où commencer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>par(mfrow = c(lignes, colonnes))</code> découpe la fenêtre en panneaux, remplis ligne par ligne. <code>par()</code> <strong>renvoie l’ancienne valeur</strong> : la garder dans <code>op</code> permet de restaurer avec <code>par(op)</code>. <code>abline()</code> accepte directement un objet <code>lm</code> pour tracer sa droite.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-3">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>par(mfrow = c(1, 2))</code> ; <code>fit &lt;- lm(y ~ x)</code> ; <code>abline(fit, col = "red", lwd = 2)</code> ; <code>legend("topleft", legend = "Droite MCO", ...)</code>. <code>qqline()</code> trace la droite de référence d’un <code>qqnorm</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="r-graph-3">
+<p><strong>Raisonnement.</strong></p>
+<ol type="1">
+<li><code>par(mfrow = c(1, 2))</code> modifie un réglage <strong>global</strong> de la fenêtre graphique ; sans restauration, tous les graphiques suivants garderaient cette disposition.</li>
+<li><code>op &lt;- par(...)</code> mémorise les anciennes valeurs, et <code>par(op)</code> les remet : le réflexe à adopter dans toute fonction qui change <code>par()</code>.</li>
+<li><code>abline(fit)</code> utilise les coefficients du modèle : plus fiable que de recopier <code>a</code> et <code>b</code> à la main. <code>legend()</code> se place par mot-clé de position (<code>"topleft"</code>) ou par coordonnées.</li>
+<li><code>qqnorm(resid(fit))</code> compare les quantiles des résidus à ceux d’une loi normale : si les points suivent la droite de <code>qqline()</code>, l’hypothèse de normalité est plausible. C’est un diagnostic <strong>visuel</strong>, à compléter par l’examen d’autres hypothèses.</li>
+</ol>
+<div class="cell" data-exercise="r-graph-3" data-solution="true">
+<div class="webr-ojs-exercise exercise-solution d-none" data-exercise="r-graph-3">
+<code id="interpolate-33" class="solution-code d-none">set.seed(rg3$seed)
+x &lt;- rnorm(80, 10, 2); y &lt;- 3 + rg3$b * x + rnorm(80, 0, 2)
+op &lt;- par(mfrow = c(1, 2))
+m  &lt;- par("mfrow")
+plot(x, y, pch = 19, col = "grey40", main = "Nuage et droite MCO")
+fit &lt;- lm(y ~ x)
+abline(fit, col = "red", lwd = 2)
+legend("topleft", legend = "Droite MCO", col = "red", lwd = 2, bty = "n")
+qqnorm(resid(fit)); qqline(resid(fit))
+par(op)
+c(pente = coef(fit)[[2]], ordonnee = coef(fit)[[1]], lignes = m[1], colonnes = m[2])</code>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="interpolate-34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="interpolate-34-1"><a href="#interpolate-34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(rg3<span class="sc">$</span>seed)</span>
+<span id="interpolate-34-2"><a href="#interpolate-34-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">80</span>, <span class="dv">10</span>, <span class="dv">2</span>); y <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">+</span> rg3<span class="sc">$</span>b <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">80</span>, <span class="dv">0</span>, <span class="dv">2</span>)</span>
+<span id="interpolate-34-3"><a href="#interpolate-34-3" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="interpolate-34-4"><a href="#interpolate-34-4" aria-hidden="true" tabindex="-1"></a>m  <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="st">"mfrow"</span>)</span>
+<span id="interpolate-34-5"><a href="#interpolate-34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">"grey40"</span>, <span class="at">main =</span> <span class="st">"Nuage et droite MCO"</span>)</span>
+<span id="interpolate-34-6"><a href="#interpolate-34-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="interpolate-34-7"><a href="#interpolate-34-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(fit, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="interpolate-34-8"><a href="#interpolate-34-8" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend =</span> <span class="st">"Droite MCO"</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span>
+<span id="interpolate-34-9"><a href="#interpolate-34-9" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(fit)); <span class="fu">qqline</span>(<span class="fu">resid</span>(fit))</span>
+<span id="interpolate-34-10"><a href="#interpolate-34-10" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span>
+<span id="interpolate-34-11"><a href="#interpolate-34-11" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">pente =</span> <span class="fu">coef</span>(fit)[[<span class="dv">2</span>]], <span class="at">ordonnee =</span> <span class="fu">coef</span>(fit)[[<span class="dv">1</span>]], <span class="at">lignes =</span> m[<span class="dv">1</span>], <span class="at">colonnes =</span> m[<span class="dv">2</span>])</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><strong>Pièges fréquents.</strong></p>
+<ul>
+<li>Oublier <code>par(op)</code> : les graphiques suivants restent coupés en deux panneaux.</li>
+<li><code>c(2, 1)</code> au lieu de <code>c(1, 2)</code> : deux lignes, une colonne, soit l’inverse de la disposition voulue.</li>
+<li>Appeler <code>plot()</code> à la place de <code>abline()</code> pour ajouter la droite : cela ouvre un nouveau panneau au lieu de compléter celui-ci.</li>
+</ul>
+<p><strong>Pour aller plus loin.</strong> Remplace <code>par(mfrow = ...)</code> par <code>layout(matrix(c(1, 1, 2, 3), 2, byrow = TRUE))</code> pour obtenir un grand panneau en haut et deux petits en bas.</p>
+</div>
+<div class="cell" data-exercise="r-graph-3" data-check="true">
+<script type="exercise-check-r-graph-3-contents">
+eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InItZ3JhcGgtMyIsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzZXQuc2VlZChyZzMkc2VlZCk7IHggPC0gcm5vcm0oODAsIDEwLCAyKTsgeSA8LSAzICsgcmczJGIgKiB4ICsgcm5vcm0oODAsIDAsIDIpXG5iIDwtIGNvdih4LCB5KSAvIHZhcih4KVxucmVmIDwtIGMoYiwgbWVhbih5KSAtIGIgKiBtZWFuKHgpLCAxLCAyKVxucmVzIDwtIHN1cHByZXNzV2FybmluZ3MoYXMubnVtZXJpYygucmVzdWx0KSlcbm1zZ3MgPC0gYyhcIlBlbnRlIDogbG0oeSB+IHgpLCBjb2VmZmljaWVudCBkZSB4LlwiLCBcIk9yZG9ubsOpZSDDoCBsJ29yaWdpbmUgOiBwcmVtaWVyIGNvZWZmaWNpZW50IGRlIGxtKHkgfiB4KS5cIiwgXCJVbmUgc2V1bGUgbGlnbmUgOiBwYXIobWZyb3cgPSBjKDEsIDIpKS5cIiwgXCJEZXV4IGNvbG9ubmVzIDogcGFyKG1mcm93ID0gYygxLCAyKSkuXCIpXG5pZiAobGVuZ3RoKHJlcykgIT0gNCB8fCBhbnlOQShyZXMpKSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gXCJSZW52b2llIGMocGVudGUgPSAuLi4sIG9yZG9ubmVlID0gLi4uLCBsaWduZXMgPSAuLi4sIGNvbG9ubmVzID0gLi4uKS5cIilcbn0gZWxzZSBpZiAoYW55KGJhZCA8LSBhYnMocmVzIC0gcmVmKSA+IDFlLTA1ICogKDEgKyBhYnMocmVmKSkpKSB7XG4gIGxpc3QoY29ycmVjdCA9IEZBTFNFLCBtZXNzYWdlID0gbXNnc1t3aGljaChiYWQpWzFdXSlcbn0gZWxzZSB7XG4gIGxpc3QoY29ycmVjdCA9IFRSVUUsIG1lc3NhZ2UgPSBzcHJpbnRmKFwiQ29ycmVjdCA6IHkgPSAlLjJmICsgJS4yZiB4IDsgZGlzcG9zaXRpb24gJWQgeCAlZCBsdWUgYXZhbnQgcmVzdGF1cmF0aW9uLlwiLCByZWZbMl0sIHJlZlsxXSwgYXMuaW50ZWdlcihyZWZbM10pLCBhcy5pbnRlZ2VyKHJlZls0XSkpKVxufSJ9
+</script>
+</div>
+<div class="dojo-done" data-id="r-graph-3">
+
+</div>
+</section>
+<section id="galerie-six-graphiques-de-base-en-un-coup-dœil" class="level2">
+<h2 class="anchored" data-anchor-id="galerie-six-graphiques-de-base-en-un-coup-dœil">Galerie : six graphiques de base en un coup d’œil</h2>
+<p>Chaque case ci-dessous utilise une seule fonction, avec ses arguments essentiels. Modifie un argument, relance, regarde l’effet.</p>
+<div class="cell" data-autorun="true" data-caption="Galerie de graphiques de base">
+<div>
+<div id="webr-36" class="exercise-cell">
+
+</div>
+<script type="webr-36-contents">
+eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImNhcHRpb24iOiJHYWxlcmllIGRlIGdyYXBoaXF1ZXMgZGUgYmFzZSIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzZXQuc2VlZCgzKVxueCA8LSBybm9ybSgxNTAsIDUwLCAxMCk7IHkgPC0gMjAgKyAwLjggKiB4ICsgcm5vcm0oMTUwLCAwLCA4KVxuZyA8LSBmYWN0b3Ioc2FtcGxlKGMoXCJBXCIsIFwiQlwiLCBcIkNcIiksIDE1MCwgVFJVRSkpXG5vcCA8LSBwYXIobWZyb3cgPSBjKDIsIDMpLCBtYXIgPSBjKDQsIDQsIDIuNSwgMSkpXG5wbG90KHgsIHksIHBjaCA9IDE5LCBjb2wgPSBhZGp1c3Rjb2xvcihcInN0ZWVsYmx1ZVwiLCAwLjUpLCBtYWluID0gXCJwbG90IDogbnVhZ2VcIiwgeGxhYiA9IFwieFwiLCB5bGFiID0gXCJ5XCIpXG5oaXN0KHgsIGJyZWFrcyA9IDE1LCBjb2wgPSBcImdyZXk4NVwiLCBib3JkZXIgPSBcIndoaXRlXCIsIG1haW4gPSBcImhpc3QgOiBoaXN0b2dyYW1tZVwiLCB4bGFiID0gXCJ4XCIpXG5ib3hwbG90KHkgfiBnLCBjb2wgPSBcImdyZXk4NVwiLCBtYWluID0gXCJib3hwbG90IDogcGFyIGdyb3VwZVwiLCB4bGFiID0gXCJncm91cGVcIiwgeWxhYiA9IFwieVwiKVxuYmFycGxvdCh0YWJsZShnKSwgY29sID0gaGNsLmNvbG9ycygzLCBcIkJsdWVzIDNcIiksIG1haW4gPSBcImJhcnBsb3QgOiBlZmZlY3RpZnNcIiwgeWxhYiA9IFwiblwiKVxucGxvdChzb3J0KHgpLCB0eXBlID0gXCJsXCIsIGx3ZCA9IDIsIGNvbCA9IFwiZmlyZWJyaWNrXCIsIG1haW4gPSBcInBsb3QgdHlwZSA9IGwgOiBzw6lyaWUgdHJpw6llXCIsIHlsYWIgPSBcInggdHJpw6lcIilcbnBsb3QoZGVuc2l0eSh4KSwgbWFpbiA9IFwiZGVuc2l0eSA6IGRlbnNpdMOpXCIsIGx3ZCA9IDIpOyBydWcoeClcbnBhcihvcCkifQ==
+</script>
+</div>
+</div>
+</section>
+<section id="aide-mémoire-arguments-graphiques-les-plus-utiles" class="level2">
+<h2 class="anchored" data-anchor-id="aide-mémoire-arguments-graphiques-les-plus-utiles">Aide-mémoire : arguments graphiques les plus utiles</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pour…</th>
+<th>Argument</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Choisir points, lignes ou les deux</td>
+<td><code>type</code></td>
+<td><code>"p"</code>, <code>"l"</code>, <code>"b"</code>, <code>"s"</code> (escalier)</td>
+</tr>
+<tr class="even">
+<td>Symbole du point</td>
+<td><code>pch</code></td>
+<td><code>19</code> (plein), <code>1</code> (rond vide), <code>15</code> (carré)</td>
+</tr>
+<tr class="odd">
+<td>Style et épaisseur de ligne</td>
+<td><code>lty</code>, <code>lwd</code></td>
+<td><code>lty = 2</code> (tirets), <code>lwd = 2</code></td>
+</tr>
+<tr class="even">
+<td>Couleur</td>
+<td><code>col</code>, <code>bg</code>, <code>border</code></td>
+<td><code>"steelblue"</code>, <code>rgb(0, 0, 0, 0.3)</code>, <code>adjustcolor("red", 0.4)</code></td>
+</tr>
+<tr class="odd">
+<td>Fixer les limites des axes</td>
+<td><code>xlim</code>, <code>ylim</code></td>
+<td><code>ylim = c(0, max(y))</code></td>
+</tr>
+<tr class="even">
+<td>Titres</td>
+<td><code>main</code>, <code>xlab</code>, <code>ylab</code>, <code>sub</code></td>
+<td><code>main = "Titre"</code></td>
+</tr>
+<tr class="odd">
+<td>Taille du texte et des symboles</td>
+<td><code>cex</code>, <code>cex.axis</code>, <code>cex.main</code></td>
+<td><code>cex = 1.2</code></td>
+</tr>
+<tr class="even">
+<td>Orientation des étiquettes</td>
+<td><code>las</code></td>
+<td><code>las = 1</code> (horizontales), <code>las = 2</code> (verticales)</td>
+</tr>
+<tr class="odd">
+<td>Échelle logarithmique</td>
+<td><code>log</code></td>
+<td><code>log = "y"</code> ou <code>"xy"</code></td>
+</tr>
+<tr class="even">
+<td>Ajouter une droite, une courbe, du texte</td>
+<td><code>abline()</code>, <code>lines()</code>, <code>text()</code>, <code>points()</code></td>
+<td><code>abline(h = 0, lty = 2)</code> ; <code>lines(x, f(x))</code></td>
+</tr>
+<tr class="odd">
+<td>Légende</td>
+<td><code>legend()</code></td>
+<td><code>legend("topright", legend = c("A", "B"), col = 1:2, lwd = 2, bty = "n")</code></td>
+</tr>
+<tr class="even">
+<td>Plusieurs panneaux</td>
+<td><code>par(mfrow = c(l, c))</code>, <code>layout()</code></td>
+<td>restaurer avec <code>par(op)</code></td>
+</tr>
+<tr class="odd">
+<td>Marges</td>
+<td><code>par(mar = c(bas, gauche, haut, droite))</code></td>
+<td><code>par(mar = c(4, 4, 2, 1))</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Bonnes pratiques.</strong> (1) L’axe d’un diagramme en barres part de 0. (2) Chaque axe a un libellé avec son <strong>unité</strong>. (3) Ne distingue pas les groupes par la seule couleur si le graphique sera imprimé en noir et blanc : ajoute <code>pch</code> ou <code>lty</code>. (4) Préfère une boîte à moustaches ou les points individuels à une simple barre de moyenne pour comparer des groupes. (5) Fixe <code>set.seed()</code> pour qu’un graphique simulé soit reproductible.</p>
+</section>
+<section id="exporter-un-graphique-et-passer-à-ggplot2-sur-ton-ordinateur" class="level2">
+<h2 class="anchored" data-anchor-id="exporter-un-graphique-et-passer-à-ggplot2-sur-ton-ordinateur">Exporter un graphique et passer à ggplot2 (sur ton ordinateur)</h2>
+<p>Dans le navigateur (webR), les graphiques s’affichent dans la page. Sur ton ordinateur (RStudio), tu les enregistres ainsi, en ouvrant un fichier, en dessinant, puis en le fermant :</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"figure1.png"</span>, <span class="at">width =</span> <span class="dv">1600</span>, <span class="at">height =</span> <span class="dv">1000</span>, <span class="at">res =</span> <span class="dv">200</span>)   <span class="co"># ou pdf("figure1.pdf", width = 8, height = 5)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(annee, pib, <span class="at">type =</span> <span class="st">"b"</span>, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">"steelblue"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(pib)))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()                                                    <span class="co"># indispensable : écrit le fichier</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Le même graphique avec <strong>ggplot2</strong> (à installer en local : <code>install.packages("ggplot2")</code>) :</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(annee, pib), <span class="fu">aes</span>(annee, pib)) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="cn">NA</span>)) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Année"</span>, <span class="at">y =</span> <span class="st">"PIB (indice)"</span>, <span class="at">title =</span> <span class="st">"Évolution du PIB"</span>) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"figure1.png"</span>, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">dpi =</span> <span class="dv">200</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La syntaxe de base (<code>plot</code>, <code>hist</code>, <code>boxplot</code>) est <strong>rapide pour explorer</strong> ; ggplot2 est plus économe pour des figures publiables avec plusieurs groupes. Les deux s’appuient sur les mêmes idées : données, axes, couleurs, légende.</p>
+</section>
+<section id="quiz-éclair" class="level2">
+<h2 class="anchored" data-anchor-id="quiz-éclair">Quiz éclair</h2>
+<div class="dojo-quiz" data-course="r" data-n="4">
+
+</div>
+</section>
+<section id="cartes-de-répétition" class="level2">
+<h2 class="anchored" data-anchor-id="cartes-de-répétition">Cartes de répétition</h2>
+<div class="dojo-cards" data-course="r" data-n="6">
+
+</div>
+
+
+<script type="webr-data">
+eyJvcHRpb25zIjp7ImJhc2VVcmwiOiJodHRwczovL3dlYnIuci13YXNtLm9yZy92MC42LjAvIn0sInBhY2thZ2VzIjp7InBrZ3MiOlsiZXZhbHVhdGUiLCJrbml0ciIsImh0bWx0b29scyJdLCJyZXBvcyI6W119LCJyZW5kZXJfZGYiOiJkZWZhdWx0In0=
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0zNiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMzY7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0zNiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzM2ID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMzYtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICBjb25zdCBvcHRpb25zID0gT2JqZWN0LmFzc2lnbih7IGlkOiBgd2Vici0zNi1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fd2Vicl92YWx1ZV8zNiA9IHdlYlJPanMucHJvY2Vzcyhfd2Vicl9lZGl0b3JfMzYsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0zMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMzE7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0zMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzMxID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMzEtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICAvLyBEZWZhdWx0IGV4ZXJjaXNlIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oXG4gICAge1xuICAgICAgaWQ6IFwid2Vici0zMS1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzMxID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8zMSwge3JnM30pO1xuX3dlYnJfZmVlZGJhY2tfMzEgPSB7XG4gIGNvbnN0IHsgV2ViUkdyYWRlciB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgZW1wdHlGZWVkYmFjayA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xuXG4gIGNvbnN0IGdyYWRlciA9IG5ldyBXZWJSR3JhZGVyKF93ZWJyX3ZhbHVlXzMxLmV2YWx1YXRvcik7XG4gIGNvbnN0IGZlZWRiYWNrID0gYXdhaXQgZ3JhZGVyLmdyYWRlRXhlcmNpc2UoKTtcbiAgaWYgKCFmZWVkYmFjaykgcmV0dXJuIGVtcHR5RmVlZGJhY2s7XG4gIHJldHVybiBmZWVkYmFjaztcbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0yNiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMjY7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0yNiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzI2ID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMjYtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICAvLyBEZWZhdWx0IGV4ZXJjaXNlIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oXG4gICAge1xuICAgICAgaWQ6IFwid2Vici0yNi1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzI2ID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8yNiwge3JnMn0pO1xuX3dlYnJfZmVlZGJhY2tfMjYgPSB7XG4gIGNvbnN0IHsgV2ViUkdyYWRlciB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgZW1wdHlGZWVkYmFjayA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xuXG4gIGNvbnN0IGdyYWRlciA9IG5ldyBXZWJSR3JhZGVyKF93ZWJyX3ZhbHVlXzI2LmV2YWx1YXRvcik7XG4gIGNvbnN0IGZlZWRiYWNrID0gYXdhaXQgZ3JhZGVyLmdyYWRlRXhlcmNpc2UoKTtcbiAgaWYgKCFmZWVkYmFjaykgcmV0dXJuIGVtcHR5RmVlZGJhY2s7XG4gIHJldHVybiBmZWVkYmFjaztcbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0yMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMjE7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0yMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzIxID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMjEtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICAvLyBEZWZhdWx0IGV4ZXJjaXNlIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oXG4gICAge1xuICAgICAgaWQ6IFwid2Vici0yMS1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzIxID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8yMSwge3JnMX0pO1xuX3dlYnJfZmVlZGJhY2tfMjEgPSB7XG4gIGNvbnN0IHsgV2ViUkdyYWRlciB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgZW1wdHlGZWVkYmFjayA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xuXG4gIGNvbnN0IGdyYWRlciA9IG5ldyBXZWJSR3JhZGVyKF93ZWJyX3ZhbHVlXzIxLmV2YWx1YXRvcik7XG4gIGNvbnN0IGZlZWRiYWNrID0gYXdhaXQgZ3JhZGVyLmdyYWRlRXhlcmNpc2UoKTtcbiAgaWYgKCFmZWVkYmFjaykgcmV0dXJuIGVtcHR5RmVlZGJhY2s7XG4gIHJldHVybiBmZWVkYmFjaztcbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0xNiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMTY7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0xNiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzE2ID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMTYtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICAvLyBEZWZhdWx0IGV4ZXJjaXNlIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oXG4gICAge1xuICAgICAgaWQ6IFwid2Vici0xNi1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzE2ID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8xNiwge3JnMH0pO1xuX3dlYnJfZmVlZGJhY2tfMTYgPSB7XG4gIGNvbnN0IHsgV2ViUkdyYWRlciB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgZW1wdHlGZWVkYmFjayA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xuXG4gIGNvbnN0IGdyYWRlciA9IG5ldyBXZWJSR3JhZGVyKF93ZWJyX3ZhbHVlXzE2LmV2YWx1YXRvcik7XG4gIGNvbnN0IGZlZWRiYWNrID0gYXdhaXQgZ3JhZGVyLmdyYWRlRXhlcmNpc2UoKTtcbiAgaWYgKCFmZWVkYmFjaykgcmV0dXJuIGVtcHR5RmVlZGJhY2s7XG4gIHJldHVybiBmZWVkYmFjaztcbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0xMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMTE7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0xMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzExID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMTEtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICAvLyBEZWZhdWx0IGV4ZXJjaXNlIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oXG4gICAge1xuICAgICAgaWQ6IFwid2Vici0xMS1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzExID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8xMSwge3JiMn0pO1xuX3dlYnJfZmVlZGJhY2tfMTEgPSB7XG4gIGNvbnN0IHsgV2ViUkdyYWRlciB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgZW1wdHlGZWVkYmFjayA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xuXG4gIGNvbnN0IGdyYWRlciA9IG5ldyBXZWJSR3JhZGVyKF93ZWJyX3ZhbHVlXzExLmV2YWx1YXRvcik7XG4gIGNvbnN0IGZlZWRiYWNrID0gYXdhaXQgZ3JhZGVyLmdyYWRlRXhlcmNpc2UoKTtcbiAgaWYgKCFmZWVkYmFjaykgcmV0dXJuIGVtcHR5RmVlZGJhY2s7XG4gIHJldHVybiBmZWVkYmFjaztcbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC02IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICAvLyBXYWl0IGZvciBvdXRwdXQgdG8gYmUgd3JpdHRlbiB0byB0aGUgRE9NLCB0aGVuIHRyaWdnZXIgd2lkZ2V0IHJlbmRlcmluZ1xuICBhd2FpdCBfd2Vicl92YWx1ZV82O1xuICBpZiAod2luZG93LkhUTUxXaWRnZXRzKSB7XG4gICAgd2luZG93LkhUTUxXaWRnZXRzLnN0YXRpY1JlbmRlcigpO1xuICB9XG4gIGlmICh3aW5kb3cuUGFnZWRUYWJsZURvYykge1xuICAgIHdpbmRvdy5QYWdlZFRhYmxlRG9jLmluaXRBbGwoKTtcbiAgfVxufVxuIn0seyJjZWxsTmFtZSI6IndlYnItNiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzYgPSB7XG4gIGNvbnN0IHsgV2ViUkV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwid2Vici02LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgLy8gRGVmYXVsdCBleGVyY2lzZSBjb25maWd1cmF0aW9uXG4gIGNvbnN0IG9wdGlvbnMgPSBPYmplY3QuYXNzaWduKFxuICAgIHtcbiAgICAgIGlkOiBcIndlYnItNi1jb250ZW50c1wiLFxuICAgICAgZW52aXI6IGBleGVyY2lzZS1lbnYtJHtibG9jay5hdHRyLmV4ZXJjaXNlfWAsXG4gICAgICBlcnJvcjogZmFsc2UsXG4gICAgICBjYXB0aW9uOiAnRXhlcmNpc2UnLFxuICAgIH0sXG4gICAgYmxvY2suYXR0clxuICApO1xuXG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxudmlld29mIF93ZWJyX3ZhbHVlXzYgPSB3ZWJST2pzLnByb2Nlc3MoX3dlYnJfZWRpdG9yXzYsIHtyYjF9KTtcbl93ZWJyX2ZlZWRiYWNrXzYgPSB7XG4gIGNvbnN0IHsgV2ViUkdyYWRlciB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgZW1wdHlGZWVkYmFjayA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xuXG4gIGNvbnN0IGdyYWRlciA9IG5ldyBXZWJSR3JhZGVyKF93ZWJyX3ZhbHVlXzYuZXZhbHVhdG9yKTtcbiAgY29uc3QgZmVlZGJhY2sgPSBhd2FpdCBncmFkZXIuZ3JhZGVFeGVyY2lzZSgpO1xuICBpZiAoIWZlZWRiYWNrKSByZXR1cm4gZW1wdHlGZWVkYmFjaztcbiAgcmV0dXJuIGZlZWRiYWNrO1xufVxuIn0seyJjZWxsTmFtZSI6IndlYnItd2lkZ2V0LTEiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIC8vIFdhaXQgZm9yIG91dHB1dCB0byBiZSB3cml0dGVuIHRvIHRoZSBET00sIHRoZW4gdHJpZ2dlciB3aWRnZXQgcmVuZGVyaW5nXG4gIGF3YWl0IF93ZWJyX3ZhbHVlXzE7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0xIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfd2Vicl9lZGl0b3JfMSA9IHtcbiAgY29uc3QgeyBXZWJSRXhlcmNpc2VFZGl0b3IsIGI2NERlY29kZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJ3ZWJyLTEtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICAvLyBEZWZhdWx0IGV4ZXJjaXNlIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oXG4gICAge1xuICAgICAgaWQ6IFwid2Vici0xLWNvbnRlbnRzXCIsXG4gICAgICBlbnZpcjogYGV4ZXJjaXNlLWVudi0ke2Jsb2NrLmF0dHIuZXhlcmNpc2V9YCxcbiAgICAgIGVycm9yOiBmYWxzZSxcbiAgICAgIGNhcHRpb246ICdFeGVyY2lzZScsXG4gICAgfSxcbiAgICBibG9jay5hdHRyXG4gICk7XG5cbiAgY29uc3QgZWRpdG9yID0gbmV3IFdlYlJFeGVyY2lzZUVkaXRvcih3ZWJST2pzLndlYlJQcm9taXNlLCBibG9jay5jb2RlLCBvcHRpb25zKTtcbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG52aWV3b2YgX3dlYnJfdmFsdWVfMSA9IHdlYlJPanMucHJvY2Vzcyhfd2Vicl9lZGl0b3JfMSwge3JiMH0pO1xuX3dlYnJfZmVlZGJhY2tfMSA9IHtcbiAgY29uc3QgeyBXZWJSR3JhZGVyIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBlbXB0eUZlZWRiYWNrID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7XG5cbiAgY29uc3QgZ3JhZGVyID0gbmV3IFdlYlJHcmFkZXIoX3dlYnJfdmFsdWVfMS5ldmFsdWF0b3IpO1xuICBjb25zdCBmZWVkYmFjayA9IGF3YWl0IGdyYWRlci5ncmFkZUV4ZXJjaXNlKCk7XG4gIGlmICghZmVlZGJhY2spIHJldHVybiBlbXB0eUZlZWRiYWNrO1xuICByZXR1cm4gZmVlZGJhY2s7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtMyIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgY29uc3QgeyBpbnRlcnBvbGF0ZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgYmxvY2tfaWQgPSBcIjNcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcIm5vbmVcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtNCIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgY29uc3QgeyBpbnRlcnBvbGF0ZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgYmxvY2tfaWQgPSBcIjRcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcInJcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtOCIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgY29uc3QgeyBpbnRlcnBvbGF0ZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgYmxvY2tfaWQgPSBcIjhcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcIm5vbmVcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtOSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgY29uc3QgeyBpbnRlcnBvbGF0ZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgYmxvY2tfaWQgPSBcIjlcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcInJcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtMTMiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCIxM1wiO1xuICBjb25zdCBsYW5ndWFnZSA9IFwibm9uZVwiO1xuICBjb25zdCBkZWZfbWFwID0ge1xufTtcbiAgY29uc3QgZWxlbSA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGBpbnRlcnBvbGF0ZS0ke2Jsb2NrX2lkfWApO1xuXG4gIC8vIFN0b3JlIG9yaWdpbmFsIHRlbXBsYXRlZCBIVE1MIGZvciByZWZlcmVuY2UgaW4gZnV0dXJlIHJlYWN0aXZlIHVwZGF0ZXNcbiAgaWYgKCFlbGVtLm9yaWdIVE1MKSBlbGVtLm9yaWdIVE1MID0gZWxlbS5pbm5lckhUTUw7XG5cbiAgLy8gSW50ZXJwb2xhdGUgcmVhY3RpdmUgT0pTIHZhcmlhYmxlcyBpbnRvIGVzdGFibGlzaGVkIEhUTUwgZWxlbWVudFxuICBlbGVtLmlubmVySFRNTCA9IGVsZW0ub3JpZ0hUTUw7XG4gIE9iamVjdC5rZXlzKGRlZl9tYXApLmZvckVhY2goKGRlZikgPT5cbiAgICBpbnRlcnBvbGF0ZShlbGVtLCBcIiR7XCIgKyBkZWYgKyBcIn1cIiwgZGVmX21hcFtkZWZdLCBsYW5ndWFnZSlcbiAgKTtcbn1cbiJ9LHsiY2VsbE5hbWUiOiJpbnRlcnBvbGF0ZS0xNCIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgY29uc3QgeyBpbnRlcnBvbGF0ZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgYmxvY2tfaWQgPSBcIjE0XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJyXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTE4IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICBjb25zdCB7IGludGVycG9sYXRlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBibG9ja19pZCA9IFwiMThcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcIm5vbmVcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtMTkiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCIxOVwiO1xuICBjb25zdCBsYW5ndWFnZSA9IFwiclwiO1xuICBjb25zdCBkZWZfbWFwID0ge1xufTtcbiAgY29uc3QgZWxlbSA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGBpbnRlcnBvbGF0ZS0ke2Jsb2NrX2lkfWApO1xuXG4gIC8vIFN0b3JlIG9yaWdpbmFsIHRlbXBsYXRlZCBIVE1MIGZvciByZWZlcmVuY2UgaW4gZnV0dXJlIHJlYWN0aXZlIHVwZGF0ZXNcbiAgaWYgKCFlbGVtLm9yaWdIVE1MKSBlbGVtLm9yaWdIVE1MID0gZWxlbS5pbm5lckhUTUw7XG5cbiAgLy8gSW50ZXJwb2xhdGUgcmVhY3RpdmUgT0pTIHZhcmlhYmxlcyBpbnRvIGVzdGFibGlzaGVkIEhUTUwgZWxlbWVudFxuICBlbGVtLmlubmVySFRNTCA9IGVsZW0ub3JpZ0hUTUw7XG4gIE9iamVjdC5rZXlzKGRlZl9tYXApLmZvckVhY2goKGRlZikgPT5cbiAgICBpbnRlcnBvbGF0ZShlbGVtLCBcIiR7XCIgKyBkZWYgKyBcIn1cIiwgZGVmX21hcFtkZWZdLCBsYW5ndWFnZSlcbiAgKTtcbn1cbiJ9LHsiY2VsbE5hbWUiOiJpbnRlcnBvbGF0ZS0yMyIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgY29uc3QgeyBpbnRlcnBvbGF0ZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgYmxvY2tfaWQgPSBcIjIzXCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJub25lXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTI0IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICBjb25zdCB7IGludGVycG9sYXRlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBibG9ja19pZCA9IFwiMjRcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcInJcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtMjgiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCIyOFwiO1xuICBjb25zdCBsYW5ndWFnZSA9IFwibm9uZVwiO1xuICBjb25zdCBkZWZfbWFwID0ge1xufTtcbiAgY29uc3QgZWxlbSA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGBpbnRlcnBvbGF0ZS0ke2Jsb2NrX2lkfWApO1xuXG4gIC8vIFN0b3JlIG9yaWdpbmFsIHRlbXBsYXRlZCBIVE1MIGZvciByZWZlcmVuY2UgaW4gZnV0dXJlIHJlYWN0aXZlIHVwZGF0ZXNcbiAgaWYgKCFlbGVtLm9yaWdIVE1MKSBlbGVtLm9yaWdIVE1MID0gZWxlbS5pbm5lckhUTUw7XG5cbiAgLy8gSW50ZXJwb2xhdGUgcmVhY3RpdmUgT0pTIHZhcmlhYmxlcyBpbnRvIGVzdGFibGlzaGVkIEhUTUwgZWxlbWVudFxuICBlbGVtLmlubmVySFRNTCA9IGVsZW0ub3JpZ0hUTUw7XG4gIE9iamVjdC5rZXlzKGRlZl9tYXApLmZvckVhY2goKGRlZikgPT5cbiAgICBpbnRlcnBvbGF0ZShlbGVtLCBcIiR7XCIgKyBkZWYgKyBcIn1cIiwgZGVmX21hcFtkZWZdLCBsYW5ndWFnZSlcbiAgKTtcbn1cbiJ9LHsiY2VsbE5hbWUiOiJpbnRlcnBvbGF0ZS0yOSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgY29uc3QgeyBpbnRlcnBvbGF0ZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3QgYmxvY2tfaWQgPSBcIjI5XCI7XG4gIGNvbnN0IGxhbmd1YWdlID0gXCJyXCI7XG4gIGNvbnN0IGRlZl9tYXAgPSB7XG59O1xuICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGludGVycG9sYXRlLSR7YmxvY2tfaWR9YCk7XG5cbiAgLy8gU3RvcmUgb3JpZ2luYWwgdGVtcGxhdGVkIEhUTUwgZm9yIHJlZmVyZW5jZSBpbiBmdXR1cmUgcmVhY3RpdmUgdXBkYXRlc1xuICBpZiAoIWVsZW0ub3JpZ0hUTUwpIGVsZW0ub3JpZ0hUTUwgPSBlbGVtLmlubmVySFRNTDtcblxuICAvLyBJbnRlcnBvbGF0ZSByZWFjdGl2ZSBPSlMgdmFyaWFibGVzIGludG8gZXN0YWJsaXNoZWQgSFRNTCBlbGVtZW50XG4gIGVsZW0uaW5uZXJIVE1MID0gZWxlbS5vcmlnSFRNTDtcbiAgT2JqZWN0LmtleXMoZGVmX21hcCkuZm9yRWFjaCgoZGVmKSA9PlxuICAgIGludGVycG9sYXRlKGVsZW0sIFwiJHtcIiArIGRlZiArIFwifVwiLCBkZWZfbWFwW2RlZl0sIGxhbmd1YWdlKVxuICApO1xufVxuIn0seyJjZWxsTmFtZSI6ImludGVycG9sYXRlLTMzIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICBjb25zdCB7IGludGVycG9sYXRlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBibG9ja19pZCA9IFwiMzNcIjtcbiAgY29uc3QgbGFuZ3VhZ2UgPSBcIm5vbmVcIjtcbiAgY29uc3QgZGVmX21hcCA9IHtcbn07XG4gIGNvbnN0IGVsZW0gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgaW50ZXJwb2xhdGUtJHtibG9ja19pZH1gKTtcblxuICAvLyBTdG9yZSBvcmlnaW5hbCB0ZW1wbGF0ZWQgSFRNTCBmb3IgcmVmZXJlbmNlIGluIGZ1dHVyZSByZWFjdGl2ZSB1cGRhdGVzXG4gIGlmICghZWxlbS5vcmlnSFRNTCkgZWxlbS5vcmlnSFRNTCA9IGVsZW0uaW5uZXJIVE1MO1xuXG4gIC8vIEludGVycG9sYXRlIHJlYWN0aXZlIE9KUyB2YXJpYWJsZXMgaW50byBlc3RhYmxpc2hlZCBIVE1MIGVsZW1lbnRcbiAgZWxlbS5pbm5lckhUTUwgPSBlbGVtLm9yaWdIVE1MO1xuICBPYmplY3Qua2V5cyhkZWZfbWFwKS5mb3JFYWNoKChkZWYpID0+XG4gICAgaW50ZXJwb2xhdGUoZWxlbSwgXCIke1wiICsgZGVmICsgXCJ9XCIsIGRlZl9tYXBbZGVmXSwgbGFuZ3VhZ2UpXG4gICk7XG59XG4ifSx7ImNlbGxOYW1lIjoiaW50ZXJwb2xhdGUtMzQiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHsgaW50ZXJwb2xhdGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IGJsb2NrX2lkID0gXCIzNFwiO1xuICBjb25zdCBsYW5ndWFnZSA9IFwiclwiO1xuICBjb25zdCBkZWZfbWFwID0ge1xufTtcbiAgY29uc3QgZWxlbSA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGBpbnRlcnBvbGF0ZS0ke2Jsb2NrX2lkfWApO1xuXG4gIC8vIFN0b3JlIG9yaWdpbmFsIHRlbXBsYXRlZCBIVE1MIGZvciByZWZlcmVuY2UgaW4gZnV0dXJlIHJlYWN0aXZlIHVwZGF0ZXNcbiAgaWYgKCFlbGVtLm9yaWdIVE1MKSBlbGVtLm9yaWdIVE1MID0gZWxlbS5pbm5lckhUTUw7XG5cbiAgLy8gSW50ZXJwb2xhdGUgcmVhY3RpdmUgT0pTIHZhcmlhYmxlcyBpbnRvIGVzdGFibGlzaGVkIEhUTUwgZWxlbWVudFxuICBlbGVtLmlubmVySFRNTCA9IGVsZW0ub3JpZ0hUTUw7XG4gIE9iamVjdC5rZXlzKGRlZl9tYXApLmZvckVhY2goKGRlZikgPT5cbiAgICBpbnRlcnBvbGF0ZShlbGVtLCBcIiR7XCIgKyBkZWYgKyBcIn1cIiwgZGVmX21hcFtkZWZdLCBsYW5ndWFnZSlcbiAgKTtcbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXByZWx1ZGUiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ3ZWJST2pzID0ge1xuICBjb25zdCB7IFdlYlIsIENoYW5uZWxUeXBlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lLldlYlI7XG4gIGNvbnN0IHtcbiAgICBXZWJSRXZhbHVhdG9yLFxuICAgIFdlYlJFbnZpcm9ubWVudE1hbmFnZXIsXG4gICAgc2V0dXBSLFxuICAgIGI2NERlY29kZSxcbiAgICBjb2xsYXBzZVBhdGhcbiAgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc3RhdHVzQ29udGFpbmVyID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJleGVyY2lzZS1sb2FkaW5nLXN0YXR1c1wiKTtcbiAgY29uc3QgaW5kaWNhdG9yQ29udGFpbmVyID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJleGVyY2lzZS1sb2FkaW5nLWluZGljYXRvclwiKTtcbiAgaW5kaWNhdG9yQ29udGFpbmVyLmNsYXNzTGlzdC5yZW1vdmUoXCJkLW5vbmVcIik7XG5cbiAgbGV0IHN0YXR1c1RleHQgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KFwiZGl2XCIpXG4gIHN0YXR1c1RleHQuY2xhc3NMaXN0ID0gXCJleGVyY2lzZS1sb2FkaW5nLWRldGFpbHNcIjtcbiAgc3RhdHVzVGV4dCA9IHN0YXR1c0NvbnRhaW5lci5hcHBlbmRDaGlsZChzdGF0dXNUZXh0KTtcbiAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBJbml0aWFsaXNlYDtcblxuICAvLyBIb2lzdCBpbmRpY2F0b3Igb3V0IGZyb20gZmluYWwgc2xpZGUgd2hlbiBydW5uaW5nIHVuZGVyIHJldmVhbFxuICBjb25zdCByZXZlYWxTdGF0dXMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKFwiLnJldmVhbCAuZXhlcmNpc2UtbG9hZGluZy1pbmRpY2F0b3JcIik7XG4gIGlmIChyZXZlYWxTdGF0dXMpIHtcbiAgICByZXZlYWxTdGF0dXMucmVtb3ZlKCk7XG4gICAgZG9jdW1lbnQucXVlcnlTZWxlY3RvcihcIi5yZXZlYWwgPiAuc2xpZGVzXCIpLmFwcGVuZENoaWxkKHJldmVhbFN0YXR1cyk7XG4gIH1cblxuICAvLyBNYWtlIGFueSByZXZlYWwgc2xpZGVzIHdpdGggbGl2ZSBjZWxscyBzY3JvbGxhYmxlXG4gIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoXCIucmV2ZWFsIC5leGVyY2lzZS1jZWxsXCIpLmZvckVhY2goKGVsKSA9PiB7XG4gICAgZWwuY2xvc2VzdCgnc2VjdGlvbi5zbGlkZScpLmNsYXNzTGlzdC5hZGQoXCJzY3JvbGxhYmxlXCIpO1xuICB9KVxuXG4gIC8vIHdlYlIgc3VwcGxlbWVudGFsIGRhdGEgYW5kIG9wdGlvbnNcbiAgY29uc3QgZGF0YUNvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwid2Vici1kYXRhXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgZGF0YSA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKGRhdGFDb250ZW50KSk7XG5cbiAgLy8gR3JhYiBsaXN0IG9mIHJlc291cmNlcyB0byBiZSBkb3dubG9hZGVkXG4gIGNvbnN0IGZpbGVzQ29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJ2ZnMtZmlsZVxcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGZpbGVzID0gSlNPTi5wYXJzZShiNjREZWNvZGUoZmlsZXNDb250ZW50KSk7XG5cbiAgLy8gSW5pdGlhbGlzZSB3ZWJSIGFuZCBzZXR1cCBmb3IgUiBjb2RlIGV2YWx1YXRpb25cbiAgbGV0IHdlYlJQcm9taXNlID0gKGFzeW5jICh3ZWJSKSA9PiB7XG4gICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyB3ZWJSYDtcbiAgICBhd2FpdCB3ZWJSLmluaXQoKTtcblxuICAgIC8vIEluc3RhbGwgcHJvdmlkZWQgbGlzdCBvZiBwYWNrYWdlc1xuICAgIC8vIEVuc3VyZSB3ZWJSIGRlZmF1bHQgcmVwbyBpcyBpbmNsdWRlZFxuICAgIGRhdGEucGFja2FnZXMucmVwb3MucHVzaChcImh0dHBzOi8vcmVwby5yLXdhc20ub3JnXCIpXG4gICAgYXdhaXQgZGF0YS5wYWNrYWdlcy5wa2dzLm1hcCgocGtnKSA9PiAoKSA9PiB7XG4gICAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYERvd25sb2FkaW5nIHBhY2thZ2U6ICR7cGtnfWA7XG4gICAgICByZXR1cm4gd2ViUi5ldmFsUlZvaWQoYFxuICAgICAgICB3ZWJyOjppbnN0YWxsKHBrZywgcmVwb3MgPSByZXBvcylcbiAgICAgICAgbGlicmFyeShwa2csIGNoYXJhY3Rlci5vbmx5ID0gVFJVRSlcbiAgICAgIGAsIHsgZW52OiB7XG4gICAgICAgIHBrZzogcGtnLFxuICAgICAgICByZXBvczogZGF0YS5wYWNrYWdlcy5yZXBvcyxcbiAgICAgIH19KTtcbiAgICB9KS5yZWR1Y2UoKGN1ciwgbmV4dCkgPT4gY3VyLnRoZW4obmV4dCksIFByb21pc2UucmVzb2x2ZSgpKTtcblxuICAgIC8vIERvd25sb2FkIGFuZCBpbnN0YWxsIHJlc291cmNlc1xuICAgIGF3YWl0IGZpbGVzLm1hcCgoZmlsZSkgPT4gYXN5bmMgKCkgPT4ge1xuICAgICAgY29uc3QgbmFtZSA9IGZpbGUuc3Vic3RyaW5nKGZpbGUubGFzdEluZGV4T2YoJy8nKSArIDEpO1xuICAgICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyByZXNvdXJjZTogJHtuYW1lfWA7XG4gICAgICBjb25zdCByZXNwb25zZSA9IGF3YWl0IGZldGNoKGZpbGUpO1xuICAgICAgaWYgKCFyZXNwb25zZS5vaykge1xuICAgICAgICB0aHJvdyBuZXcgRXJyb3IoYENhbid0IGRvd25sb2FkIFxcYCR7ZmlsZX1cXGAuIEVycm9yICR7cmVzcG9uc2Uuc3RhdHVzfTogXCIke3Jlc3BvbnNlLnN0YXR1c1RleHR9XCIuYCk7XG4gICAgICB9XG4gICAgICBjb25zdCBkYXRhID0gYXdhaXQgcmVzcG9uc2UuYXJyYXlCdWZmZXIoKTtcblxuICAgICAgLy8gU3RvcmUgVVJMcyBpbiB0aGUgY3dkIHdpdGhvdXQgYW55IHN1YmRpcmVjdG9yeSBzdHJ1Y3R1cmVcbiAgICAgIGlmIChmaWxlLmluY2x1ZGVzKFwiOi8vXCIpKSB7XG4gICAgICAgIGZpbGUgPSBuYW1lO1xuICAgICAgfVxuXG4gICAgICAvLyBDb2xsYXBzZSBoaWdoZXIgZGlyZWN0b3J5IHN0cnVjdHVyZVxuICAgICAgZmlsZSA9IGNvbGxhcHNlUGF0aChmaWxlKTtcblxuICAgICAgLy8gQ3JlYXRlIGRpcmVjdG9yeSB0cmVlLCBpZ25vcmluZyBcImRpcmVjdG9yeSBleGlzdHNcIiBWRlMgZXJyb3JzXG4gICAgICBjb25zdCBwYXJ0cyA9IGZpbGUuc3BsaXQoJy8nKS5zbGljZSgwLCAtMSk7XG4gICAgICBsZXQgcGF0aCA9ICcnO1xuICAgICAgd2hpbGUgKHBhcnRzLmxlbmd0aCA+IDApIHtcbiAgICAgICAgcGF0aCArPSBwYXJ0cy5zaGlmdCgpICsgJy8nO1xuICAgICAgICBjb25zdCBhbmFseXNpcyA9IGF3YWl0IHdlYlIuRlMuYW5hbHl6ZVBhdGgocGF0aCk7XG4gICAgICAgIGlmICghYW5hbHlzaXMuZXhpc3RzKSB7XG4gICAgICAgICAgdHJ5IHtcbiAgICAgICAgICAgIGF3YWl0IHdlYlIuRlMubWtkaXIocGF0aCk7XG4gICAgICAgICAgfSBjYXRjaCAoZSkge1xuICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKGBGaWxlc3lzdGVtIEVycm9yOiBcIiR7ZS5tZXNzYWdlfVwiLmApO1xuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgfVxuXG4gICAgICAvLyBXcml0ZSB0aGlzIGZpbGUgdG8gdGhlIFZGU1xuICAgICAgcmV0dXJuIGF3YWl0IHdlYlIuRlMud3JpdGVGaWxlKGZpbGUsIG5ldyBVaW50OEFycmF5KGRhdGEpKTtcbiAgICB9KS5yZWR1Y2UoKGN1ciwgbmV4dCkgPT4gY3VyLnRoZW4obmV4dCksIFByb21pc2UucmVzb2x2ZSgpKTtcblxuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgSW5zdGFsbGluZyB3ZWJSIHNoaW1zYDtcbiAgICBhd2FpdCB3ZWJSLmV2YWxSVm9pZChgd2Vicjo6c2hpbV9pbnN0YWxsKClgKTtcblxuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgV2ViUiBlbnZpcm9ubWVudCBzZXR1cGA7XG4gICAgYXdhaXQgc2V0dXBSKHdlYlIsIGRhdGEpO1xuXG4gICAgc3RhdHVzVGV4dC5yZW1vdmUoKTtcbiAgICBpZiAoc3RhdHVzQ29udGFpbmVyLmNoaWxkcmVuLmxlbmd0aCA9PSAwKSB7XG4gICAgICBzdGF0dXNDb250YWluZXIucGFyZW50Tm9kZS5yZW1vdmUoKTtcbiAgICB9XG4gICAgcmV0dXJuIHdlYlI7XG4gIH0pKG5ldyBXZWJSKGRhdGEub3B0aW9ucykpO1xuXG4gIC8vIEtlZXAgdHJhY2sgb2YgaW5pdGlhbCBPSlMgYmxvY2sgcmVuZGVyXG4gIGNvbnN0IHJlbmRlcmVkT2pzID0ge307XG5cbiAgY29uc3QgcHJvY2VzcyA9IGFzeW5jIChjb250ZXh0LCBpbnB1dHMpID0+IHtcbiAgICBjb25zdCB3ZWJSID0gYXdhaXQgd2ViUlByb21pc2U7XG4gICAgY29uc3QgZXZhbHVhdG9yID0gbmV3IFdlYlJFdmFsdWF0b3Iod2ViUiwgY29udGV4dClcbiAgICBhd2FpdCBldmFsdWF0b3IucHJvY2VzcyhpbnB1dHMpO1xuICAgIHJldHVybiBldmFsdWF0b3IuY29udGFpbmVyO1xuICB9XG5cbiAgcmV0dXJuIHtcbiAgICBwcm9jZXNzLFxuICAgIHdlYlJQcm9taXNlLFxuICAgIHJlbmRlcmVkT2pzLFxuICB9O1xufVxuIn1dfQ==
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+WyIuLi9SL3ZlaWxsZS5SIiwiLi4vUi9zZWdyZWdhdGlvbi5SIiwiLi4vUi9pbmVnYWxpdGVzLlIiLCIuLi9SL2Rvam8uUiJd
+</script>
+<div class="ojs-auto-generated hidden">
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6WyAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7cmIwLnNlZWR9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC0xIn0sICB7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJpbmxpbmUiOiJ0cnVlIiwic291cmNlIjoiaHRsLmh0bWxgPHNwYW4+JHtyYjAuc308L3NwYW4+YCIsICJjZWxsTmFtZSI6Im9qcy1lbGVtZW50LWlkLTIifSwgIHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImlubGluZSI6InRydWUiLCJzb3VyY2UiOiJodGwuaHRtbGA8c3Bhbj4ke3JiMS5zZWVkfTwvc3Bhbj5gIiwgImNlbGxOYW1lIjoib2pzLWVsZW1lbnQtaWQtMyJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7cmIyLnNlZWR9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC00In0sICB7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJpbmxpbmUiOiJ0cnVlIiwic291cmNlIjoiaHRsLmh0bWxgPHNwYW4+JHtyYjIua308L3NwYW4+YCIsICJjZWxsTmFtZSI6Im9qcy1lbGVtZW50LWlkLTUifSwgIHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImlubGluZSI6InRydWUiLCJzb3VyY2UiOiJodGwuaHRtbGA8c3Bhbj4ke3JnMS5zZWVkfTwvc3Bhbj5gIiwgImNlbGxOYW1lIjoib2pzLWVsZW1lbnQtaWQtNiJ9LCAgeyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiaW5saW5lIjoidHJ1ZSIsInNvdXJjZSI6Imh0bC5odG1sYDxzcGFuPiR7cmcxLkx9PC9zcGFuPmAiLCAiY2VsbE5hbWUiOiJvanMtZWxlbWVudC1pZC03In0sICB7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJpbmxpbmUiOiJ0cnVlIiwic291cmNlIjoiaHRsLmh0bWxgPHNwYW4+JHtyZzIuc2VlZH08L3NwYW4+YCIsICJjZWxsTmFtZSI6Im9qcy1lbGVtZW50LWlkLTgifSwgIHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImlubGluZSI6InRydWUiLCJzb3VyY2UiOiJodGwuaHRtbGA8c3Bhbj4ke3JnMy5zZWVkfTwvc3Bhbj5gIiwgImNlbGxOYW1lIjoib2pzLWVsZW1lbnQtaWQtOSJ9XX0=
+</script>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script>
+// Charge le module dojo.js depuis la racine du site, quelle que soit la profondeur de la page.
+(function () {
+  var m = document.querySelector('meta[name="quarto:offset"]');
+  var base = m ? m.getAttribute('content') : './';
+  var s = document.createElement('script');
+  s.type = 'module';
+  s.src = base + 'assets/dojo.js';
+  document.body.appendChild(s);
+})();
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InJuZyA9IHtcbiAgLy8gR8OpbsOpcmF0ZXVyIHBzZXVkby1hbMOpYXRvaXJlIHJlcHJvZHVjdGlibGUgOiBncmFpbmUgPSBqb3VyICsgaWQgZCdleGVyY2ljZSArIHNhbHQuXG4gIC8vIChTb3VyY2UgdW5pcXVlIDogc2NyaXB0cy90ZXN0X2V4ZXJjaWNlcy5SIMOpdmFsdWUgY2V0dGUgbcOqbWUgY2VsbHVsZSBhdmVjIE5vZGUuKVxuICBjb25zdCB0b2RheSA9IG5ldyBEYXRlKCkudG9JU09TdHJpbmcoKS5zbGljZSgwLCAxMCk7XG4gIGNvbnN0IGhhc2ggPSAocykgPT4ge1xuICAgIGxldCBoID0gMTc3OTAzMzcwMyBeIHMubGVuZ3RoO1xuICAgIGZvciAobGV0IGkgPSAwOyBpIDwgcy5sZW5ndGg7IGkrKykgeyBoID0gTWF0aC5pbXVsKGggXiBzLmNoYXJDb2RlQXQoaSksIDM0MzI5MTgzNTMpOyBoID0gKGggPDwgMTMpIHwgKGggPj4+IDE5KTsgfVxuICAgIHJldHVybiBoID4+PiAwO1xuICB9O1xuICBjb25zdCBtdWxiZXJyeTMyID0gKGEpID0+ICgpID0+IHtcbiAgICBhIHw9IDA7IGEgPSAoYSArIDB4NmQyYjc5ZjUpIHwgMDtcbiAgICBsZXQgdCA9IE1hdGguaW11bChhIF4gKGEgPj4+IDE1KSwgMSB8IGEpO1xuICAgIHQgPSAodCArIE1hdGguaW11bCh0IF4gKHQgPj4+IDcpLCA2MSB8IHQpKSBeIHQ7XG4gICAgcmV0dXJuICgodCBeICh0ID4+PiAxNCkpID4+PiAwKSAvIDQyOTQ5NjcyOTY7XG4gIH07XG4gIHJldHVybiAoaWQsIHNhbHQgPSAwLCBkYXkgPSB0b2RheSkgPT4ge1xuICAgIGNvbnN0IHUgPSBtdWxiZXJyeTMyKGhhc2goYCR7ZGF5fXwke2lkfXwke3NhbHR9YCkpO1xuICAgIGNvbnN0IGludCA9IChhLCBiKSA9PiBhICsgTWF0aC5mbG9vcih1KCkgKiAoYiAtIGEgKyAxKSk7XG4gICAgY29uc3QgcGljayA9IChhcnIpID0+IGFycltNYXRoLmZsb29yKHUoKSAqIGFyci5sZW5ndGgpXTtcbiAgICBjb25zdCBub3JtYWwgPSAoKSA9PiBNYXRoLnNxcnQoLTIgKiBNYXRoLmxvZygxIC0gdSgpKSkgKiBNYXRoLmNvcygyICogTWF0aC5QSSAqIHUoKSk7XG4gICAgcmV0dXJuIHsgdSwgaW50LCBwaWNrLCBub3JtYWwgfTtcbiAgfTtcbn1cblxudmlld29mIHNhbHQgPSB7XG4gIGNvbnN0IGIgPSBodG1sYDxidXR0b24gY2xhc3M9XCJkb2pvLWJ0biBkb2pvLXJlcm9sbFwiPvCfjrIgTm91dmVhdXggw6lub25jw6lzPC9idXR0b24+YDtcbiAgbGV0IG4gPSAwOyBiLnZhbHVlID0gMDtcbiAgYi5vbmNsaWNrID0gKCkgPT4geyBiLnZhbHVlID0gKytuOyBiLmRpc3BhdGNoRXZlbnQobmV3IEV2ZW50KFwiaW5wdXRcIiwgeyBidWJibGVzOiB0cnVlIH0pKTsgfTtcbiAgcmV0dXJuIGI7XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJyYjAgPSB7IGNvbnN0IGcgPSBybmcoXCJyLWJhc2UtMFwiLCBzYWx0KTsgcmV0dXJuIHsgc2VlZDogZy5pbnQoMSwgOTk5OSksIHM6IGcuaW50KDI1LCA1MCkgfTsgfVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0zIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoicmIxID0geyBjb25zdCBnID0gcm5nKFwici1iYXNlLTFcIiwgc2FsdCk7IHJldHVybiB7IHNlZWQ6IGcuaW50KDEsIDk5OTkpLCBlY2FydDogZy5pbnQoMTAsIDQwKSAqIDEwIH07IH1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InJiMiA9IHsgY29uc3QgZyA9IHJuZyhcInItYmFzZS0yXCIsIHNhbHQpOyByZXR1cm4geyBzZWVkOiBnLmludCgxLCA5OTk5KSwgazogZy5pbnQoMSwgMykgfTsgfVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC01IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoicmcwID0geyBjb25zdCBnID0gcm5nKFwici1ncmFwaC0wXCIsIHNhbHQpOyByZXR1cm4geyBzZWVkOiBnLmludCgxLCA5OTk5KSwgZzogZy5pbnQoMSwgNCkgfTsgfVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC02IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoicmcxID0geyBjb25zdCBnID0gcm5nKFwici1ncmFwaC0xXCIsIHNhbHQpOyByZXR1cm4geyBzZWVkOiBnLmludCgxLCA5OTk5KSwgTDogZy5waWNrKFswLjUsIDFdKSB9OyB9XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTciLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJyZzIgPSB7IGNvbnN0IGcgPSBybmcoXCJyLWdyYXBoLTJcIiwgc2FsdCk7IHJldHVybiB7IHNlZWQ6IGcuaW50KDEsIDk5OTkpLCBiOiBnLmludCgxMCwgMTQpIH07IH1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtOCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InJnMyA9IHsgY29uc3QgZyA9IHJuZyhcInItZ3JhcGgtM1wiLCBzYWx0KTsgcmV0dXJuIHsgc2VlZDogZy5pbnQoMSwgOTk5OSksIGI6IGcuaW50KDUsIDIwKSAvIDEwIH07IH1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnc2FsdCcpIn1dfQ==
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../parcours";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Le Dojo : un entraînement par jour. Ta progression est stockée dans ton navigateur (voir « Progression » pour l’exporter).</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

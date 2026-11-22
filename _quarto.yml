@@ -36,6 +36,8 @@ website:
             href: parcours/histoire.qmd
           - text: "Économie contemporaine"
             href: parcours/contemporaine.qmd
+          - text: "R : bases et graphiques"
+            href: parcours/r.qmd
       - text: "Recherche"
         menu:
           - text: "Le défi de la semaine"

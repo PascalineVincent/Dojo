@@ -37,3 +37,25 @@
 - {id: stats-chi2-1, course: stats, level: 2, minutes: 12, xp: 25, title: "Test du khi-deux d'indépendance", page: parcours/stats.html, track: stats-tests, step: 2}
 - {id: stats-perm-1, course: stats, level: 3, minutes: 12, xp: 30, title: "Test de permutation", page: parcours/stats.html, track: stats-tests, step: 3}
 - {id: stats-mult-1, course: stats, level: 3, minutes: 12, xp: 30, title: "Comparaisons multiples : Bonferroni et Holm", page: parcours/stats.html, track: stats-tests, step: 4}
+- {id: con-prix-0, course: contemporaine, level: 1, minutes: 6, xp: 10, title: "Inflation, salaire nominal et pouvoir d'achat", page: parcours/contemporaine.html, track: con-prix, step: 1}
+- {id: con-prix-1, course: contemporaine, level: 2, minutes: 10, xp: 25, title: "Déflater une série : PIB réel et croissance", page: parcours/contemporaine.html, track: con-prix, step: 2}
+- {id: con-prix-2, course: contemporaine, level: 3, minutes: 12, xp: 30, title: "Taux d'intérêt réel et valeur future du capital", page: parcours/contemporaine.html, track: con-prix, step: 3}
+- {id: con-croiss-0, course: contemporaine, level: 1, minutes: 6, xp: 10, title: "Taux de croissance annuel moyen et temps de doublement", page: parcours/contemporaine.html, track: con-croiss, step: 1}
+- {id: con-croiss-1, course: contemporaine, level: 2, minutes: 10, xp: 25, title: "Convergence : quand un pays pauvre rattrape-t-il ?", page: parcours/contemporaine.html, track: con-croiss, step: 2}
+- {id: con-croiss-2, course: contemporaine, level: 3, minutes: 12, xp: 30, title: "Comptabilité de la croissance : le rôle de la PGF", page: parcours/contemporaine.html, track: con-croiss, step: 3}
+- {id: con-trav-0, course: contemporaine, level: 1, minutes: 6, xp: 10, title: "Chômage, activité, emploi : trois taux, trois dénominateurs", page: parcours/contemporaine.html, track: con-travail, step: 1}
+- {id: con-trav-1, course: contemporaine, level: 2, minutes: 10, xp: 25, title: "Flux d'emploi et chômage d'équilibre", page: parcours/contemporaine.html, track: con-travail, step: 2}
+- {id: con-trav-2, course: contemporaine, level: 3, minutes: 14, xp: 35, title: "Loi d'Okun : estimer le lien croissance-chômage", page: parcours/contemporaine.html, track: con-travail, step: 3}
+- {id: con-mon-0, course: contemporaine, level: 1, minutes: 6, xp: 10, title: "Règle de Taylor : quel taux directeur ?", page: parcours/contemporaine.html, track: con-monnaie, step: 1}
+- {id: con-mon-1, course: contemporaine, level: 2, minutes: 12, xp: 25, title: "Taylor sur 8 trimestres : trop accommodante ?", page: parcours/contemporaine.html, track: con-monnaie, step: 2}
+- {id: con-mon-2, course: contemporaine, level: 3, minutes: 12, xp: 30, title: "Transmission : une hausse de taux sur la mensualité d'un prêt", page: parcours/contemporaine.html, track: con-monnaie, step: 3}
+- {id: con-comm-0, course: contemporaine, level: 1, minutes: 6, xp: 10, title: "Solde courant = épargne − investissement", page: parcours/contemporaine.html, track: con-commerce, step: 1}
+- {id: con-comm-1, course: contemporaine, level: 2, minutes: 10, xp: 25, title: "Taux de change réel et compétitivité", page: parcours/contemporaine.html, track: con-commerce, step: 2}
+- {id: con-comm-2, course: contemporaine, level: 3, minutes: 14, xp: 35, title: "Condition de Marshall-Lerner : une dépréciation améliore-t-elle le solde ?", page: parcours/contemporaine.html, track: con-commerce, step: 3}
+- {id: r-base-0, course: r, level: 1, minutes: 6, xp: 10, title: "Vecteurs : indexer, filtrer, compter", page: parcours/r.html, track: r-base, step: 1}
+- {id: r-base-1, course: r, level: 2, minutes: 10, xp: 25, title: "Tableaux de données : sélectionner, résumer, comparer", page: parcours/r.html, track: r-base, step: 2}
+- {id: r-base-2, course: r, level: 3, minutes: 12, xp: 30, title: "Écrire une fonction et l'appliquer à une liste", page: parcours/r.html, track: r-base, step: 3}
+- {id: r-graph-0, course: r, level: 1, minutes: 8, xp: 15, title: "Premier graphique : une série temporelle propre", page: parcours/r.html, track: r-graph, step: 1}
+- {id: r-graph-1, course: r, level: 2, minutes: 10, xp: 25, title: "Histogramme en densité et courbe de densité", page: parcours/r.html, track: r-graph, step: 2}
+- {id: r-graph-2, course: r, level: 2, minutes: 12, xp: 25, title: "Comparer des groupes : boîtes à moustaches et barres", page: parcours/r.html, track: r-graph, step: 3}
+- {id: r-graph-3, course: r, level: 3, minutes: 14, xp: 35, title: "Plusieurs graphiques : droite de régression et diagnostic des résidus", page: parcours/r.html, track: r-graph, step: 4}

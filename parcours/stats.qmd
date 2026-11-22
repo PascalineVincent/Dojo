@@ -5,7 +5,7 @@ subtitle: "Probabilités, estimation, tests : rappels et simulation"
 
 {{< include ../_extensions/r-wasm/live/_knitr.qmd >}}
 
-Rappels de L1 par la **simulation** : on ne se contente pas de la formule, on la vérifie. Les énoncés changent chaque jour (graine = date). Trois pistes : *estimation et simulation*, *statistiques descriptives* (résumer, comparer des groupes, repérer les valeurs atypiques) et *comparaisons et tests* (Welch, khi-deux, permutation, comparaisons multiples). Une boîte à outils « quelle méthode, quelle fonction ? » termine la page.
+Rappels de L1 par la **simulation** : on ne se contente pas de la formule, on la vérifie. Les énoncés changent chaque jour (graine = date). Trois pistes : *estimation et simulation*, *statistiques descriptives* (résumer, comparer des groupes, repérer les valeurs atypiques) et *comparaisons et tests* (Welch, khi-deux, permutation, comparaisons multiples). Une section d'aide R (réflexes, erreurs fréquentes) et une boîte à outils « quelle méthode, quelle fonction ? » terminent la page ; chaque exercice a **trois indices** (orientation, formule, fonction R sur un exemple).
 
 {{< include ../_ojs.qmd >}}
 
@@ -45,6 +45,20 @@ Deux ingrédients : (i) simuler un grand nombre de moyennes de $n$ observations 
 ::: {.callout-tip collapse="false"}
 ## Indice 2 · la formule
 Une loi exponentielle d'espérance $m$ a pour paramètre `rate = 1/m` dans `rexp()`. Pour des observations i.i.d., $\mathrm{sd}(\bar X) = \sigma / \sqrt{n}$.
+:::
+:::
+
+::: {.hint exercise="stats-tcl-1"}
+::: {.callout-tip collapse="false"}
+## Indice 3 · la fonction R, sur un exemple
+`replicate(B, expr)` répète `expr` B fois et renvoie le vecteur des résultats ; `sd()` donne ensuite la dispersion de ces B moyennes. Exemple (autre loi, autre taille) :
+
+```r
+x <- replicate(1000, mean(runif(10)))   # 1000 moyennes de 10 tirages uniformes
+sd(x)                                   # dispersion simulée
+# la théorie : sigma / sqrt(n), ici sigma = sqrt(1/12) pour une uniforme(0, 1)
+sqrt(1/12) / sqrt(10)
+```
 :::
 :::
 
@@ -134,6 +148,20 @@ Pour un IC bilatéral à 95 %, on prend le quantile d'ordre 0,975 de la loi de S
 :::
 :::
 
+::: {.hint exercise="stats-ic-1"}
+::: {.callout-tip collapse="false"}
+## Indice 3 · la fonction R, sur un exemple
+`qt(p, df)` renvoie le quantile de la loi de Student. Pour un IC à 95 %, on veut le quantile 0,975 (2,5 % de chaque côté). Exemple sur 4 valeurs :
+
+```r
+y <- c(4, 6, 5, 7); n <- length(y)
+qt(0.975, df = n - 1)                                    # valeur critique
+mean(y) + c(-1, 1) * qt(0.975, n - 1) * sd(y) / sqrt(n) # borne basse, borne haute
+# vérification : t.test(y)$conf.int
+```
+:::
+:::
+
 ::: {.solution exercise="stats-ic-1"}
 **Raisonnement.**
 
@@ -219,6 +247,21 @@ Pour chaque échantillon simulé, deux choses : la demi-largeur de l'intervalle 
 ::: {.callout-tip collapse="false"}
 ## Indice 2 · la formule
 marge = `crit * sd(x) / sqrt(n)` ; l'IC contient $\mu$ si `abs(mean(x) - mu) <= marge`. Pour Student la couverture doit être proche de 0,95.
+:::
+:::
+
+::: {.hint exercise="stats-couv-1"}
+::: {.callout-tip collapse="false"}
+## Indice 3 · la fonction R, sur un exemple
+Dans `replicate(B, { ... })`, **la dernière expression du bloc est la valeur renvoyée**. Un test logique donne TRUE/FALSE, et `mean()` d'un vecteur logique est la proportion de TRUE. Exemple :
+
+```r
+mean(replicate(2000, {
+  z <- rnorm(5)                      # un échantillon
+  abs(mean(z)) < 1                   # TRUE si la moyenne est à moins de 1 de 0
+}))
+# pour l'IC : abs(mean(x) - mu) < marge, avec marge = crit * sd(x) / sqrt(n)
+```
 :::
 :::
 
@@ -322,6 +365,20 @@ Il y a trois familles de résumés : la **position** (autour de quoi se situent 
 :::
 :::
 
+::: {.hint exercise="stats-desc-1"}
+::: {.callout-tip collapse="false"}
+## Indice 3 · la fonction R, sur un exemple
+`quantile(x, c(0.25, 0.75))` renvoie un vecteur **nommé** ; `unname()` retire les noms pour obtenir un nombre propre. L'asymétrie se calcule avec `mean()` d'un vecteur. Exemple :
+
+```r
+y <- c(2, 3, 3, 4, 10)
+q <- quantile(y, c(0.25, 0.75))
+unname(q[2] - q[1])                      # écart interquartile (ou IQR(y))
+mean(((y - mean(y)) / sd(y))^3)          # asymétrie : positive si queue à droite
+```
+:::
+:::
+
 ::: {.solution exercise="stats-desc-1"}
 **Raisonnement.**
 
@@ -416,6 +473,21 @@ Résumer par groupe, c'est calculer **la même statistique** sur chaque sous-éc
 ::: {.callout-tip collapse="false"}
 ## Indice 2 · les fonctions
 `table(diplome)` ou `tapply(salaire, diplome, length)` ; `tapply(salaire, diplome, mean)` ; avec `median` puis `sd`. La part est `effectif / sum(effectif)`.
+:::
+:::
+
+::: {.hint exercise="stats-desc-2"}
+::: {.callout-tip collapse="false"}
+## Indice 3 · la fonction R, sur un exemple
+`tapply(valeurs, groupes, fonction)` calcule la fonction pour chaque modalité du facteur et renvoie un vecteur nommé. Exemple :
+
+```r
+v <- c(10, 12, 20, 22, 30)
+g <- c("a", "a", "b", "b", "b")
+tapply(v, g, mean)       # a: 11, b: 24
+tapply(v, g, length)     # effectifs par groupe
+tapply(v, g, sd)         # écart-type par groupe
+```
 :::
 :::
 
@@ -527,6 +599,19 @@ Clôture basse : $Q_1 - k\,\mathrm{IQR}$ ; clôture haute : $Q_3 + k\,\mathrm{IQ
 :::
 :::
 
+::: {.hint exercise="stats-desc-3"}
+::: {.callout-tip collapse="false"}
+## Indice 3 · la fonction R, sur un exemple
+`which(condition)` renvoie les **positions** où la condition est vraie ; `|` signifie « ou ». Pour les seuils de Tukey, utilise les deux quartiles et l'IQR. Exemple :
+
+```r
+y <- c(1, 2, 2, 3, 3, 4, 40)
+q <- quantile(y, c(0.25, 0.75)); iqr <- q[2] - q[1]
+which(y < q[1] - 1.5 * iqr | y > q[2] + 1.5 * iqr)   # position 7
+```
+:::
+:::
+
 ::: {.solution exercise="stats-desc-3"}
 **Raisonnement.**
 
@@ -628,6 +713,20 @@ Sous H0 (moyennes égales), la différence $m_1 - m_2$ est centrée sur 0. Il fa
 ::: {.callout-tip collapse="false"}
 ## Indice 2 · les formules
 `se = sqrt(v1/n1 + v2/n2)` ; `t = (m1 - m2) / se` ; `p = 2 * pt(-abs(t), df)` ; écart-type poolé : `sqrt(((n1 - 1) * v1 + (n2 - 1) * v2) / (n1 + n2 - 2))`.
+:::
+:::
+
+::: {.hint exercise="stats-t-1"}
+::: {.callout-tip collapse="false"}
+## Indice 3 · la fonction R, sur un exemple
+Les variances des deux moyennes s'additionnent sous la racine. La p-value bilatérale double la probabilité d'une queue, via `pt()` sur la **valeur absolue** de t. Exemple :
+
+```r
+v1 <- 4; n1 <- 10; v2 <- 9; n2 <- 15
+se <- sqrt(v1 / n1 + v2 / n2)       # erreur-type de la différence
+pt(-abs(2.1), df = 18) * 2          # p bilatérale pour t = 2.1
+# vérification globale : t.test(a, b) est un test de Welch par défaut
+```
 :::
 :::
 
@@ -733,6 +832,21 @@ Si le diplôme et la situation d'emploi étaient indépendants, la proportion de
 ::: {.callout-tip collapse="false"}
 ## Indice 2 · les formules
 `outer(rowSums(tab), colSums(tab)) / sum(tab)` ; `sum((tab - attendus)^2 / attendus)` ; `(nrow(tab) - 1) * (ncol(tab) - 1)` ; `pchisq(chi2, ddl, lower.tail = FALSE)`.
+:::
+:::
+
+::: {.hint exercise="stats-chi2-1"}
+::: {.callout-tip collapse="false"}
+## Indice 3 · la fonction R, sur un exemple
+Le tableau des effectifs attendus s'obtient avec `outer()` (produit croisé des totaux). La p-value est la probabilité de dépasser la statistique : `lower.tail = FALSE`. Exemple :
+
+```r
+tab <- matrix(c(20, 30, 25, 25), 2)
+attendus <- outer(rowSums(tab), colSums(tab)) / sum(tab)
+stat <- sum((tab - attendus)^2 / attendus)
+pchisq(stat, df = 1, lower.tail = FALSE)
+# vérification : chisq.test(tab, correct = FALSE)
+```
 :::
 :::
 
@@ -842,6 +956,20 @@ Si le groupe n'a **aucun effet**, l'étiquette A/B de chaque observation est int
 ::: {.callout-tip collapse="false"}
 ## Indice 2 · les formules
 `g <- sample(groupe)` mélange les étiquettes. p-value : `(1 + sum(abs(stat) >= abs(obs))) / (B + 1)`.
+:::
+:::
+
+::: {.hint exercise="stats-perm-1"}
+::: {.callout-tip collapse="false"}
+## Indice 3 · la fonction R, sur un exemple
+`sample(groupe)` mélange les étiquettes sans les changer de nature (tirage sans remise de tout le vecteur). Compter combien de fois la statistique simulée dépasse l'observée : `sum(abs(stat) >= abs(obs))`. Exemple :
+
+```r
+groupe <- rep(c("A", "B"), each = 3)
+sample(groupe)                                  # étiquettes permutées
+stat <- c(0.5, -2, 1.5, 3)                      # statistiques simulées
+(1 + sum(abs(stat) >= abs(2))) / (length(stat) + 1)
+```
 :::
 :::
 
@@ -957,6 +1085,21 @@ Bonferroni : `pmin(1, length(p) * p)`. Holm : trie les p-values, multiplie la pl
 :::
 :::
 
+::: {.hint exercise="stats-mult-1"}
+::: {.callout-tip collapse="false"}
+## Indice 3 · la fonction R, sur un exemple
+`order(p)` donne les positions qui trient `p` ; `seq_len(m)` donne les rangs 1 à m. Tu peux vérifier tes fonctions avec `p.adjust(p, "bonferroni")` et `p.adjust(p, "holm")`. Exemple :
+
+```r
+p <- c(0.04, 0.001, 0.2); m <- length(p)
+o <- order(p)                        # positions triées
+pmin(1, m * p)                       # Bonferroni
+(m - seq_len(m) + 1) * p[o]          # facteurs de Holm sur les p triés
+p.adjust(p, "holm")
+```
+:::
+:::
+
 ::: {.solution exercise="stats-mult-1"}
 **Raisonnement.**
 
@@ -1052,6 +1195,20 @@ $P(M \mid +) = \dfrac{P(+ \mid M)\,P(M)}{P(+ \mid M)\,P(M) + P(+ \mid \bar M)\,P
 :::
 :::
 
+::: {.hint exercise="stats-bayes-1"}
+::: {.callout-tip collapse="false"}
+## Indice 3 · la fonction R, sur un exemple
+Pose les quatre cases d'un tableau 2 × 2 en probabilités : vrais positifs `se * prev`, faux négatifs, faux positifs `(1 - sp) * (1 - prev)`, vrais négatifs. La VPP est la part des positifs qui sont de vrais positifs. Exemple (autres valeurs) :
+
+```r
+prev <- 0.1; se <- 0.9; sp <- 0.8
+vrais_pos <- se * prev
+faux_pos  <- (1 - sp) * (1 - prev)
+vrais_pos / (vrais_pos + faux_pos)      # P(malade | positif)
+```
+:::
+:::
+
 ::: {.solution exercise="stats-bayes-1"}
 **Raisonnement.**
 
@@ -1101,6 +1258,34 @@ if (length(res) != 2 || anyNA(res)) {
 
 ::: {.dojo-done data-id="stats-bayes-1"}
 :::
+
+## Aide R pour les exercices de statistiques
+
+Quand un exercice te bloque, commence par **lire le gabarit** : chaque `______` remplace une expression R, et le commentaire à côté dit laquelle. Puis ouvre les indices un par un (le 3e donne la fonction R, sur un exemple différent). Cette page rappelle les mécanismes qui reviennent partout.
+
+| Besoin | Réflexe R |
+|---|---|
+| Répéter une simulation B fois | `replicate(B, { ...; valeur_finale })`, la dernière expression est renvoyée |
+| Proportion de succès | `mean(vecteur_logique)` (TRUE vaut 1) ; compter : `sum(vecteur_logique)` |
+| Statistique par groupe | `tapply(x, g, fonction)` ou `aggregate(x ~ g, data, fonction)` |
+| Positions qui vérifient une condition | `which(x > 3)` ; « ou » s'écrit avec la barre verticale |
+| Quantiles et valeurs critiques | `quantile(x, p)`, `qnorm(p)`, `qt(p, df)`, `qchisq(p, df)` |
+| p-value d'une statistique | `pt(-abs(t), df) * 2`, `pchisq(x, df, lower.tail = FALSE)` |
+| Retrouver le résultat avec les fonctions toutes faites | `t.test()`, `chisq.test()`, `p.adjust()` |
+| Lire un objet de test | `res <- t.test(x, y)` puis `res$p.value`, `res$statistic`, `res$conf.int` |
+
+```{webr}
+#| autorun: true
+#| caption: "Terrain de jeu : extraire les éléments d'un test"
+set.seed(1)
+x <- rnorm(20, 10, 2); y <- rnorm(25, 11, 3)
+res <- t.test(x, y)           # Welch par défaut
+res                           # affichage complet
+c(t = unname(res$statistic), p = res$p.value, ddl = unname(res$parameter))
+res$conf.int                  # IC à 95 % de la différence
+```
+
+**Erreurs fréquentes.** (1) `ERREUR : objet introuvable` : un nom est mal écrit ou défini plus bas. (2) Résultat de longueur 1 au lieu de n : il manque une opération vectorisée ou un `mean()` en trop. (3) `NA` : ajoute `na.rm = TRUE` ou cherche la valeur manquante. (4) Une p-value à 0 : c'est une valeur arrondie, écris « p < 0,001 ». (5) Mettre le résultat dans un `print()` : la dernière ligne suffit, c'est elle que le correcteur lit.
 
 ## Boîte à outils : quelle méthode, quelle fonction ?
 

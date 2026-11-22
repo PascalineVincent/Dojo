@@ -8,6 +8,7 @@ Site statique (Quarto) pour **maintenir les bases** (micro L1/L2, statistiques L
 |---|---|
 | **Séance du jour** | 5 cartes en répétition espacée, quiz éclair, exercice du jour (pondéré par tes points faibles), veille, défi de la semaine |
 | **Parcours** | Micro (laboratoire interactif), Stats, Économétrie, Histoire éco., Éco. contemporaine : exercices organisés en **pistes** |
+| **R** | Bases de R (vecteurs, tableaux, fonctions) et graphiques de base, avec exercices vérifiés par les valeurs renvoyées |
 | **Recherche** | Défi hebdomadaire ; labos Ségrégation (D, M, H, biais de petites unités, décomposition) et Inégalités (Lorenz, Gini pondéré, GE, décomposition de Theil) |
 | **Veille** | Flux OpenAlex et arXiv filtré par mots-clés + socle de lectures + fiche de lecture |
 | **Progression** | XP, ceintures, série, radar de maîtrise, export/import JSON |

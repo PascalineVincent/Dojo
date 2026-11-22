@@ -220,7 +220,7 @@ function mountDone(el) {
 // ------------------------------------------------------------------ exercice du jour
 const dayRank = () => { const d = new Date().getDay(); return d === 0 || d === 6; };     // week-end ?
 const TRACK_LABEL = { 'micro-cpp': 'Concurrence parfaite', 'micro-pouvoir': 'Pouvoir de marché', 'stats-est': 'Estimation et simulation', 'stats-desc': 'Statistiques descriptives', 'stats-tests': 'Comparaisons et tests',
-  eco: 'Économétrie', 'con-dette': 'Dette publique', seg: 'Ségrégation', ineq: 'Inégalités' };
+  eco: 'Économétrie', 'con-dette': 'Dette publique', 'con-prix': 'Inflation et prix', 'con-croiss': 'Croissance', 'con-travail': 'Marché du travail', 'con-monnaie': 'Politique monétaire', 'con-commerce': 'Commerce extérieur', 'r-base': 'R : bases', 'r-graph': 'R : graphiques', seg: 'Ségrégation', ineq: 'Inégalités' };
 const trackOf = (t) => DATA.exercises.filter((e) => e.track === t).sort((a, b) => a.step - b.step);
 // une marche est accessible quand toutes les précédentes de sa piste ont été réussies au moins une fois
 const unlocked = (e) => !e.track || trackOf(e.track).filter((x) => x.step < e.step).every((x) => S.done[x.id] || S.paid[x.id]);
