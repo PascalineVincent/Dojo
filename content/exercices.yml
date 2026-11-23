@@ -59,3 +59,43 @@
 - {id: r-graph-1, course: r, level: 2, minutes: 10, xp: 25, title: "Histogramme en densité et courbe de densité", page: parcours/r.html, track: r-graph, step: 2}
 - {id: r-graph-2, course: r, level: 2, minutes: 12, xp: 25, title: "Comparer des groupes : boîtes à moustaches et barres", page: parcours/r.html, track: r-graph, step: 3}
 - {id: r-graph-3, course: r, level: 3, minutes: 14, xp: 35, title: "Plusieurs graphiques : droite de régression et diagnostic des résidus", page: parcours/r.html, track: r-graph, step: 4}
+- {id: m-r-1, course: r, level: 1, minutes: 2, xp: 5, title: "Lire une colonne avec $", page: parcours/minis.html, track: mini-r, step: 1}
+- {id: m-r-2, course: r, level: 1, minutes: 2, xp: 5, title: "Indexer un vecteur par son nom", page: parcours/minis.html, track: mini-r, step: 2}
+- {id: m-r-3, course: r, level: 1, minutes: 2, xp: 5, title: "Une condition qui compte", page: parcours/minis.html, track: mini-r, step: 3}
+- {id: m-r-4, course: r, level: 1, minutes: 3, xp: 5, title: "Prédire avant d'exécuter", page: parcours/minis.html, track: mini-r, step: 4}
+- {id: m-r-5, course: r, level: 1, minutes: 3, xp: 8, title: "La virgule des tableaux", page: parcours/minis.html, track: mini-r, step: 5}
+- {id: m-r-6, course: r, level: 2, minutes: 3, xp: 8, title: "Retrouver un nom à partir d'une position", page: parcours/minis.html, track: mini-r, step: 6}
+- {id: m-r-7, course: r, level: 2, minutes: 4, xp: 8, title: "Résumer par groupe", page: parcours/minis.html, track: mini-r, step: 7}
+- {id: m-r-8, course: r, level: 2, minutes: 4, xp: 10, title: "Écrire sa première fonction", page: parcours/minis.html, track: mini-r, step: 8}
+- {id: m-st-1, course: stats, level: 1, minutes: 2, xp: 5, title: "Position : la médiane", page: parcours/minis.html, track: mini-stats, step: 1}
+- {id: m-st-2, course: stats, level: 1, minutes: 2, xp: 5, title: "Dispersion robuste : l'écart interquartile", page: parcours/minis.html, track: mini-stats, step: 2}
+- {id: m-st-3, course: stats, level: 2, minutes: 3, xp: 8, title: "Lire un tableau croisé à trois dimensions", page: parcours/minis.html, track: mini-stats, step: 3}
+- {id: m-st-4, course: stats, level: 2, minutes: 3, xp: 8, title: "Un taux à partir d'un tableau", page: parcours/minis.html, track: mini-stats, step: 4}
+- {id: m-st-5, course: stats, level: 3, minutes: 5, xp: 12, title: "Le paradoxe de Simpson", page: parcours/minis.html, track: mini-stats, step: 5}
+- {id: m-st-6, course: stats, level: 2, minutes: 3, xp: 8, title: "Lire un test : significatif ou non ?", page: parcours/minis.html, track: mini-stats, step: 6}
+- {id: m-st-7, course: stats, level: 2, minutes: 3, xp: 8, title: "Corrélation de deux séries macro", page: parcours/minis.html, track: mini-stats, step: 7}
+- {id: m-st-8, course: stats, level: 3, minutes: 4, xp: 10, title: "Un khi-deux sur un tableau 2 × 2", page: parcours/minis.html, track: mini-stats, step: 8}
+- {id: m-ec-1, course: econometrie, level: 1, minutes: 3, xp: 8, title: "Ma première régression", page: parcours/minis.html, track: mini-eco, step: 1}
+- {id: m-ec-2, course: econometrie, level: 1, minutes: 2, xp: 5, title: "La constante du modèle", page: parcours/minis.html, track: mini-eco, step: 2}
+- {id: m-ec-3, course: econometrie, level: 1, minutes: 2, xp: 5, title: "Lire le R²", page: parcours/minis.html, track: mini-eco, step: 3}
+- {id: m-ec-4, course: econometrie, level: 2, minutes: 3, xp: 8, title: "Prédire avec le modèle", page: parcours/minis.html, track: mini-eco, step: 4}
+- {id: m-ec-5, course: econometrie, level: 2, minutes: 4, xp: 10, title: "Contrôler d'autres variables", page: parcours/minis.html, track: mini-eco, step: 5}
+- {id: m-ec-6, course: econometrie, level: 2, minutes: 4, xp: 10, title: "Quel pays est le plus mal expliqué ?", page: parcours/minis.html, track: mini-eco, step: 6}
+- {id: m-ma-1, course: contemporaine, level: 1, minutes: 3, xp: 5, title: "Croissance cumulée d'une série", page: parcours/minis.html, track: mini-macro, step: 1}
+- {id: m-ma-2, course: contemporaine, level: 2, minutes: 3, xp: 8, title: "Taux de croissance annuel moyen", page: parcours/minis.html, track: mini-macro, step: 2}
+- {id: m-ma-3, course: contemporaine, level: 2, minutes: 4, xp: 8, title: "Inflation à partir d'un déflateur", page: parcours/minis.html, track: mini-macro, step: 3}
+- {id: m-ma-4, course: contemporaine, level: 2, minutes: 4, xp: 8, title: "Productivité apparente du travail", page: parcours/minis.html, track: mini-macro, step: 4}
+- {id: m-ma-5, course: contemporaine, level: 2, minutes: 3, xp: 8, title: "Parités de l'euro : un taux croisé", page: parcours/minis.html, track: mini-macro, step: 5}
+- {id: m-ma-6, course: contemporaine, level: 3, minutes: 5, xp: 12, title: "Volatilité annualisée d'un indice boursier", page: parcours/minis.html, track: mini-macro, step: 6}
+- {id: m-mi-1, course: micro, level: 1, minutes: 3, xp: 8, title: "Élasticité-prix (chiffres illustratifs)", page: parcours/minis.html, track: mini-micro, step: 1}
+- {id: m-mi-2, course: micro, level: 1, minutes: 3, xp: 8, title: "Surplus du consommateur", page: parcours/minis.html, track: mini-micro, step: 2}
+- {id: m-mi-3, course: micro, level: 2, minutes: 4, xp: 10, title: "Coût marginal et offre d'une firme", page: parcours/minis.html, track: mini-micro, step: 3}
+- {id: m-mi-4, course: micro, level: 2, minutes: 4, xp: 10, title: "Le profit maximal", page: parcours/minis.html, track: mini-micro, step: 4}
+- {id: m-in-1, course: recherche, level: 1, minutes: 3, xp: 8, title: "Concentration : part des 5 plus peuplés", page: parcours/minis.html, track: mini-ineq, step: 1}
+- {id: m-in-2, course: recherche, level: 1, minutes: 2, xp: 5, title: "Un rapport d'extrêmes", page: parcours/minis.html, track: mini-ineq, step: 2}
+- {id: m-in-3, course: recherche, level: 2, minutes: 4, xp: 10, title: "L'indice de Gini de la population des États", page: parcours/minis.html, track: mini-ineq, step: 3}
+- {id: m-in-4, course: recherche, level: 3, minutes: 5, xp: 12, title: "Lire une courbe de Lorenz", page: parcours/minis.html, track: mini-ineq, step: 4}
+- {id: m-hi-1, course: histoire, level: 1, minutes: 3, xp: 8, title: "Un siècle et demi de croissance démographique", page: parcours/minis.html, track: mini-hist, step: 1}
+- {id: m-hi-2, course: histoire, level: 2, minutes: 4, xp: 8, title: "Quelle décennie a connu la plus forte croissance ?", page: parcours/minis.html, track: mini-hist, step: 2}
+- {id: m-hi-3, course: histoire, level: 1, minutes: 3, xp: 8, title: "La diffusion du téléphone en 1951", page: parcours/minis.html, track: mini-hist, step: 3}
+- {id: m-hi-4, course: histoire, level: 3, minutes: 6, xp: 15, title: "Évaluer une loi : la ceinture de sécurité", page: parcours/minis.html, track: mini-hist, step: 4}

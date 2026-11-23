@@ -43,3 +43,7 @@ Rédige en 8 à 12 lignes, puis compare avec tes cours. C'est la **récupératio
 3. Que désigne la « Grande Divergence » et pourquoi la date de 1800 est-elle importante ?
 4. La courbe de Kuznets est-elle un mécanisme ou une période particulière de l'histoire ? Qu'en dit Piketty ?
 5. Comparer 1929 et 2008 : qu'est-ce qui diffère dans la réponse des politiques monétaires et budgétaires ?
+
+::: {.callout-tip}
+**S'exercer sur des données historiques réelles.** Quatre échauffements courts (population américaine depuis 1790, téléphones dans le monde, évaluation de la loi sur la ceinture de sécurité) sont dans [la piste Histoire des échauffements](minis.qmd#mini-hist).
+:::

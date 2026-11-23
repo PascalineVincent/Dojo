@@ -9,6 +9,10 @@ Six pistes d'exercices progressifs (guidé, à compléter, autonome), chacune av
 
 Les **identités** et les **mécanismes** valent mieux que les chiffres du jour : pour tout chiffre d'actualité, va chercher la source officielle (INSEE, Eurostat, BCE, OFCE) au moment où tu en as besoin.
 
+::: {.callout-tip}
+**Une marche te paraît trop haute ?** Fais d'abord les [échauffements](minis.qmd) : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page *Aujourd'hui* te propose aussi un exercice court.
+:::
+
 {{< include ../_ojs.qmd >}}
 
 ::: {.dojo-track data-track="con-dette"}

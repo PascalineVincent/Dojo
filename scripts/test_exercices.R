@@ -129,9 +129,10 @@ for (id in exo_labels) {
   } else {
     rest <- substr(src, at, nchar(src))
     body <- sub("\n:::\\s*\n.*$", "", rest)
-    for (need in c("**Raisonnement.**", "**Pièges fréquents.**"))
+    mini <- grepl("^m-", id)      # échauffements : corrigé plus court
+    for (need in c("**Raisonnement.**", if (!mini) "**Pièges fréquents.**"))
       if (!grepl(need, body, fixed = TRUE)) fail(sprintf("[%s] corrigé incomplet : « %s » manquant", id, need))
-    if (nchar(gsub("```.*?```", "", body)) < 450) fail(sprintf("[%s] corrigé trop court (< 450 caractères de texte)", id))
+    if (nchar(gsub("```.*?```", "", body)) < (if (mini) 200 else 450)) fail(sprintf("[%s] corrigé trop court", id))
   }
   if (!grepl(sprintf('{.dojo-done data-id="%s"}', id), src, fixed = TRUE)) fail(sprintf("[%s] bouton « réussi » manquant", id))
   if (!grepl(sprintf("{#%s}", id), src, fixed = TRUE)) fail(sprintf("[%s] ancre de section manquante", id))

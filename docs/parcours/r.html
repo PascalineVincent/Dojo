@@ -331,6 +331,10 @@ window.Quarto = {
     <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Aujourd’hui</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../parcours/minis.html"> 
+<span class="menu-text">Échauffements</span></a>
+  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parcours" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Parcours</span>
@@ -450,37 +454,50 @@ window.Quarto = {
 
 
 <p>Deux pistes progressives, avec indices et corrigés. <em>R : bases</em> couvre les vecteurs, les tableaux de données et les fonctions ; <em>R : graphiques</em> part de <code>plot()</code> et va jusqu’aux figures à plusieurs panneaux. Les graphiques se vérifient par ce que R <strong>renvoie</strong> (limites des axes avec <code>par("usr")</code>, objets renvoyés par <code>hist()</code>, <code>boxplot()</code>, <code>barplot()</code>), pas par l’œil. Les énoncés changent chaque jour.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Astuce
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Une marche te paraît trop haute ?</strong> Fais d’abord les <a href="../parcours/minis.html">échauffements</a> : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page <em>Aujourd’hui</em> te propose aussi un exercice court.</p>
+</div>
+</div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb1" data-startfrom="21" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 20;"><span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> {</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Générateur pseudo-aléatoire reproductible : graine = jour + id d'exercice + salt.</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">// (Source unique : scripts/test_exercices.R évalue cette même cellule avec Node.)</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> today <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>()<span class="op">.</span><span class="fu">toISOString</span>()<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> hash <span class="op">=</span> (s) <span class="kw">=&gt;</span> {</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> h <span class="op">=</span> <span class="dv">1779033703</span> <span class="op">^</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) { h <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(h <span class="op">^</span> s<span class="op">.</span><span class="fu">charCodeAt</span>(i)<span class="op">,</span> <span class="dv">3432918353</span>)<span class="op">;</span> h <span class="op">=</span> (h <span class="op">&lt;&lt;</span> <span class="dv">13</span>) <span class="op">|</span> (h <span class="op">&gt;&gt;&gt;</span> <span class="dv">19</span>)<span class="op">;</span> }</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> h <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> mulberry32 <span class="op">=</span> (a) <span class="kw">=&gt;</span> () <span class="kw">=&gt;</span> {</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    a <span class="op">|=</span> <span class="dv">0</span><span class="op">;</span> a <span class="op">=</span> (a <span class="op">+</span> <span class="bn">0x6d2b79f5</span>) <span class="op">|</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> t <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(a <span class="op">^</span> (a <span class="op">&gt;&gt;&gt;</span> <span class="dv">15</span>)<span class="op">,</span> <span class="dv">1</span> <span class="op">|</span> a)<span class="op">;</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> (t <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">7</span>)<span class="op">,</span> <span class="dv">61</span> <span class="op">|</span> t)) <span class="op">^</span> t<span class="op">;</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ((t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">14</span>)) <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span>) <span class="op">/</span> <span class="dv">4294967296</span><span class="op">;</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> (id<span class="op">,</span> salt <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> day <span class="op">=</span> today) <span class="kw">=&gt;</span> {</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> u <span class="op">=</span> <span class="fu">mulberry32</span>(<span class="fu">hash</span>(<span class="vs">`</span><span class="sc">${</span>day<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>id<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>salt<span class="sc">}</span><span class="vs">`</span>))<span class="op">;</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> int <span class="op">=</span> (a<span class="op">,</span> b) <span class="kw">=&gt;</span> a <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> (b <span class="op">-</span> a <span class="op">+</span> <span class="dv">1</span>))<span class="op">;</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> pick <span class="op">=</span> (arr) <span class="kw">=&gt;</span> arr[<span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> arr<span class="op">.</span><span class="at">length</span>)]<span class="op">;</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> normal <span class="op">=</span> () <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">log</span>(<span class="dv">1</span> <span class="op">-</span> <span class="fu">u</span>())) <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">cos</span>(<span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="cn">PI</span> <span class="op">*</span> <span class="fu">u</span>())<span class="op">;</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { u<span class="op">,</span> int<span class="op">,</span> pick<span class="op">,</span> normal }<span class="op">;</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>viewof salt <span class="op">=</span> {</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> b <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;button class="dojo-btn dojo-reroll"&gt;🎲 Nouveaux énoncés&lt;/button&gt;`</span><span class="op">;</span></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> n <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  b<span class="op">.</span><span class="at">onclick</span> <span class="op">=</span> () <span class="kw">=&gt;</span> { b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="op">++</span>n<span class="op">;</span> b<span class="op">.</span><span class="fu">dispatchEvent</span>(<span class="kw">new</span> <span class="bu">Event</span>(<span class="st">"input"</span><span class="op">,</span> { <span class="dt">bubbles</span><span class="op">:</span> <span class="kw">true</span> }))<span class="op">;</span> }<span class="op">;</span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> b<span class="op">;</span></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb1" data-startfrom="25" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 24;"><span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> {</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Générateur pseudo-aléatoire reproductible : graine = jour + id d'exercice + salt.</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="co">// (Source unique : scripts/test_exercices.R évalue cette même cellule avec Node.)</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> today <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>()<span class="op">.</span><span class="fu">toISOString</span>()<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> hash <span class="op">=</span> (s) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> h <span class="op">=</span> <span class="dv">1779033703</span> <span class="op">^</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) { h <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(h <span class="op">^</span> s<span class="op">.</span><span class="fu">charCodeAt</span>(i)<span class="op">,</span> <span class="dv">3432918353</span>)<span class="op">;</span> h <span class="op">=</span> (h <span class="op">&lt;&lt;</span> <span class="dv">13</span>) <span class="op">|</span> (h <span class="op">&gt;&gt;&gt;</span> <span class="dv">19</span>)<span class="op">;</span> }</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> h <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> mulberry32 <span class="op">=</span> (a) <span class="kw">=&gt;</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    a <span class="op">|=</span> <span class="dv">0</span><span class="op">;</span> a <span class="op">=</span> (a <span class="op">+</span> <span class="bn">0x6d2b79f5</span>) <span class="op">|</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> t <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(a <span class="op">^</span> (a <span class="op">&gt;&gt;&gt;</span> <span class="dv">15</span>)<span class="op">,</span> <span class="dv">1</span> <span class="op">|</span> a)<span class="op">;</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> (t <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">7</span>)<span class="op">,</span> <span class="dv">61</span> <span class="op">|</span> t)) <span class="op">^</span> t<span class="op">;</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ((t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">14</span>)) <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span>) <span class="op">/</span> <span class="dv">4294967296</span><span class="op">;</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> (id<span class="op">,</span> salt <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> day <span class="op">=</span> today) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> u <span class="op">=</span> <span class="fu">mulberry32</span>(<span class="fu">hash</span>(<span class="vs">`</span><span class="sc">${</span>day<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>id<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>salt<span class="sc">}</span><span class="vs">`</span>))<span class="op">;</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> int <span class="op">=</span> (a<span class="op">,</span> b) <span class="kw">=&gt;</span> a <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> (b <span class="op">-</span> a <span class="op">+</span> <span class="dv">1</span>))<span class="op">;</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> pick <span class="op">=</span> (arr) <span class="kw">=&gt;</span> arr[<span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> arr<span class="op">.</span><span class="at">length</span>)]<span class="op">;</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> normal <span class="op">=</span> () <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">log</span>(<span class="dv">1</span> <span class="op">-</span> <span class="fu">u</span>())) <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">cos</span>(<span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="cn">PI</span> <span class="op">*</span> <span class="fu">u</span>())<span class="op">;</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { u<span class="op">,</span> int<span class="op">,</span> pick<span class="op">,</span> normal }<span class="op">;</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>viewof salt <span class="op">=</span> {</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> b <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;button class="dojo-btn dojo-reroll"&gt;🎲 Nouveaux énoncés&lt;/button&gt;`</span><span class="op">;</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> n <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  b<span class="op">.</span><span class="at">onclick</span> <span class="op">=</span> () <span class="kw">=&gt;</span> { b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="op">++</span>n<span class="op">;</span> b<span class="op">.</span><span class="fu">dispatchEvent</span>(<span class="kw">new</span> <span class="bu">Event</span>(<span class="st">"input"</span><span class="op">,</span> { <span class="dt">bubbles</span><span class="op">:</span> <span class="kw">true</span> }))<span class="op">;</span> }<span class="op">;</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> b<span class="op">;</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-1-1" data-nodetype="declaration">
@@ -503,7 +520,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="r-base-0">Vecteurs : indexer, filtrer, compter</h2>
 <p><span class="dojo-step">Marche 1 sur 3 · Guidé</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="109" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 108;"><span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>rb0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-base-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">s</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">25</span><span class="op">,</span> <span class="dv">50</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="113" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 112;"><span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>rb0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-base-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">s</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">25</span><span class="op">,</span> <span class="dv">50</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-2" data-nodetype="declaration">
 
@@ -523,7 +540,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJWZWN0ZXVycyIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJj
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-base-0">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -532,7 +549,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJWZWN0ZXVycyIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJj
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Une comparaison comme <code>x &gt; s</code> renvoie un vecteur de TRUE/FALSE. On peut le <strong>sommer</strong> (TRUE vaut 1) pour compter, ou l’utiliser dans des crochets pour <strong>filtrer</strong>.</p>
 </div>
@@ -541,7 +558,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJWZWN0ZXVycyIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJj
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-base-0">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -550,7 +567,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJWZWN0ZXVycyIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJj
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>n_sup = sum(x &gt; s)</code> ; <code>moy_sup = mean(x[x &gt; s])</code> ; <code>pos_max = which.max(x)</code> ; <code>plafond = ifelse(x &gt; s, s, x)</code> (ou <code>pmin(x, s)</code>).</p>
 </div>
@@ -606,7 +623,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InIt
 <h2 class="anchored" data-anchor-id="r-base-1">Tableaux de données : sélectionner, résumer, comparer</h2>
 <p><span class="dojo-step">Marche 2 sur 3 · À compléter</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="199" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 198;"><span id="cb3-199"><a href="#cb3-199" aria-hidden="true" tabindex="-1"></a>rb1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-base-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">ecart</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">10</span><span class="op">,</span> <span class="dv">40</span>) <span class="op">*</span> <span class="dv">10</span> }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="203" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 202;"><span id="cb3-203"><a href="#cb3-203" aria-hidden="true" tabindex="-1"></a>rb1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-base-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">ecart</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">10</span><span class="op">,</span> <span class="dv">40</span>) <span class="op">*</span> <span class="dv">10</span> }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="declaration">
 
@@ -626,7 +643,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJEYXRhIGZyYW1lIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhl
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-base-1">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -635,7 +652,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJEYXRhIGZyYW1lIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhl
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Un data frame s’indexe <code>df[lignes, colonnes]</code>. Pour <strong>filtrer des lignes</strong>, mets une condition logique dans le premier emplacement et laisse le second vide : <code>df[condition, ]</code>. Combine les conditions avec <code>&amp;</code>.</p>
 </div>
@@ -644,7 +661,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJEYXRhIGZyYW1lIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhl
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-base-1">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -653,7 +670,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJEYXRhIGZyYW1lIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhl
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>cible &lt;- df[df$sexe == "F" &amp; df$age &gt;= 30, ]</code> ; <code>moy_sexe &lt;- tapply(df$revenu, df$sexe, mean)</code> ; <code>age_plus_riche = df$age[which.max(df$revenu)]</code>.</p>
 </div>
@@ -707,7 +724,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InIt
 <h2 class="anchored" data-anchor-id="r-base-2">Écrire une fonction et l’appliquer à une liste</h2>
 <p><span class="dojo-step">Marche 3 sur 3 · Autonome</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="287" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 286;"><span id="cb4-287"><a href="#cb4-287" aria-hidden="true" tabindex="-1"></a>rb2 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-base-2"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">k</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">3</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="291" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 290;"><span id="cb4-291"><a href="#cb4-291" aria-hidden="true" tabindex="-1"></a>rb2 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-base-2"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">k</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">3</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-4" data-nodetype="declaration">
 
@@ -727,7 +744,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJGb25jdGlvbiArIHZhcHBseSIsImVkaXQiOnRydWUsImV2YWwiOnRy
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-base-2">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -736,7 +753,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJGb25jdGlvbiArIHZhcHBseSIsImVkaXQiOnRydWUsImV2YWwiOnRy
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Une fonction se définit <code>nom &lt;- function(argument) { ... }</code> et renvoie sa <strong>dernière expression</strong>. Ici, calcule d’abord les variations relatives de <code>x</code> (différences successives rapportées au niveau précédent), puis leur écart-type.</p>
 </div>
@@ -745,7 +762,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJGb25jdGlvbiArIHZhcHBseSIsImVkaXQiOnRydWUsImV2YWwiOnRy
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-base-2">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -754,7 +771,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJGb25jdGlvbiArIHZhcHBseSIsImVkaXQiOnRydWUsImV2YWwiOnRy
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>volatilite &lt;- function(x) sd(diff(x) / x[-length(x)])</code> ; <code>x[-length(x)]</code> retire le dernier élément, donc aligne chaque variation avec la valeur de départ. <code>vapply(liste, f, numeric(1))</code> applique <code>f</code> à chaque élément et exige un nombre en retour.</p>
 </div>
@@ -807,7 +824,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InIt
 <h2 class="anchored" data-anchor-id="r-graph-0">Premier graphique : une série temporelle propre</h2>
 <p><span class="dojo-step">Marche 1 sur 4 · Guidé</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="371" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 370;"><span id="cb5-371"><a href="#cb5-371" aria-hidden="true" tabindex="-1"></a>rg0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-graph-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">g</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">4</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="375" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 374;"><span id="cb5-375"><a href="#cb5-375" aria-hidden="true" tabindex="-1"></a>rg0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-graph-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">g</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">4</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-5" data-nodetype="declaration">
 
@@ -827,7 +844,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJwbG90KCkiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lz
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-0">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -836,7 +853,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJwbG90KCkiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lz
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>plot(x, y, ...)</code> accepte des arguments nommés qui règlent l’apparence : <code>type</code> (“p” points, “l” lignes, “b” les deux), <code>pch</code> (symbole), <code>col</code>, <code>xlab</code>, <code>ylab</code>, <code>main</code>, et <code>ylim = c(min, max)</code> pour fixer l’étendue verticale.</p>
 </div>
@@ -845,7 +862,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJwbG90KCkiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lz
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-0">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -854,7 +871,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJwbG90KCkiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lz
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse show">
+<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>plot(annee, pib, type = "b", pch = 19, col = "steelblue", ylim = c(0, max(pib)), xlab = "Année", ylab = "PIB (indice)", main = "Évolution du PIB")</code>.</p>
 </div>
@@ -906,7 +923,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InIt
 <h2 class="anchored" data-anchor-id="r-graph-1">Histogramme en densité et courbe de densité</h2>
 <p><span class="dojo-step">Marche 2 sur 4 · À compléter</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb6" data-startfrom="458" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 457;"><span id="cb6-458"><a href="#cb6-458" aria-hidden="true" tabindex="-1"></a>rg1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-graph-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">L</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="fl">0.5</span><span class="op">,</span> <span class="dv">1</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb6" data-startfrom="462" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 461;"><span id="cb6-462"><a href="#cb6-462" aria-hidden="true" tabindex="-1"></a>rg1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-graph-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">L</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="fl">0.5</span><span class="op">,</span> <span class="dv">1</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-6" data-nodetype="declaration">
 
@@ -926,7 +943,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJoaXN0KCkgZXQgZGVuc2l0eSgpIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-1">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -935,7 +952,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJoaXN0KCkgZXQgZGVuc2l0eSgpIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
+<div id="callout-10" class="callout-10-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>hist(x, breaks = ...)</code> accepte un <strong>vecteur de bornes</strong> pour des classes de largeur choisie ; <code>freq = FALSE</code> affiche des densités au lieu d’effectifs. La borne haute doit couvrir le maximum : arrondis <code>max(x) / L</code> à l’entier supérieur.</p>
 </div>
@@ -944,7 +961,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJoaXN0KCkgZXQgZGVuc2l0eSgpIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-1">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -953,7 +970,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJoaXN0KCkgZXQgZGVuc2l0eSgpIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse show">
+<div id="callout-11" class="callout-11-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>h &lt;- hist(x, breaks = seq(0, ceiling(max(x) / L) * L, by = L), freq = FALSE, col = "grey85", main = "Revenus", xlab = "Milliers d'euros")</code> ; <code>lines(density(x), col = "red", lwd = 2)</code>.</p>
 </div>
@@ -1007,7 +1024,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InIt
 <h2 class="anchored" data-anchor-id="r-graph-2">Comparer des groupes : boîtes à moustaches et barres</h2>
 <p><span class="dojo-step">Marche 3 sur 4 · À compléter</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb7" data-startfrom="552" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 551;"><span id="cb7-552"><a href="#cb7-552" aria-hidden="true" tabindex="-1"></a>rg2 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-graph-2"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">b</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">10</span><span class="op">,</span> <span class="dv">14</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb7" data-startfrom="556" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 555;"><span id="cb7-556"><a href="#cb7-556" aria-hidden="true" tabindex="-1"></a>rg2 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"r-graph-2"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">b</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">10</span><span class="op">,</span> <span class="dv">14</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-7" data-nodetype="declaration">
 
@@ -1027,7 +1044,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJib3hwbG90KCkgZXQgYmFycGxvdCgpIiwiZWRpdCI6dHJ1ZSwiZXZh
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-2">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1036,7 +1053,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJib3hwbG90KCkgZXQgYmFycGxvdCgpIiwiZWRpdCI6dHJ1ZSwiZXZh
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse show">
+<div id="callout-12" class="callout-12-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>boxplot()</code> accepte une <strong>formule</strong> <code>y ~ groupe</code> avec l’argument <code>data</code>, ou deux vecteurs séparés (<code>boxplot(salaire ~ diplome)</code> fonctionne directement car les deux sont dans l’environnement). <code>barplot()</code> prend un vecteur de hauteurs, avec <code>names.arg</code> ou un vecteur nommé.</p>
 </div>
@@ -1045,7 +1062,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJib3hwbG90KCkgZXQgYmFycGxvdCgpIiwiZWRpdCI6dHJ1ZSwiZXZh
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-2">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1054,7 +1071,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJib3hwbG90KCkgZXQgYmFycGxvdCgpIiwiZWRpdCI6dHJ1ZSwiZXZh
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-12" class="callout-12-contents callout-collapse collapse show">
+<div id="callout-13" class="callout-13-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>b &lt;- boxplot(salaire ~ diplome, col = "grey85", ylab = "Salaire horaire (euros)")</code> ; <code>bp &lt;- barplot(moy, ylab = "Salaire moyen (euros)", ylim = c(0, max(moy) * 1.1))</code>. La ligne 3 de <code>b$stats</code> contient les médianes.</p>
 </div>
@@ -1132,7 +1149,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJwYXIobWZyb3cpLCBhYmxpbmUoKSwgbGVnZW5kKCkiLCJlZGl0Ijp0
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-3">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1141,7 +1158,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJwYXIobWZyb3cpLCBhYmxpbmUoKSwgbGVnZW5kKCkiLCJlZGl0Ijp0
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-13" class="callout-13-contents callout-collapse collapse show">
+<div id="callout-14" class="callout-14-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>par(mfrow = c(lignes, colonnes))</code> découpe la fenêtre en panneaux, remplis ligne par ligne. <code>par()</code> <strong>renvoie l’ancienne valeur</strong> : la garder dans <code>op</code> permet de restaurer avec <code>par(op)</code>. <code>abline()</code> accepte directement un objet <code>lm</code> pour tracer sa droite.</p>
 </div>
@@ -1150,7 +1167,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJwYXIobWZyb3cpLCBhYmxpbmUoKSwgbGVnZW5kKCkiLCJlZGl0Ijp0
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="r-graph-3">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1159,7 +1176,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJwYXIobWZyb3cpLCBhYmxpbmUoKSwgbGVnZW5kKCkiLCJlZGl0Ijp0
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-14" class="callout-14-contents callout-collapse collapse show">
+<div id="callout-15" class="callout-15-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>par(mfrow = c(1, 2))</code> ; <code>fit &lt;- lm(y ~ x)</code> ; <code>abline(fit, col = "red", lwd = 2)</code> ; <code>legend("topleft", legend = "Droite MCO", ...)</code>. <code>qqline()</code> trace la droite de référence d’un <code>qqnorm</code>.</p>
 </div>

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-22T14:21:56Z",
+  "updated": "2026-11-23T20:47:52Z",
   "items": [
     {
       "id": "https://doi.org/10.5281/zenodo.24281556",
@@ -99,22 +99,19 @@
       ]
     },
     {
-      "id": "https://doi.org/10.67967/wwjmrd.0513",
-      "title": "Changing Patterns of Income Inequality in India: A Contemporary Analysis",
-      "authors": "Ashfakur Rahman",
-      "venue": "World Wide Journal of Multidisciplinary Research and Development",
-      "date": "2026-11-01",
-      "url": "https://doi.org/10.67967/wwjmrd.0513",
+      "id": "https://doi.org/10.1080/00224499.2026.2763038",
+      "title": "A Measurement Invariance Study of the Sexual Cognitions Checklist Across Sexual Orientation and Gender Identity",
+      "authors": ["Carlos Pérez‐Amorós", "María del Mar Sánchez-Fuentes", "Gracia M. Sánchez-Pérez", "Juan Carlos Sierra"],
+      "venue": "The Journal of Sex Research",
+      "date": "2026-11-20",
+      "url": "https://doi.org/10.1080/00224499.2026.2763038",
       "source": "openalex",
-      "score": 18,
-      "topic": "Inégalités",
+      "score": 15,
+      "topic": "Identité de genre",
       "matched": [
-        "inequality",
-        "gini",
-        "lorenz",
-        "top income",
-        "wealth",
-        "poverty"
+        "gender identity",
+        "transgender",
+        "sexual orientation"
       ]
     },
     {
@@ -131,22 +128,6 @@
         "inequality",
         "gini",
         "wealth"
-      ]
-    },
-    {
-      "id": "https://doi.org/10.66728/sshi.v4i8.700723",
-      "title": "Dynamics of residential concentration, segregation and social diversity of scheduled tribes in Manbazar block-I of Purulia district, West Bengal (1991-2011)",
-      "authors": ["Prosenjit Murmu", "Jagdish Kumar Mahto"],
-      "venue": "Social Science & Humanities International",
-      "date": "2026-11-01",
-      "url": "https://doi.org/10.66728/sshi.v4i8.700723",
-      "source": "openalex",
-      "score": 15,
-      "topic": "Ségrégation",
-      "matched": [
-        "segregation",
-        "dissimilarity",
-        "residential"
       ]
     },
     {
@@ -359,6 +340,52 @@
       ]
     },
     {
+      "id": "https://doi.org/10.1108/ijebr-10-2025-1565",
+      "title": "Queer(y)ing gender in entrepreneurial action through the experiences of transgender women entrepreneurs in Tasmania",
+      "authors": ["Roshni Narendran", "Angela Dwyer", "Balkrushna Potdar"],
+      "venue": "International Journal of Entrepreneurial Behaviour & Research",
+      "date": "2026-11-23",
+      "url": "https://doi.org/10.1108/ijebr-10-2025-1565",
+      "source": "openalex",
+      "score": 12,
+      "topic": "Identité de genre",
+      "matched": [
+        "gender identity",
+        "transgender"
+      ]
+    },
+    {
+      "id": "https://doi.org/10.21275/sr261119174248",
+      "title": "Income Inequality and Economic Growth: Causes, Consequences, and Policy Implications",
+      "authors": "Saddam Hussain",
+      "venue": "International Journal of Science and Research (IJSR)",
+      "date": "2026-11-21",
+      "url": "https://doi.org/10.21275/sr261119174248",
+      "source": "openalex",
+      "score": 12,
+      "topic": "Inégalités",
+      "matched": [
+        "inequality",
+        "income distribution",
+        "wealth"
+      ]
+    },
+    {
+      "id": "https://doi.org/10.5281/zenodo.24397933",
+      "title": "Socio-Economic Problems of the Transgender Community in Satara District, Maharashtra: A Sociological Study",
+      "authors": "GANESH SHRIRANG SATARKAR",
+      "venue": "Zenodo (CERN European Organization for Nuclear Research)",
+      "date": "2026-11-20",
+      "url": "https://doi.org/10.5281/zenodo.24397933",
+      "source": "openalex",
+      "score": 12,
+      "topic": "Identité de genre",
+      "matched": [
+        "gender identity",
+        "transgender"
+      ]
+    },
+    {
       "id": "https://doi.org/10.1093/ooec/odag014",
       "title": "Is Income Inequality Rising Everywhere?",
       "authors": ["Facundo Alvaredo", "Françoìs Bourguignon", "Francisco H. G. Ferreira", "Christoph Lakner", "Nora Claudia Lustig"],
@@ -494,6 +521,21 @@
       ]
     },
     {
+      "id": "https://openalex.org/W7225767941",
+      "title": "Transgender Adoption in India through Constitutional Equality and Philosophical Perspectives",
+      "authors": ["Sarmistha Bhattacharya", "Bhupal Bhattacharya"],
+      "venue": "Journal of Family & Adoption Law",
+      "date": "2026-11-09",
+      "url": "https://openalex.org/W7225767941",
+      "source": "openalex",
+      "score": 12,
+      "topic": "Identité de genre",
+      "matched": [
+        "gender identity",
+        "transgender"
+      ]
+    },
+    {
       "id": "https://doi.org/10.1080/19317611.2026.2759121",
       "title": "Latent Profile Analysis of Shame: Examining Gender Identity and Sexual Orientation Differences and the Role of Sexual Adaptation",
       "authors": ["Yuran Chen", "Ke Li", "Chun Chen"],
@@ -570,6 +612,22 @@
       ]
     },
     {
+      "id": "https://doi.org/10.1002/sd.71871",
+      "title": "Sustainable for Whom? Industrial Competitiveness, Sustainable Industrialization and Carbon Inequality: Evidence From a Global Panel",
+      "authors": ["Özge Kozal", "Hakan İnke", "Daniel Balsalobre‐Lorente"],
+      "venue": "Sustainable Development",
+      "date": "2026-11-05",
+      "url": "https://doi.org/10.1002/sd.71871",
+      "source": "openalex",
+      "score": 12,
+      "topic": "Inégalités",
+      "matched": [
+        "inequality",
+        "top income",
+        "wealth"
+      ]
+    },
+    {
       "id": "https://doi.org/10.1080/00346764.2026.2757824",
       "title": "How should we target wealth inequality?",
       "authors": "Tsung‐Hsing Ho",
@@ -631,37 +689,6 @@
       ]
     },
     {
-      "id": "https://doi.org/10.1111/roiw.70102",
-      "title": "Assortative Mating in Spain: Who Marries Whom, and How Does it Influence Income and Wealth Inequality?",
-      "authors": ["Silvia De Poli", "Jorge Onrubia", "Fidel Picos Sánchez"],
-      "venue": "Review of Income and Wealth",
-      "date": "2026-11-01",
-      "url": "https://doi.org/10.1111/roiw.70102",
-      "source": "openalex",
-      "score": 12,
-      "topic": "Inégalités",
-      "matched": [
-        "inequality",
-        "wealth"
-      ]
-    },
-    {
-      "id": "https://doi.org/10.1002/pa.70174",
-      "title": "Competition Policy and Inequality: The Role of Mergers and Acquisition Adjudications in South Africa",
-      "authors": ["Nicholas Nwanyek Ngepah", "Charles Shaaba Saba", "Ariane Ephemia Ndzignat Mouteyica"],
-      "venue": "Journal of Public Affairs",
-      "date": "2026-11-01",
-      "url": "https://doi.org/10.1002/pa.70174",
-      "source": "openalex",
-      "score": 12,
-      "topic": "Inégalités",
-      "matched": [
-        "inequality",
-        "income distribution",
-        "wealth"
-      ]
-    },
-    {
       "id": "https://doi.org/10.52342/2587-7666vte_2026_4_140_158",
       "title": "Between-Group and Within-Group Components of Wage Inequality in Russia: an Empirical Analysis",
       "authors": "Анастасия Вадимовна Каравай",
@@ -707,6 +734,21 @@
       ]
     },
     {
+      "id": "https://doi.org/10.1016/j.ssmph.2026.101991",
+      "title": "Racial residential segregation and food insecurity: Examining disparities in Black-White food insecurity across U.S. metropolitan areas",
+      "authors": ["Noah Gibson", "Norbert Lance Weston Wilson"],
+      "venue": "SSM - Population Health",
+      "date": "2026-11-04",
+      "url": "https://doi.org/10.1016/j.ssmph.2026.101991",
+      "source": "openalex",
+      "score": 11,
+      "topic": "Ségrégation",
+      "matched": [
+        "segregation",
+        "residential"
+      ]
+    },
+    {
       "id": "https://doi.org/10.1073/pnas.2625474123",
       "title": "Unpacking transatlantic income inequality",
       "authors": ["James P. Ziliak", "Jonathan Cribb", "Richard W. Blundell", "James W. Banks", "David Green", "Antoine Bozio", "Malka Guillot", "Barra Roantree", "Maxime Tô", "Brindusa Anghel", "Cristina Barceló", "Jim Been", "Patrick Bennett", "Maximilian Blömer", "Olympia Bover", "Koen Caminada", "Bart Capéau", "Daniele Checchi", "Svetoslav Danchev", "André Decoster", "Bram De Rock", "Kelly Foley", "Giorgos Gatopoulos", "Martin Halla", "Bradley L. Hardy", "Elena Herold", "Laura Hospido", "Tullio Jappelli", "Egbert Jongen", "Niki Kalavrezou", "Arizo Karimi", "Elizabeth Krause", "Max Lay", "Søren Leth‐Petersen", "Charlotte Lucke", "Immacolata Marino", "Antonis Mavropoulos", "Carlos Oliveira", "Marten O. Palme", "Tuuli Paukkeri", "Grigoris Pavlou", "Andreas Peichl", "Pedro Portugal", "Lukas Puschnig", "Pedro S. Raposo", "Ann-Christin Rathje", "Terhi Ravaska", "Craig Riddell", "Marja Riihelä", "Johan Sæverud", "Kjell G. Salvanes", "Annalisa Scognamiglio", "Anne Steuernagel", "Jonas Vanderkelen", "Heike Vethaak", "Nikos Vettas", "Andrea Michaela Weber", "Tom Wernham"],
@@ -737,41 +779,9 @@
       ]
     },
     {
-      "id": "https://doi.org/10.1002/sgp2.70081",
-      "title": "Physical Context and Social Situation of Men Who Have Sex With Men and Transgender Service Workers in Thailand: Qualitative Study",
-      "authors": ["Srisuman Sartsara", "Nanchatsan Sakunpong", "Chawitra Tantimala", "Rohan D. Jeremiah"],
-      "venue": "Sexuality Gender & Policy",
-      "date": "2026-11-01",
-      "url": "https://doi.org/10.1002/sgp2.70081",
-      "source": "openalex",
-      "score": 11,
-      "topic": "Identité de genre",
-      "matched": [
-        "transgender",
-        "lgbt"
-      ]
-    },
-    {
-      "id": "https://doi.org/10.1370/afm.24.s1.9468",
-      "title": "Gender Diversity, Sexual Orientation, Mental Health, and Suicide Attempts in Multiple States from 2016-2023",
-      "authors": ["Anusha Tanneru", "David Schneider", "Emily Levy Kamugisha"],
-      "venue": "",
-      "date": "2026-11-01",
-      "url": "https://doi.org/10.1370/afm.24.s1.9468",
-      "source": "openalex",
-      "score": 11,
-      "topic": "Identité de genre",
-      "matched": [
-        "gender identity",
-        "transgender",
-        "gender minority",
-        "sexual orientation"
-      ]
-    },
-    {
       "id": "https://doi.org/10.11116/9789461668653",
       "title": "The Middle Class Paradox: Affluence and Inequality in Belgium, Past and Present",
-      "authors": [],
+      "authors": ["Bruno Blondé", "Ive Marx"],
       "venue": "Leuven University Press eBooks",
       "date": "2027-04-30",
       "url": "https://doi.org/10.11116/9789461668653",
@@ -790,6 +800,21 @@
       "venue": "International Journal for Research in Applied Science and Engineering Technology",
       "date": "2026-11-30",
       "url": "https://doi.org/10.22214/ijraset.2026.85716",
+      "source": "openalex",
+      "score": 10,
+      "topic": "Inégalités",
+      "matched": [
+        "inequality",
+        "wealth"
+      ]
+    },
+    {
+      "id": "https://doi.org/10.1093/oso/9780197836019.003.0021",
+      "title": "Inequality",
+      "authors": ["Per L. Krusell", "José-V́ıctor Ŕıos-Rull"],
+      "venue": "Oxford University Press eBooks",
+      "date": "2026-11-19",
+      "url": "https://doi.org/10.1093/oso/9780197836019.003.0021",
       "source": "openalex",
       "score": 10,
       "topic": "Inégalités",
@@ -844,6 +869,20 @@
       ]
     },
     {
+      "id": "https://doi.org/10.17613/3amkv-gav11",
+      "title": "Measuring Activity-Space Segregation with Multi-Source Big Data: A Physical--Digital Framework with Simulation Validation and a Real-Data Proof of Concept",
+      "authors": "Guangwei Wang",
+      "venue": "PhilPapers (PhilPapers Foundation)",
+      "date": "2026-12-31",
+      "url": "https://doi.org/10.17613/3amkv-gav11",
+      "source": "openalex",
+      "score": 9,
+      "topic": "Ségrégation",
+      "matched": [
+        "segregation"
+      ]
+    },
+    {
       "id": "https://doi.org/10.15407/sociology2026.04.153",
       "title": "From “gay-marriages” to “queer-kinship”: dynamics of a research interest towards LGBT- and queer-families in 1963–2024",
       "authors": "M. H. Kasianczuk",
@@ -859,77 +898,33 @@
       ]
     },
     {
-      "id": "https://doi.org/10.11144/javeriana.umed67.pfag",
-      "title": "Prevalencia y factores asociados a la diversidad de género y orientación sexual en el Eje Cafetero (Colombia): un estudio transversal",
-      "authors": "Franklin José Espitia De La Hoz",
-      "venue": "Universitas Médica",
-      "date": "2026-11-19",
-      "url": "https://doi.org/10.11144/javeriana.umed67.pfag",
-      "source": "openalex",
-      "score": 9,
-      "topic": "Identité de genre",
-      "matched": [
-        "transgender",
-        "non-binary",
-        "lgbt",
-        "sexual orientation"
-      ]
-    },
-    {
-      "id": "https://doi.org/10.5281/zenodo.24335295",
-      "title": "Replication Package for 'Gender Identity and Economic Decision Making'",
-      "authors": ["Anne Brenøe", "Zeynep Eyibak", "Lea Heursen", "Eva Ranehill", "Roberto A. Weber"],
+      "id": "https://doi.org/10.5281/zenodo.24418242",
+      "title": "Code for: Socioeconomic school segregation or a national–migrant divide? (TIMSS 2023)",
+      "authors": ["university of cape coast", "Davis Mawuena Aweso"],
       "venue": "Zenodo (CERN European Organization for Nuclear Research)",
-      "date": "2026-11-18",
-      "url": "https://doi.org/10.5281/zenodo.24335295",
+      "date": "2026-11-21",
+      "url": "https://doi.org/10.5281/zenodo.24418242",
       "source": "openalex",
       "score": 9,
-      "topic": "Identité de genre",
+      "topic": "Ségrégation",
       "matched": [
-        "gender identity"
+        "segregation"
       ]
     },
     {
-      "id": "https://doi.org/10.32614/cran.package.gir",
-      "title": "GIR: Gini Index Regression with Bayesian Bootstrap Inference",
-      "authors": "David Diaz-Villarejo",
-      "venue": "",
-      "date": "2026-11-17",
-      "url": "https://doi.org/10.32614/cran.package.gir",
+      "id": "https://doi.org/10.29121/shodhsamajik.v3.i3.2026.227",
+      "title": "POVERTY ALLEVIATION, EQUITABLE DISTRIBUTION OF INCOME AND WEALTH, AND INCLUSIVE GROWTH: STRATEGIES FOR SUSTAINABLE DEVELOPMENT IN INDIA",
+      "authors": ["Deepak Kumar", "Suman Rani"],
+      "venue": "ShodhSamajik Journal of Social Studies",
+      "date": "2026-11-21",
+      "url": "https://doi.org/10.29121/shodhsamajik.v3.i3.2026.227",
       "source": "openalex",
       "score": 9,
       "topic": "Inégalités",
       "matched": [
-        "gini"
-      ]
-    },
-    {
-      "id": "https://doi.org/10.58088/7h1d-wj84",
-      "title": "FERTILITY AND LABOR MARKET OUTCOMES OF QUEER INDIVIDUALS: ESSAYS ON LGBTQ+ ECONOMICS",
-      "authors": "Maximilien Turini Bielsa",
-      "venue": "Library, Museums and Press - UDSpace (University of Delaware)",
-      "date": "2026-11-17",
-      "url": "https://doi.org/10.58088/7h1d-wj84",
-      "source": "openalex",
-      "score": 9,
-      "topic": "Identité de genre",
-      "matched": [
-        "transgender",
-        "lgbt"
-      ]
-    },
-    {
-      "id": "https://doi.org/10.1108/joeei-10-2026-0037",
-      "title": "Advancing the study of economic exploitation and inequality: introducing a new scholarly forum",
-      "authors": "Nick Drydakis",
-      "venue": "The Journal of Economic Exploitation and Inequality",
-      "date": "2026-11-17",
-      "url": "https://doi.org/10.1108/joeei-10-2026-0037",
-      "source": "openalex",
-      "score": 9,
-      "topic": "Inégalités",
-      "matched": [
-        "inequality"
+        "inequality",
+        "wealth",
+        "poverty"
       ]
     }
   ]

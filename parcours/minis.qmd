@@ -1,0 +1,2687 @@
+---
+title: "Échauffements (2 à 5 minutes)"
+subtitle: "Un seul trou à remplir, des données réelles, des marches très basses"
+---
+
+{{< include ../_extensions/r-wasm/live/_knitr.qmd >}}
+
+Ces mini-exercices sont faits pour **ne pas abandonner** : un seul trou (parfois deux), un énoncé court, des données réelles livrées avec R (sauf mention « chiffres illustratifs »), une correction immédiate et un corrigé qui explique le pourquoi. Dans chaque piste, une marche n'introduit **qu'une seule idée** nouvelle. Fais-les en 10 minutes pour t'échauffer, ou quand une marche des parcours te paraît trop haute.
+
+**Si tu bloques :** (1) relis le commentaire à droite du trou (`______`), il dit ce qu'il faut mettre ; (2) ouvre l'indice 1, puis l'indice 2 ; (3) lis le message de correction, il dit précisément ce qui ne va pas ; (4) en dernier recours, affiche la solution, **recopie-la à la main** et change une valeur pour voir l'effet.
+
+## Messages d'erreur R : que veulent-ils dire ?
+
+| Message | Cause la plus fréquente | Remède |
+|---|---|---|
+| `object 'x' not found` | Nom mal écrit, objet pas encore créé, colonne sans `tableau$` | Vérifie l'orthographe (majuscules !) ; écris `tableau$x` |
+| `could not find function "f"` | Fonction mal orthographiée ou fichier pas chargé | `IQR` et non `iqr` ; ajoute `source("R/inegalites.R")` |
+| `unexpected symbol` | Il manque un opérateur ou une virgule entre deux éléments | Relis la ligne : `a b` doit être `a, b` ou `a + b` |
+| `unexpected ','` ou `unexpected ')'` | Virgule ou parenthèse en trop | Compte les parenthèses ouvrantes et fermantes |
+| `non-numeric argument to binary operator` | Opération sur du texte | Vérifie les guillemets autour des nombres ; `as.numeric()` |
+| `subscript out of bounds` | Indice ou nom absent du tableau | Vérifie le nom exact avec `names()` ou `dimnames()` |
+| `argument is of length zero` | Un élément extrait n'existe pas (nom erroné après `$`) | `names(objet)` liste les noms valables |
+| `missing value where TRUE/FALSE needed` | Un `NA` dans une condition `if` | `is.na()`, ou `na.rm = TRUE` dans le calcul |
+| Un avertissement de longueur (`longer object length...`) | Deux vecteurs de tailles incompatibles | Compare `length(a)` et `length(b)` |
+
+
+# R : syntaxe, indexation, fonctions {#mini-r}
+
+::: {.dojo-track data-track="mini-r"}
+:::
+
+## Lire une colonne avec $ {#m-r-1}
+
+[Marche 1 sur 8 · Échauffement]{.dojo-step}
+
+Le jeu de données `women` (déjà chargé dans R) donne la taille (`height`, en pouces) et le poids (`weight`, en livres) de 15 femmes américaines. Calcule la taille moyenne.
+
+```{webr}
+#| exercise: m-r-1
+#| caption: "Lire une colonne avec $"
+mean(women$______)     # nom de la colonne
+```
+
+::: {.hint exercise="m-r-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Une colonne d'un tableau se lit avec `tableau$nom_colonne`. Tape `names(women)` pour voir les noms disponibles.
+:::
+:::
+
+::: {.hint exercise="m-r-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`mean(women$height)` : le nom de la colonne vient **sans guillemets** après le `$`.
+:::
+:::
+
+::: {.solution exercise="m-r-1"}
+**Raisonnement.**
+
+1. `women` est un tableau (data frame) : chaque colonne est un vecteur.
+2. `women$height` extrait la colonne `height` ; `mean()` calcule sa moyenne.
+
+```{webr}
+#| exercise: m-r-1
+#| solution: true
+mean(women$height)
+```
+
+**Pièges fréquents.**
+
+- Écrire `women height` ou `women[height]` : R cherche un objet `height` qui n'existe pas (`object 'height' not found`).
+- Mettre des guillemets après le `$` : ça marche mais n'est pas nécessaire.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-r-1
+#| check: true
+ref <- mean(women$height)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Moyenne de la colonne `height` : `mean(women$height)`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". La taille moyenne est de 65 pouces (165 cm)."))
+}
+```
+
+::: {.dojo-done data-id="m-r-1"}
+:::
+
+## Indexer un vecteur par son nom {#m-r-2}
+
+[Marche 2 sur 8 · Échauffement]{.dojo-step}
+
+`euro` est un vecteur nommé : il donne pour chaque monnaie le nombre d'unités nationales valant 1 euro, selon les parités fixées en 1998 (`euro["DEM"]` pour le mark allemand). Combien de francs français valaient 100 euros ?
+
+```{webr}
+#| exercise: m-r-2
+#| caption: "Indexer un vecteur par son nom"
+100 * euro[______]     # le nom de la monnaie, entre guillemets
+```
+
+::: {.hint exercise="m-r-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Un vecteur nommé s'indexe avec le nom **entre guillemets** dans des crochets : `euro["DEM"]`. `names(euro)` liste les noms.
+:::
+:::
+
+::: {.hint exercise="m-r-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`100 * euro["FRF"]` : les guillemets sont obligatoires, sinon R cherche un objet `FRF`.
+:::
+:::
+
+::: {.solution exercise="m-r-2"}
+**Raisonnement.**
+
+1. Dans un vecteur nommé, `x["nom"]` renvoie l'élément correspondant, avec son nom.
+2. On multiplie ensuite par 100 : 100 euros valent 100 fois la parité.
+
+```{webr}
+#| exercise: m-r-2
+#| solution: true
+100 * euro["FRF"]
+```
+
+**Pièges fréquents.**
+
+- Oublier les guillemets : `euro[FRF]` donne `object 'FRF' not found`.
+- Inverser le sens : la parité donne des francs **pour 1 euro**, pas des euros pour 1 franc.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-r-2
+#| check: true
+ref <- 100 * euro[["FRF"]]
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Multiplie la parité du franc (`\"FRF\"`) par 100.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". 100 euros valaient 655,96 francs."))
+}
+```
+
+::: {.dojo-done data-id="m-r-2"}
+:::
+
+## Une condition qui compte {#m-r-3}
+
+[Marche 3 sur 8 · Échauffement]{.dojo-step}
+
+Combien des 15 femmes de `women` pèsent **plus de 140 livres** ? Indique l'opérateur de comparaison.
+
+```{webr}
+#| exercise: m-r-3
+#| caption: "Une condition qui compte"
+sum(women$weight ______ 140)     # opérateur de comparaison
+```
+
+::: {.hint exercise="m-r-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Une comparaison (`>`, `<`, `>=`, `==`) donne un vecteur de TRUE/FALSE. `sum()` d'un vecteur logique compte les TRUE.
+:::
+:::
+
+::: {.hint exercise="m-r-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+Le symbole « plus grand que » est `>` ; « supérieur ou égal » s'écrit `>=`.
+:::
+:::
+
+::: {.solution exercise="m-r-3"}
+**Raisonnement.**
+
+1. `women$weight > 140` compare chaque poids à 140 et renvoie 15 valeurs logiques.
+2. TRUE vaut 1 et FALSE vaut 0 : leur somme est le nombre de cas qui vérifient la condition.
+
+```{webr}
+#| exercise: m-r-3
+#| solution: true
+sum(women$weight > 140)
+```
+
+**Pièges fréquents.**
+
+- `=>` au lieu de `>=` : erreur de syntaxe.
+- Un seul `=` pour tester une égalité : `=` affecte, il faut `==`.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-r-3
+#| check: true
+ref <- sum(women$weight > 140)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Utilise l'opérateur `>` (strictement supérieur).")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Six femmes dépassent 140 livres."))
+}
+```
+
+::: {.dojo-done data-id="m-r-3"}
+:::
+
+## Prédire avant d'exécuter {#m-r-4}
+
+[Marche 4 sur 8 · Échauffement]{.dojo-step}
+
+Sans exécuter le code, prédis la valeur de `sum(c(2, 5, 8, 11) > 6)` et écris-la dans `reponse`. Puis lance le bloc : le correcteur compare ta prédiction au vrai résultat.
+
+```{webr}
+#| exercise: m-r-4
+#| caption: "Prédire avant d'exécuter"
+# Prédis : sum(c(2, 5, 8, 11) > 6)
+reponse <- ______
+reponse
+```
+
+::: {.hint exercise="m-r-4"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Écris d'abord la comparaison élément par élément : `2 > 6`, `5 > 6`, `8 > 6`, `11 > 6`. Puis compte combien sont vraies.
+:::
+:::
+
+::: {.hint exercise="m-r-4"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+Les valeurs 8 et 11 dépassent 6 : combien de TRUE ? Écris ce nombre.
+:::
+:::
+
+::: {.solution exercise="m-r-4"}
+**Raisonnement.**
+
+1. La comparaison donne FALSE FALSE TRUE TRUE.
+2. `sum()` additionne : 0 + 0 + 1 + 1 = 2.
+Savoir prédire un résultat évite de multiplier les essais au hasard.
+
+```{webr}
+#| exercise: m-r-4
+#| solution: true
+reponse <- sum(c(2, 5, 8, 11) > 6)
+reponse
+```
+
+**Pièges fréquents.**
+
+- Répondre 8 + 11 = 19 : on ne somme pas les valeurs, mais les TRUE.
+- Répondre 4 : on compte tous les éléments au lieu de ceux qui vérifient la condition.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-r-4
+#| check: true
+ref <- sum(c(2, 5, 8, 11) > 6)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Compte les éléments strictement supérieurs à 6.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Prédire avant d'exécuter est un excellent réflexe."))
+}
+```
+
+::: {.dojo-done data-id="m-r-4"}
+:::
+
+## La virgule des tableaux {#m-r-5}
+
+[Marche 5 sur 8 · Échauffement]{.dojo-step}
+
+`longley` contient des séries macroéconomiques américaines de 1947 à 1962 (une ligne par année). Combien de lignes correspondent à l'année 1960 ou après ? Pour filtrer des **lignes**, la condition est suivie d'une virgule : `tableau[condition, ]`.
+
+```{webr}
+#| exercise: m-r-5
+#| caption: "La virgule des tableaux"
+nrow(longley[longley$Year >= 1960 ______])     # que faut-il écrire juste avant le crochet fermant ?
+```
+
+::: {.hint exercise="m-r-5"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Dans `tableau[lignes, colonnes]`, la virgule sépare les lignes des colonnes. Pour garder toutes les colonnes, laisse la place vide après la virgule.
+:::
+:::
+
+::: {.hint exercise="m-r-5"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+Il manque une virgule, suivie d'un espace : `longley[longley$Year >= 1960, ]`.
+:::
+:::
+
+::: {.solution exercise="m-r-5"}
+**Raisonnement.**
+
+1. `longley$Year >= 1960` est un vecteur logique de 16 valeurs.
+2. Placé avant la virgule, il sélectionne les **lignes** ; après la virgule vide, toutes les colonnes sont conservées.
+3. `nrow()` compte les lignes obtenues : 1960, 1961 et 1962.
+
+```{webr}
+#| exercise: m-r-5
+#| solution: true
+nrow(longley[longley$Year >= 1960, ])
+```
+
+**Pièges fréquents.**
+
+- Oublier la virgule : R sélectionne des colonnes et renvoie une erreur ou un résultat incohérent.
+- Écrire `longley[Year >= 1960, ]` sans `longley$` : `object 'Year' not found`.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-r-5
+#| check: true
+ref <- nrow(longley[longley$Year >= 1960, ])
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Il faut la virgule : `longley[longley$Year >= 1960, ]` ; compte ensuite les lignes avec `nrow()`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Trois années (1960, 1961, 1962)."))
+}
+```
+
+::: {.dojo-done data-id="m-r-5"}
+:::
+
+## Retrouver un nom à partir d'une position {#m-r-6}
+
+[Marche 6 sur 8 · Échauffement]{.dojo-step}
+
+`LifeCycleSavings` donne, pour 50 pays (années 1960-1970), le taux d'épargne `sr`. Quel pays a le taux d'épargne le plus élevé ? La fonction cherchée renvoie la **position** du maximum.
+
+```{webr}
+#| exercise: m-r-6
+#| caption: "Retrouver un nom à partir d'une position"
+rownames(LifeCycleSavings)[______(LifeCycleSavings$sr)]     # fonction qui renvoie la position du maximum
+```
+
+::: {.hint exercise="m-r-6"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`max()` renvoie la **valeur** du maximum ; une autre fonction renvoie sa **position**. Les noms de pays sont les noms de lignes (`rownames`).
+:::
+:::
+
+::: {.hint exercise="m-r-6"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`which.max(x)` renvoie la position du maximum ; entre crochets, elle sélectionne le nom de ligne correspondant.
+:::
+:::
+
+::: {.solution exercise="m-r-6"}
+**Raisonnement.**
+
+1. On veut un nom, pas un nombre : on passe par la **position** du maximum.
+2. `which.max(LifeCycleSavings$sr)` donne cette position ; `rownames(...)[position]` donne le nom du pays.
+
+```{webr}
+#| exercise: m-r-6
+#| solution: true
+rownames(LifeCycleSavings)[which.max(LifeCycleSavings$sr)]
+```
+
+**Pièges fréquents.**
+
+- `max(...)` au lieu de `which.max(...)` : on obtient 21,1 (la valeur) mais pas le pays.
+- Oublier `rownames` : on obtiendrait un numéro.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-r-6
+#| check: true
+ref <- rownames(LifeCycleSavings)[order(-LifeCycleSavings$sr)][1]
+res <- trimws(as.character(.result))
+if (length(res) != 1 || is.na(res)) {
+  list(correct = FALSE, message = "Renvoie un nom (la dernière ligne du bloc doit donner le résultat).")
+} else if (!identical(res, ref)) {
+  list(correct = FALSE, message = "Utilise `which.max()` (position du maximum), pas `max()` (valeur).")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", ref, ". C'est le Japon, avec 21,1 % d'épargne."))
+}
+```
+
+::: {.dojo-done data-id="m-r-6"}
+:::
+
+## Résumer par groupe {#m-r-7}
+
+[Marche 7 sur 8 · Échauffement]{.dojo-step}
+
+`state.x77` contient des données sur les 50 États américains (1970-75) et `state.region` donne leur région. Calcule le revenu moyen par habitant (`Income`) pour chaque région, puis donne le **nom** de la région où il est le plus élevé.
+
+```{webr}
+#| exercise: m-r-7
+#| caption: "Résumer par groupe"
+m <- tapply(state.x77[, "Income"], ______, mean)     # le facteur qui définit les groupes
+names(which.max(m))
+```
+
+::: {.hint exercise="m-r-7"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`tapply(valeurs, groupes, fonction)` applique la fonction à chaque groupe. Les groupes sont donnés par un vecteur de même longueur que les valeurs.
+:::
+:::
+
+::: {.hint exercise="m-r-7"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+Le deuxième argument est `state.region` : c'est lui qui contient la région de chaque État.
+:::
+:::
+
+::: {.solution exercise="m-r-7"}
+**Raisonnement.**
+
+1. `tapply(x, g, mean)` renvoie un vecteur **nommé** : une moyenne par région.
+2. `which.max(m)` donne la position (et le nom) du plus grand ; `names()` extrait ce nom.
+
+```{webr}
+#| exercise: m-r-7
+#| solution: true
+m <- tapply(state.x77[, "Income"], state.region, mean)
+names(which.max(m))
+```
+
+**Pièges fréquents.**
+
+- Mettre `state.x77` entier comme premier argument : `tapply` attend un vecteur, pas une matrice.
+- Oublier `mean` : la fonction à appliquer est obligatoire.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-r-7
+#| check: true
+ref <- as.character(names(which.max(tapply(state.x77[, 'Income'], state.region, mean))))
+res <- trimws(as.character(.result))
+if (length(res) != 1 || is.na(res)) {
+  list(correct = FALSE, message = "Renvoie un nom (la dernière ligne du bloc doit donner le résultat).")
+} else if (!identical(res, ref)) {
+  list(correct = FALSE, message = "Le groupe est `state.region`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", ref, ". La région Ouest a le revenu moyen le plus élevé."))
+}
+```
+
+::: {.dojo-done data-id="m-r-7"}
+:::
+
+## Écrire sa première fonction {#m-r-8}
+
+[Marche 8 sur 8 · Échauffement]{.dojo-step}
+
+Écris la fonction `en_pct(x)` qui convertit une part en pourcentage, puis applique-la à des taux de chômage régionaux (en part de la population active) : `c(0.021, 0.035, 0.012)`. Renvoie la **somme** des trois pourcentages.
+
+```{webr}
+#| exercise: m-r-8
+#| caption: "Écrire sa première fonction"
+taux <- c(0.021, 0.035, 0.012)
+en_pct <- function(x) ______     # renvoie 100 fois x
+sum(en_pct(taux))
+```
+
+::: {.hint exercise="m-r-8"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Une fonction s'écrit `nom <- function(argument) expression`. Elle renvoie la valeur de son **dernière expression**, sans `return()`.
+:::
+:::
+
+::: {.hint exercise="m-r-8"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`en_pct <- function(x) 100 * x` : la fonction s'applique ensuite à tout le vecteur d'un coup.
+:::
+:::
+
+::: {.solution exercise="m-r-8"}
+**Raisonnement.**
+
+1. `function(x) 100 * x` définit une opération sur `x`, quel que soit le nombre d'éléments.
+2. Comme les opérations sont vectorisées, `en_pct(taux)` renvoie les trois pourcentages, et `sum()` les additionne : 2,1 + 3,5 + 1,2 = 6,8.
+
+```{webr}
+#| exercise: m-r-8
+#| solution: true
+taux <- c(0.021, 0.035, 0.012)
+en_pct <- function(x) 100 * x
+sum(en_pct(taux))
+```
+
+**Pièges fréquents.**
+
+- Oublier `function` : `en_pct <- (x) 100 * x` est une erreur de syntaxe.
+- Appeler `en_pct()` avant de l'avoir définie.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-r-8
+#| check: true
+ref <- sum(100 * c(0.021, 0.035, 0.012))
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "La fonction doit renvoyer `100 * x`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Une fonction évite de répéter le même calcul."))
+}
+```
+
+::: {.dojo-done data-id="m-r-8"}
+:::
+
+
+# Statistiques : résumer, comparer, tester {#mini-stats}
+
+::: {.dojo-track data-track="mini-stats"}
+:::
+
+## Position : la médiane {#m-st-1}
+
+[Marche 1 sur 8 · Échauffement]{.dojo-step}
+
+`swiss` contient des indicateurs socio-économiques de 47 provinces suisses francophones vers 1888. Quelle est la **médiane** de l'indicateur de fécondité `Fertility` ?
+
+```{webr}
+#| exercise: m-st-1
+#| caption: "Position : la médiane"
+______(swiss$Fertility)     # fonction qui calcule la médiane
+```
+
+::: {.hint exercise="m-st-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+La médiane partage la série en deux moitiés égales : c'est la valeur du milieu après tri.
+:::
+:::
+
+::: {.hint exercise="m-st-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`median(swiss$Fertility)`.
+:::
+:::
+
+::: {.solution exercise="m-st-1"}
+**Raisonnement.**
+
+1. La médiane est le quantile 50 % : la moitié des provinces est en dessous, l'autre au-dessus.
+2. Elle résiste aux valeurs extrêmes, contrairement à la moyenne.
+
+```{webr}
+#| exercise: m-st-1
+#| solution: true
+median(swiss$Fertility)
+```
+
+**Pièges fréquents.**
+
+- Taper `mediane` ou `Median` : R distingue majuscules et minuscules et utilise le nom anglais.
+- Confondre médiane et moyenne : elles diffèrent dès que la distribution est asymétrique.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-st-1
+#| check: true
+ref <- median(swiss$Fertility)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Fonction : `median()`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". La médiane vaut 70,4."))
+}
+```
+
+::: {.dojo-done data-id="m-st-1"}
+:::
+
+## Dispersion robuste : l'écart interquartile {#m-st-2}
+
+[Marche 2 sur 8 · Échauffement]{.dojo-step}
+
+`swiss$Education` donne la part d'hommes de plus de 20 ans ayant une éducation au-delà de l'école primaire (en %). Calcule l'**écart interquartile** (Q3 − Q1).
+
+```{webr}
+#| exercise: m-st-2
+#| caption: "Dispersion robuste : l'écart interquartile"
+______(swiss$Education)     # fonction de l'écart interquartile (en majuscules)
+```
+
+::: {.hint exercise="m-st-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+L'écart interquartile mesure la dispersion du centre de la distribution (entre le 1er et le 3e quartile).
+:::
+:::
+
+::: {.hint exercise="m-st-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+La fonction s'écrit `IQR` : trois majuscules.
+:::
+:::
+
+::: {.solution exercise="m-st-2"}
+**Raisonnement.**
+
+1. `IQR(x)` est équivalent à `quantile(x, 0.75) - quantile(x, 0.25)`.
+2. Il ignore les 25 % de valeurs les plus petites et les plus grandes : il est peu sensible aux extrêmes, utile pour une série asymétrique comme celle-ci.
+
+```{webr}
+#| exercise: m-st-2
+#| solution: true
+IQR(swiss$Education)
+```
+
+**Pièges fréquents.**
+
+- Écrire `iqr(...)` : R est sensible à la casse (`could not find function "iqr"`).
+- Utiliser `sd()` sur une série très asymétrique : elle est tirée par quelques provinces.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-st-2
+#| check: true
+ref <- IQR(swiss$Education)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Fonction : `IQR()`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". L'écart interquartile vaut 6 points."))
+}
+```
+
+::: {.dojo-done data-id="m-st-2"}
+:::
+
+## Lire un tableau croisé à trois dimensions {#m-st-3}
+
+[Marche 3 sur 8 · Échauffement]{.dojo-step}
+
+`UCBAdmissions` donne les admissions à l'université de Berkeley en 1973, selon l'admission (`Admit`), le sexe (`Gender`) et le département (`Dept`). Combien de **femmes** ont déposé une candidature (tous départements confondus) ? Les trois dimensions sont séparées par des virgules : `tableau[admission, sexe, département]`.
+
+```{webr}
+#| exercise: m-st-3
+#| caption: "Lire un tableau croisé à trois dimensions"
+sum(UCBAdmissions[, ______, ])     # le sexe, entre guillemets
+```
+
+::: {.hint exercise="m-st-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Un tableau à 3 dimensions s'indexe `[dim1, dim2, dim3]`. Une dimension laissée vide est conservée en entier. Le sexe est la 2e dimension.
+:::
+:::
+
+::: {.hint exercise="m-st-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`sum(UCBAdmissions[, "Female", ])` : deux virgules, le nom du sexe au milieu.
+:::
+:::
+
+::: {.solution exercise="m-st-3"}
+**Raisonnement.**
+
+1. On fixe la 2e dimension à `"Female"` et on garde toutes les admissions (1re dimension) et tous les départements (3e).
+2. `sum()` additionne ensuite tous les effectifs sélectionnés.
+
+```{webr}
+#| exercise: m-st-3
+#| solution: true
+sum(UCBAdmissions[, "Female", ])
+```
+
+**Pièges fréquents.**
+
+- Une seule virgule : R attend trois indices et signale `incorrect number of dimensions`.
+- `"female"` en minuscule : les noms sont sensibles à la casse (`subscript out of bounds`).
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-st-3
+#| check: true
+ref <- sum(UCBAdmissions[, "Female", ])
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Indexe la 2e dimension (le sexe) avec `\"Female\"`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". 1 835 candidatures de femmes."))
+}
+```
+
+::: {.dojo-done data-id="m-st-3"}
+:::
+
+## Un taux à partir d'un tableau {#m-st-4}
+
+[Marche 4 sur 8 · Échauffement]{.dojo-step}
+
+On agrège les départements : `adm <- apply(UCBAdmissions, c(1, 2), sum)` donne un tableau 2 × 2 (admission × sexe). Calcule le **taux d'admission des hommes** : candidats hommes admis divisés par **tous** les candidats hommes.
+
+```{webr}
+#| exercise: m-st-4
+#| caption: "Un taux à partir d'un tableau"
+adm <- apply(UCBAdmissions, c(1, 2), sum)
+adm["Admitted", "Male"] / ______     # total des candidats hommes
+```
+
+::: {.hint exercise="m-st-4"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Un taux est une part : effectif du groupe qui vérifie la condition divisé par l'effectif **total** du groupe.
+:::
+:::
+
+::: {.hint exercise="m-st-4"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`sum(adm[, "Male"])` : toute la colonne des hommes (admis + refusés).
+:::
+:::
+
+::: {.solution exercise="m-st-4"}
+**Raisonnement.**
+
+1. Numérateur : hommes admis (1 198).
+2. Dénominateur : tous les hommes qui ont candidaté (1 198 + 1 493 = 2 691).
+3. Taux : 1 198 / 2 691 ≈ 44,5 %.
+
+```{webr}
+#| exercise: m-st-4
+#| solution: true
+adm <- apply(UCBAdmissions, c(1, 2), sum)
+adm["Admitted", "Male"] / sum(adm[, "Male"])
+```
+
+**Pièges fréquents.**
+
+- Diviser par le total général (4 526) : on obtiendrait la part des admis hommes dans l'ensemble des candidats, pas un taux d'admission.
+- Oublier la virgule vide dans `adm[, "Male"]`.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-st-4
+#| check: true
+ref <- {adm <- apply(UCBAdmissions, c(1, 2), sum); adm["Admitted", "Male"] / (1198 + 1493)}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Dénominateur : tous les hommes (admis et refusés), `sum(adm[, \"Male\"])`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Environ 44,5 % des hommes sont admis."))
+}
+```
+
+::: {.dojo-done data-id="m-st-4"}
+:::
+
+## Le paradoxe de Simpson {#m-st-5}
+
+[Marche 5 sur 8 · Échauffement]{.dojo-step}
+
+On compare l'écart de taux d'admission hommes − femmes, d'abord tous départements confondus, puis dans le seul département A. La fonction `taux(t)` (fournie) calcule le taux d'admission de chaque sexe pour un tableau 2 × 2. Complète le calcul de l'écart dans le département A.
+
+```{webr}
+#| exercise: m-st-5
+#| caption: "Le paradoxe de Simpson"
+taux <- function(t) t["Admitted", ] / colSums(t)
+adm <- apply(UCBAdmissions, c(1, 2), sum)
+global <- taux(adm)
+A <- taux(UCBAdmissions[, , "A"])
+c(global = global[["Male"]] - global[["Female"]], depA = ______)     # même écart, dans le département A
+```
+
+::: {.hint exercise="m-st-5"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Le vecteur `A` contient déjà les taux d'admission des deux sexes dans le département A. Il suffit de faire la même soustraction que pour `global`.
+:::
+:::
+
+::: {.hint exercise="m-st-5"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`A[["Male"]] - A[["Female"]]`.
+:::
+:::
+
+::: {.solution exercise="m-st-5"}
+**Raisonnement.**
+
+1. Globalement, les hommes sont admis plus souvent (écart ≈ +14 points).
+2. Dans le département A, l'écart s'inverse : les femmes y sont davantage admises (≈ −20 points).
+3. C'est le **paradoxe de Simpson** : un écart global peut disparaître ou s'inverser une fois les départements pris en compte. Ici, les femmes candidatent davantage dans des départements très sélectifs.
+
+```{webr}
+#| exercise: m-st-5
+#| solution: true
+taux <- function(t) t["Admitted", ] / colSums(t)
+adm <- apply(UCBAdmissions, c(1, 2), sum)
+global <- taux(adm)
+A <- taux(UCBAdmissions[, , "A"])
+c(global = global[["Male"]] - global[["Female"]], depA = A[["Male"]] - A[["Female"]])
+```
+
+**Pièges fréquents.**
+
+- Conclure à une discrimination à partir de l'écart global seul : il faut contrôler la structure des candidatures.
+- Confondre un écart de **taux** et un écart d'**effectifs**.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-st-5
+#| check: true
+ref <- {t <- function(m) m['Admitted', ] / colSums(m); a <- apply(UCBAdmissions, c(1, 2), sum); c(t(a)[['Male']] - t(a)[['Female']], t(UCBAdmissions[, , 'A'])[['Male']] - t(UCBAdmissions[, , 'A'])[['Female']])}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Écart dans le département A : `A[[\"Male\"]] - A[[\"Female\"]]`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Écarts : +14,2 points globalement, −20,3 points dans le département A."))
+}
+```
+
+::: {.dojo-done data-id="m-st-5"}
+:::
+
+## Lire un test : significatif ou non ? {#m-st-6}
+
+[Marche 6 sur 8 · Échauffement]{.dojo-step}
+
+`sleep` donne l'effet de deux somnifères (`group` 1 et 2) sur la durée de sommeil supplémentaire (`extra`) de 10 patients (les mêmes dans les deux groupes). Avec le test t de Welch (traité comme deux échantillons indépendants), la différence est-elle significative au seuil de 5 % ? Réponds par `TRUE` ou `FALSE`.
+
+```{webr}
+#| exercise: m-st-6
+#| caption: "Lire un test : significatif ou non ?"
+t.test(extra ~ group, data = sleep)$______ < 0.05     # élément qui contient la p-value
+```
+
+::: {.hint exercise="m-st-6"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`t.test()` renvoie une liste : on extrait un élément avec `$`. L'élément s'appelle comme la quantité qu'on cherche (en anglais, avec un point).
+:::
+:::
+
+::: {.hint exercise="m-st-6"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`$p.value` : la p-value du test. La comparaison `< 0.05` renvoie TRUE ou FALSE.
+:::
+:::
+
+::: {.solution exercise="m-st-6"}
+**Raisonnement.**
+
+1. `t.test(extra ~ group, data = sleep)` compare les moyennes des deux groupes ; la p-value vaut environ 0,079.
+2. 0,079 > 0,05 : on ne rejette pas l'égalité des moyennes au seuil de 5 %.
+3. « Non significatif » ne veut pas dire « pas d'effet » : l'échantillon (10 patients) est petit.
+
+```{webr}
+#| exercise: m-st-6
+#| solution: true
+t.test(extra ~ group, data = sleep)$p.value < 0.05
+```
+
+**Pièges fréquents.**
+
+- Écrire `$pvalue` ou `$p-value` : l'élément s'appelle `p.value`.
+- Lire p = 0,079 comme « il n'y a pas de différence » : c'est une absence de preuve suffisante, pas une preuve d'absence.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-st-6
+#| check: true
+ref <- FALSE
+if (!is.logical(.result) || length(.result) != 1 || is.na(.result)) {
+  list(correct = FALSE, message = "Renvoie TRUE ou FALSE (la dernière ligne du bloc).")
+} else if (!identical(as.logical(.result), ref)) {
+  list(correct = FALSE, message = "La p-value est dans `$p.value` ; compare-la à 0,05.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", ref, ". p ≈ 0,079 : non significatif à 5 %."))
+}
+```
+
+::: {.dojo-done data-id="m-st-6"}
+:::
+
+## Corrélation de deux séries macro {#m-st-7}
+
+[Marche 7 sur 8 · Échauffement]{.dojo-step}
+
+Dans `longley` (économie américaine, 1947-1962), calcule la corrélation entre `GNP` (production) et `Employed` (emploi).
+
+```{webr}
+#| exercise: m-st-7
+#| caption: "Corrélation de deux séries macro"
+______(longley$GNP, longley$Employed)     # fonction de corrélation
+```
+
+::: {.hint exercise="m-st-7"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+La corrélation de Pearson mesure l'intensité du lien linéaire entre deux séries : elle est comprise entre −1 et 1.
+:::
+:::
+
+::: {.hint exercise="m-st-7"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`cor(x, y)` : les deux séries, séparées par une virgule.
+:::
+:::
+
+::: {.solution exercise="m-st-7"}
+**Raisonnement.**
+
+1. `cor()` renvoie un coefficient proche de 1 : les deux séries croissent ensemble (≈ 0,98).
+2. Attention : deux séries de tendance croissante sont presque toujours corrélées. Ce coefficient ne dit pas que l'une cause l'autre, et il n'est pas fiable pour des séries non stationnaires.
+
+```{webr}
+#| exercise: m-st-7
+#| solution: true
+cor(longley$GNP, longley$Employed)
+```
+
+**Pièges fréquents.**
+
+- Croire qu'une corrélation forte prouve un lien causal.
+- Oublier que `cor(x)` avec une seule série est une erreur.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-st-7
+#| check: true
+ref <- cor(longley$GNP, longley$Employed)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Utilise `cor(longley$GNP, longley$Employed)`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". La corrélation est très proche de 1, mais deux tendances croissantes se ressemblent presque toujours."))
+}
+```
+
+::: {.dojo-done data-id="m-st-7"}
+:::
+
+## Un khi-deux sur un tableau 2 × 2 {#m-st-8}
+
+[Marche 8 sur 8 · Échauffement]{.dojo-step}
+
+Reprends le tableau agrégé `adm` (admission × sexe) de Berkeley. Calcule la statistique du khi-deux d'indépendance **sans correction de continuité**. Elle est stockée dans le résultat du test.
+
+```{webr}
+#| exercise: m-st-8
+#| caption: "Un khi-deux sur un tableau 2 × 2"
+adm <- apply(UCBAdmissions, c(1, 2), sum)
+chisq.test(adm, correct = FALSE)$______     # élément qui contient la statistique
+```
+
+::: {.hint exercise="m-st-8"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Comme pour `t.test()`, `chisq.test()` renvoie une liste. Les éléments utiles sont `statistic`, `p.value`, `parameter` (degrés de liberté) et `expected`.
+:::
+:::
+
+::: {.hint exercise="m-st-8"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`$statistic`.
+:::
+:::
+
+::: {.solution exercise="m-st-8"}
+**Raisonnement.**
+
+1. Le khi-deux compare les effectifs observés aux effectifs attendus si l'admission était indépendante du sexe.
+2. Ici la statistique vaut environ 92 pour 1 degré de liberté : la p-value est minuscule, l'admission globale n'est pas indépendante du sexe.
+3. Mais le paradoxe de Simpson (marche précédente) montre qu'on ne peut pas en conclure à une discrimination.
+
+```{webr}
+#| exercise: m-st-8
+#| solution: true
+adm <- apply(UCBAdmissions, c(1, 2), sum)
+chisq.test(adm, correct = FALSE)$statistic
+```
+
+**Pièges fréquents.**
+
+- Oublier `correct = FALSE` : R applique par défaut une correction de Yates sur les tableaux 2 × 2, ce qui change légèrement la valeur.
+- Interpréter un test d'association comme une preuve de causalité.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-st-8
+#| check: true
+ref <- {a <- apply(UCBAdmissions, c(1, 2), sum); e <- outer(rowSums(a), colSums(a)) / sum(a); sum((a - e)^2 / e)}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Utilise `chisq.test(adm, correct = FALSE)$statistic`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Statistique ≈ 92,2 : association très forte, mais confondue par le choix du département."))
+}
+```
+
+::: {.dojo-done data-id="m-st-8"}
+:::
+
+
+# Économétrie : régression pas à pas {#mini-eco}
+
+::: {.dojo-track data-track="mini-eco"}
+:::
+
+## Ma première régression {#m-ec-1}
+
+[Marche 1 sur 6 · Échauffement]{.dojo-step}
+
+`LifeCycleSavings` : pour 50 pays, `sr` est le taux d'épargne et `ddpi` la croissance du revenu par habitant. Estime `sr` en fonction de `ddpi` et renvoie le **coefficient de `ddpi`**. La formule s'écrit `y ~ x`.
+
+```{webr}
+#| exercise: m-ec-1
+#| caption: "Ma première régression"
+fit <- lm(sr ______ ddpi, data = LifeCycleSavings)     # le symbole qui sépare y et x
+coef(fit)[["ddpi"]]
+```
+
+::: {.hint exercise="m-ec-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`lm()` prend une formule `y ~ x` : la variable expliquée à gauche du tilde, l'explicative à droite.
+:::
+:::
+
+::: {.hint exercise="m-ec-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+Le symbole est `~` (tilde). Sur un clavier français : AltGr + 2, puis espace.
+:::
+:::
+
+::: {.solution exercise="m-ec-1"}
+**Raisonnement.**
+
+1. `sr ~ ddpi` se lit « sr expliqué par ddpi ».
+2. `coef(fit)` renvoie le vecteur des coefficients ; `[["ddpi"]]` extrait celui de `ddpi`.
+3. La pente vaut environ 0,48 : un point de croissance en plus est associé à 0,48 point d'épargne en plus, en moyenne (association, pas causalité).
+
+```{webr}
+#| exercise: m-ec-1
+#| solution: true
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+coef(fit)[["ddpi"]]
+```
+
+**Pièges fréquents.**
+
+- Écrire `sr = ddpi` ou `sr - ddpi` : la formule exige le tilde.
+- Oublier `data = LifeCycleSavings` : R cherche `sr` et `ddpi` dans l'environnement.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-ec-1
+#| check: true
+ref <- {b <- cov(LifeCycleSavings$sr, LifeCycleSavings$ddpi) / var(LifeCycleSavings$ddpi); b}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Formule : `sr ~ ddpi`, puis `coef(fit)[[\"ddpi\"]]`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Pente ≈ 0,476."))
+}
+```
+
+::: {.dojo-done data-id="m-ec-1"}
+:::
+
+## La constante du modèle {#m-ec-2}
+
+[Marche 2 sur 6 · Échauffement]{.dojo-step}
+
+Même régression, `fit <- lm(sr ~ ddpi, data = LifeCycleSavings)`. Quelle est la **constante** (ordonnée à l'origine) estimée ? Elle s'appelle `"(Intercept)"` dans le vecteur des coefficients.
+
+```{webr}
+#| exercise: m-ec-2
+#| caption: "La constante du modèle"
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+coef(fit)[[______]]     # nom de la constante, entre guillemets
+```
+
+::: {.hint exercise="m-ec-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`names(coef(fit))` liste les noms des coefficients. La constante porte un nom particulier, avec des parenthèses.
+:::
+:::
+
+::: {.hint exercise="m-ec-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`"(Intercept)"` : avec les parenthèses et les guillemets.
+:::
+:::
+
+::: {.solution exercise="m-ec-2"}
+**Raisonnement.**
+
+1. La constante est l'épargne prédite quand `ddpi` vaut 0 (≈ 7,9 %).
+2. Elle n'a de sens que si 0 appartient au domaine observé de `ddpi`.
+3. La droite des moindres carrés passe par le point des moyennes : constante = moyenne de y − pente × moyenne de x.
+
+```{webr}
+#| exercise: m-ec-2
+#| solution: true
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+coef(fit)[["(Intercept)"]]
+```
+
+**Pièges fréquents.**
+
+- Écrire `Intercept` sans parenthèses : `subscript out of bounds`.
+- Interpréter la constante hors du domaine des données.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-ec-2
+#| check: true
+ref <- mean(LifeCycleSavings$sr) - cov(LifeCycleSavings$sr, LifeCycleSavings$ddpi) / var(LifeCycleSavings$ddpi) * mean(LifeCycleSavings$ddpi)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Le nom exact est `\"(Intercept)\"`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Constante ≈ 7,88."))
+}
+```
+
+::: {.dojo-done data-id="m-ec-2"}
+:::
+
+## Lire le R² {#m-ec-3}
+
+[Marche 3 sur 6 · Échauffement]{.dojo-step}
+
+Récupère le **R²** de la régression `sr ~ ddpi` : la part de la variance de `sr` expliquée par le modèle. Il est stocké dans le résumé du modèle.
+
+```{webr}
+#| exercise: m-ec-3
+#| caption: "Lire le R²"
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+summary(fit)$______     # élément du résumé : R au carré
+```
+
+::: {.hint exercise="m-ec-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`summary(fit)` est une liste ; `names(summary(fit))` donne ses éléments. Celui qu'on cherche est « r squared » avec un point.
+:::
+:::
+
+::: {.hint exercise="m-ec-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`$r.squared`.
+:::
+:::
+
+::: {.solution exercise="m-ec-3"}
+**Raisonnement.**
+
+1. Pour une régression simple, le R² est le carré de la corrélation entre x et y (≈ 0,31² ≈ 0,09).
+2. Seulement 9 % de la variance du taux d'épargne est expliquée par la croissance : un R² faible n'invalide pas le coefficient, mais dit que d'autres facteurs comptent.
+
+```{webr}
+#| exercise: m-ec-3
+#| solution: true
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+summary(fit)$r.squared
+```
+
+**Pièges fréquents.**
+
+- Écrire `$r2` ou `$R2` : l'élément s'appelle `r.squared`.
+- Choisir un modèle sur le seul R² : il ne baisse jamais quand on ajoute des variables (utile : R² ajusté `adj.r.squared`).
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-ec-3
+#| check: true
+ref <- cor(LifeCycleSavings$sr, LifeCycleSavings$ddpi)^2
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "`summary(fit)$r.squared`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". R² ≈ 0,093."))
+}
+```
+
+::: {.dojo-done data-id="m-ec-3"}
+:::
+
+## Prédire avec le modèle {#m-ec-4}
+
+[Marche 4 sur 6 · Échauffement]{.dojo-step}
+
+Quel taux d'épargne le modèle `sr ~ ddpi` prédit-il pour un pays dont le revenu par habitant croît de 5 % par an ? Les nouvelles données se passent dans un data frame via `newdata`.
+
+```{webr}
+#| exercise: m-ec-4
+#| caption: "Prédire avec le modèle"
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+predict(fit, newdata = data.frame(ddpi = ______))     # la croissance voulue
+```
+
+::: {.hint exercise="m-ec-4"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`predict(modele, newdata = ...)` calcule la valeur prédite pour de nouvelles observations. Le data frame doit contenir les **mêmes noms de variables** que le modèle.
+:::
+:::
+
+::: {.hint exercise="m-ec-4"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+La valeur de `ddpi` est 5 (un pourcentage, donc 5 et non 0,05 : les données sont en %).
+:::
+:::
+
+::: {.solution exercise="m-ec-4"}
+**Raisonnement.**
+
+1. Prédiction = constante + pente × 5 ≈ 7,88 + 0,476 × 5 ≈ 10,3 %.
+2. Les données de `ddpi` sont exprimées en pourcentage : 5 est l'unité cohérente.
+3. 5 % est dans le domaine observé : on interpole. Extrapoler hors de ce domaine est risqué.
+
+```{webr}
+#| exercise: m-ec-4
+#| solution: true
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+predict(fit, newdata = data.frame(ddpi = 5))
+```
+
+**Pièges fréquents.**
+
+- Donner `data.frame(x = 5)` avec un nom différent de celui du modèle : l'erreur `object 'ddpi' not found` apparaît.
+- Mélanger les unités (0,05 au lieu de 5).
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-ec-4
+#| check: true
+ref <- {b <- cov(LifeCycleSavings$sr, LifeCycleSavings$ddpi) / var(LifeCycleSavings$ddpi); mean(LifeCycleSavings$sr) + b * (5 - mean(LifeCycleSavings$ddpi))}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Passe `ddpi = 5` (en pourcentage).")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Épargne prédite ≈ 10,3 %."))
+}
+```
+
+::: {.dojo-done data-id="m-ec-4"}
+:::
+
+## Contrôler d'autres variables {#m-ec-5}
+
+[Marche 5 sur 6 · Échauffement]{.dojo-step}
+
+Ajoute des variables explicatives : part des moins de 15 ans (`pop15`), part des plus de 75 ans (`pop75`), revenu disponible par habitant (`dpi`) et croissance (`ddpi`). Estime `sr` sur ces quatre variables et renvoie le coefficient de `pop15`. On ajoute les variables avec `+`.
+
+```{webr}
+#| exercise: m-ec-5
+#| caption: "Contrôler d'autres variables"
+fit5 <- lm(sr ~ pop15 + ______, data = LifeCycleSavings)     # les trois autres variables, séparées par +
+coef(fit5)[["pop15"]]
+```
+
+::: {.hint exercise="m-ec-5"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Dans une formule, `+` signifie « et » : `y ~ x1 + x2 + x3`. Ce n'est pas une addition numérique.
+:::
+:::
+
+::: {.hint exercise="m-ec-5"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`sr ~ pop15 + pop75 + dpi + ddpi`.
+:::
+:::
+
+::: {.solution exercise="m-ec-5"}
+**Raisonnement.**
+
+1. Le coefficient de `pop15` est négatif (≈ −0,46) : à autres variables égales, les pays plus jeunes épargnent moins (cohérent avec le cycle de vie).
+2. Chaque coefficient se lit « toutes choses égales par ailleurs ». Ici, la pente de `ddpi` change quand on contrôle les autres variables.
+3. Les variables explicatives étant corrélées, les coefficients sont plus sensibles aux choix de spécification.
+
+```{webr}
+#| exercise: m-ec-5
+#| solution: true
+fit5 <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data = LifeCycleSavings)
+coef(fit5)[["pop15"]]
+```
+
+**Pièges fréquents.**
+
+- Écrire `sr ~ pop15, pop75, ...` avec des virgules : une formule se construit avec `+`.
+- Lire un coefficient sans préciser les autres variables du modèle.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-ec-5
+#| check: true
+ref <- {X <- cbind(1, as.matrix(LifeCycleSavings[, c('pop15', 'pop75', 'dpi', 'ddpi')])); solve(t(X) %*% X, t(X) %*% LifeCycleSavings$sr)[2]}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Formule : `sr ~ pop15 + pop75 + dpi + ddpi`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Coefficient de pop15 ≈ −0,46."))
+}
+```
+
+::: {.dojo-done data-id="m-ec-5"}
+:::
+
+## Quel pays est le plus mal expliqué ? {#m-ec-6}
+
+[Marche 6 sur 6 · Échauffement]{.dojo-step}
+
+Avec le modèle à quatre variables (`fit5`, fourni), quel pays a le résidu le plus grand **en valeur absolue** ? Les résidus s'obtiennent avec `resid(fit5)`. Il faut mettre en valeur absolue avant de chercher le maximum.
+
+```{webr}
+#| exercise: m-ec-6
+#| caption: "Quel pays est le plus mal expliqué ?"
+fit5 <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data = LifeCycleSavings)
+names(which.max(______(resid(fit5))))     # fonction valeur absolue
+```
+
+::: {.hint exercise="m-ec-6"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Un résidu est positif ou négatif : sans valeur absolue, `which.max` ne trouverait que le plus grand résidu positif. La fonction « valeur absolue » est une abréviation de trois lettres.
+:::
+:::
+
+::: {.hint exercise="m-ec-6"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`abs()`.
+:::
+:::
+
+::: {.solution exercise="m-ec-6"}
+**Raisonnement.**
+
+1. Un résidu = valeur observée − valeur prédite. Un grand résidu en valeur absolue signale un pays que le modèle explique mal.
+2. Zambie : taux d'épargne observé beaucoup plus élevé que prédit. Repérer ces **observations atypiques** est une étape de diagnostic.
+3. Étape suivante : vérifier si un tel pays influence fortement les coefficients (levier, distance de Cook).
+
+```{webr}
+#| exercise: m-ec-6
+#| solution: true
+fit5 <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data = LifeCycleSavings)
+names(which.max(abs(resid(fit5))))
+```
+
+**Pièges fréquents.**
+
+- Oublier `abs()` : on trouverait le plus grand résidu positif seulement.
+- Écarter une observation atypique sans justification : à documenter.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-ec-6
+#| check: true
+ref <- {f <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data = LifeCycleSavings); names(resid(f))[order(-abs(resid(f)))][1]}
+res <- trimws(as.character(.result))
+if (length(res) != 1 || is.na(res)) {
+  list(correct = FALSE, message = "Renvoie un nom (la dernière ligne du bloc doit donner le résultat).")
+} else if (!identical(res, ref)) {
+  list(correct = FALSE, message = "Utilise la valeur absolue : `abs()`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", ref, ". Le plus grand résidu absolu est celui de la Zambie."))
+}
+```
+
+::: {.dojo-done data-id="m-ec-6"}
+:::
+
+
+# Macro : croissance, prix, chômage, monnaie {#mini-macro}
+
+::: {.dojo-track data-track="mini-macro"}
+:::
+
+## Croissance cumulée d'une série {#m-ma-1}
+
+[Marche 1 sur 6 · Échauffement]{.dojo-step}
+
+Dans `longley`, la colonne `GNP` donne la production américaine annuelle de 1947 (ligne 1) à 1962 (ligne 16). Calcule la croissance **cumulée** de 1947 à 1962, en %.
+
+```{webr}
+#| exercise: m-ma-1
+#| caption: "Croissance cumulée d'une série"
+(longley$GNP[16] / ______ - 1) * 100     # valeur de départ : 1re ligne
+```
+
+::: {.hint exercise="m-ma-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Une variation en % est (valeur finale / valeur initiale − 1) × 100. La valeur initiale est la 1re ligne.
+:::
+:::
+
+::: {.hint exercise="m-ma-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`longley$GNP[1]` : l'élément n° 1 de la colonne.
+:::
+:::
+
+::: {.solution exercise="m-ma-1"}
+**Raisonnement.**
+
+1. Valeur finale : `longley$GNP[16]` ; valeur initiale : `longley$GNP[1]`.
+2. Leur rapport moins 1, fois 100, donne la variation cumulée (≈ 137 %).
+
+```{webr}
+#| exercise: m-ma-1
+#| solution: true
+(longley$GNP[16] / longley$GNP[1] - 1) * 100
+```
+
+**Pièges fréquents.**
+
+- Diviser par la valeur finale au lieu de la valeur initiale.
+- Oublier de multiplier par 100 : on obtient une part, pas un pourcentage.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-ma-1
+#| check: true
+ref <- (longley$GNP[16] / longley$GNP[1] - 1) * 100
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Divise par la valeur de 1947 : `longley$GNP[1]`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Croissance cumulée ≈ 136,8 %."))
+}
+```
+
+::: {.dojo-done data-id="m-ma-1"}
+:::
+
+## Taux de croissance annuel moyen {#m-ma-2}
+
+[Marche 2 sur 6 · Échauffement]{.dojo-step}
+
+Toujours avec `GNP` (1947 à 1962), calcule le taux de croissance **annuel moyen** en %. Attention au nombre de périodes entre 1947 et 1962.
+
+```{webr}
+#| exercise: m-ma-2
+#| caption: "Taux de croissance annuel moyen"
+((longley$GNP[16] / longley$GNP[1])^(1 / ______) - 1) * 100     # nombre d'années entre 1947 et 1962
+```
+
+::: {.hint exercise="m-ma-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Le taux annuel moyen est la racine d'ordre T du rapport final / initial, moins 1, où T est le nombre d'**intervalles** entre les années.
+:::
+:::
+
+::: {.hint exercise="m-ma-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+De 1947 à 1962, il y a 15 intervalles (16 années, donc 15 écarts).
+:::
+:::
+
+::: {.solution exercise="m-ma-2"}
+**Raisonnement.**
+
+1. Croissance composée : final = initial × (1 + g)^T, donc g = (final / initial)^(1/T) − 1.
+2. T = 1962 − 1947 = 15 : on compte les années qui séparent, pas le nombre de lignes.
+
+```{webr}
+#| exercise: m-ma-2
+#| solution: true
+((longley$GNP[16] / longley$GNP[1])^(1 / 15) - 1) * 100
+```
+
+**Pièges fréquents.**
+
+- Prendre T = 16 (nombre de lignes) au lieu de 15.
+- Diviser la croissance cumulée par T : on obtient une moyenne arithmétique, supérieure au taux composé.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-ma-2
+#| check: true
+ref <- ((longley$GNP[16] / longley$GNP[1])^(1 / 15) - 1) * 100
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "T = 1962 − 1947 = 15.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Environ 5,9 % par an."))
+}
+```
+
+::: {.dojo-done data-id="m-ma-2"}
+:::
+
+## Inflation à partir d'un déflateur {#m-ma-3}
+
+[Marche 3 sur 6 · Échauffement]{.dojo-step}
+
+`GNP.deflator` est l'indice des prix implicite du PIB (base 1954 = 100). Calcule l'inflation de chaque année par différence relative, puis renvoie l'inflation **moyenne** (moyenne arithmétique des 15 taux annuels), en %.
+
+```{webr}
+#| exercise: m-ma-3
+#| caption: "Inflation à partir d'un déflateur"
+d <- longley$GNP.deflator
+infl <- diff(d) / ______     # niveau de l'année précédente : toutes les valeurs sauf la dernière
+mean(infl) * 100
+```
+
+::: {.hint exercise="m-ma-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`diff(d)` donne les variations absolues (15 valeurs). Pour une variation **relative**, on divise par le niveau de la période précédente : 15 valeurs aussi.
+:::
+:::
+
+::: {.hint exercise="m-ma-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`head(d, -1)` : tous les éléments sauf le dernier.
+:::
+:::
+
+::: {.solution exercise="m-ma-3"}
+**Raisonnement.**
+
+1. `diff(d)` = d[t+1] − d[t].
+2. Divisé par `head(d, -1)` (les valeurs d[t]), il donne l'inflation annuelle.
+3. Les longueurs doivent coïncider : 15 et 15. Diviser par `d` entier recyclerait mal.
+
+```{webr}
+#| exercise: m-ma-3
+#| solution: true
+d <- longley$GNP.deflator
+infl <- diff(d) / head(d, -1)
+mean(infl) * 100
+```
+
+**Pièges fréquents.**
+
+- Diviser `diff(d)` par `d` (16 valeurs) : avertissement de longueur, et résultat faux.
+- Oublier le `* 100` final.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-ma-3
+#| check: true
+ref <- {d <- longley$GNP.deflator; mean((d[-1] - d[-length(d)]) / d[-length(d)]) * 100}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Divise par `head(d, -1)` pour que les longueurs coïncident.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Inflation moyenne ≈ 2,3 % par an."))
+}
+```
+
+::: {.dojo-done data-id="m-ma-3"}
+:::
+
+## Productivité apparente du travail {#m-ma-4}
+
+[Marche 4 sur 6 · Échauffement]{.dojo-step}
+
+La **productivité apparente du travail** est la production par personne employée. Avec `GNP` et `Employed` de `longley` (1947-1962), calcule cette productivité pour chaque année, puis sa croissance cumulée de 1947 à 1962, en %. L'unité des deux colonnes n'a pas d'importance : on calcule une variation relative.
+
+```{webr}
+#| exercise: m-ma-4
+#| caption: "Productivité apparente du travail"
+prod <- longley$GNP / ______     # la colonne de l'emploi
+(prod[16] / prod[1] - 1) * 100
+```
+
+::: {.hint exercise="m-ma-4"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+La productivité est un **rapport** : production divisée par emploi. Le calcul est vectorisé : une valeur par année.
+:::
+:::
+
+::: {.hint exercise="m-ma-4"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`longley$Employed`.
+:::
+:::
+
+::: {.solution exercise="m-ma-4"}
+**Raisonnement.**
+
+1. `prod` contient 16 valeurs : la production par employé de chaque année.
+2. Sa croissance cumulée se lit comme celle de n'importe quelle série : final / initial − 1.
+3. La croissance de la production se décompose en croissance de l'emploi et croissance de la productivité : ici la production croît d'environ 137 %, l'emploi d'environ 17 % : l'essentiel de la hausse vient de la productivité (+102 %).
+
+```{webr}
+#| exercise: m-ma-4
+#| solution: true
+prod <- longley$GNP / longley$Employed
+(prod[16] / prod[1] - 1) * 100
+```
+
+**Pièges fréquents.**
+
+- Inverser le rapport : `Employed / GNP` est un contenu en emploi, pas une productivité.
+- Conclure sur des niveaux à partir d'unités mal connues : seules les variations relatives sont interprétables sans la documentation des unités.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-ma-4
+#| check: true
+ref <- {p <- longley$GNP / longley$Employed; (p[16] / p[1] - 1) * 100}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Divise `GNP` par `Employed`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Productivité +102,5 % (production +136,8 %, emploi +17,0 %) : l'essentiel de la croissance vient de la productivité."))
+}
+```
+
+::: {.dojo-done data-id="m-ma-4"}
+:::
+
+## Parités de l'euro : un taux croisé {#m-ma-5}
+
+[Marche 5 sur 6 · Échauffement]{.dojo-step}
+
+`euro` donne la valeur de 1 euro dans chaque ancienne monnaie nationale. Combien vaut **1 franc français** en deutschemarks ? (1 euro = 6,56 francs = 1,96 marks)
+
+```{webr}
+#| exercise: m-ma-5
+#| caption: "Parités de l'euro : un taux croisé"
+euro[["DEM"]] / ______     # la parité du franc
+```
+
+::: {.hint exercise="m-ma-5"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+On passe de francs à marks en passant par l'euro : 1 franc = 1 / 6,56 euro, et 1 euro = 1,96 marks.
+:::
+:::
+
+::: {.hint exercise="m-ma-5"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`euro[["FRF"]]`.
+:::
+:::
+
+::: {.solution exercise="m-ma-5"}
+**Raisonnement.**
+
+1. 1 franc vaut 1 / `euro["FRF"]` euro.
+2. Chaque euro vaut `euro["DEM"]` marks : 1 franc vaut donc `euro["DEM"] / euro["FRF"]` marks ≈ 0,30.
+3. Ces parités ont été fixées de manière irrévocable le 31 décembre 1998 : les taux croisés étaient donc connus d'avance.
+
+```{webr}
+#| exercise: m-ma-5
+#| solution: true
+euro[["DEM"]] / euro[["FRF"]]
+```
+
+**Pièges fréquents.**
+
+- Calculer `FRF / DEM` : on obtient des marks par franc inversé (3,35 francs par mark).
+- Confondre `[` et `[[` : `[[` renvoie un nombre sans nom.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-ma-5
+#| check: true
+ref <- euro[["DEM"]] / euro[["FRF"]]
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Taux croisé : `euro[[\"DEM\"]] / euro[[\"FRF\"]]`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". 1 franc ≈ 0,298 mark (inversement, 1 mark = 3,35 francs)."))
+}
+```
+
+::: {.dojo-done data-id="m-ma-5"}
+:::
+
+## Volatilité annualisée d'un indice boursier {#m-ma-6}
+
+[Marche 6 sur 6 · Échauffement]{.dojo-step}
+
+`EuStockMarkets` contient les cours quotidiens de quatre indices européens entre 1991 et 1998. Calcule la volatilité annualisée du **CAC 40** : écart-type des rendements logarithmiques quotidiens multiplié par la racine du nombre de jours de bourse par an (252).
+
+```{webr}
+#| exercise: m-ma-6
+#| caption: "Volatilité annualisée d'un indice boursier"
+r <- diff(log(EuStockMarkets[, "CAC"]))     # rendements quotidiens
+sd(r) * sqrt(______) * 100     # jours de bourse par an, en %
+```
+
+::: {.hint exercise="m-ma-6"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Un rendement logarithmique quotidien est `diff(log(prix))`. Si les rendements sont indépendants, la variance croît avec le temps : l'écart-type annuel est l'écart-type quotidien fois √252.
+:::
+:::
+
+::: {.hint exercise="m-ma-6"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`sqrt(252)`.
+:::
+:::
+
+::: {.solution exercise="m-ma-6"}
+**Raisonnement.**
+
+1. `diff(log(p))` donne les rendements continus.
+2. `sd(r)` mesure la volatilité quotidienne (≈ 1,1 %).
+3. L'annualisation multiplie par √252 (≈ 15,9), d'où ≈ 17,5 %. L'hypothèse d'indépendance des rendements est une approximation.
+
+```{webr}
+#| exercise: m-ma-6
+#| solution: true
+r <- diff(log(EuStockMarkets[, "CAC"]))
+sd(r) * sqrt(252) * 100
+```
+
+**Pièges fréquents.**
+
+- Multiplier par 252 au lieu de √252.
+- Utiliser `diff(p) / p` : proche, mais pas identique aux rendements logarithmiques.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-ma-6
+#| check: true
+ref <- sd(diff(log(EuStockMarkets[, 'CAC']))) * sqrt(252) * 100
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Annualise avec `sqrt(252)`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Volatilité annualisée ≈ 17,5 % (1991-1998)."))
+}
+```
+
+::: {.dojo-done data-id="m-ma-6"}
+:::
+
+
+# Micro : élasticité, surplus, coûts {#mini-micro}
+
+::: {.dojo-track data-track="mini-micro"}
+:::
+
+## Élasticité-prix (chiffres illustratifs) {#m-mi-1}
+
+[Marche 1 sur 4 · Échauffement]{.dojo-step}
+
+*Chiffres illustratifs.* Quand le prix d'un bien passe de 10 à 12 €, la quantité demandée passe de 500 à 450 unités. Calcule l'élasticité-prix de la demande par la **méthode du point milieu** : variation relative de la quantité divisée par variation relative du prix, chacune calculée par rapport à la moyenne des deux valeurs.
+
+```{webr}
+#| exercise: m-mi-1
+#| caption: "Élasticité-prix (chiffres illustratifs)"
+P0 <- 10; P1 <- 12; Q0 <- 500; Q1 <- 450
+dQ <- (Q1 - Q0) / ((Q0 + Q1) / 2)     # variation relative de la quantité
+ep <- dQ / ______                       # variation relative du prix, même méthode
+ep
+```
+
+::: {.hint exercise="m-mi-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Même formule que `dQ`, mais avec les prix : (variation du prix) divisée par (moyenne des deux prix).
+:::
+:::
+
+::: {.hint exercise="m-mi-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`(P1 - P0) / ((P0 + P1) / 2)`.
+:::
+:::
+
+::: {.solution exercise="m-mi-1"}
+**Raisonnement.**
+
+1. Variation relative de Q : −50 / 475 ≈ −10,5 %.
+2. Variation relative de P : 2 / 11 ≈ +18,2 %.
+3. Élasticité ≈ −0,58 : la demande est **inélastique** (|ε| < 1) : une hausse de prix augmente la dépense totale.
+
+```{webr}
+#| exercise: m-mi-1
+#| solution: true
+P0 <- 10; P1 <- 12; Q0 <- 500; Q1 <- 450
+dQ <- (Q1 - Q0) / ((Q0 + Q1) / 2)
+ep <- dQ / ((P1 - P0) / ((P0 + P1) / 2))
+ep
+```
+
+**Pièges fréquents.**
+
+- Calculer les variations relatives par rapport à la valeur initiale : le résultat dépend du sens de la variation (le point milieu corrige cela).
+- Oublier le signe négatif : la loi de la demande donne une élasticité négative.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-mi-1
+#| check: true
+ref <- ((450 - 500) / ((500 + 450) / 2)) / ((12 - 10) / ((10 + 12) / 2))
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Variation relative du prix : `(P1 - P0) / ((P0 + P1) / 2)`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Élasticité ≈ −0,58 : demande inélastique."))
+}
+```
+
+::: {.dojo-done data-id="m-mi-1"}
+:::
+
+## Surplus du consommateur {#m-mi-2}
+
+[Marche 2 sur 4 · Échauffement]{.dojo-step}
+
+*Chiffres illustratifs.* La demande est `P = 20 − 0,5 Q`. Au prix de marché `p = 8`, la quantité demandée est `q = 24`. Le surplus du consommateur est l'aire du triangle sous la courbe de demande et au-dessus du prix : ½ × (prix maximal − prix) × quantité.
+
+```{webr}
+#| exercise: m-mi-2
+#| caption: "Surplus du consommateur"
+p <- 8; q <- (20 - p) / 0.5                    # quantité demandée à ce prix
+0.5 * (20 - p) * ______                        # quantité demandée
+```
+
+::: {.hint exercise="m-mi-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+L'aire d'un triangle est base × hauteur / 2. Ici la hauteur est l'écart entre le prix maximal (20) et le prix payé, la base est la quantité achetée.
+:::
+:::
+
+::: {.hint exercise="m-mi-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`q`.
+:::
+:::
+
+::: {.solution exercise="m-mi-2"}
+**Raisonnement.**
+
+1. Prix maximal que les consommateurs seraient prêts à payer : 20 (ordonnée à l'origine).
+2. Le surplus est le triangle de base `q = 24` et de hauteur `20 − 8 = 12` : ½ × 12 × 24 = 144.
+3. Il mesure le gain des consommateurs par rapport à ce qu'ils auraient accepté de payer.
+
+```{webr}
+#| exercise: m-mi-2
+#| solution: true
+p <- 8; q <- (20 - p) / 0.5
+0.5 * (20 - p) * q
+```
+
+**Pièges fréquents.**
+
+- Oublier le facteur ½ : on calcule l'aire d'un rectangle.
+- Utiliser le prix à la place de l'écart (20 − p).
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-mi-2
+#| check: true
+ref <- 0.5 * (20 - 8) * 24
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-09 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Surplus = ½ × (20 − p) × q.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Surplus = 144."))
+}
+```
+
+::: {.dojo-done data-id="m-mi-2"}
+:::
+
+## Coût marginal et offre d'une firme {#m-mi-3}
+
+[Marche 3 sur 4 · Échauffement]{.dojo-step}
+
+*Chiffres illustratifs.* Le coût total d'une firme pour une production de 0 à 5 unités est `c(0, 20, 45, 75, 115, 170)`. Le coût marginal d'une unité est la variation du coût total. Si le prix est 45, combien d'unités la firme produit-elle (elle produit toute unité dont le coût marginal ne dépasse pas le prix) ?
+
+```{webr}
+#| exercise: m-mi-3
+#| caption: "Coût marginal et offre d'une firme"
+cout <- c(0, 20, 45, 75, 115, 170)
+cm <- diff(cout)                 # coût marginal de chaque unité
+sum(cm <= ______)                # le prix
+```
+
+::: {.hint exercise="m-mi-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`diff()` renvoie les variations successives : ici 20, 25, 30, 40, 55. Une unité est produite si son coût marginal est inférieur ou égal au prix.
+:::
+:::
+
+::: {.hint exercise="m-mi-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+Le prix est 45 : `sum(cm <= 45)`.
+:::
+:::
+
+::: {.solution exercise="m-mi-3"}
+**Raisonnement.**
+
+1. Coûts marginaux : 20, 25, 30, 40, 55.
+2. Les quatre premières unités coûtent au plus 40 < 45 : elles sont rentables.
+3. La 5e coûte 55 > 45 : la firme s'arrête. La règle « prix = coût marginal » est le critère d'une firme preneuse de prix.
+
+```{webr}
+#| exercise: m-mi-3
+#| solution: true
+cout <- c(0, 20, 45, 75, 115, 170)
+cm <- diff(cout)
+sum(cm <= 45)
+```
+
+**Pièges fréquents.**
+
+- Comparer le prix au coût **total** au lieu du coût marginal.
+- Compter la ligne 0 (production nulle) comme une unité.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-mi-3
+#| check: true
+ref <- 4
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-09 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Compte les coûts marginaux inférieurs ou égaux à 45.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". La firme produit 4 unités."))
+}
+```
+
+::: {.dojo-done data-id="m-mi-3"}
+:::
+
+## Le profit maximal {#m-mi-4}
+
+[Marche 4 sur 4 · Échauffement]{.dojo-step}
+
+*Chiffres illustratifs.* Avec les mêmes coûts et un prix de 45, calcule le profit `prix × quantité − coût` pour chaque quantité de 0 à 5, puis donne la quantité qui **maximise le profit**. Attention : `which.max` donne une position, pas une quantité.
+
+```{webr}
+#| exercise: m-mi-4
+#| caption: "Le profit maximal"
+cout <- c(0, 20, 45, 75, 115, 170); q <- 0:5
+profit <- 45 * q - cout
+which.max(______) - 1      # position du maximum, moins 1 car q commence à 0
+```
+
+::: {.hint exercise="m-mi-4"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Le profit est calculé pour les 6 quantités. `which.max()` indique la position du plus grand profit dans le vecteur. La 1re position correspond à q = 0 : on retire 1.
+:::
+:::
+
+::: {.hint exercise="m-mi-4"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`which.max(profit) - 1`.
+:::
+:::
+
+::: {.solution exercise="m-mi-4"}
+**Raisonnement.**
+
+1. Profits : 0, 25, 45, 60, 65, 55.
+2. Le maximum (65) est en 5e position, donc q = 4.
+3. Cohérent avec la règle prix = coût marginal de la marche précédente : on arrête de produire quand le coût marginal dépasse le prix.
+
+```{webr}
+#| exercise: m-mi-4
+#| solution: true
+cout <- c(0, 20, 45, 75, 115, 170); q <- 0:5
+profit <- 45 * q - cout
+which.max(profit) - 1
+```
+
+**Pièges fréquents.**
+
+- Oublier de retirer 1 : on répondrait 5 au lieu de 4.
+- Renvoyer le profit maximal (65) au lieu de la quantité.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-mi-4
+#| check: true
+ref <- 4
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-09 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Donne la quantité : `which.max(profit) - 1`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Profit maximal 65, pour q = 4."))
+}
+```
+
+::: {.dojo-done data-id="m-mi-4"}
+:::
+
+
+# Concentration et inégalités {#mini-ineq}
+
+::: {.dojo-track data-track="mini-ineq"}
+:::
+
+## Concentration : part des 5 plus peuplés {#m-in-1}
+
+[Marche 1 sur 4 · Échauffement]{.dojo-step}
+
+`state.x77[, "Population"]` donne la population des 50 États américains (estimation 1975). Quelle part de la population totale vivait dans les **5 États les plus peuplés** ?
+
+```{webr}
+#| exercise: m-in-1
+#| caption: "Concentration : part des 5 plus peuplés"
+pop <- state.x77[, "Population"]
+sum(sort(pop, decreasing = TRUE)[1:______]) / sum(pop)     # nombre d'États
+```
+
+::: {.hint exercise="m-in-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`sort(x, decreasing = TRUE)` trie du plus grand au plus petit ; `[1:k]` garde les k premiers.
+:::
+:::
+
+::: {.hint exercise="m-in-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`1:5`.
+:::
+:::
+
+::: {.solution exercise="m-in-1"}
+**Raisonnement.**
+
+1. On trie par taille décroissante et on garde les cinq premiers.
+2. On divise leur somme par le total : c'est un indicateur de **concentration** (ici ≈ 0,35).
+
+```{webr}
+#| exercise: m-in-1
+#| solution: true
+pop <- state.x77[, "Population"]
+sum(sort(pop, decreasing = TRUE)[1:5]) / sum(pop)
+```
+
+**Pièges fréquents.**
+
+- `sort(pop)` sans `decreasing = TRUE` : on prendrait les 5 plus petits.
+- Oublier de diviser par `sum(pop)` : on obtient un effectif, pas une part.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-in-1
+#| check: true
+ref <- {pop <- state.x77[, 'Population']; sum(pop[order(-pop)][1:5]) / sum(pop)}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Garde les 5 premiers après tri décroissant.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Environ un tiers de la population (35 %)."))
+}
+```
+
+::: {.dojo-done data-id="m-in-1"}
+:::
+
+## Un rapport d'extrêmes {#m-in-2}
+
+[Marche 2 sur 4 · Échauffement]{.dojo-step}
+
+Quel est le rapport entre la population du plus peuplé et celle du moins peuplé de ces États ? Indique la fonction du minimum.
+
+```{webr}
+#| exercise: m-in-2
+#| caption: "Un rapport d'extrêmes"
+pop <- state.x77[, "Population"]
+max(pop) / ______(pop)     # fonction du minimum
+```
+
+::: {.hint exercise="m-in-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Le rapport d'extrêmes est un indicateur simple, sensible aux valeurs les plus atypiques.
+:::
+:::
+
+::: {.hint exercise="m-in-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`min(pop)`.
+:::
+:::
+
+::: {.solution exercise="m-in-2"}
+**Raisonnement.**
+
+1. Ce rapport (ici ≈ 58) vaut « le plus grand est 58 fois le plus petit ».
+2. Il est facile à lire mais ne dépend que de **deux** observations : il ne dit rien de la forme de la distribution.
+
+```{webr}
+#| exercise: m-in-2
+#| solution: true
+pop <- state.x77[, "Population"]
+max(pop) / min(pop)
+```
+
+**Pièges fréquents.**
+
+- Utiliser `range(pop)` : renvoie les deux valeurs, pas leur rapport.
+- Oublier que le rapport est très sensible à un seul État atypique.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-in-2
+#| check: true
+ref <- max(state.x77[, 'Population']) / min(state.x77[, 'Population'])
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Fonction du minimum : `min()`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Le plus peuplé a 58 fois la population du moins peuplé."))
+}
+```
+
+::: {.dojo-done data-id="m-in-2"}
+:::
+
+## L'indice de Gini de la population des États {#m-in-3}
+
+[Marche 3 sur 4 · Échauffement]{.dojo-step}
+
+La fonction `gini()` du dépôt (`R/inegalites.R`) calcule l'indice de Gini. Charge-la avec `source()` puis calcule le Gini de la population des États (0 = répartition égale, 1 = tout dans un seul État).
+
+```{webr}
+#| exercise: m-in-3
+#| caption: "L'indice de Gini de la population des États"
+source("R/inegalites.R")
+pop <- state.x77[, "Population"]
+______(pop)     # fonction du dépôt
+```
+
+::: {.hint exercise="m-in-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`source("fichier.R")` exécute le fichier et rend ses fonctions disponibles. Le nom de la fonction est celui de l'indice.
+:::
+:::
+
+::: {.hint exercise="m-in-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`gini(pop)`.
+:::
+:::
+
+::: {.solution exercise="m-in-3"}
+**Raisonnement.**
+
+1. `source()` charge les fonctions du dépôt (`lorenz`, `gini`, `ge`, …).
+2. Le Gini de la population des États (≈ 0,50) mesure l'inégalité de **taille**, pas de revenu. Les mêmes outils servent à toute répartition : revenus, emplois, populations d'entreprises.
+
+```{webr}
+#| exercise: m-in-3
+#| solution: true
+source("R/inegalites.R")
+pop <- state.x77[, "Population"]
+gini(pop)
+```
+
+**Pièges fréquents.**
+
+- Oublier `source(...)` : `could not find function "gini"`.
+- Interpréter ce Gini comme une inégalité de revenus : c'est une inégalité entre États.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-in-3
+#| check: true
+ref <- {source('R/inegalites.R'); gini(state.x77[, 'Population'])}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Appelle `gini(pop)` après `source(\"R/inegalites.R\")`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Gini ≈ 0,50."))
+}
+```
+
+::: {.dojo-done data-id="m-in-3"}
+:::
+
+## Lire une courbe de Lorenz {#m-in-4}
+
+[Marche 4 sur 4 · Échauffement]{.dojo-step}
+
+`lorenz(x)` renvoie un tableau avec la part cumulée des États (`p`) et la part cumulée de la population (`L`). Quelle part de la population totale vit dans la **moitié** des États les moins peuplés ? Interpole la courbe en `p = 0,5` avec `approx()`.
+
+```{webr}
+#| exercise: m-in-4
+#| caption: "Lire une courbe de Lorenz"
+source("R/inegalites.R")
+pop <- state.x77[, "Population"]
+l <- lorenz(pop)
+approx(l$p, l$L, xout = ______)$y     # part cumulée des États visée
+```
+
+::: {.hint exercise="m-in-4"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`approx(x, y, xout)` interpole la courbe `y` en fonction de `x` au point `xout`. Ici `x` = part des États (`p`), `y` = part de la population (`L`).
+:::
+:::
+
+::: {.hint exercise="m-in-4"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`xout = 0.5` : la moitié des États.
+:::
+:::
+
+::: {.solution exercise="m-in-4"}
+**Raisonnement.**
+
+1. La courbe de Lorenz donne, pour chaque part `p` des États (du plus petit au plus grand), la part cumulée `L` de la population.
+2. En `p = 0,5`, les 25 États les moins peuplés ne comptent que ≈ 16 % de la population : plus la courbe est loin de la diagonale, plus la concentration est forte.
+
+```{webr}
+#| exercise: m-in-4
+#| solution: true
+source("R/inegalites.R")
+pop <- state.x77[, "Population"]
+l <- lorenz(pop)
+approx(l$p, l$L, xout = 0.5)$y
+```
+
+**Pièges fréquents.**
+
+- Utiliser `xout = 50` : `p` est une proportion (entre 0 et 1), pas un pourcentage.
+- Lire `L` comme une part du total des États au lieu d'une part de la population.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-in-4
+#| check: true
+ref <- {source('R/inegalites.R'); l <- lorenz(state.x77[, 'Population']); approx(l$p, l$L, xout = 0.5)$y}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 0.0001 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Interpole en `xout = 0.5`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". La moitié des États les moins peuplés abrite environ 16 % de la population."))
+}
+```
+
+::: {.dojo-done data-id="m-in-4"}
+:::
+
+
+# Histoire et évaluation de politiques {#mini-hist}
+
+::: {.dojo-track data-track="mini-hist"}
+:::
+
+## Un siècle et demi de croissance démographique {#m-hi-1}
+
+[Marche 1 sur 4 · Échauffement]{.dojo-step}
+
+`uspop` donne la population des États-Unis (en millions) à chaque recensement décennal de 1790 à 1970. Calcule le taux de croissance annuel moyen sur toute la période, en %. Combien d'années séparent 1790 de 1970 ?
+
+```{webr}
+#| exercise: m-hi-1
+#| caption: "Un siècle et demi de croissance démographique"
+(uspop[length(uspop)] / uspop[1])^(1 / ______) - 1     # années entre 1790 et 1970
+# à multiplier par 100 pour un pourcentage
+```
+
+::: {.hint exercise="m-hi-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Le rapport entre la dernière et la première valeur est élevé à la puissance 1 / (nombre d'années), puis on retire 1.
+:::
+:::
+
+::: {.hint exercise="m-hi-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+1970 − 1790 = 180 ans (et non 19 recensements).
+:::
+:::
+
+::: {.solution exercise="m-hi-1"}
+**Raisonnement.**
+
+1. `uspop[length(uspop)]` est la dernière valeur, `uspop[1]` la première.
+2. Le nombre de **périodes** annuelles est 180, car les recensements sont décennaux : il y a 18 décennies, soit 180 ans.
+3. Résultat ≈ 2,2 % par an : un doublement tous les 32 ans environ.
+
+```{webr}
+#| exercise: m-hi-1
+#| solution: true
+((uspop[length(uspop)] / uspop[1])^(1 / 180) - 1) * 100
+```
+
+**Pièges fréquents.**
+
+- Utiliser 19 (nombre d'observations) ou 18 (décennies) : le taux obtenu serait un taux par décennie, pas par an.
+- Oublier de convertir en %.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-hi-1
+#| check: true
+ref <- ((as.numeric(uspop)[19] / as.numeric(uspop)[1])^(1 / 180) - 1) * 100
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Il y a 180 années entre 1790 et 1970.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Environ 2,2 % par an sur 180 ans."))
+}
+```
+
+::: {.dojo-done data-id="m-hi-1"}
+:::
+
+## Quelle décennie a connu la plus forte croissance ? {#m-hi-2}
+
+[Marche 2 sur 4 · Échauffement]{.dojo-step}
+
+On calcule le taux de croissance de chaque décennie. Quelle décennie (indiquée par l'année du recensement final) a connu la plus forte croissance relative ? Complète la recherche du maximum.
+
+```{webr}
+#| exercise: m-hi-2
+#| caption: "Quelle décennie a connu la plus forte croissance ?"
+g <- diff(uspop) / head(uspop, -1)     # croissance de chaque décennie
+as.numeric(time(uspop))[-1][which.max(______)]     # vecteur dans lequel on cherche le maximum
+```
+
+::: {.hint exercise="m-hi-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`which.max()` s'applique au vecteur des taux de croissance. `time(uspop)[-1]` donne les années d'arrivée de chaque décennie.
+:::
+:::
+
+::: {.hint exercise="m-hi-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`g`.
+:::
+:::
+
+::: {.solution exercise="m-hi-2"}
+**Raisonnement.**
+
+1. `g` contient 18 taux (un par décennie).
+2. `which.max(g)` donne la position du plus fort taux ; on lit l'année correspondante dans `time(uspop)[-1]`.
+3. La plus forte croissance relative a lieu entre 1800 et 1810 (+36 %) : la population est encore petite, donc une même hausse en volume pèse beaucoup en relatif.
+
+```{webr}
+#| exercise: m-hi-2
+#| solution: true
+g <- diff(uspop) / head(uspop, -1)
+as.numeric(time(uspop))[-1][which.max(g)]
+```
+
+**Pièges fréquents.**
+
+- Oublier `[-1]` sur les années : la position serait décalée d'une décennie.
+- Comparer des variations absolues (millions) au lieu des taux : les décennies récentes l'emporteraient mécaniquement.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-hi-2
+#| check: true
+ref <- {g <- diff(as.numeric(uspop)) / head(as.numeric(uspop), -1); as.numeric(time(uspop))[-1][which.max(g)]}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Cherche le maximum de `g` et lis l'année avec `time(uspop)[-1]`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Décennie finissant en 1810 (+36 %)."))
+}
+```
+
+::: {.dojo-done data-id="m-hi-2"}
+:::
+
+## La diffusion du téléphone en 1951 {#m-hi-3}
+
+[Marche 3 sur 4 · Échauffement]{.dojo-step}
+
+`WorldPhones` donne le nombre de téléphones (en milliers) par région du monde (colonnes) et par année (lignes, 1951 à 1961). Quelle part de l'**Europe** dans le total mondial en 1951, en % ?
+
+```{webr}
+#| exercise: m-hi-3
+#| caption: "La diffusion du téléphone en 1951"
+WorldPhones["1951", "Europe"] / sum(WorldPhones[______, ]) * 100     # ligne de l'année voulue
+```
+
+::: {.hint exercise="m-hi-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`WorldPhones[ligne, colonne]` : la ligne vide après la virgule signifie « toutes les colonnes ». Les lignes sont repérées par l'année, entre guillemets.
+:::
+:::
+
+::: {.hint exercise="m-hi-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`"1951"`.
+:::
+:::
+
+::: {.solution exercise="m-hi-3"}
+**Raisonnement.**
+
+1. Numérateur : téléphones européens en 1951.
+2. Dénominateur : somme de **toute** la ligne 1951.
+3. L'Europe détient environ 29 % du total en 1951, derrière l'Amérique du Nord.
+
+```{webr}
+#| exercise: m-hi-3
+#| solution: true
+WorldPhones["1951", "Europe"] / sum(WorldPhones["1951", ]) * 100
+```
+
+**Pièges fréquents.**
+
+- Écrire `WorldPhones[1951, ]` sans guillemets : R cherche la ligne numéro 1951 (`subscript out of bounds`).
+- Diviser par la somme de la colonne (tous les pays, toutes les années).
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-hi-3
+#| check: true
+ref <- WorldPhones['1951', 'Europe'] / sum(WorldPhones['1951', ]) * 100
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "La ligne s'écrit `\"1951\"` avec des guillemets.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". L'Europe pesait environ 29 % du parc mondial."))
+}
+```
+
+::: {.dojo-done data-id="m-hi-3"}
+:::
+
+## Évaluer une loi : la ceinture de sécurité {#m-hi-4}
+
+[Marche 4 sur 4 · Échauffement]{.dojo-step}
+
+`Seatbelts` donne, mois par mois, le nombre de conducteurs tués au Royaume-Uni (`DriversKilled`) de 1969 à 1984. La colonne `law` vaut 1 après l'entrée en vigueur de la loi sur la ceinture (janvier 1983). Calcule la variation relative (%) du nombre moyen mensuel de tués après la loi par rapport à avant.
+
+```{webr}
+#| exercise: m-hi-4
+#| caption: "Évaluer une loi : la ceinture de sécurité"
+d <- as.data.frame(Seatbelts)
+m <- tapply(d$DriversKilled, ______, mean)     # groupes : avant / après la loi
+(m[["1"]] / m[["0"]] - 1) * 100
+```
+
+::: {.hint exercise="m-hi-4"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`tapply(valeurs, groupes, mean)` calcule une moyenne par groupe. Le groupe est donné par la colonne qui vaut 0 avant la loi et 1 après.
+:::
+:::
+
+::: {.hint exercise="m-hi-4"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`d$law`.
+:::
+:::
+
+::: {.solution exercise="m-hi-4"}
+**Raisonnement.**
+
+1. `tapply` renvoie deux moyennes, nommées `"0"` (avant) et `"1"` (après).
+2. Le rapport moins 1, fois 100, donne la variation relative : ≈ −20 %.
+3. **Attention** : cette comparaison avant/après n'est pas causale. D'autres facteurs évoluent en même temps (prix de l'essence, tendance de long terme, météo). Une vraie évaluation exigerait un groupe de comparaison ou un modèle de séries temporelles (différences de différences, ARIMA avec intervention).
+
+```{webr}
+#| exercise: m-hi-4
+#| solution: true
+d <- as.data.frame(Seatbelts)
+m <- tapply(d$DriversKilled, d$law, mean)
+(m[["1"]] / m[["0"]] - 1) * 100
+```
+
+**Pièges fréquents.**
+
+- Conclure que la loi a « causé » 20 % de morts en moins.
+- Écrire `m[[1]]` et `m[[2]]` : fonctionne, mais l'ordre des groupes est moins explicite que les noms.
+
+**Pour aller plus loin.** Passe à la marche suivante, ou reviens sur ce point quand tu as un doute.
+:::
+
+```{webr}
+#| exercise: m-hi-4
+#| check: true
+ref <- {d <- as.data.frame(Seatbelts); (mean(d$DriversKilled[d$law == 1]) / mean(d$DriversKilled[d$law == 0]) - 1) * 100}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
+} else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = "Le groupe est `d$law`.")
+} else {
+  list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Environ −20 % (comparaison descriptive, pas causale)."))
+}
+```
+
+::: {.dojo-done data-id="m-hi-4"}
+:::
+

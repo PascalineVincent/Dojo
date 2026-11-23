@@ -24,6 +24,8 @@ website:
     left:
       - text: "Aujourd'hui"
         href: index.qmd
+      - text: "Échauffements"
+        href: parcours/minis.qmd
       - text: "Parcours"
         menu:
           - text: "Micro (L1/L2)"

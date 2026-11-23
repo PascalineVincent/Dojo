@@ -10,6 +10,10 @@ format:
 
 Les énoncés sont **tirés au sort chaque jour** (graine = date) : les chiffres changent d'un jour à l'autre, on ne peut donc pas retenir les réponses par cœur. Le bouton ci-dessous redonne de nouveaux énoncés à la demande. Le code R s'exécute dans ton navigateur ; **Vérifier** corrige ta réponse.
 
+::: {.callout-tip}
+**Une marche te paraît trop haute ?** Fais d'abord les [échauffements](minis.qmd) : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page *Aujourd'hui* te propose aussi un exercice court.
+:::
+
 {{< include ../_ojs.qmd >}}
 
 ## Laboratoire : comparer les structures de marché

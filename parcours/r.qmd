@@ -7,6 +7,10 @@ subtitle: "Vecteurs, tableaux, fonctions, puis graphiques de base pas à pas"
 
 Deux pistes progressives, avec indices et corrigés. *R : bases* couvre les vecteurs, les tableaux de données et les fonctions ; *R : graphiques* part de `plot()` et va jusqu'aux figures à plusieurs panneaux. Les graphiques se vérifient par ce que R **renvoie** (limites des axes avec `par("usr")`, objets renvoyés par `hist()`, `boxplot()`, `barplot()`), pas par l'œil. Les énoncés changent chaque jour.
 
+::: {.callout-tip}
+**Une marche te paraît trop haute ?** Fais d'abord les [échauffements](minis.qmd) : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page *Aujourd'hui* te propose aussi un exercice court.
+:::
+
 {{< include ../_ojs.qmd >}}
 
 ::: {.dojo-track data-track="r-base"}

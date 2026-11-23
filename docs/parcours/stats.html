@@ -331,6 +331,10 @@ window.Quarto = {
     <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Aujourd’hui</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../parcours/minis.html"> 
+<span class="menu-text">Échauffements</span></a>
+  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parcours" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Parcours</span>
@@ -453,37 +457,50 @@ window.Quarto = {
 
 
 <p>Rappels de L1 par la <strong>simulation</strong> : on ne se contente pas de la formule, on la vérifie. Les énoncés changent chaque jour (graine = date). Trois pistes : <em>estimation et simulation</em>, <em>statistiques descriptives</em> (résumer, comparer des groupes, repérer les valeurs atypiques) et <em>comparaisons et tests</em> (Welch, khi-deux, permutation, comparaisons multiples). Une section d’aide R (réflexes, erreurs fréquentes) et une boîte à outils « quelle méthode, quelle fonction ? » terminent la page ; chaque exercice a <strong>trois indices</strong> (orientation, formule, fonction R sur un exemple).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Astuce
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Une marche te paraît trop haute ?</strong> Fais d’abord les <a href="../parcours/minis.html">échauffements</a> : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page <em>Aujourd’hui</em> te propose aussi un exercice court.</p>
+</div>
+</div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb1" data-startfrom="21" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 20;"><span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> {</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Générateur pseudo-aléatoire reproductible : graine = jour + id d'exercice + salt.</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">// (Source unique : scripts/test_exercices.R évalue cette même cellule avec Node.)</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> today <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>()<span class="op">.</span><span class="fu">toISOString</span>()<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> hash <span class="op">=</span> (s) <span class="kw">=&gt;</span> {</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> h <span class="op">=</span> <span class="dv">1779033703</span> <span class="op">^</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) { h <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(h <span class="op">^</span> s<span class="op">.</span><span class="fu">charCodeAt</span>(i)<span class="op">,</span> <span class="dv">3432918353</span>)<span class="op">;</span> h <span class="op">=</span> (h <span class="op">&lt;&lt;</span> <span class="dv">13</span>) <span class="op">|</span> (h <span class="op">&gt;&gt;&gt;</span> <span class="dv">19</span>)<span class="op">;</span> }</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> h <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> mulberry32 <span class="op">=</span> (a) <span class="kw">=&gt;</span> () <span class="kw">=&gt;</span> {</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    a <span class="op">|=</span> <span class="dv">0</span><span class="op">;</span> a <span class="op">=</span> (a <span class="op">+</span> <span class="bn">0x6d2b79f5</span>) <span class="op">|</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> t <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(a <span class="op">^</span> (a <span class="op">&gt;&gt;&gt;</span> <span class="dv">15</span>)<span class="op">,</span> <span class="dv">1</span> <span class="op">|</span> a)<span class="op">;</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> (t <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">7</span>)<span class="op">,</span> <span class="dv">61</span> <span class="op">|</span> t)) <span class="op">^</span> t<span class="op">;</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ((t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">14</span>)) <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span>) <span class="op">/</span> <span class="dv">4294967296</span><span class="op">;</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> (id<span class="op">,</span> salt <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> day <span class="op">=</span> today) <span class="kw">=&gt;</span> {</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> u <span class="op">=</span> <span class="fu">mulberry32</span>(<span class="fu">hash</span>(<span class="vs">`</span><span class="sc">${</span>day<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>id<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>salt<span class="sc">}</span><span class="vs">`</span>))<span class="op">;</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> int <span class="op">=</span> (a<span class="op">,</span> b) <span class="kw">=&gt;</span> a <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> (b <span class="op">-</span> a <span class="op">+</span> <span class="dv">1</span>))<span class="op">;</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> pick <span class="op">=</span> (arr) <span class="kw">=&gt;</span> arr[<span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> arr<span class="op">.</span><span class="at">length</span>)]<span class="op">;</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> normal <span class="op">=</span> () <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">log</span>(<span class="dv">1</span> <span class="op">-</span> <span class="fu">u</span>())) <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">cos</span>(<span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="cn">PI</span> <span class="op">*</span> <span class="fu">u</span>())<span class="op">;</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { u<span class="op">,</span> int<span class="op">,</span> pick<span class="op">,</span> normal }<span class="op">;</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>viewof salt <span class="op">=</span> {</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> b <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;button class="dojo-btn dojo-reroll"&gt;🎲 Nouveaux énoncés&lt;/button&gt;`</span><span class="op">;</span></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> n <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  b<span class="op">.</span><span class="at">onclick</span> <span class="op">=</span> () <span class="kw">=&gt;</span> { b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="op">++</span>n<span class="op">;</span> b<span class="op">.</span><span class="fu">dispatchEvent</span>(<span class="kw">new</span> <span class="bu">Event</span>(<span class="st">"input"</span><span class="op">,</span> { <span class="dt">bubbles</span><span class="op">:</span> <span class="kw">true</span> }))<span class="op">;</span> }<span class="op">;</span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> b<span class="op">;</span></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb1" data-startfrom="25" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 24;"><span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> {</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Générateur pseudo-aléatoire reproductible : graine = jour + id d'exercice + salt.</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="co">// (Source unique : scripts/test_exercices.R évalue cette même cellule avec Node.)</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> today <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>()<span class="op">.</span><span class="fu">toISOString</span>()<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> hash <span class="op">=</span> (s) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> h <span class="op">=</span> <span class="dv">1779033703</span> <span class="op">^</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> s<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) { h <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(h <span class="op">^</span> s<span class="op">.</span><span class="fu">charCodeAt</span>(i)<span class="op">,</span> <span class="dv">3432918353</span>)<span class="op">;</span> h <span class="op">=</span> (h <span class="op">&lt;&lt;</span> <span class="dv">13</span>) <span class="op">|</span> (h <span class="op">&gt;&gt;&gt;</span> <span class="dv">19</span>)<span class="op">;</span> }</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> h <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> mulberry32 <span class="op">=</span> (a) <span class="kw">=&gt;</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    a <span class="op">|=</span> <span class="dv">0</span><span class="op">;</span> a <span class="op">=</span> (a <span class="op">+</span> <span class="bn">0x6d2b79f5</span>) <span class="op">|</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> t <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(a <span class="op">^</span> (a <span class="op">&gt;&gt;&gt;</span> <span class="dv">15</span>)<span class="op">,</span> <span class="dv">1</span> <span class="op">|</span> a)<span class="op">;</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> (t <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">imul</span>(t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">7</span>)<span class="op">,</span> <span class="dv">61</span> <span class="op">|</span> t)) <span class="op">^</span> t<span class="op">;</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ((t <span class="op">^</span> (t <span class="op">&gt;&gt;&gt;</span> <span class="dv">14</span>)) <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span>) <span class="op">/</span> <span class="dv">4294967296</span><span class="op">;</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> (id<span class="op">,</span> salt <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> day <span class="op">=</span> today) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> u <span class="op">=</span> <span class="fu">mulberry32</span>(<span class="fu">hash</span>(<span class="vs">`</span><span class="sc">${</span>day<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>id<span class="sc">}</span><span class="vs">|</span><span class="sc">${</span>salt<span class="sc">}</span><span class="vs">`</span>))<span class="op">;</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> int <span class="op">=</span> (a<span class="op">,</span> b) <span class="kw">=&gt;</span> a <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> (b <span class="op">-</span> a <span class="op">+</span> <span class="dv">1</span>))<span class="op">;</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> pick <span class="op">=</span> (arr) <span class="kw">=&gt;</span> arr[<span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="fu">u</span>() <span class="op">*</span> arr<span class="op">.</span><span class="at">length</span>)]<span class="op">;</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> normal <span class="op">=</span> () <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">log</span>(<span class="dv">1</span> <span class="op">-</span> <span class="fu">u</span>())) <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">cos</span>(<span class="dv">2</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="cn">PI</span> <span class="op">*</span> <span class="fu">u</span>())<span class="op">;</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { u<span class="op">,</span> int<span class="op">,</span> pick<span class="op">,</span> normal }<span class="op">;</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>viewof salt <span class="op">=</span> {</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> b <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;button class="dojo-btn dojo-reroll"&gt;🎲 Nouveaux énoncés&lt;/button&gt;`</span><span class="op">;</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> n <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  b<span class="op">.</span><span class="at">onclick</span> <span class="op">=</span> () <span class="kw">=&gt;</span> { b<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="op">++</span>n<span class="op">;</span> b<span class="op">.</span><span class="fu">dispatchEvent</span>(<span class="kw">new</span> <span class="bu">Event</span>(<span class="st">"input"</span><span class="op">,</span> { <span class="dt">bubbles</span><span class="op">:</span> <span class="kw">true</span> }))<span class="op">;</span> }<span class="op">;</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> b<span class="op">;</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-1-1" data-nodetype="declaration">
@@ -506,7 +523,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="stats-tcl-1">TCL par simulation</h2>
 <p><span class="dojo-step">Marche 1 sur 3 · Guidé</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="116" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 115;"><span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>tcl1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-tcl-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">n</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">10</span><span class="op">,</span> <span class="dv">25</span><span class="op">,</span> <span class="dv">50</span><span class="op">,</span> <span class="dv">100</span>])<span class="op">,</span> <span class="dt">m</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">2</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">10</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="120" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 119;"><span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>tcl1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-tcl-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">n</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">10</span><span class="op">,</span> <span class="dv">25</span><span class="op">,</span> <span class="dv">50</span><span class="op">,</span> <span class="dv">100</span>])<span class="op">,</span> <span class="dt">m</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">2</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">10</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-2" data-nodetype="declaration">
 
@@ -526,7 +543,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiLDiWNhcnQtdHlwZSBkZSBsYSBtb3llbm5lIGVtcGlyaXF1ZSIsImVk
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-tcl-1">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -535,27 +552,9 @@ eyJhdHRyIjp7ImNhcHRpb24iOiLDiWNhcnQtdHlwZSBkZSBsYSBtb3llbm5lIGVtcGlyaXF1ZSIsImVk
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Deux ingrédients : (i) simuler un grand nombre de moyennes de <span class="math inline">\(n\)</span> observations ; (ii) écrire ce que la théorie annonce pour l’écart-type d’une moyenne. Tu compares ensuite les deux.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-tcl-1">
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Une loi exponentielle d’espérance <span class="math inline">\(m\)</span> a pour paramètre <code>rate = 1/m</code> dans <code>rexp()</code>. Pour des observations i.i.d., <span class="math inline">\(\mathrm{sd}(\bar X) = \sigma / \sqrt{n}\)</span>.</p>
+<p>Deux ingrédients : (i) simuler un grand nombre de moyennes de <span class="math inline">\(n\)</span> observations ; (ii) écrire ce que la théorie annonce pour l’écart-type d’une moyenne. Tu compares ensuite les deux.</p>
 </div>
 </div>
 </div>
@@ -567,11 +566,29 @@ eyJhdHRyIjp7ImNhcHRpb24iOiLDiWNhcnQtdHlwZSBkZSBsYSBtb3llbm5lIGVtcGlyaXF1ZSIsImVk
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Une loi exponentielle d’espérance <span class="math inline">\(m\)</span> a pour paramètre <code>rate = 1/m</code> dans <code>rexp()</code>. Pour des observations i.i.d., <span class="math inline">\(\mathrm{sd}(\bar X) = \sigma / \sqrt{n}\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-tcl-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>replicate(B, expr)</code> répète <code>expr</code> B fois et renvoie le vecteur des résultats ; <code>sd()</code> donne ensuite la dispersion de ces B moyennes. Exemple (autre loi, autre taille) :</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, <span class="fu">mean</span>(<span class="fu">runif</span>(<span class="dv">10</span>)))   <span class="co"># 1000 moyennes de 10 tirages uniformes</span></span>
@@ -623,11 +640,11 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InN0
 <h2 class="anchored" data-anchor-id="stats-ic-1">Intervalle de confiance d’une moyenne</h2>
 <p><span class="dojo-step">Marche 2 sur 3 · À compléter</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="216" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 215;"><span id="cb4-216"><a href="#cb4-216" aria-hidden="true" tabindex="-1"></a>ic1 <span class="op">=</span> {</span>
-<span id="cb4-217"><a href="#cb4-217" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-ic-1"</span><span class="op">,</span> salt)<span class="op">;</span></span>
-<span id="cb4-218"><a href="#cb4-218" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> mu <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">50</span><span class="op">,</span> <span class="dv">120</span>)<span class="op">,</span> sd <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">5</span><span class="op">,</span> <span class="dv">20</span>)<span class="op">,</span> n <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">12</span><span class="op">,</span> <span class="dv">30</span>)<span class="op">;</span></span>
-<span id="cb4-219"><a href="#cb4-219" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { <span class="dt">x</span><span class="op">:</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">from</span>({ <span class="dt">length</span><span class="op">:</span> n }<span class="op">,</span> () <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">round</span>((mu <span class="op">+</span> sd <span class="op">*</span> g<span class="op">.</span><span class="fu">normal</span>()) <span class="op">*</span> <span class="dv">10</span>) <span class="op">/</span> <span class="dv">10</span>) }<span class="op">;</span></span>
-<span id="cb4-220"><a href="#cb4-220" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="220" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 219;"><span id="cb4-220"><a href="#cb4-220" aria-hidden="true" tabindex="-1"></a>ic1 <span class="op">=</span> {</span>
+<span id="cb4-221"><a href="#cb4-221" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-ic-1"</span><span class="op">,</span> salt)<span class="op">;</span></span>
+<span id="cb4-222"><a href="#cb4-222" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> mu <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">50</span><span class="op">,</span> <span class="dv">120</span>)<span class="op">,</span> sd <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">5</span><span class="op">,</span> <span class="dv">20</span>)<span class="op">,</span> n <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">12</span><span class="op">,</span> <span class="dv">30</span>)<span class="op">;</span></span>
+<span id="cb4-223"><a href="#cb4-223" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { <span class="dt">x</span><span class="op">:</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">from</span>({ <span class="dt">length</span><span class="op">:</span> n }<span class="op">,</span> () <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">round</span>((mu <span class="op">+</span> sd <span class="op">*</span> g<span class="op">.</span><span class="fu">normal</span>()) <span class="op">*</span> <span class="dv">10</span>) <span class="op">/</span> <span class="dv">10</span>) }<span class="op">;</span></span>
+<span id="cb4-224"><a href="#cb4-224" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="declaration">
 
@@ -647,7 +664,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJJQyDDoCA5NSAlIChTdHVkZW50KSIsImVkaXQiOnRydWUsImV2YWwi
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-ic-1">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -656,27 +673,9 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJJQyDDoCA5NSAlIChTdHVkZW50KSIsImVkaXQiOnRydWUsImV2YWwi
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Un IC s’écrit « estimation ± marge ». Ici <span class="math inline">\(\sigma\)</span> est inconnu et l’échantillon petit : quelle loi gouverne le rapport <span class="math inline">\((\bar x - \mu)/(s/\sqrt n)\)</span> ?</p>
-</div>
-</div>
-</div>
-</div>
-<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-ic-1">
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Pour un IC bilatéral à 95 %, on prend le quantile d’ordre 0,975 de la loi de Student à <span class="math inline">\(n-1\)</span> degrés de liberté : <code>qt(0.975, df = n - 1)</code>. Vérifie avec <code>t.test(x)$conf.int</code>.</p>
+<p>Un IC s’écrit « estimation ± marge ». Ici <span class="math inline">\(\sigma\)</span> est inconnu et l’échantillon petit : quelle loi gouverne le rapport <span class="math inline">\((\bar x - \mu)/(s/\sqrt n)\)</span> ?</p>
 </div>
 </div>
 </div>
@@ -688,11 +687,29 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJJQyDDoCA5NSAlIChTdHVkZW50KSIsImVkaXQiOnRydWUsImV2YWwi
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Pour un IC bilatéral à 95 %, on prend le quantile d’ordre 0,975 de la loi de Student à <span class="math inline">\(n-1\)</span> degrés de liberté : <code>qt(0.975, df = n - 1)</code>. Vérifie avec <code>t.test(x)$conf.int</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-ic-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>qt(p, df)</code> renvoie le quantile de la loi de Student. Pour un IC à 95 %, on veut le quantile 0,975 (2,5 % de chaque côté). Exemple sur 4 valeurs :</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">7</span>); n <span class="ot">&lt;-</span> <span class="fu">length</span>(y)</span>
@@ -744,7 +761,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InN0
 <h2 class="anchored" data-anchor-id="stats-couv-1">Couverture réelle de l’intervalle de confiance</h2>
 <p><span class="dojo-step">Marche 3 sur 3 · Autonome</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb6" data-startfrom="333" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 332;"><span id="cb6-333"><a href="#cb6-333" aria-hidden="true" tabindex="-1"></a>couv1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-couv-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">n</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">4</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">6</span><span class="op">,</span> <span class="dv">8</span><span class="op">,</span> <span class="dv">10</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb6" data-startfrom="337" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 336;"><span id="cb6-337"><a href="#cb6-337" aria-hidden="true" tabindex="-1"></a>couv1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-couv-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">n</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">4</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">6</span><span class="op">,</span> <span class="dv">8</span><span class="op">,</span> <span class="dv">10</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-4" data-nodetype="declaration">
 
@@ -764,7 +781,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJUYXV4IGRlIGNvdXZlcnR1cmUiLCJlZGl0Ijp0cnVlLCJldmFsIjp0
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-couv-1">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -773,27 +790,9 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJUYXV4IGRlIGNvdXZlcnR1cmUiLCJlZGl0Ijp0cnVlLCJldmFsIjp0
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Pour chaque échantillon simulé, deux choses : la demi-largeur de l’intervalle (la marge), puis un test vrai/faux « l’intervalle contient-il <span class="math inline">\(\mu\)</span> ? ». La moyenne de ces vrai/faux est la couverture.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-couv-1">
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
 <div id="callout-8" class="callout-8-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>marge = <code>crit * sd(x) / sqrt(n)</code> ; l’IC contient <span class="math inline">\(\mu\)</span> si <code>abs(mean(x) - mu) &lt;= marge</code>. Pour Student la couverture doit être proche de 0,95.</p>
+<p>Pour chaque échantillon simulé, deux choses : la demi-largeur de l’intervalle (la marge), puis un test vrai/faux « l’intervalle contient-il <span class="math inline">\(\mu\)</span> ? ». La moyenne de ces vrai/faux est la couverture.</p>
 </div>
 </div>
 </div>
@@ -805,11 +804,29 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJUYXV4IGRlIGNvdXZlcnR1cmUiLCJlZGl0Ijp0cnVlLCJldmFsIjp0
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-9" class="callout-9-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>marge = <code>crit * sd(x) / sqrt(n)</code> ; l’IC contient <span class="math inline">\(\mu\)</span> si <code>abs(mean(x) - mu) &lt;= marge</code>. Pour Student la couverture doit être proche de 0,95.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-couv-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Dans <code>replicate(B, { ... })</code>, <strong>la dernière expression du bloc est la valeur renvoyée</strong>. Un test logique donne TRUE/FALSE, et <code>mean()</code> d’un vecteur logique est la proportion de TRUE. Exemple :</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">replicate</span>(<span class="dv">2000</span>, {</span>
@@ -878,7 +895,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InN0
 <h2 class="anchored" data-anchor-id="stats-desc-1">Résumer une série : position, dispersion, forme</h2>
 <p><span class="dojo-step">Marche 1 sur 3 · Guidé</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb8" data-startfrom="439" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 438;"><span id="cb8-439"><a href="#cb8-439" aria-hidden="true" tabindex="-1"></a>desc1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-desc-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">n</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">30</span><span class="op">,</span> <span class="dv">40</span><span class="op">,</span> <span class="dv">50</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb8" data-startfrom="443" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 442;"><span id="cb8-443"><a href="#cb8-443" aria-hidden="true" tabindex="-1"></a>desc1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-desc-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">n</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">30</span><span class="op">,</span> <span class="dv">40</span><span class="op">,</span> <span class="dv">50</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-5" data-nodetype="declaration">
 
@@ -898,7 +915,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJTdGF0aXN0aXF1ZXMgZGVzY3JpcHRpdmVzIGQndW5lIHPDqXJpZSIs
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-desc-1">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -907,27 +924,9 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJTdGF0aXN0aXF1ZXMgZGVzY3JpcHRpdmVzIGQndW5lIHPDqXJpZSIs
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Il y a trois familles de résumés : la <strong>position</strong> (autour de quoi se situent les valeurs), la <strong>dispersion</strong> (à quel point elles s’étalent) et la <strong>forme</strong> (symétrique ou étirée d’un côté). Pour chacune, R a une fonction toute prête, sauf l’asymétrie.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-desc-1">
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 2 · les fonctions
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
 <div id="callout-11" class="callout-11-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p><code>mean(x)</code>, <code>median(x)</code>, <code>sd(x)</code>, <code>IQR(x)</code> (ou <code>diff(quantile(x, c(0.25, 0.75)))</code>). Asymétrie : <code>mean(((x - mean(x)) / sd(x))^3)</code>.</p>
+<p>Il y a trois familles de résumés : la <strong>position</strong> (autour de quoi se situent les valeurs), la <strong>dispersion</strong> (à quel point elles s’étalent) et la <strong>forme</strong> (symétrique ou étirée d’un côté). Pour chacune, R a une fonction toute prête, sauf l’asymétrie.</p>
 </div>
 </div>
 </div>
@@ -939,11 +938,29 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJTdGF0aXN0aXF1ZXMgZGVzY3JpcHRpdmVzIGQndW5lIHPDqXJpZSIs
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+<span class="screen-reader-only">Astuce</span>Indice 2 · les fonctions
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-12" class="callout-12-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>mean(x)</code>, <code>median(x)</code>, <code>sd(x)</code>, <code>IQR(x)</code> (ou <code>diff(quantile(x, c(0.25, 0.75)))</code>). Asymétrie : <code>mean(((x - mean(x)) / sd(x))^3)</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-desc-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>quantile(x, c(0.25, 0.75))</code> renvoie un vecteur <strong>nommé</strong> ; <code>unname()</code> retire les noms pour obtenir un nombre propre. L’asymétrie se calcule avec <code>mean()</code> d’un vecteur. Exemple :</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">10</span>)</span>
@@ -1003,7 +1020,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InN0
 <h2 class="anchored" data-anchor-id="stats-desc-2">Tableau descriptif par groupe</h2>
 <p><span class="dojo-step">Marche 2 sur 3 · À compléter</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb10" data-startfrom="563" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 562;"><span id="cb10-563"><a href="#cb10-563" aria-hidden="true" tabindex="-1"></a>desc2 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-desc-2"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb10" data-startfrom="567" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 566;"><span id="cb10-567"><a href="#cb10-567" aria-hidden="true" tabindex="-1"></a>desc2 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-desc-2"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-6" data-nodetype="declaration">
 
@@ -1023,7 +1040,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJUYWJsZWF1IGRlc2NyaXB0aWYgcGFyIGdyb3VwZSIsImVkaXQiOnRy
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-desc-2">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1032,27 +1049,9 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJUYWJsZWF1IGRlc2NyaXB0aWYgcGFyIGdyb3VwZSIsImVkaXQiOnRy
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-13" class="callout-13-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Résumer par groupe, c’est calculer <strong>la même statistique</strong> sur chaque sous-échantillon. Un seul outil (<code>tapply</code>) suffit pour les quatre premières lignes du tableau ; la part se déduit de l’effectif.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-desc-2">
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 2 · les fonctions
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
 <div id="callout-14" class="callout-14-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p><code>table(diplome)</code> ou <code>tapply(salaire, diplome, length)</code> ; <code>tapply(salaire, diplome, mean)</code> ; avec <code>median</code> puis <code>sd</code>. La part est <code>effectif / sum(effectif)</code>.</p>
+<p>Résumer par groupe, c’est calculer <strong>la même statistique</strong> sur chaque sous-échantillon. Un seul outil (<code>tapply</code>) suffit pour les quatre premières lignes du tableau ; la part se déduit de l’effectif.</p>
 </div>
 </div>
 </div>
@@ -1064,11 +1063,29 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJUYWJsZWF1IGRlc2NyaXB0aWYgcGFyIGdyb3VwZSIsImVkaXQiOnRy
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+<span class="screen-reader-only">Astuce</span>Indice 2 · les fonctions
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-15" class="callout-15-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>table(diplome)</code> ou <code>tapply(salaire, diplome, length)</code> ; <code>tapply(salaire, diplome, mean)</code> ; avec <code>median</code> puis <code>sd</code>. La part est <code>effectif / sum(effectif)</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-desc-2">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>tapply(valeurs, groupes, fonction)</code> calcule la fonction pour chaque modalité du facteur et renvoie un vecteur nommé. Exemple :</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">12</span>, <span class="dv">20</span>, <span class="dv">22</span>, <span class="dv">30</span>)</span>
@@ -1138,7 +1155,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InN0
 <h2 class="anchored" data-anchor-id="stats-desc-3">Repérer les valeurs atypiques</h2>
 <p><span class="dojo-step">Marche 3 sur 3 · Autonome</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb12" data-startfrom="682" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 681;"><span id="cb12-682"><a href="#cb12-682" aria-hidden="true" tabindex="-1"></a>desc3 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-desc-3"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">k</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="fl">1.5</span><span class="op">,</span> <span class="dv">3</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb12" data-startfrom="686" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 685;"><span id="cb12-686"><a href="#cb12-686" aria-hidden="true" tabindex="-1"></a>desc3 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-desc-3"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">k</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="fl">1.5</span><span class="op">,</span> <span class="dv">3</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-7" data-nodetype="declaration">
 
@@ -1158,7 +1175,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJWYWxldXJzIGF0eXBpcXVlcyIsImVkaXQiOnRydWUsImV2YWwiOnRy
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-desc-3">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1167,27 +1184,9 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJWYWxldXJzIGF0eXBpcXVlcyIsImVkaXQiOnRydWUsImV2YWwiOnRy
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-16" class="callout-16-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Une valeur est « atypique » si elle sort d’un intervalle construit à partir de la <strong>distribution du cœur des données</strong>. Les quartiles décrivent ce cœur ; l’écart interquartile en donne la largeur.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-desc-3">
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 2 · les clôtures
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
 <div id="callout-17" class="callout-17-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Clôture basse : <span class="math inline">\(Q_1 - k\,\mathrm{IQR}\)</span> ; clôture haute : <span class="math inline">\(Q_3 + k\,\mathrm{IQR}\)</span>. En R : <code>which(x &lt; q[1] - k * IQR(x) | x &gt; q[2] + k * IQR(x))</code>.</p>
+<p>Une valeur est « atypique » si elle sort d’un intervalle construit à partir de la <strong>distribution du cœur des données</strong>. Les quartiles décrivent ce cœur ; l’écart interquartile en donne la largeur.</p>
 </div>
 </div>
 </div>
@@ -1199,11 +1198,29 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJWYWxldXJzIGF0eXBpcXVlcyIsImVkaXQiOnRydWUsImV2YWwiOnRy
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+<span class="screen-reader-only">Astuce</span>Indice 2 · les clôtures
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-18" class="callout-18-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Clôture basse : <span class="math inline">\(Q_1 - k\,\mathrm{IQR}\)</span> ; clôture haute : <span class="math inline">\(Q_3 + k\,\mathrm{IQR}\)</span>. En R : <code>which(x &lt; q[1] - k * IQR(x) | x &gt; q[2] + k * IQR(x))</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-desc-3">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-19" class="callout-19-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>which(condition)</code> renvoie les <strong>positions</strong> où la condition est vraie ; <code>|</code> signifie « ou ». Pour les seuils de Tukey, utilise les deux quartiles et l’IQR. Exemple :</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">40</span>)</span>
@@ -1273,7 +1290,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InN0
 <h2 class="anchored" data-anchor-id="stats-t-1">Test t de Welch à la main</h2>
 <p><span class="dojo-step">Marche 1 sur 4 · Guidé</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb14" data-startfrom="800" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 799;"><span id="cb14-800"><a href="#cb14-800" aria-hidden="true" tabindex="-1"></a>tt1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-t-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">n1</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">15</span><span class="op">,</span> <span class="dv">20</span><span class="op">,</span> <span class="dv">30</span>])<span class="op">,</span> <span class="dt">n2</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">20</span><span class="op">,</span> <span class="dv">25</span><span class="op">,</span> <span class="dv">40</span>])<span class="op">,</span> <span class="dt">delta</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">4</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb14" data-startfrom="804" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 803;"><span id="cb14-804"><a href="#cb14-804" aria-hidden="true" tabindex="-1"></a>tt1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-t-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">n1</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">15</span><span class="op">,</span> <span class="dv">20</span><span class="op">,</span> <span class="dv">30</span>])<span class="op">,</span> <span class="dt">n2</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">20</span><span class="op">,</span> <span class="dv">25</span><span class="op">,</span> <span class="dv">40</span>])<span class="op">,</span> <span class="dt">delta</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">4</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-8" data-nodetype="declaration">
 
@@ -1293,7 +1310,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJUZXN0IHQgZGUgV2VsY2giLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVl
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-t-1">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1302,27 +1319,9 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJUZXN0IHQgZGUgV2VsY2giLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVl
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-19" class="callout-19-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Sous H0 (moyennes égales), la différence <span class="math inline">\(m_1 - m_2\)</span> est centrée sur 0. Il faut la comparer à sa variabilité d’échantillonnage : l’erreur-type. Pour une différence de deux moyennes indépendantes, les variances des deux moyennes s’<strong>additionnent</strong>.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-t-1">
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 2 · les formules
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
 <div id="callout-20" class="callout-20-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p><code>se = sqrt(v1/n1 + v2/n2)</code> ; <code>t = (m1 - m2) / se</code> ; <code>p = 2 * pt(-abs(t), df)</code> ; écart-type poolé : <code>sqrt(((n1 - 1) * v1 + (n2 - 1) * v2) / (n1 + n2 - 2))</code>.</p>
+<p>Sous H0 (moyennes égales), la différence <span class="math inline">\(m_1 - m_2\)</span> est centrée sur 0. Il faut la comparer à sa variabilité d’échantillonnage : l’erreur-type. Pour une différence de deux moyennes indépendantes, les variances des deux moyennes s’<strong>additionnent</strong>.</p>
 </div>
 </div>
 </div>
@@ -1334,11 +1333,29 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJUZXN0IHQgZGUgV2VsY2giLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVl
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+<span class="screen-reader-only">Astuce</span>Indice 2 · les formules
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-21" class="callout-21-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>se = sqrt(v1/n1 + v2/n2)</code> ; <code>t = (m1 - m2) / se</code> ; <code>p = 2 * pt(-abs(t), df)</code> ; écart-type poolé : <code>sqrt(((n1 - 1) * v1 + (n2 - 1) * v2) / (n1 + n2 - 2))</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-t-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Les variances des deux moyennes s’additionnent sous la racine. La p-value bilatérale double la probabilité d’une queue, via <code>pt()</code> sur la <strong>valeur absolue</strong> de t. Exemple :</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>v1 <span class="ot">&lt;-</span> <span class="dv">4</span>; n1 <span class="ot">&lt;-</span> <span class="dv">10</span>; v2 <span class="ot">&lt;-</span> <span class="dv">9</span>; n2 <span class="ot">&lt;-</span> <span class="dv">15</span></span>
@@ -1406,7 +1423,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InN0
 <h2 class="anchored" data-anchor-id="stats-chi2-1">Test du khi-deux d’indépendance</h2>
 <p><span class="dojo-step">Marche 2 sur 4 · À compléter</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb16" data-startfrom="921" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 920;"><span id="cb16-921"><a href="#cb16-921" aria-hidden="true" tabindex="-1"></a>chi1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-chi2-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">effet</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">0</span><span class="op">,</span> <span class="fl">0.05</span><span class="op">,</span> <span class="fl">0.1</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb16" data-startfrom="925" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 924;"><span id="cb16-925"><a href="#cb16-925" aria-hidden="true" tabindex="-1"></a>chi1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-chi2-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">effet</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">0</span><span class="op">,</span> <span class="fl">0.05</span><span class="op">,</span> <span class="fl">0.1</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-9" data-nodetype="declaration">
 
@@ -1426,7 +1443,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJUZXN0IGR1IGtoaS1kZXV4IiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-chi2-1">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1435,27 +1452,9 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJUZXN0IGR1IGtoaS1kZXV4IiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-22" class="callout-22-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Si le diplôme et la situation d’emploi étaient indépendants, la proportion de personnes en emploi serait la même dans chaque ligne du tableau. Calcule d’abord <strong>ce tableau-là</strong> (les effectifs attendus) puis mesure son écart au tableau observé.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-chi2-1">
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 2 · les formules
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
 <div id="callout-23" class="callout-23-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p><code>outer(rowSums(tab), colSums(tab)) / sum(tab)</code> ; <code>sum((tab - attendus)^2 / attendus)</code> ; <code>(nrow(tab) - 1) * (ncol(tab) - 1)</code> ; <code>pchisq(chi2, ddl, lower.tail = FALSE)</code>.</p>
+<p>Si le diplôme et la situation d’emploi étaient indépendants, la proportion de personnes en emploi serait la même dans chaque ligne du tableau. Calcule d’abord <strong>ce tableau-là</strong> (les effectifs attendus) puis mesure son écart au tableau observé.</p>
 </div>
 </div>
 </div>
@@ -1467,11 +1466,29 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJUZXN0IGR1IGtoaS1kZXV4IiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+<span class="screen-reader-only">Astuce</span>Indice 2 · les formules
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-24" class="callout-24-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>outer(rowSums(tab), colSums(tab)) / sum(tab)</code> ; <code>sum((tab - attendus)^2 / attendus)</code> ; <code>(nrow(tab) - 1) * (ncol(tab) - 1)</code> ; <code>pchisq(chi2, ddl, lower.tail = FALSE)</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-chi2-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-25" class="callout-25-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Le tableau des effectifs attendus s’obtient avec <code>outer()</code> (produit croisé des totaux). La p-value est la probabilité de dépasser la statistique : <code>lower.tail = FALSE</code>. Exemple :</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">25</span>, <span class="dv">25</span>), <span class="dv">2</span>)</span>
@@ -1540,7 +1557,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InN0
 <h2 class="anchored" data-anchor-id="stats-perm-1">Test de permutation</h2>
 <p><span class="dojo-step">Marche 3 sur 4 · Autonome</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb18" data-startfrom="1049" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1048;"><span id="cb18-1049"><a href="#cb18-1049" aria-hidden="true" tabindex="-1"></a>perm1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-perm-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">delta</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">0</span><span class="op">,</span> <span class="fl">0.4</span><span class="op">,</span> <span class="fl">0.8</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb18" data-startfrom="1053" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1052;"><span id="cb18-1053"><a href="#cb18-1053" aria-hidden="true" tabindex="-1"></a>perm1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-perm-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">delta</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">0</span><span class="op">,</span> <span class="fl">0.4</span><span class="op">,</span> <span class="fl">0.8</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-10" data-nodetype="declaration">
 
@@ -1560,7 +1577,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJUZXN0IGRlIHBlcm11dGF0aW9uIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-perm-1">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1569,27 +1586,9 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJUZXN0IGRlIHBlcm11dGF0aW9uIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-25" class="callout-25-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Si le groupe n’a <strong>aucun effet</strong>, l’étiquette A/B de chaque observation est interchangeable. Mélanger les étiquettes au hasard fabrique donc des données « comme sous H0 ». Reste à voir où se situe la différence observée dans cette distribution fabriquée.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-perm-1">
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 2 · les formules
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
 <div id="callout-26" class="callout-26-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p><code>g &lt;- sample(groupe)</code> mélange les étiquettes. p-value : <code>(1 + sum(abs(stat) &gt;= abs(obs))) / (B + 1)</code>.</p>
+<p>Si le groupe n’a <strong>aucun effet</strong>, l’étiquette A/B de chaque observation est interchangeable. Mélanger les étiquettes au hasard fabrique donc des données « comme sous H0 ». Reste à voir où se situe la différence observée dans cette distribution fabriquée.</p>
 </div>
 </div>
 </div>
@@ -1601,11 +1600,29 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJUZXN0IGRlIHBlcm11dGF0aW9uIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+<span class="screen-reader-only">Astuce</span>Indice 2 · les formules
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-27" class="callout-27-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><code>g &lt;- sample(groupe)</code> mélange les étiquettes. p-value : <code>(1 + sum(abs(stat) &gt;= abs(obs))) / (B + 1)</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-perm-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-28" class="callout-28-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>sample(groupe)</code> mélange les étiquettes sans les changer de nature (tirage sans remise de tout le vecteur). Compter combien de fois la statistique simulée dépasse l’observée : <code>sum(abs(stat) &gt;= abs(obs))</code>. Exemple :</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>groupe <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>), <span class="at">each =</span> <span class="dv">3</span>)</span>
@@ -1679,7 +1696,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InN0
 <h2 class="anchored" data-anchor-id="stats-mult-1">Comparaisons multiples : Bonferroni et Holm</h2>
 <p><span class="dojo-step">Marche 4 sur 4 · Autonome</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb20" data-startfrom="1167" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1166;"><span id="cb20-1167"><a href="#cb20-1167" aria-hidden="true" tabindex="-1"></a>mult1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-mult-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">m</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">10</span><span class="op">,</span> <span class="dv">20</span><span class="op">,</span> <span class="dv">40</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb20" data-startfrom="1171" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1170;"><span id="cb20-1171"><a href="#cb20-1171" aria-hidden="true" tabindex="-1"></a>mult1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"stats-mult-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">m</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">10</span><span class="op">,</span> <span class="dv">20</span><span class="op">,</span> <span class="dv">40</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-11" data-nodetype="declaration">
 
@@ -1699,7 +1716,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJDb3JyZWN0aW9ucyBkZSBwLXZhbHVlcyIsImVkaXQiOnRydWUsImV2
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-mult-1">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1708,27 +1725,9 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJDb3JyZWN0aW9ucyBkZSBwLXZhbHVlcyIsImVkaXQiOnRydWUsImV2
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-28" class="callout-28-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Quand on teste beaucoup d’hypothèses, quelques tests « sortent » par hasard. Pour que le risque d’<strong>au moins un</strong> faux positif reste de 5 %, il faut rendre chaque test plus exigeant. Bonferroni le fait de façon uniforme ; Holm de façon séquentielle, en partant de la p-value la plus petite.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-mult-1">
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 2 · les corrections
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
 <div id="callout-29" class="callout-29-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Bonferroni : <code>pmin(1, length(p) * p)</code>. Holm : trie les p-values, multiplie la plus petite par <span class="math inline">\(m\)</span>, la suivante par <span class="math inline">\(m-1\)</span>, etc. : <code>(m - seq_len(m) + 1) * p[o]</code>.</p>
+<p>Quand on teste beaucoup d’hypothèses, quelques tests « sortent » par hasard. Pour que le risque d’<strong>au moins un</strong> faux positif reste de 5 %, il faut rendre chaque test plus exigeant. Bonferroni le fait de façon uniforme ; Holm de façon séquentielle, en partant de la p-value la plus petite.</p>
 </div>
 </div>
 </div>
@@ -1740,11 +1739,29 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJDb3JyZWN0aW9ucyBkZSBwLXZhbHVlcyIsImVkaXQiOnRydWUsImV2
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+<span class="screen-reader-only">Astuce</span>Indice 2 · les corrections
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-30" class="callout-30-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Bonferroni : <code>pmin(1, length(p) * p)</code>. Holm : trie les p-values, multiplie la plus petite par <span class="math inline">\(m\)</span>, la suivante par <span class="math inline">\(m-1\)</span>, etc. : <code>(m - seq_len(m) + 1) * p[o]</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-mult-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-31" class="callout-31-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p><code>order(p)</code> donne les positions qui trient <code>p</code> ; <code>seq_len(m)</code> donne les rangs 1 à m. Tu peux vérifier tes fonctions avec <code>p.adjust(p, "bonferroni")</code> et <code>p.adjust(p, "holm")</code>. Exemple :</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.04</span>, <span class="fl">0.001</span>, <span class="fl">0.2</span>); m <span class="ot">&lt;-</span> <span class="fu">length</span>(p)</span>
@@ -1834,7 +1851,7 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJWUFAgZXQgVlBOIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhl
 </div>
 <div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-bayes-1">
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1843,27 +1860,9 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJWUFAgZXQgVlBOIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhl
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-31" class="callout-31-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Imagine 100 000 personnes et dresse un petit tableau : combien de malades ? Parmi eux, combien de positifs ? Combien de positifs parmi les sains ? Le calcul de Bayes est ce tableau lu en colonne.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-bayes-1">
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
 <div id="callout-32" class="callout-32-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p><span class="math inline">\(P(M \mid +) = \dfrac{P(+ \mid M)\,P(M)}{P(+ \mid M)\,P(M) + P(+ \mid \bar M)\,P(\bar M)}\)</span>, où <span class="math inline">\(P(+ \mid \bar M) = 1 - \text{spécificité}\)</span>. Même démarche pour le VPN.</p>
+<p>Imagine 100 000 personnes et dresse un petit tableau : combien de malades ? Parmi eux, combien de positifs ? Combien de positifs parmi les sains ? Le calcul de Bayes est ce tableau lu en colonne.</p>
 </div>
 </div>
 </div>
@@ -1875,11 +1874,29 @@ eyJhdHRyIjp7ImNhcHRpb24iOiJWUFAgZXQgVlBOIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhl
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+<span class="screen-reader-only">Astuce</span>Indice 2 · la formule
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-33" class="callout-33-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(P(M \mid +) = \dfrac{P(+ \mid M)\,P(M)}{P(+ \mid M)\,P(M) + P(+ \mid \bar M)\,P(\bar M)}\)</span>, où <span class="math inline">\(P(+ \mid \bar M) = 1 - \text{spécificité}\)</span>. Même démarche pour le VPN.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="stats-bayes-1">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Indice 3 · la fonction R, sur un exemple
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-34" class="callout-34-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Pose les quatre cases d’un tableau 2 × 2 en probabilités : vrais positifs <code>se * prev</code>, faux négatifs, faux positifs <code>(1 - sp) * (1 - prev)</code>, vrais négatifs. La VPP est la part des positifs qui sont de vrais positifs. Exemple (autres valeurs) :</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>prev <span class="ot">&lt;-</span> <span class="fl">0.1</span>; se <span class="ot">&lt;-</span> <span class="fl">0.9</span>; sp <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>

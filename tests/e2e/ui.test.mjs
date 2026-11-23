@@ -89,4 +89,12 @@ await go("http://localhost:8765/index.html");
   ok(/recherche\/defis\.html#defi-/.test(href), "défi de la semaine : lien « Voir le corrigé » " + href); }
 await go("http://localhost:8765/recherche/defis.html");
 ok(await ev("document.querySelectorAll('.callout').length >= 8 && document.querySelectorAll('section[id^=defi-]').length === 8"), "page des corrigés : 8 défis");
+// échauffements : 7 pistes, 40 marches ; bouton « Plus court » ; lien de repli depuis une piste
+await go("http://localhost:8765/parcours/minis.html");
+ok(await ev("document.querySelectorAll('.dojo-ladder').length === 7 && document.querySelectorAll('.dojo-steps li').length === 40"), "échauffements : 7 pistes, 40 marches");
+await go("http://localhost:8765/parcours/stats.html");
+ok(await ev("[...document.querySelectorAll('.dojo-ladder a')].some(a => a.href.includes('minis.html#mini-stats'))"), "stats : lien vers les échauffements");
+await go("http://localhost:8765/index.html"); await ev("localStorage.clear()"); await go("http://localhost:8765/index.html");
+{ const t = await ev("(() => { const btn = (txt) => [...document.querySelectorAll('.dojo-exo .dojo-btn')].find(x => x.textContent.includes(txt)); btn('Plus court').click(); const out = []; for (let i = 0; i < 20; i++) { const m = [...document.querySelectorAll('.dojo-exo .dojo-badge')].find(x => x.textContent.startsWith('~')); out.push(parseInt(m.textContent.replace('~', ''))); btn('Un autre').click(); } return out; })()");
+  ok(t.length === 20 && t.every((x) => x <= 5), "« Plus court » : exercices de 5 minutes maximum"); }
 ws.close(); process.exit(process.exitCode || 0);

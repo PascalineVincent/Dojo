@@ -7,6 +7,10 @@ subtitle: "Probabilités, estimation, tests : rappels et simulation"
 
 Rappels de L1 par la **simulation** : on ne se contente pas de la formule, on la vérifie. Les énoncés changent chaque jour (graine = date). Trois pistes : *estimation et simulation*, *statistiques descriptives* (résumer, comparer des groupes, repérer les valeurs atypiques) et *comparaisons et tests* (Welch, khi-deux, permutation, comparaisons multiples). Une section d'aide R (réflexes, erreurs fréquentes) et une boîte à outils « quelle méthode, quelle fonction ? » terminent la page ; chaque exercice a **trois indices** (orientation, formule, fonction R sur un exemple).
 
+::: {.callout-tip}
+**Une marche te paraît trop haute ?** Fais d'abord les [échauffements](minis.qmd) : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page *Aujourd'hui* te propose aussi un exercice court.
+:::
+
 {{< include ../_ojs.qmd >}}
 
 ::: {.dojo-track data-track="stats-est"}

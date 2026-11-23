@@ -220,14 +220,17 @@ function mountDone(el) {
 // ------------------------------------------------------------------ exercice du jour
 const dayRank = () => { const d = new Date().getDay(); return d === 0 || d === 6; };     // week-end ?
 const TRACK_LABEL = { 'micro-cpp': 'Concurrence parfaite', 'micro-pouvoir': 'Pouvoir de marché', 'stats-est': 'Estimation et simulation', 'stats-desc': 'Statistiques descriptives', 'stats-tests': 'Comparaisons et tests',
-  eco: 'Économétrie', 'con-dette': 'Dette publique', 'con-prix': 'Inflation et prix', 'con-croiss': 'Croissance', 'con-travail': 'Marché du travail', 'con-monnaie': 'Politique monétaire', 'con-commerce': 'Commerce extérieur', 'r-base': 'R : bases', 'r-graph': 'R : graphiques', seg: 'Ségrégation', ineq: 'Inégalités' };
+  eco: 'Économétrie', 'con-dette': 'Dette publique', 'con-prix': 'Inflation et prix', 'con-croiss': 'Croissance', 'con-travail': 'Marché du travail', 'con-monnaie': 'Politique monétaire', 'con-commerce': 'Commerce extérieur', 'r-base': 'R : bases', 'mini-r': 'Échauffements : R', 'mini-stats': 'Échauffements : stats', 'mini-eco': 'Échauffements : économétrie', 'mini-macro': 'Échauffements : Macro', 'mini-micro': 'Échauffements : Micro', 'mini-ineq': 'Échauffements : inégalités', 'mini-hist': 'Échauffements : histoire',  'r-graph': 'R : graphiques', seg: 'Ségrégation', ineq: 'Inégalités' };
+const PREP = { 'micro-cpp': 'mini-micro', 'micro-pouvoir': 'mini-micro', 'stats-est': 'mini-stats', 'stats-desc': 'mini-stats', 'stats-tests': 'mini-stats',
+  eco: 'mini-eco', 'con-dette': 'mini-macro', 'con-prix': 'mini-macro', 'con-croiss': 'mini-macro', 'con-travail': 'mini-macro', 'con-monnaie': 'mini-macro',
+  'con-commerce': 'mini-macro', seg: 'mini-ineq', ineq: 'mini-ineq', 'r-base': 'mini-r', 'r-graph': 'mini-r' };
 const trackOf = (t) => DATA.exercises.filter((e) => e.track === t).sort((a, b) => a.step - b.step);
 // une marche est accessible quand toutes les précédentes de sa piste ont été réussies au moins une fois
 const unlocked = (e) => !e.track || trackOf(e.track).filter((x) => x.step < e.step).every((x) => S.done[x.id] || S.paid[x.id]);
-function chooseExercise(salt = 0) {
+function chooseExercise(salt = 0, short = false) {
   const m = mastery(), t = ymd(), weekend = dayRank();
   const cutoff = ymd(addDays(new Date(), -14));
-  const open = DATA.exercises.filter(unlocked);
+  const open = DATA.exercises.filter(unlocked).filter((e) => !short || e.minutes <= 5);
   const cand = open.filter((e) => !S.done[e.id] || S.done[e.id] < cutoff);
   const pool = cand.length ? cand : (open.length ? open : DATA.exercises);
   const w = pool.map((e) => (1.2 - (m[e.course] ?? 0)) * (S.done[e.id] ? 0.4 : 1) * (weekend && e.course === 'recherche' ? 3 : 1));
@@ -237,9 +240,9 @@ function chooseExercise(salt = 0) {
   return pool[pool.length - 1];
 }
 function mountExo(el) {
-  let salt = 0;
+  let salt = 0, short = false;
   const draw = () => {
-    const e = chooseExercise(salt);
+    const e = chooseExercise(salt, short);
     el.innerHTML = '';
     if (!e) { el.append(h('div', { class: 'dojo-panel' }, 'Aucun exercice dans le catalogue.')); return; }
     const done = h('div', { class: 'dojo-done', 'data-id': e.id });
@@ -251,6 +254,7 @@ function mountExo(el) {
       h('h4', { style: 'margin:.6rem 0' }, e.title),
       h('a', { class: 'dojo-btn primary', href: new URL(`${e.page}#${e.id}`, ROOT).href, style: 'text-decoration:none;display:inline-block' }, 'Ouvrir l\'exercice'),
       h('button', { class: 'dojo-btn', onclick: () => { salt++; draw(); } }, '🎲 Un autre'),
+      h('button', { class: 'dojo-btn', title: 'Un échauffement de 5 minutes maximum', onclick: () => { short = !short; salt++; draw(); } }, short ? '↩ Tous les exercices' : '⚡ Plus court (≤ 5 min)'),
       h('p', { class: 'dojo-meta', style: 'margin:.7rem 0 .3rem' }, dayRank() ? 'Week-end : la recherche est mise en avant.' : 'Choisi selon tes points faibles (radar « Progression »).'),
       done));
     mountDone(done);
@@ -271,7 +275,9 @@ function mountTrack(el) {
       const a = h('a', { href: here ? `#${x.id}` : new URL(`${x.page}#${x.id}`, ROOT).href }, x.title);
       return h('li', { class: S.done[x.id] ? 'ok' : (unlocked(x) ? 'next' : '') }, S.done[x.id] ? '✔ ' : '', a,
         h('span', { class: 'dojo-meta' }, ` · ${'★'.repeat(x.level)}`));
-    }))));
+    })),
+    PREP[t] ? h('p', { class: 'dojo-meta', style: 'margin:.6rem 0 0' }, 'Une marche te paraît trop haute ? ',
+      h('a', { href: new URL(`parcours/minis.html#${PREP[t]}`, ROOT).href }, `Fais d'abord les échauffements (${trackOf(PREP[t]).length} mini-exercices, 2 à 5 min)`), '.') : ''));
 }
 
 // ------------------------------------------------------------------ défi de la semaine

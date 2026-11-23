@@ -7,6 +7,10 @@ subtitle: "MCO, endogénéité, inférence : démonstrations par simulation"
 
 Pour chaque notion : un **processus générateur de données connu**, donc une vérité à retrouver. C'est la meilleure façon de garder l'intuition des biais en tête. Les graines changent chaque jour.
 
+::: {.callout-tip}
+**Une marche te paraît trop haute ?** Fais d'abord les [échauffements](minis.qmd) : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page *Aujourd'hui* te propose aussi un exercice court.
+:::
+
 {{< include ../_ojs.qmd >}}
 
 ::: {.dojo-track data-track="eco"}
