@@ -56,9 +56,9 @@ Une ville compte 6 quartiers. Les vecteurs `a` (groupe A) et `b` (groupe B) donn
 #|   - seg0
 set.seed(seg0$seed)
 a <- sample(5:80, 6); b <- sample(5:80, 6)
-pa <- ______      # part du groupe A vivant dans chaque quartier : a / sum(a)
+pa <- ______      # répartition du groupe A entre les quartiers
 pb <- ______      # idem pour le groupe B
-D  <- ______      # 0,5 * somme des valeurs absolues des écarts de parts
+D  <- ______      # indice de dissimilarité : demi-somme des écarts entre les deux répartitions
 c(D = D, quartier_max = which.max(abs(pa - pb)))
 ```
 
@@ -95,6 +95,8 @@ pb <- b / sum(b)                   # répartition du groupe B
 D  <- 0.5 * sum(abs(pa - pb))
 c(D = D, quartier_max = which.max(abs(pa - pb)))
 ```
+
+**Lecture économique.** L'indice de dissimilarité mesure la part d'un groupe qui devrait déménager pour que les deux groupes aient la même répartition entre quartiers. C'est un indice d'**uniformité** : il ne dit rien de l'exposition réelle d'un groupe à l'autre. Sa valeur dépend du découpage en quartiers.
 
 **Pièges fréquents.**
 
@@ -148,7 +150,7 @@ tab <- seg_sim_city(U = 40, size = 150, p = 0.3, kappa = seg1$kappa, seed = seg1
 
 my_D <- function(tab) {
   a <- tab[, 1]; b <- tab[, 2]
-  ______     # 0,5 * somme des valeurs absolues des écarts de parts
+  ______     # indice de dissimilarité : demi-somme des écarts entre les deux répartitions
 }
 c(mon_D = my_D(tab), seg_D = seg_D(tab))
 ```
@@ -188,6 +190,8 @@ my_D <- function(tab) {
 }
 c(mon_D = my_D(tab), seg_D = seg_D(tab))
 ```
+
+**Lecture économique.** Coder l'indice D soi-même permet de voir ce qu'il compare : deux répartitions entre unités. Il est invariant à la taille totale des groupes, mais pas à leur découpage spatial (voir le problème de l'unité spatiale modifiable). On le complète par des indices d'exposition ou d'entropie.
 
 **Pièges fréquents.**
 
@@ -237,7 +241,7 @@ seg00 = { const g = rng("seg-m-0", salt); return { p: g.pick([0.1, 0.2, 0.3, 0.4
 #|   - seg00
 entropie <- function(p) {
   p <- p[p > 0]                  # convention 0 * log(0) = 0
-  ______                         # - somme des p * log(p)
+  ______                         # entropie de la composition (indice de diversité)
 }
 p <- seg00$p
 c(separee = entropie(c(1, 0)), deux_groupes = entropie(c(p, 1 - p)),
@@ -277,6 +281,8 @@ p <- seg00$p
 c(separee = entropie(c(1, 0)), deux_groupes = entropie(c(p, 1 - p)),
   egal2 = entropie(c(0.5, 0.5)), egal3 = entropie(rep(1 / 3, 3)))
 ```
+
+**Lecture économique.** L'entropie mesure la diversité d'une composition : maximale quand les groupes sont à parts égales, nulle quand un seul groupe est présent. C'est la brique de l'indice d'information mutuelle : la ségrégation est le fait que la diversité à l'intérieur des unités soit plus faible que la diversité de la ville.
 
 **Pièges fréquents.**
 
@@ -335,7 +341,7 @@ tab3 <- matrix(rpois(8 * 3, 25) + 1, 8, 3)       # 8 unités, 3 groupes
 entropie <- function(p) { p <- p[p > 0]; -sum(p * log(p)) }
 my_M <- function(tab) {
   E  <- ______          # entropie de la composition globale (parts des colonnes)
-  Ei <- ______          # entropie de chaque unité : apply(parts par ligne, 1, entropie)
+  Ei <- ______          # entropie de la composition de chaque unité (ligne par ligne)
   ti <- ______          # part de chaque unité dans la population totale
   E - sum(ti * Ei)
 }
@@ -381,6 +387,8 @@ my_M <- function(tab) {
 }
 c(mon_M = my_M(tab3), seg_M = seg_M(tab3))
 ```
+
+**Lecture économique.** L'indice M compare la diversité de la ville à celle de chaque unité. Il se décompose exactement entre zones et à l'intérieur des zones, ce qui permet de dire où se situe la ségrégation (entre arrondissements ou entre quartiers d'un même arrondissement). Cette propriété le rend utile pour comparer des villes ou des dates.
 
 **Pièges fréquents.**
 
@@ -466,6 +474,8 @@ res <- sapply(tailles, function(s) {
 round(res, 3)
 ```
 
+**Lecture économique.** Avec de petites unités, le hasard seul produit des écarts de composition : D et M sont positifs même sans ségrégation. Ce biais est fort pour de petites unités, de petits groupes ou des écoles, et peut faire croire à tort que la ségrégation a augmenté quand les unités rétrécissent. Les corrections par simulation (benchmark aléatoire) sont donc standard.
+
 **Pièges fréquents.**
 
 - Lire un D de 0,25 comme une « forte ségrégation » sans le comparer au D attendu sous H0.
@@ -516,10 +526,10 @@ source("R/segregation.R")
 tab <- seg_sim_city(U = 12, size = 80, p = 0.4, kappa = 3, seed = seg4$seed)
 zone <- rep(c("nord", "centre", "sud"), each = 4)
 
-agg <- ______                        # effectifs agrégés par zone : rowsum(tab, zone)
+agg <- ______                        # regroupe les unités par zone
 M_inter <- seg_M(agg)
 N_r <- ______                        # population de chaque zone (même ordre que agg)
-M_r <- ______                        # M dans chaque zone : sapply(split(seq_len(nrow(tab)), zone), function(i) seg_M(tab[i, , drop = FALSE]))
+M_r <- ______                        # M à l'intérieur de chaque zone (applique seg_M à chaque sous-tableau)
 M_intra <- sum(N_r / sum(N_r) * M_r)
 c(inter = M_inter, intra = M_intra, total = M_inter + M_intra, direct = seg_M(tab))
 ```
@@ -561,6 +571,8 @@ M_r <- sapply(split(seq_len(nrow(tab)), zone), function(i) seg_M(tab[i, , drop =
 M_intra <- sum(N_r / sum(N_r) * M_r)
 c(inter = M_inter, intra = M_intra, total = M_inter + M_intra, direct = seg_M(tab))
 ```
+
+**Lecture économique.** Décomposer M entre et intra zones répond à la question : la ségrégation tient-elle à la différence entre zones (grandes frontières) ou à l'intérieur (micro-ségrégation) ? Le terme inter est la ségrégation qui subsiste si l'on agrège ; le terme intra est celle que l'agrégation efface (voir MAUP).
 
 **Pièges fréquents.**
 

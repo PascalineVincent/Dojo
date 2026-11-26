@@ -99,3 +99,42 @@
 - {id: m-hi-2, course: histoire, level: 2, minutes: 4, xp: 8, title: "Quelle décennie a connu la plus forte croissance ?", page: parcours/minis.html, track: mini-hist, step: 2}
 - {id: m-hi-3, course: histoire, level: 1, minutes: 3, xp: 8, title: "La diffusion du téléphone en 1951", page: parcours/minis.html, track: mini-hist, step: 3}
 - {id: m-hi-4, course: histoire, level: 3, minutes: 6, xp: 15, title: "Évaluer une loi : la ceinture de sécurité", page: parcours/minis.html, track: mini-hist, step: 4}
+- {id: a-tab-1, course: r, level: 1, minutes: 6, xp: 12, title: "Un tableau trié et arrondi", page: parcours/atelier.html, track: lire-tab, step: 1}
+- {id: a-tab-2, course: r, level: 2, minutes: 6, xp: 15, title: "Un tableau croisé en pourcentages", page: parcours/atelier.html, track: lire-tab, step: 2}
+- {id: a-tab-3, course: r, level: 2, minutes: 8, xp: 18, title: "Un tableau de moyennes par groupe", page: parcours/atelier.html, track: lire-tab, step: 3}
+- {id: a-tab-4, course: r, level: 2, minutes: 8, xp: 18, title: "Ajouter une colonne calculée et classer", page: parcours/atelier.html, track: lire-tab, step: 4}
+- {id: a-tab-5, course: r, level: 3, minutes: 8, xp: 22, title: "Formater un nombre pour une publication", page: parcours/atelier.html, track: lire-tab, step: 5}
+- {id: a-tab-6, course: r, level: 3, minutes: 12, xp: 30, title: "Un tableau de régression prêt à publier", page: parcours/atelier.html, track: lire-tab, step: 6}
+- {id: a-bug-1, course: r, level: 1, minutes: 3, xp: 8, title: "Trouve l'erreur : objet introuvable", page: parcours/atelier.html, track: lire-debug, step: 1}
+- {id: a-bug-2, course: r, level: 1, minutes: 3, xp: 8, title: "Trouve l'erreur : la virgule oubliée", page: parcours/atelier.html, track: lire-debug, step: 2}
+- {id: a-bug-3, course: r, level: 2, minutes: 4, xp: 10, title: "Trouve l'erreur : égalité ou affectation", page: parcours/atelier.html, track: lire-debug, step: 3}
+- {id: a-bug-4, course: r, level: 2, minutes: 4, xp: 10, title: "Trouve l'erreur : valeurs manquantes", page: parcours/atelier.html, track: lire-debug, step: 4}
+- {id: a-bug-5, course: r, level: 3, minutes: 6, xp: 12, title: "Trouve l'erreur : vecteurs de longueurs différentes", page: parcours/atelier.html, track: lire-debug, step: 5}
+- {id: a-lire-1, course: econometrie, level: 1, minutes: 5, xp: 12, title: "Lire un coefficient de régression", page: parcours/atelier.html, track: lire-sortie, step: 1}
+- {id: a-lire-2, course: econometrie, level: 2, minutes: 5, xp: 15, title: "Lire une p-value", page: parcours/atelier.html, track: lire-sortie, step: 2}
+- {id: a-lire-3, course: econometrie, level: 2, minutes: 5, xp: 15, title: "Lire un intervalle de confiance", page: parcours/atelier.html, track: lire-sortie, step: 3}
+- {id: a-lire-4, course: stats, level: 3, minutes: 8, xp: 20, title: "Un écart global qui se retourne (Simpson)", page: parcours/atelier.html, track: lire-sortie, step: 4}
+- {id: a-lire-5, course: econometrie, level: 2, minutes: 6, xp: 15, title: "R², R² ajusté et variables ajoutées", page: parcours/atelier.html, track: lire-sortie, step: 5}
+- {id: a-lire-6, course: econometrie, level: 3, minutes: 6, xp: 18, title: "Un test de normalité des résidus", page: parcours/atelier.html, track: lire-sortie, step: 6}
+- {id: a-lire-7, course: stats, level: 3, minutes: 6, xp: 18, title: "Corrélation en niveaux et en variations", page: parcours/atelier.html, track: lire-sortie, step: 7}
+- {id: a-lire-8, course: stats, level: 3, minutes: 6, xp: 18, title: "Comparer trois groupes : l'ANOVA", page: parcours/atelier.html, track: lire-sortie, step: 8}
+- {id: a-gra-1, course: recherche, level: 2, minutes: 5, xp: 15, title: "Lire une courbe de Lorenz", page: parcours/atelier.html, track: lire-graph, step: 1}
+- {id: a-gra-2, course: stats, level: 2, minutes: 5, xp: 15, title: "Lire un histogramme asymétrique", page: parcours/atelier.html, track: lire-graph, step: 2}
+- {id: a-gra-3, course: econometrie, level: 2, minutes: 5, xp: 15, title: "Lire un nuage de points et sa droite", page: parcours/atelier.html, track: lire-graph, step: 3}
+- {id: a-gra-4, course: histoire, level: 3, minutes: 6, xp: 18, title: "Lire une échelle logarithmique", page: parcours/atelier.html, track: lire-graph, step: 4}
+- {id: a-gra-5, course: stats, level: 2, minutes: 5, xp: 15, title: "Lire des boîtes à moustaches", page: parcours/atelier.html, track: lire-graph, step: 5}
+- {id: a-gra-6, course: econometrie, level: 4, minutes: 8, xp: 22, title: "Lire un graphique de résidus", page: parcours/atelier.html, track: lire-graph, step: 6}
+- {id: a-red-1, course: econometrie, level: 2, minutes: 8, xp: 20, title: "Rédiger l'interprétation d'un coefficient", page: parcours/atelier.html, track: lire-rediger, step: 1}
+- {id: a-red-2, course: econometrie, level: 3, minutes: 8, xp: 22, title: "Rédiger la conclusion d'un test", page: parcours/atelier.html, track: lire-rediger, step: 2}
+- {id: a-red-3, course: stats, level: 3, minutes: 8, xp: 22, title: "Rédiger une mise en garde (paradoxe de Simpson)", page: parcours/atelier.html, track: lire-rediger, step: 3}
+- {id: a-red-4, course: stats, level: 2, minutes: 6, xp: 18, title: "Rédiger la lecture d'une distribution asymétrique", page: parcours/atelier.html, track: lire-rediger, step: 4}
+- {id: a-red-5, course: econometrie, level: 3, minutes: 8, xp: 22, title: "Rédiger l'incertitude d'une estimation", page: parcours/atelier.html, track: lire-rediger, step: 5}
+- {id: v-sta-1, course: stats, level: 4, minutes: 10, xp: 40, title: "Bootstrap de la médiane", page: parcours/avance.html, track: stats-avance, step: 1, after: stats-tests}
+- {id: v-sta-2, course: stats, level: 4, minutes: 12, xp: 40, title: "Puissance d'un test par simulation", page: parcours/avance.html, track: stats-avance, step: 2, after: stats-tests}
+- {id: v-sta-3, course: stats, level: 4, minutes: 12, xp: 40, title: "Corriger les tests multiples", page: parcours/avance.html, track: stats-avance, step: 3, after: stats-tests}
+- {id: v-sta-4, course: stats, level: 5, minutes: 15, xp: 45, title: "Le p-hacking par simulation", page: parcours/avance.html, track: stats-avance, step: 4, after: stats-tests}
+- {id: v-eco-1, course: econometrie, level: 5, minutes: 15, xp: 45, title: "Effets fixes : l'estimateur intra", page: parcours/avance.html, track: eco-avance, step: 1, after: eco}
+- {id: v-eco-2, course: econometrie, level: 5, minutes: 15, xp: 45, title: "Différence de différences", page: parcours/avance.html, track: eco-avance, step: 2, after: eco}
+- {id: v-eco-3, course: econometrie, level: 5, minutes: 18, xp: 55, title: "Variable instrumentale et instrument faible", page: parcours/avance.html, track: eco-avance, step: 3, after: eco}
+- {id: v-mic-1, course: micro, level: 4, minutes: 12, xp: 40, title: "Cournot avec libre entrée", page: parcours/avance.html, track: micro-avance, step: 1, after: micro-cpp}
+- {id: v-mic-2, course: micro, level: 5, minutes: 15, xp: 45, title: "Trop d'entrée : optimum social", page: parcours/avance.html, track: micro-avance, step: 2, after: micro-cpp}

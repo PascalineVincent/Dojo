@@ -1,0 +1,2409 @@
+---
+title: "Atelier : tableaux, débogage, lecture et rédaction"
+subtitle: "Pas seulement calculer : produire, corriger, lire, expliquer"
+---
+
+{{< include ../_extensions/r-wasm/live/_knitr.qmd >}}
+
+Ici, on s'exerce aux gestes du métier autres que « trouver le bon nombre » : **fabriquer et mettre en forme un tableau**, **trouver l'erreur** dans un code, **interpréter une sortie** ou **un graphique** (avec un retour détaillé pour chaque mauvaise réponse), et **rédiger** l'interprétation d'un résultat (le correcteur vérifie que ta phrase contient les éléments attendus).
+
+Les réponses à choix se donnent par une **lettre** entre guillemets. Chaque mauvaise réponse a son explication : lis-la, elle est faite pour comprendre le piège.
+
+
+# Fabriquer et mettre en forme un tableau {#lire-tab}
+
+::: {.dojo-track data-track="lire-tab"}
+:::
+
+## Un tableau trié et arrondi {#a-tab-1}
+
+[Marche 1 sur 6 · Guidé]{.dojo-step}
+
+`euro` donne la valeur d'un euro en monnaies nationales (parités fixées en 1998). Construis un tableau (`data.frame`) à deux colonnes, `monnaie` (le nom) et `parite` (la valeur arrondie à **3 décimales**), trié de la parité la **plus élevée à la plus faible**. Renvoie le tableau.
+
+```{webr}
+#| exercise: a-tab-1
+#| caption: "Un tableau trié et arrondi"
+tab <- data.frame(monnaie = names(euro), parite = ______)     # arrondi à 3 décimales
+tab <- tab[______, ]                                          # ordre décroissant des parités
+tab
+```
+
+::: {.hint exercise="a-tab-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Pour trier un tableau, on réordonne ses **lignes** avec un vecteur de positions : `tab[positions, ]`. Une fonction fournit ces positions à partir d'une colonne.
+:::
+:::
+
+::: {.hint exercise="a-tab-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`round(unname(euro), 3)` ; `order(tab$parite, decreasing = TRUE)` renvoie les positions triées, à placer **avant** la virgule dans les crochets.
+:::
+:::
+
+::: {.solution exercise="a-tab-1"}
+**Raisonnement.**
+
+1. `order()` renvoie des **positions**, pas des valeurs triées (c'est `sort()` qui trie des valeurs).
+2. Placées avant la virgule, ces positions réordonnent les lignes ; la colonne vide après la virgule garde toutes les colonnes.
+3. `unname()` retire les noms du vecteur pour éviter qu'ils ne deviennent des noms de lignes.
+
+**Lecture économique.** Une parité élevée ne signifie pas une monnaie « faible » ou « forte » au sens économique : ces valeurs reflètent surtout les niveaux de prix et les conventions historiques, fixés lors de la conversion. Le nombre d'unités par euro dit peu de chose sur la richesse d'un pays.
+
+```{webr}
+#| exercise: a-tab-1
+#| solution: true
+tab <- data.frame(monnaie = names(euro), parite = round(unname(euro), 3))
+tab <- tab[order(tab$parite, decreasing = TRUE), ]
+tab
+```
+
+**Pièges fréquents.**
+
+- `sort(tab$parite)` à la place de `order(...)` : on obtient des valeurs triées, pas un réordonnancement de lignes.
+- Oublier la virgule : `tab[order(...)]` réordonne les colonnes, pas les lignes.
+
+**Pour aller plus loin.** Trie par ordre alphabétique de `monnaie` avec `order(tab$monnaie)` et compare.
+:::
+
+```{webr}
+#| exercise: a-tab-1
+#| check: true
+ref <- {t <- data.frame(monnaie = names(euro), parite = round(unname(euro), 3)); t[order(t$parite, decreasing = TRUE), ]}
+res <- .result
+same <- function(a, b) if (is.numeric(b)) isTRUE(all.equal(as.numeric(a), b, tolerance = 1e-06)) else identical(as.character(a), as.character(b))
+if (!is.data.frame(res)) {
+  list(correct = FALSE, message = "Renvoie un data.frame (la dernière ligne du bloc doit être le tableau).")
+} else if (!identical(names(res), names(ref))) {
+  list(correct = FALSE, message = paste0("Colonnes attendues, dans cet ordre : ", paste(names(ref), collapse = ", "), "."))
+} else if (nrow(res) != nrow(ref)) {
+  list(correct = FALSE, message = sprintf("%d lignes attendues, %d obtenues. Pense à trier avec `order()` et à arrondir avec `round()`.", nrow(ref), nrow(res)))
+} else if (length(bad <- names(ref)[!mapply(same, res, ref)])) {
+  list(correct = FALSE, message = paste0("Colonne(s) incorrecte(s) : ", paste(bad, collapse = ", "), ". Pense à trier avec `order()` et à arrondir avec `round()`."))
+} else {
+  list(correct = TRUE, message = "Correct : le tableau est trié,la lire italienne est en tête avec plus de 1 900 lires par euro.")
+}
+```
+
+::: {.dojo-done data-id="a-tab-1"}
+:::
+
+## Un tableau croisé en pourcentages {#a-tab-2}
+
+[Marche 2 sur 6 · À compléter]{.dojo-step}
+
+Avec les admissions agrégées de Berkeley (`adm`, admission × sexe), construis le tableau des **pourcentages par colonne** (la somme de chaque colonne fait 100) arrondis à **1 décimale**. Renvoie la matrice.
+
+```{webr}
+#| exercise: a-tab-2
+#| caption: "Un tableau croisé en pourcentages"
+adm <- apply(UCBAdmissions, c(1, 2), sum)
+pct <- ______(adm, 2)     # proportions calculées colonne par colonne
+round(100 * pct, 1)
+```
+
+::: {.hint exercise="a-tab-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Une proportion se calcule en divisant chaque case par un total. `prop.table()` le fait pour toi, mais il faut lui dire par rapport à quoi : le tableau entier, les lignes ou les colonnes.
+:::
+:::
+
+::: {.hint exercise="a-tab-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`prop.table(adm, 2)` divise chaque case par le total de **sa colonne** (donc par le nombre de candidats de chaque sexe). Avec `1`, ce serait par ligne.
+:::
+:::
+
+::: {.solution exercise="a-tab-2"}
+**Raisonnement.**
+
+1. Pour comparer les taux d'admission des deux sexes, le total de référence doit être le nombre de candidats de chaque sexe : on raisonne **par colonne**.
+2. `prop.table(adm)` sans second argument divise par le total général : ce n'est pas un taux d'admission.
+3. Le résultat se lit en colonne : 44,5 % des hommes sont admis, contre 30,4 % des femmes.
+
+**Lecture économique.** Le choix du dénominateur change la question posée : « parmi les candidats, quelle part est admise ? » (par colonne) n'est pas « parmi les admis, quelle part est féminine ? » (par ligne). Les deux sont légitimes, mais ne répondent pas à la même question.
+
+```{webr}
+#| exercise: a-tab-2
+#| solution: true
+adm <- apply(UCBAdmissions, c(1, 2), sum)
+pct <- prop.table(adm, 2)
+round(100 * pct, 1)
+```
+
+**Pièges fréquents.**
+
+- `prop.table(adm, 1)` : proportions par ligne, qui répondent à une autre question.
+- Oublier `100 *` : on obtient des proportions entre 0 et 1.
+
+**Pour aller plus loin.** Calcule les mêmes pourcentages par ligne et rédige une phrase pour chacun des deux tableaux.
+:::
+
+```{webr}
+#| exercise: a-tab-2
+#| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
+ref <- as.numeric(round(100 * prop.table(apply(UCBAdmissions, c(1, 2), sum), 2), 1))
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un résultat numérique de la bonne longueur (dernière ligne du bloc).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = paste0("Utilise `prop.table(adm, 2)` : le 2 signifie « par colonne » (1 = par ligne).", .diag(res, ref)))
+} else {
+  list(correct = TRUE, message = "Correct : 44,5 % des hommes mais 30,4 % des femmes sont admis (tous départements confondus).")
+}
+```
+
+::: {.dojo-done data-id="a-tab-2"}
+:::
+
+## Un tableau de moyennes par groupe {#a-tab-3}
+
+[Marche 3 sur 6 · À compléter]{.dojo-step}
+
+À partir des États américains (`state.x77`, région dans `state.region`), construis un tableau avec, pour chaque région, la **moyenne du revenu** (`Income`) et la **moyenne de l'analphabétisme** (`Illiteracy`). Les colonnes doivent s'appeler `region`, `Income` et `Illiteracy`, avec les régions dans l'ordre : Northeast, South, North Central, West.
+
+```{webr}
+#| exercise: a-tab-3
+#| caption: "Un tableau de moyennes par groupe"
+d <- as.data.frame(state.x77)
+d$region <- state.region
+aggregate(______ ~ region, data = d, FUN = mean)     # deux variables à résumer à la fois
+```
+
+::: {.hint exercise="a-tab-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`aggregate()` accepte une formule `variables ~ groupe`. Pour résumer **plusieurs** variables à la fois, on les regroupe à gauche avec une fonction qui les assemble en colonnes.
+:::
+:::
+
+::: {.hint exercise="a-tab-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`cbind(Income, Illiteracy) ~ region` : `cbind()` assemble les deux variables ; `FUN = mean` leur applique la moyenne dans chaque région.
+:::
+:::
+
+::: {.solution exercise="a-tab-3"}
+**Raisonnement.**
+
+1. `aggregate(y ~ g, data, FUN)` calcule la fonction pour chaque modalité de `g` et renvoie directement un data.frame (contrairement à `tapply`, qui renvoie un vecteur).
+2. Avec plusieurs variables, `cbind(v1, v2)` à gauche du tilde produit une colonne de résultats par variable.
+3. L'ordre des régions suit celui des niveaux du facteur `state.region`.
+
+**Lecture économique.** Les régions les plus riches ne sont pas celles où l'analphabétisme est le plus bas : l'Ouest cumule revenu élevé et analphabétisme proche du Nord-Est, tandis que le Sud cumule faible revenu et fort analphabétisme. Un tableau de moyennes révèle la **corrélation entre indicateurs au niveau des groupes**, sans dire pourquoi.
+
+```{webr}
+#| exercise: a-tab-3
+#| solution: true
+d <- as.data.frame(state.x77)
+d$region <- state.region
+aggregate(cbind(Income, Illiteracy) ~ region, data = d, FUN = mean)
+```
+
+**Pièges fréquents.**
+
+- Écrire `aggregate(Income + Illiteracy ~ region, ...)` : le `+` est une syntaxe de régression, pas de résumé.
+- Oublier `data = d` : R cherche `Income` dans l'environnement.
+
+**Pour aller plus loin.** Ajoute le nombre d'États par région avec `FUN = length` pour une seule variable.
+:::
+
+```{webr}
+#| exercise: a-tab-3
+#| check: true
+ref <- {d <- as.data.frame(state.x77); d$region <- state.region; r <- do.call(rbind, lapply(levels(state.region), function(g) data.frame(region = g, Income = mean(d$Income[d$region == g]), Illiteracy = mean(d$Illiteracy[d$region == g])))); r}
+res <- .result
+same <- function(a, b) if (is.numeric(b)) isTRUE(all.equal(as.numeric(a), b, tolerance = 1e-06)) else identical(as.character(a), as.character(b))
+if (!is.data.frame(res)) {
+  list(correct = FALSE, message = "Renvoie un data.frame (la dernière ligne du bloc doit être le tableau).")
+} else if (!identical(names(res), names(ref))) {
+  list(correct = FALSE, message = paste0("Colonnes attendues, dans cet ordre : ", paste(names(ref), collapse = ", "), "."))
+} else if (nrow(res) != nrow(ref)) {
+  list(correct = FALSE, message = sprintf("%d lignes attendues, %d obtenues. Utilise `aggregate(cbind(var1, var2) ~ groupe, data, FUN)`.", nrow(ref), nrow(res)))
+} else if (length(bad <- names(ref)[!mapply(same, res, ref)])) {
+  list(correct = FALSE, message = paste0("Colonne(s) incorrecte(s) : ", paste(bad, collapse = ", "), ". Utilise `aggregate(cbind(var1, var2) ~ groupe, data, FUN)`."))
+} else {
+  list(correct = TRUE, message = "Correct : l'Ouest a le revenu moyen le plus élevé (4 703), le Sud le plus faible (4 012) et le plus fort analphabétisme (1,74 %).")
+}
+```
+
+::: {.dojo-done data-id="a-tab-3"}
+:::
+
+## Ajouter une colonne calculée et classer {#a-tab-4}
+
+[Marche 4 sur 6 · À compléter]{.dojo-step}
+
+Dans `state.x77`, `Population` est en milliers d'habitants et `Area` en miles carrés. Ajoute une colonne `densite` (habitants par mile carré) puis renvoie, dans l'ordre, les **noms des 5 États les plus denses**.
+
+```{webr}
+#| exercise: a-tab-4
+#| caption: "Ajouter une colonne calculée et classer"
+d <- as.data.frame(state.x77)
+d$densite <- ______     # habitants (pas en milliers) par mile carré
+top <- d[order(-d$densite), ]
+rownames(top)[1:5]
+```
+
+::: {.hint exercise="a-tab-4"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Une densité est un rapport entre deux colonnes : habitants divisés par superficie. Fais attention à l'**unité** de la population (milliers).
+:::
+:::
+
+::: {.hint exercise="a-tab-4"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`d$Population * 1000 / d$Area` ; le signe moins dans `order(-d$densite)` trie en ordre décroissant.
+:::
+:::
+
+::: {.solution exercise="a-tab-4"}
+**Raisonnement.**
+
+1. `Population` est exprimée en milliers : sans conversion, les densités seraient 1 000 fois trop faibles (le classement resterait le même, mais pas les valeurs).
+2. `order(-x)` trie en ordre décroissant des valeurs numériques.
+3. `rownames(top)` donne les noms d'États car le jeu de données les stocke comme noms de lignes.
+
+**Lecture économique.** La densité place en tête de petits États du Nord-Est (New Jersey, Rhode Island…) : un classement par densité met en avant la **concentration spatiale**, très différente du classement par population totale (Californie, New York). Le choix de l'indicateur oriente le récit.
+
+```{webr}
+#| exercise: a-tab-4
+#| solution: true
+d <- as.data.frame(state.x77)
+d$densite <- d$Population * 1000 / d$Area
+top <- d[order(-d$densite), ]
+rownames(top)[1:5]
+```
+
+**Pièges fréquents.**
+
+- Oublier la conversion des milliers en habitants : les valeurs sont fausses même si l'ordre est correct.
+- `order(d$densite)` sans signe moins : on obtient les 5 États les moins denses.
+
+**Pour aller plus loin.** Compare avec le classement par population totale : quels États changent de rang ?
+:::
+
+```{webr}
+#| exercise: a-tab-4
+#| check: true
+ref <- {d <- as.data.frame(state.x77); rownames(d)[order(-(d$Population * 1000 / d$Area))][1:5]}
+res <- trimws(as.character(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un vecteur de texte (dernière ligne du bloc), de la bonne longueur.")
+} else if (!identical(res, as.character(ref))) {
+  list(correct = FALSE, message = "Convertis d'abord la population en habitants (× 1000), puis divise par la superficie.")
+} else {
+  list(correct = TRUE, message = "Correct : New Jersey, Rhode Island, Massachusetts, Connecticut, Maryland.")
+}
+```
+
+::: {.dojo-done data-id="a-tab-4"}
+:::
+
+## Formater un nombre pour une publication {#a-tab-5}
+
+[Marche 5 sur 6 · À compléter]{.dojo-step}
+
+Écris une phrase prête à publier pour la région au revenu moyen le plus élevé des États-Unis : `"<région> : revenu moyen <valeur> $ (<n> États)"`, où la valeur est arrondie à l'unité avec un **espace** comme séparateur de milliers (ex. `4 703`). Utilise `paste0`, `format` et `round`.
+
+```{webr}
+#| exercise: a-tab-5
+#| caption: "Formater un nombre pour une publication"
+d <- as.data.frame(state.x77); d$region <- state.region
+m <- tapply(d$Income, d$region, mean)
+r <- names(which.max(m))
+n <- sum(d$region == r)
+paste0(r, " : revenu moyen ", ______, " $ (", n, " États)")     # valeur arrondie, avec séparateur de milliers
+```
+
+::: {.hint exercise="a-tab-5"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`format(x, big.mark = " ")` insère le séparateur de milliers ; il faut d'abord arrondir à l'unité. `paste0()` assemble les morceaux sans espace supplémentaire.
+:::
+:::
+
+::: {.hint exercise="a-tab-5"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`format(round(m[[r]]), big.mark = " ")` : `m[[r]]` extrait la valeur sans nom, `round()` arrondit à l'unité.
+:::
+:::
+
+::: {.solution exercise="a-tab-5"}
+**Raisonnement.**
+
+1. `m[[r]]` récupère la valeur numérique de la région `r` (avec `[[`, sans le nom).
+2. `round()` supprime les décimales avant la mise en forme, sinon `format()` en affiche 7.
+3. `paste0()` concatène sans séparateur ; les espaces sont donc à mettre dans les chaînes.
+
+**Lecture économique.** Présenter un chiffre, c'est aussi décider de sa **précision** : afficher 4 702,615 donnerait une fausse impression de précision pour une moyenne de 13 États. Arrondir et séparer les milliers rendent le message lisible sans le déformer.
+
+```{webr}
+#| exercise: a-tab-5
+#| solution: true
+d <- as.data.frame(state.x77); d$region <- state.region
+m <- tapply(d$Income, d$region, mean)
+r <- names(which.max(m))
+n <- sum(d$region == r)
+paste0(r, " : revenu moyen ", format(round(m[[r]]), big.mark = " "), " $ (", n, " États)")
+```
+
+**Pièges fréquents.**
+
+- `format(m[[r]], big.mark = " ")` sans `round` : la valeur garde des décimales.
+- `paste(...)` au lieu de `paste0(...)` : des espaces parasites apparaissent.
+
+**Pour aller plus loin.** Utilise `sprintf("%.1f %%", x)` pour afficher un pourcentage à 1 décimale.
+:::
+
+```{webr}
+#| exercise: a-tab-5
+#| check: true
+ref <- "West : revenu moyen 4 703 $ (13 États)"
+res <- trimws(as.character(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un vecteur de texte (dernière ligne du bloc), de la bonne longueur.")
+} else if (!identical(res, as.character(ref))) {
+  list(correct = FALSE, message = "La phrase attendue est exactement : `West : revenu moyen 4 703 $ (13 États)` (vérifie l'espace des milliers et l'arrondi).")
+} else {
+  list(correct = TRUE, message = "Correct : la mise en forme est celle d'un tableau publiable.")
+}
+```
+
+::: {.dojo-done data-id="a-tab-5"}
+:::
+
+## Un tableau de régression prêt à publier {#a-tab-6}
+
+[Marche 6 sur 6 · Autonome]{.dojo-step}
+
+Estime `sr ~ ddpi` sur `LifeCycleSavings` et construis le tableau de résultats habituel dans les articles : colonnes `variable`, `coef`, `se`, `t`, `p` (arrondis à 3 décimales) et `signif` (`"***"` si p < 0,01 ; `"**"` si p < 0,05 ; `"*"` si p < 0,1 ; sinon `""`).
+
+```{webr}
+#| exercise: a-tab-6
+#| caption: "Un tableau de régression prêt à publier"
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+m <- summary(fit)$coefficients     # matrice : estimation, erreur-type, t, p
+tab <- data.frame(variable = rownames(m), coef = round(m[, 1], 3), se = round(m[, 2], 3),
+                  t = round(m[, 3], 3), p = round(m[, 4], 3), row.names = NULL)
+tab$signif <- ______     # étoiles selon la p-value (condition imbriquée)
+tab
+```
+
+::: {.hint exercise="a-tab-6"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`ifelse(condition, valeur_si_vrai, valeur_si_faux)` est vectorisé. Pour plus de deux cas, on **imbrique** : le « faux » contient un nouveau `ifelse`. Teste d'abord le seuil le plus strict.
+:::
+:::
+
+::: {.hint exercise="a-tab-6"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`ifelse(tab$p < 0.01, "***", ifelse(tab$p < 0.05, "**", ifelse(tab$p < 0.1, "*", "")))`.
+:::
+:::
+
+::: {.solution exercise="a-tab-6"}
+**Raisonnement.**
+
+1. `summary(fit)$coefficients` est une matrice à 4 colonnes : estimation, erreur-type, statistique t, p-value.
+2. On teste les seuils du plus strict (1 %) au plus large (10 %) : avec l'ordre inverse, tout p < 0,01 recevrait seulement une étoile.
+3. `row.names = NULL` évite que les noms des coefficients soient répétés comme noms de lignes.
+
+**Lecture économique.** Les étoiles résument la significativité, pas l'importance économique : un effet peut être « significatif » mais minuscule, ou important mais imprécis. Un lecteur critique regarde d'abord l'**ampleur** du coefficient et son intervalle de confiance, puis seulement l'étoile.
+
+```{webr}
+#| exercise: a-tab-6
+#| solution: true
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+m <- summary(fit)$coefficients
+tab <- data.frame(variable = rownames(m), coef = round(m[, 1], 3), se = round(m[, 2], 3),
+                  t = round(m[, 3], 3), p = round(m[, 4], 3), row.names = NULL)
+tab$signif <- ifelse(tab$p < 0.01, "***", ifelse(tab$p < 0.05, "**", ifelse(tab$p < 0.1, "*", "")))
+tab
+```
+
+**Pièges fréquents.**
+
+- Tester d'abord `p < 0.1` : toutes les p-values faibles recevraient une seule étoile.
+- Arrondir `p` à 3 décimales puis comparer : une p-value de 0,0049 devient 0,005 et peut changer de catégorie ; calcule les étoiles sur la valeur non arrondie en pratique.
+
+**Pour aller plus loin.** Ajoute une colonne avec l'intervalle de confiance à 95 % : `confint(fit)`.
+:::
+
+```{webr}
+#| exercise: a-tab-6
+#| check: true
+ref <- {f <- lm(sr ~ ddpi, LifeCycleSavings); m <- summary(f)$coefficients; t <- data.frame(variable = rownames(m), coef = round(m[, 1], 3), se = round(m[, 2], 3), t = round(m[, 3], 3), p = round(m[, 4], 3), row.names = NULL); t$signif <- ifelse(t$p < 0.01, '***', ifelse(t$p < 0.05, '**', ifelse(t$p < 0.1, '*', ''))); t}
+res <- .result
+same <- function(a, b) if (is.numeric(b)) isTRUE(all.equal(as.numeric(a), b, tolerance = 1e-06)) else identical(as.character(a), as.character(b))
+if (!is.data.frame(res)) {
+  list(correct = FALSE, message = "Renvoie un data.frame (la dernière ligne du bloc doit être le tableau).")
+} else if (!identical(names(res), names(ref))) {
+  list(correct = FALSE, message = paste0("Colonnes attendues, dans cet ordre : ", paste(names(ref), collapse = ", "), "."))
+} else if (nrow(res) != nrow(ref)) {
+  list(correct = FALSE, message = sprintf("%d lignes attendues, %d obtenues. Les étoiles viennent de conditions imbriquées sur `tab$p` : du seuil le plus strict au plus large.", nrow(ref), nrow(res)))
+} else if (length(bad <- names(ref)[!mapply(same, res, ref)])) {
+  list(correct = FALSE, message = paste0("Colonne(s) incorrecte(s) : ", paste(bad, collapse = ", "), ". Les étoiles viennent de conditions imbriquées sur `tab$p` : du seuil le plus strict au plus large."))
+} else {
+  list(correct = TRUE, message = "Correct : la pente de ddpi est significative à 5 % (p = 0,031), pas à 1 %.")
+}
+```
+
+::: {.dojo-done data-id="a-tab-6"}
+:::
+
+
+# Trouver l'erreur {#lire-debug}
+
+::: {.dojo-track data-track="lire-debug"}
+:::
+
+## Trouve l'erreur : objet introuvable {#a-bug-1}
+
+[Marche 1 sur 5 · Guidé]{.dojo-step}
+
+Ce code devait calculer le revenu moyen des États, mais il échoue avec `object 'Income' not found`. Réécris la ligne fautive pour qu'elle fonctionne.
+
+```r
+d <- as.data.frame(state.x77)
+mean(Income)     # ligne fautive
+```
+
+```{webr}
+#| exercise: a-bug-1
+#| caption: "Trouve l'erreur : objet introuvable"
+d <- as.data.frame(state.x77)
+______     # la ligne corrigée
+```
+
+::: {.hint exercise="a-bug-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+R cherche `Income` comme un objet isolé. Mais `Income` n'est pas un objet : c'est une colonne **d'un tableau**.
+:::
+:::
+
+::: {.hint exercise="a-bug-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+On désigne une colonne avec le nom du tableau, un `$` et le nom de la colonne : `d$Income`.
+:::
+:::
+
+::: {.solution exercise="a-bug-1"}
+**Raisonnement.**
+
+1. Quand une colonne vit dans un data.frame, on la désigne `tableau$colonne`.
+2. Le message `object 'Income' not found` signifie que R a cherché un objet de ce nom dans l'environnement sans le trouver.
+3. L'alternative est `with(d, mean(Income))`, qui évalue l'expression dans le tableau.
+
+**Lecture économique.** Savoir lire les messages d'erreur est une compétence de recherche : on gagne un temps considérable à identifier **la partie du message qui dit quoi**. Ici `not found` renvoie à un nom, pas à un calcul.
+
+```{webr}
+#| exercise: a-bug-1
+#| solution: true
+d <- as.data.frame(state.x77)
+mean(d$Income)
+```
+
+**Pièges fréquents.**
+
+- Écrire `mean(d[Income])` : même erreur, `Income` n'est pas défini.
+- Mettre des guillemets : `mean("Income")` renvoie `NA` et un avertissement.
+
+**Pour aller plus loin.** Essaie `with(d, mean(Income))` et `mean(d[["Income"]])` : trois écritures équivalentes.
+:::
+
+```{webr}
+#| exercise: a-bug-1
+#| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
+ref <- mean(as.data.frame(state.x77)$Income)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un résultat numérique de la bonne longueur (dernière ligne du bloc).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = paste0("Le résultat doit être le revenu moyen des 50 États : la colonne `Income` appartient au tableau `d`.", .diag(res, ref)))
+} else {
+  list(correct = TRUE, message = "Correct : le revenu moyen des États vaut 4 436 $ (données de 1974).")
+}
+```
+
+::: {.dojo-done data-id="a-bug-1"}
+:::
+
+## Trouve l'erreur : la virgule oubliée {#a-bug-2}
+
+[Marche 2 sur 5 · Guidé]{.dojo-step}
+
+On veut le nombre d'États à revenu supérieur à 5 000. Le code ci-dessous échoue avec `undefined columns selected`. Corrige la ligne.
+
+```r
+d <- as.data.frame(state.x77)
+nrow(d[d$Income > 5000])     # ligne fautive
+```
+
+```{webr}
+#| exercise: a-bug-2
+#| caption: "Trouve l'erreur : la virgule oubliée"
+d <- as.data.frame(state.x77)
+______     # la ligne corrigée
+```
+
+::: {.hint exercise="a-bug-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Dans un tableau, les crochets attendent deux positions : `[lignes, colonnes]`. Ici on filtre des lignes.
+:::
+:::
+
+::: {.hint exercise="a-bug-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+Il manque la virgule : `d[condition, ]` (la place des colonnes reste vide pour les garder toutes).
+:::
+:::
+
+::: {.solution exercise="a-bug-2"}
+**Raisonnement.**
+
+1. `d[condition]` sans virgule est lu comme un choix de **colonnes** : R cherche des colonnes inexistantes.
+2. `d[condition, ]` filtre les lignes.
+3. `sum(condition)` aurait suffi pour compter : TRUE vaut 1.
+
+**Lecture économique.** Filtrer des observations sur une condition est l'opération de base de toute analyse : un oubli de virgule peut passer inaperçu avec un vecteur, mais pas avec un tableau. Vérifier le nombre de lignes obtenu est un réflexe de **contrôle de cohérence**.
+
+```{webr}
+#| exercise: a-bug-2
+#| solution: true
+d <- as.data.frame(state.x77)
+nrow(d[d$Income > 5000, ])
+```
+
+**Pièges fréquents.**
+
+- `d[d$Income > 5000]` : colonnes, pas lignes.
+- `d[d$Income > 5000, ]` puis `length(...)` : `length` d'un data.frame renvoie le nombre de colonnes.
+
+**Pour aller plus loin.** Compte aussi les États à revenu inférieur à 4 000 avec `sum()`.
+:::
+
+```{webr}
+#| exercise: a-bug-2
+#| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
+ref <- sum(as.data.frame(state.x77)$Income > 5000)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un résultat numérique de la bonne longueur (dernière ligne du bloc).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = paste0("Il faut compter les lignes (États) qui vérifient la condition.", .diag(res, ref)))
+} else {
+  list(correct = TRUE, message = "Correct : 8 États ont un revenu supérieur à 5 000 $.")
+}
+```
+
+::: {.dojo-done data-id="a-bug-2"}
+:::
+
+## Trouve l'erreur : égalité ou affectation {#a-bug-3}
+
+[Marche 3 sur 5 · À compléter]{.dojo-step}
+
+On veut le revenu moyen des États du **Sud** (`state.region == "South"`). Ce code ne fait pas ce qu'on veut (il modifie des données !). Réécris la ligne fautive.
+
+```r
+d <- as.data.frame(state.x77); d$region <- state.region
+mean(d$Income[d$region = "South"])     # ligne fautive
+```
+
+```{webr}
+#| exercise: a-bug-3
+#| caption: "Trouve l'erreur : égalité ou affectation"
+d <- as.data.frame(state.x77); d$region <- state.region
+______     # la ligne corrigée
+```
+
+::: {.hint exercise="a-bug-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Un seul signe `=` est une **affectation**. Pour **tester** une égalité, R utilise un autre opérateur.
+:::
+:::
+
+::: {.hint exercise="a-bug-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`d$region == "South"` : deux signes égal.
+:::
+:::
+
+::: {.solution exercise="a-bug-3"}
+**Raisonnement.**
+
+1. `=` affecte une valeur ; `==` compare et renvoie TRUE/FALSE.
+2. Confondre les deux dans un filtre est l'une des erreurs les plus courantes.
+3. `d$Income[d$region == "South"]` sélectionne les revenus des seuls États du Sud ; `mean()` en fait la moyenne.
+
+**Lecture économique.** Comparer un sous-groupe à la moyenne nationale est un geste de base en économie régionale : le Sud (4 012 $) est ici sous la moyenne nationale (4 436 $). C'est une comparaison de **niveaux**, qui ne dit rien des causes (structure productive, prix, histoire).
+
+```{webr}
+#| exercise: a-bug-3
+#| solution: true
+d <- as.data.frame(state.x77); d$region <- state.region
+mean(d$Income[d$region == "South"])
+```
+
+**Pièges fréquents.**
+
+- `d$region = "South"` : affectation inattendue ou erreur selon le contexte.
+- `d$region == South` : sans guillemets, R cherche un objet `South`.
+
+**Pour aller plus loin.** Compare avec l'Ouest : calcule l'écart de revenu moyen entre Ouest et Sud.
+:::
+
+```{webr}
+#| exercise: a-bug-3
+#| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
+ref <- mean(state.x77[state.region == 'South', 'Income'])
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un résultat numérique de la bonne longueur (dernière ligne du bloc).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = paste0("Le résultat doit être le revenu moyen des États du Sud.", .diag(res, ref)))
+} else {
+  list(correct = TRUE, message = "Correct : le revenu moyen du Sud est de 4 012 $, inférieur à la moyenne nationale (4 436 $).")
+}
+```
+
+::: {.dojo-done data-id="a-bug-3"}
+:::
+
+## Trouve l'erreur : valeurs manquantes {#a-bug-4}
+
+[Marche 4 sur 5 · À compléter]{.dojo-step}
+
+Dans `airquality` (mesures quotidiennes à New York, mai à septembre 1973), on veut l'**ozone moyen** (`Ozone`, en ppb). Le code renvoie `NA`. Réécris la ligne pour obtenir la moyenne des valeurs **disponibles**.
+
+```r
+mean(airquality$Ozone)     # ligne fautive : renvoie NA
+```
+
+```{webr}
+#| exercise: a-bug-4
+#| caption: "Trouve l'erreur : valeurs manquantes"
+______     # la ligne corrigée
+```
+
+::: {.hint exercise="a-bug-4"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+La moindre valeur manquante (`NA`) rend le résultat d'une moyenne manquant. Une option de `mean()` demande d'ignorer ces valeurs.
+:::
+:::
+
+::: {.hint exercise="a-bug-4"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`mean(x, na.rm = TRUE)` : `na.rm` signifie « NA remove ».
+:::
+:::
+
+::: {.solution exercise="a-bug-4"}
+**Raisonnement.**
+
+1. Toute opération impliquant `NA` renvoie `NA`.
+2. `na.rm = TRUE` retire les valeurs manquantes avant de calculer.
+3. `sum(is.na(x))` compte les valeurs manquantes : à vérifier toujours avant de les ignorer.
+
+**Lecture économique.** Ignorer silencieusement des valeurs manquantes est une décision méthodologique : si les valeurs manquent **de façon non aléatoire** (par exemple, les capteurs tombent en panne quand l'ozone est élevé), la moyenne est biaisée. En économie, les non-réponses aux enquêtes de revenu posent le même problème.
+
+```{webr}
+#| exercise: a-bug-4
+#| solution: true
+mean(airquality$Ozone, na.rm = TRUE)
+```
+
+**Pièges fréquents.**
+
+- `mean(x, na.rm = T)` : fonctionne mais `T` peut être redéfini ; préfère `TRUE`.
+- Remplacer les `NA` par 0 : cela fausse la moyenne.
+
+**Pour aller plus loin.** Compte les jours manquants avec `sum(is.na(airquality$Ozone))`.
+:::
+
+```{webr}
+#| exercise: a-bug-4
+#| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
+ref <- mean(airquality$Ozone, na.rm = TRUE)
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un résultat numérique de la bonne longueur (dernière ligne du bloc).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = paste0("Le résultat doit être la moyenne de l'ozone en ignorant les valeurs manquantes.", .diag(res, ref)))
+} else {
+  list(correct = TRUE, message = "Correct : l'ozone moyen est de 42,1 ppb, calculé sur les mesures disponibles (116 sur 153 jours).")
+}
+```
+
+::: {.dojo-done data-id="a-bug-4"}
+:::
+
+## Trouve l'erreur : vecteurs de longueurs différentes {#a-bug-5}
+
+[Marche 5 sur 5 · Autonome]{.dojo-step}
+
+On veut le **taux de croissance annuel** du PIB (`GNP` de `longley`, en % par rapport à l'année précédente), puis sa moyenne. Ce code donne un avertissement de longueur et un résultat faux. Réécris la ligne.
+
+```r
+g <- longley$GNP
+croiss <- diff(g) / g * 100     # ligne fautive
+mean(croiss)
+```
+
+```{webr}
+#| exercise: a-bug-5
+#| caption: "Trouve l'erreur : vecteurs de longueurs différentes"
+g <- longley$GNP
+croiss <- ______     # la ligne corrigée
+mean(croiss)
+```
+
+::: {.hint exercise="a-bug-5"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`diff(g)` donne 15 valeurs, `g` en a 16. Pour une variation relative, chaque variation doit être divisée par la valeur de **départ** de la période.
+:::
+:::
+
+::: {.hint exercise="a-bug-5"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · le code
+`diff(g) / head(g, -1) * 100` : `head(g, -1)` retire le dernier élément, donc 15 valeurs.
+:::
+:::
+
+::: {.solution exercise="a-bug-5"}
+**Raisonnement.**
+
+1. `diff(g)` a une valeur de moins que `g`.
+2. Diviser un vecteur de 15 valeurs par un vecteur de 16 recycle le plus court : R avertit (`longer object length is not a multiple`) et aligne mal les années.
+3. Le bon dénominateur est le niveau de départ : `g[-length(g)]` ou `head(g, -1)`.
+
+**Lecture économique.** Une moyenne de taux annuels (arithmétique) n'est pas le taux de croissance moyen **composé** : sur la période, la croissance composée est plus faible si les taux fluctuent. Pour résumer une trajectoire de croissance, on préfère le taux composé ; la moyenne des taux est utile pour comparer des volatilités.
+
+```{webr}
+#| exercise: a-bug-5
+#| solution: true
+g <- longley$GNP
+croiss <- diff(g) / head(g, -1) * 100
+mean(croiss)
+```
+
+**Pièges fréquents.**
+
+- Diviser par `g` en entier : décalage et recyclage.
+- Oublier `* 100` : taux en proportion, pas en %.
+
+**Pour aller plus loin.** Compare avec le taux composé `((g[16] / g[1])^(1/15) - 1) * 100`.
+:::
+
+```{webr}
+#| exercise: a-bug-5
+#| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
+ref <- {g <- longley$GNP; mean(diff(g) / g[-length(g)] * 100)}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un résultat numérique de la bonne longueur (dernière ligne du bloc).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = paste0("La croissance de chaque année se rapporte au niveau de l'année **précédente** (15 taux pour 16 années).", .diag(res, ref)))
+} else {
+  list(correct = TRUE, message = "Correct : la croissance moyenne du GNP est de 6,0 % par an (moyenne arithmétique des 15 taux ; le taux composé est un peu plus faible, 5,9 %).")
+}
+```
+
+::: {.dojo-done data-id="a-bug-5"}
+:::
+
+
+# Interpréter une sortie de modèle ou de test {#lire-sortie}
+
+::: {.dojo-track data-track="lire-sortie"}
+:::
+
+## Lire un coefficient de régression {#a-lire-1}
+
+[Marche 1 sur 8 · Interpréter]{.dojo-step}
+
+Exécute le code : il estime le lien entre le taux d'épargne `sr` et la croissance `ddpi` dans 50 pays. Quelle phrase interprète **correctement** la pente de `ddpi` ?
+
+- **A.** Une hausse d'un point de croissance **fait augmenter** l'épargne de 0,476 point.
+- **B.** En moyenne, les pays dont la croissance est supérieure d'un point ont un taux d'épargne supérieur d'environ 0,48 point (association).
+- **C.** 47,6 % de l'épargne s'explique par la croissance.
+- **D.** Le coefficient n'est pas interprétable car le R² est faible.
+
+```{webr}
+#| exercise: a-lire-1
+#| caption: "Lire un coefficient de régression"
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+print(summary(fit)$coefficients)     # estimation, erreur-type, t, p
+reponse <- ______     # une lettre entre guillemets
+reponse
+```
+
+::: {.hint exercise="a-lire-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Quelle est l'unité de la pente ? Qu'est-ce qui est comparé : un même pays dans le temps, ou des pays différents ?
+:::
+:::
+
+::: {.hint exercise="a-lire-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · comment raisonner
+La pente est en « points d'épargne par point de croissance ». Les données sont en coupe : on compare des pays.
+:::
+:::
+
+::: {.solution exercise="a-lire-1"}
+**Raisonnement.**
+
+1. La pente (0,476) se lit : « quand `ddpi` augmente d'une unité (un point), `sr` est en moyenne plus élevé de 0,476 unité ».
+2. Les données comparent des **pays**, pas l'évolution d'un pays : on parle d'**association**.
+3. Le R² est une autre quantité : il mesure la part de variance expliquée.
+
+**Lecture économique.** La théorie du cycle de vie prédit un lien entre croissance et épargne (les jeunes épargnent plus quand le revenu futur est plus élevé), mais la causalité peut aussi aller de l'épargne vers la croissance, et des facteurs communs (démographie, institutions) jouent des deux côtés.
+
+```{webr}
+#| exercise: a-lire-1
+#| solution: true
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+print(summary(fit)$coefficients)     # estimation, erreur-type, t, p
+reponse <- "B"
+reponse
+```
+
+**Pièges fréquents.**
+
+- Dire « 1 % de croissance en plus **cause** 0,48 point d'épargne en plus ».
+- Oublier l'unité de la pente.
+
+**Pour aller plus loin.** Réécris la phrase correcte avec les mots de ton choix dans le dernier exercice de la piste.
+:::
+
+```{webr}
+#| exercise: a-lire-1
+#| check: true
+rep <- toupper(trimws(as.character(.result)))
+fb <- c(A = "« Fait augmenter » est un langage causal : la régression compare des pays, elle ne montre pas ce qui se passerait si la croissance d'un pays augmentait.", B = "La pente est une différence moyenne entre pays, par point de croissance : c'est une association conditionnelle, dont on ne peut tirer un effet causal sans hypothèse supplémentaire.", C = "Confusion avec le R² : la pente se lit en unités de `sr` par unité de `ddpi`, pas en pourcentage de variance expliquée.", D = "Un R² faible n'empêche pas d'interpréter un coefficient : il indique seulement que d'autres facteurs expliquent une grande part des différences d'épargne.")
+if (length(rep) != 1 || is.na(rep) || !(rep %in% names(fb))) {
+  list(correct = FALSE, message = "Réponds par une seule lettre entre guillemets, par exemple \"B\" (options : A, B, C, D).")
+} else if (rep == "B") {
+  list(correct = TRUE, message = paste0("Correct. ", fb[["B"]]))
+} else {
+  list(correct = FALSE, message = paste0("Pas tout à fait. ", fb[[rep]], " Relis la sortie et réessaie."))
+}
+```
+
+::: {.dojo-done data-id="a-lire-1"}
+:::
+
+## Lire une p-value {#a-lire-2}
+
+[Marche 2 sur 8 · Interpréter]{.dojo-step}
+
+La pente de `ddpi` a une p-value de 0,031 (dernière colonne). Quelle phrase est **correcte** ?
+
+- **A.** La probabilité que le coefficient soit nul est de 3,1 %.
+- **B.** La pente est significative à 1 %.
+- **C.** Si la vraie pente était nulle, on obtiendrait une estimation aussi éloignée de 0 dans environ 3 % des échantillons ; on rejette l'hypothèse nulle à 5 % mais pas à 1 %.
+- **D.** La pente n'est pas significative.
+
+```{webr}
+#| exercise: a-lire-2
+#| caption: "Lire une p-value"
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+print(summary(fit)$coefficients)     # estimation, erreur-type, t, p
+reponse <- ______     # une lettre entre guillemets
+reponse
+```
+
+::: {.hint exercise="a-lire-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Rappelle-toi sous quelle hypothèse la p-value est calculée : la vraie pente est-elle supposée nulle ou non ?
+:::
+:::
+
+::: {.hint exercise="a-lire-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · comment raisonner
+p < 0,05 : rejet à 5 %. p > 0,01 : pas de rejet à 1 %.
+:::
+:::
+
+::: {.solution exercise="a-lire-2"}
+**Raisonnement.**
+
+1. La p-value est calculée **en supposant l'hypothèse nulle vraie** (pente = 0).
+2. 0,031 < 0,05 : significatif à 5 %. 0,031 > 0,01 : non significatif à 1 %.
+3. Elle ne dit ni l'importance de l'effet, ni la probabilité que l'hypothèse soit vraie.
+
+**Lecture économique.** En économie appliquée, une p-value à 0,031 est un résultat « fragile » : un autre échantillon, une autre spécification ou une correction pour tests multiples peut le faire basculer. On lit toujours la p-value avec l'**ampleur** de l'effet et l'intervalle de confiance.
+
+```{webr}
+#| exercise: a-lire-2
+#| solution: true
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+print(summary(fit)$coefficients)     # estimation, erreur-type, t, p
+reponse <- "C"
+reponse
+```
+
+**Pièges fréquents.**
+
+- Lire la p-value comme « la probabilité que l'effet soit nul ».
+- Confondre « significatif » et « important ».
+
+**Pour aller plus loin.** Calcule `confint(fit)` : l'intervalle contient-il 0 ?
+:::
+
+```{webr}
+#| exercise: a-lire-2
+#| check: true
+rep <- toupper(trimws(as.character(.result)))
+fb <- c(A = "La p-value n'est pas la probabilité que l'hypothèse nulle soit vraie : c'est la probabilité d'un résultat aussi extrême **si** elle était vraie.", B = "0,031 > 0,01 : le seuil de 1 % n'est pas franchi.", C = "C'est la définition correcte : la p-value est calculée sous l'hypothèse nulle. Ici, 0,031 < 0,05 mais > 0,01.", D = "0,031 est inférieur à 0,05 : la pente est significative au seuil usuel de 5 %.")
+if (length(rep) != 1 || is.na(rep) || !(rep %in% names(fb))) {
+  list(correct = FALSE, message = "Réponds par une seule lettre entre guillemets, par exemple \"B\" (options : A, B, C, D).")
+} else if (rep == "C") {
+  list(correct = TRUE, message = paste0("Correct. ", fb[["C"]]))
+} else {
+  list(correct = FALSE, message = paste0("Pas tout à fait. ", fb[[rep]], " Relis la sortie et réessaie."))
+}
+```
+
+::: {.dojo-done data-id="a-lire-2"}
+:::
+
+## Lire un intervalle de confiance {#a-lire-3}
+
+[Marche 3 sur 8 · Interpréter]{.dojo-step}
+
+Exécute le code. L'intervalle de confiance à 95 % de la pente de `ddpi` est environ [0,04 ; 0,91]. Quelle conclusion est la plus **juste** ?
+
+- **A.** Il y a 95 % de probabilité que la vraie pente soit entre 0,044 et 0,907.
+- **B.** L'intervalle est large : l'effet est positif mais très imprécis, de presque nul à près de 1 point.
+- **C.** L'intervalle contient 0, donc la pente n'est pas significative.
+- **D.** 0,476 est la valeur la plus probable, avec certitude.
+
+```{webr}
+#| exercise: a-lire-3
+#| caption: "Lire un intervalle de confiance"
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+print(round(confint(fit), 3))
+reponse <- ______     # une lettre entre guillemets
+reponse
+```
+
+::: {.hint exercise="a-lire-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Regarde les deux bornes : contiennent-elles 0 ? Et quelle est la largeur de l'intervalle par rapport à l'estimation ?
+:::
+:::
+
+::: {.hint exercise="a-lire-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · comment raisonner
+L'intervalle va de 0,044 à 0,907 : l'incertitude est de l'ordre de l'estimation elle-même.
+:::
+:::
+
+::: {.solution exercise="a-lire-3"}
+**Raisonnement.**
+
+1. L'intervalle ne contient pas 0 : la pente est significative à 5 %.
+2. Il est très large : la vraie pente pourrait être presque nulle ou proche de 1.
+3. L'estimation ponctuelle (0,476) est une valeur parmi les compatibles.
+
+**Lecture économique.** Dire « l'effet est significatif » est insuffisant : une décision publique (par exemple une politique d'épargne) dépend de la valeur plausible de l'effet. Un intervalle large signifie que les données ne permettent pas de chiffrer l'effet précisément.
+
+```{webr}
+#| exercise: a-lire-3
+#| solution: true
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+print(round(confint(fit), 3))
+reponse <- "B"
+reponse
+```
+
+**Pièges fréquents.**
+
+- Interpréter l'intervalle comme une probabilité sur la vraie valeur.
+- Ne regarder que l'étoile de significativité.
+
+**Pour aller plus loin.** Compare avec l'intervalle à 90 % : `confint(fit, level = 0.90)`.
+:::
+
+```{webr}
+#| exercise: a-lire-3
+#| check: true
+rep <- toupper(trimws(as.character(.result)))
+fb <- c(A = "Interprétation fréquentiste : la procédure produit un intervalle qui contient la vraie valeur dans 95 % des échantillons. La vraie pente est fixe, elle n'a pas de « probabilité ».", B = "L'intervalle exclut 0 (donc significatif à 5 %) mais est très large : l'estimation de l'effet est imprécise.", C = "La borne inférieure (0,044) est positive : l'intervalle ne contient pas 0.", D = "L'estimation ponctuelle est la valeur centrale de l'intervalle, mais sans certitude : l'incertitude est précisément ce que l'intervalle mesure.")
+if (length(rep) != 1 || is.na(rep) || !(rep %in% names(fb))) {
+  list(correct = FALSE, message = "Réponds par une seule lettre entre guillemets, par exemple \"B\" (options : A, B, C, D).")
+} else if (rep == "B") {
+  list(correct = TRUE, message = paste0("Correct. ", fb[["B"]]))
+} else {
+  list(correct = FALSE, message = paste0("Pas tout à fait. ", fb[[rep]], " Relis la sortie et réessaie."))
+}
+```
+
+::: {.dojo-done data-id="a-lire-3"}
+:::
+
+## Un écart global qui se retourne (Simpson) {#a-lire-4}
+
+[Marche 4 sur 8 · Interpréter]{.dojo-step}
+
+Exécute le code : il affiche les taux d'admission (en %) des hommes et des femmes à Berkeley, d'abord tous départements confondus, puis par département. Que peut-on conclure ?
+
+- **A.** Les femmes sont discriminées dans tous les départements.
+- **B.** L'écart global dépend en partie de la répartition des candidatures entre départements ; il faut comparer à l'intérieur de chaque département.
+- **C.** Les femmes sont avantagées dans tous les départements.
+- **D.** Les données ne permettent aucune comparaison.
+
+```{webr}
+#| exercise: a-lire-4
+#| caption: "Un écart global qui se retourne (Simpson)"
+adm <- apply(UCBAdmissions, c(1, 2), sum)
+print(round(100 * prop.table(adm, 2)["Admitted", ], 1))     # global
+print(round(100 * apply(UCBAdmissions, c(2, 3), function(x) x["Admitted"] / sum(x)), 1))     # par département
+reponse <- ______     # une lettre entre guillemets
+reponse
+```
+
+::: {.hint exercise="a-lire-4"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Compare les taux **dans chaque département** avec le taux global : l'écart global se retrouve-t-il partout ?
+:::
+:::
+
+::: {.hint exercise="a-lire-4"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · comment raisonner
+Les écarts par département sont de signes différents et plus petits que l'écart global.
+:::
+:::
+
+::: {.solution exercise="a-lire-4"}
+**Raisonnement.**
+
+1. Global : 44,5 % des hommes contre 30,4 % des femmes sont admis.
+2. Par département, les écarts sont faibles et de signes variables (femmes plus admises en A, B, D, F ; hommes en C, E).
+3. L'écart global vient de la répartition des candidatures : les femmes visent davantage des départements très sélectifs.
+
+**Lecture économique.** Ce paradoxe est central en économie du genre ou de la discrimination : comparer des moyennes brutes sans contrôler la composition (secteur, métier, département) peut renverser la conclusion. À l'inverse, si la **sélection** dans les départements est elle-même liée à des obstacles, le tableau reste pertinent : le contrôle dépend de la question posée.
+
+```{webr}
+#| exercise: a-lire-4
+#| solution: true
+adm <- apply(UCBAdmissions, c(1, 2), sum)
+print(round(100 * prop.table(adm, 2)["Admitted", ], 1))     # global
+print(round(100 * apply(UCBAdmissions, c(2, 3), function(x) x["Admitted"] / sum(x)), 1))     # par département
+reponse <- "B"
+reponse
+```
+
+**Pièges fréquents.**
+
+- Conclure à partir du seul taux global.
+- Conclure l'inverse (avantage des femmes) à partir d'un seul département.
+
+**Pour aller plus loin.** Calcule la part de femmes parmi les candidats de chaque département avec `prop.table(apply(UCBAdmissions, c(2, 3), sum), 2)`.
+:::
+
+```{webr}
+#| exercise: a-lire-4
+#| check: true
+rep <- toupper(trimws(as.character(.result)))
+fb <- c(A = "Dans 4 départements sur 6 (A, B, D, F), les femmes ont un taux d'admission au moins égal à celui des hommes : l'affirmation est contredite par les données.", B = "C'est le paradoxe de Simpson : le taux global (44,5 % contre 30,4 %) mélange des départements très inégalement sélectifs, et les femmes candidatent davantage dans les plus sélectifs.", C = "Dans les départements C et E, les hommes ont un taux plus élevé : « avantagées partout » est faux.", D = "Comparer les taux est possible ; c'est la comparaison agrégée seule qui est trompeuse.")
+if (length(rep) != 1 || is.na(rep) || !(rep %in% names(fb))) {
+  list(correct = FALSE, message = "Réponds par une seule lettre entre guillemets, par exemple \"B\" (options : A, B, C, D).")
+} else if (rep == "B") {
+  list(correct = TRUE, message = paste0("Correct. ", fb[["B"]]))
+} else {
+  list(correct = FALSE, message = paste0("Pas tout à fait. ", fb[[rep]], " Relis la sortie et réessaie."))
+}
+```
+
+::: {.dojo-done data-id="a-lire-4"}
+:::
+
+## R², R² ajusté et variables ajoutées {#a-lire-5}
+
+[Marche 5 sur 8 · Interpréter]{.dojo-step}
+
+Le code estime deux modèles de l'épargne : un à une variable, l'autre à quatre variables. Pourquoi regarde-t-on le **R² ajusté** pour les comparer ?
+
+- **A.** Le R² ajusté est toujours plus grand que le R².
+- **B.** Le R² ne diminue jamais quand on ajoute une variable, même inutile ; le R² ajusté pénalise le nombre de variables.
+- **C.** Le R² ajusté mesure la causalité.
+- **D.** Il n'y a aucune différence entre les deux.
+
+```{webr}
+#| exercise: a-lire-5
+#| caption: "R², R² ajusté et variables ajoutées"
+f1 <- lm(sr ~ ddpi, data = LifeCycleSavings)
+f4 <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data = LifeCycleSavings)
+print(round(c(R2_1 = summary(f1)$r.squared, R2_4 = summary(f4)$r.squared,
+              ajuste_1 = summary(f1)$adj.r.squared, ajuste_4 = summary(f4)$adj.r.squared), 3))
+reponse <- ______     # une lettre entre guillemets
+reponse
+```
+
+::: {.hint exercise="a-lire-5"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Que se passe-t-il pour le R² quand on ajoute une variable explicative, même sans pouvoir explicatif ?
+:::
+:::
+
+::: {.hint exercise="a-lire-5"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · comment raisonner
+Le R² (0,093 → 0,338) augmente, mais le R² ajusté tient compte du nombre de variables (0,280 pour le modèle complet).
+:::
+:::
+
+::: {.solution exercise="a-lire-5"}
+**Raisonnement.**
+
+1. Le R² est la part de variance de y expliquée : il augmente mécaniquement avec le nombre de variables.
+2. Le R² ajusté corrige cette hausse automatique.
+3. Ici l'ajout de `pop15`, `pop75` et `dpi` fait passer le R² de 0,093 à 0,338 : l'amélioration est réelle (R² ajusté 0,280).
+
+**Lecture économique.** En économie appliquée, on choisit les variables d'après la théorie et les risques de biais, pas en maximisant un R². Un modèle sans pouvoir prédictif peut très bien identifier un effet causal, et inversement.
+
+```{webr}
+#| exercise: a-lire-5
+#| solution: true
+f1 <- lm(sr ~ ddpi, data = LifeCycleSavings)
+f4 <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data = LifeCycleSavings)
+print(round(c(R2_1 = summary(f1)$r.squared, R2_4 = summary(f4)$r.squared,
+              ajuste_1 = summary(f1)$adj.r.squared, ajuste_4 = summary(f4)$adj.r.squared), 3))
+reponse <- "B"
+reponse
+```
+
+**Pièges fréquents.**
+
+- Choisir un modèle parce que son R² est plus élevé.
+- Croire que le R² ajusté peut dépasser le R².
+
+**Pour aller plus loin.** Ajoute une variable de bruit `rnorm(50)` : que devient le R² ? Et le R² ajusté ?
+:::
+
+```{webr}
+#| exercise: a-lire-5
+#| check: true
+rep <- toupper(trimws(as.character(.result)))
+fb <- c(A = "C'est l'inverse : le R² ajusté est inférieur ou égal au R² (voir la sortie : 0,338 contre 0,280 pour le modèle à quatre variables).", B = "Ajouter une variable, même du pur bruit, ne fait jamais baisser le R² ; le R² ajusté retire une pénalité qui dépend du nombre de variables.", C = "Aucun R² ne mesure la causalité : c'est une mesure d'ajustement.", D = "Ils diffèrent surtout quand on ajoute de nombreuses variables à de petits échantillons.")
+if (length(rep) != 1 || is.na(rep) || !(rep %in% names(fb))) {
+  list(correct = FALSE, message = "Réponds par une seule lettre entre guillemets, par exemple \"B\" (options : A, B, C, D).")
+} else if (rep == "B") {
+  list(correct = TRUE, message = paste0("Correct. ", fb[["B"]]))
+} else {
+  list(correct = FALSE, message = paste0("Pas tout à fait. ", fb[[rep]], " Relis la sortie et réessaie."))
+}
+```
+
+::: {.dojo-done data-id="a-lire-5"}
+:::
+
+## Un test de normalité des résidus {#a-lire-6}
+
+[Marche 6 sur 8 · Interpréter]{.dojo-step}
+
+Exécute le code : il teste la normalité des résidus du modèle à quatre variables (test de Shapiro-Wilk). La p-value vaut environ 0,85. Que conclure ?
+
+- **A.** Les résidus sont normaux : c'est démontré.
+- **B.** On ne rejette pas la normalité ; mais ce test a peu de puissance avec 50 observations et ne démontre rien.
+- **C.** On rejette la normalité au seuil de 5 %.
+- **D.** Le modèle est bien spécifié.
+
+```{webr}
+#| exercise: a-lire-6
+#| caption: "Un test de normalité des résidus"
+f4 <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data = LifeCycleSavings)
+print(shapiro.test(resid(f4)))
+reponse <- ______     # une lettre entre guillemets
+reponse
+```
+
+::: {.hint exercise="a-lire-6"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Dans un test de Shapiro-Wilk, quelle est l'hypothèse nulle ? Que signifie une grande p-value ?
+:::
+:::
+
+::: {.hint exercise="a-lire-6"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · comment raisonner
+H0 : les résidus sont normaux. Une grande p-value = pas de rejet de H0.
+:::
+:::
+
+::: {.solution exercise="a-lire-6"}
+**Raisonnement.**
+
+1. H0 : les résidus suivent une loi normale.
+2. p = 0,85 : rien dans les données n'est incompatible avec H0.
+3. « Ne pas rejeter » n'est pas « accepter » : la puissance est limitée avec 50 observations.
+
+**Lecture économique.** En pratique, avec des échantillons de grande taille, les inférences sur les coefficients reposent sur le théorème central limite, pas sur la normalité des erreurs ; ce qui menace une étude économétrique est plutôt l'endogénéité (variable omise, simultanéité), que ce test ne détecte pas.
+
+```{webr}
+#| exercise: a-lire-6
+#| solution: true
+f4 <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data = LifeCycleSavings)
+print(shapiro.test(resid(f4)))
+reponse <- "B"
+reponse
+```
+
+**Pièges fréquents.**
+
+- Confondre « non significatif » et « démontré ».
+- Croire que la normalité des résidus garantit un modèle correct.
+
+**Pour aller plus loin.** Trace `qqnorm(resid(f4)); qqline(resid(f4))` et compare le diagnostic visuel avec le test.
+:::
+
+```{webr}
+#| exercise: a-lire-6
+#| check: true
+rep <- toupper(trimws(as.character(.result)))
+fb <- c(A = "Un test non significatif ne démontre pas l'hypothèse nulle : il ne la rejette pas.", B = "Absence de preuve de non-normalité, pas preuve de normalité. De plus, la normalité des erreurs est surtout utile pour les petits échantillons.", C = "0,85 est très supérieur à 0,05 : on ne rejette pas.", D = "La normalité des résidus est une hypothèse parmi d'autres : elle ne dit rien de la spécification (variables omises, forme fonctionnelle).")
+if (length(rep) != 1 || is.na(rep) || !(rep %in% names(fb))) {
+  list(correct = FALSE, message = "Réponds par une seule lettre entre guillemets, par exemple \"B\" (options : A, B, C, D).")
+} else if (rep == "B") {
+  list(correct = TRUE, message = paste0("Correct. ", fb[["B"]]))
+} else {
+  list(correct = FALSE, message = paste0("Pas tout à fait. ", fb[[rep]], " Relis la sortie et réessaie."))
+}
+```
+
+::: {.dojo-done data-id="a-lire-6"}
+:::
+
+## Corrélation en niveaux et en variations {#a-lire-7}
+
+[Marche 7 sur 8 · Interpréter]{.dojo-step}
+
+Le code calcule la corrélation entre production (`GNP`) et emploi (`Employed`) américains de 1947 à 1962, en niveaux puis en variations annuelles. Quelle lecture est la plus **prudente** ?
+
+- **A.** La corrélation de 0,98 prouve que la production cause l'emploi.
+- **B.** La corrélation en niveaux est gonflée par la tendance commune ; en variations elle reste forte (0,89), ce qui est plus informatif, mais ne prouve pas la causalité.
+- **C.** Une corrélation de 0,98 signifie que 98 % de l'emploi est expliqué par la production.
+- **D.** On ne peut pas calculer de corrélation sur des séries temporelles.
+
+```{webr}
+#| exercise: a-lire-7
+#| caption: "Corrélation en niveaux et en variations"
+print(round(cor(longley$GNP, longley$Employed), 3))                       # niveaux
+print(round(cor(diff(longley$GNP), diff(longley$Employed)), 3))           # variations annuelles
+reponse <- ______     # une lettre entre guillemets
+reponse
+```
+
+::: {.hint exercise="a-lire-7"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Qu'est-ce qui rend deux séries très corrélées en niveaux même si elles ne sont pas liées ? Que change le passage aux variations ?
+:::
+:::
+
+::: {.hint exercise="a-lire-7"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · comment raisonner
+Compare les deux coefficients : 0,98 en niveaux et 0,89 en variations.
+:::
+:::
+
+::: {.solution exercise="a-lire-7"}
+**Raisonnement.**
+
+1. En niveaux, les deux séries croissent sur la période : la tendance seule produit une forte corrélation.
+2. En variations, on retire la tendance : le coefficient baisse (0,89) mais reste élevé.
+3. Cela suggère une co-évolution conjoncturelle réelle (loi d'Okun), mais l'identification causale exige davantage.
+
+**Lecture économique.** Cette distinction est le cœur de la « régression fallacieuse » des séries temporelles : deux marches aléatoires indépendantes peuvent paraître fortement corrélées en niveaux. En macro-économétrie, on travaille sur des séries stationnaires (variations) ou on teste la cointégration.
+
+```{webr}
+#| exercise: a-lire-7
+#| solution: true
+print(round(cor(longley$GNP, longley$Employed), 3))                       # niveaux
+print(round(cor(diff(longley$GNP), diff(longley$Employed)), 3))           # variations annuelles
+reponse <- "B"
+reponse
+```
+
+**Pièges fréquents.**
+
+- Interpréter une corrélation en niveaux de séries tendancielles comme un lien structurel.
+- Confondre corrélation et part de variance expliquée.
+
+**Pour aller plus loin.** Simule deux marches aléatoires indépendantes (`cumsum(rnorm(50))`) et calcule leur corrélation.
+:::
+
+```{webr}
+#| exercise: a-lire-7
+#| check: true
+rep <- toupper(trimws(as.character(.result)))
+fb <- c(A = "Une corrélation ne prouve pas la causalité ; la production et l'emploi peuvent évoluer ensemble à cause du cycle ou de la démographie.", B = "Deux séries à tendance croissante sont presque toujours corrélées en niveaux ; la corrélation des variations retire la tendance et reflète la co-évolution conjoncturelle.", C = "La part de variance expliquée est le carré de la corrélation (0,97), et uniquement dans une régression linéaire sur les niveaux ; elle n'a pas de sens causal.", D = "On peut la calculer, mais l'interprétation exige de tenir compte des tendances (stationnarité).")
+if (length(rep) != 1 || is.na(rep) || !(rep %in% names(fb))) {
+  list(correct = FALSE, message = "Réponds par une seule lettre entre guillemets, par exemple \"B\" (options : A, B, C, D).")
+} else if (rep == "B") {
+  list(correct = TRUE, message = paste0("Correct. ", fb[["B"]]))
+} else {
+  list(correct = FALSE, message = paste0("Pas tout à fait. ", fb[[rep]], " Relis la sortie et réessaie."))
+}
+```
+
+::: {.dojo-done data-id="a-lire-7"}
+:::
+
+## Comparer trois groupes : l'ANOVA {#a-lire-8}
+
+[Marche 8 sur 8 · Interpréter]{.dojo-step}
+
+Le code compare le revenu moyen des quatre régions américaines (analyse de variance). Le test donne F ≈ 4,7 et p ≈ 0,006. Quelle conclusion est correcte ?
+
+- **A.** Toutes les régions ont des revenus moyens différents.
+- **B.** Au moins une région a un revenu moyen différent des autres ; le test global ne dit pas lesquelles.
+- **C.** L'Ouest est significativement plus riche que le Sud.
+- **D.** Aucune différence entre régions.
+
+```{webr}
+#| exercise: a-lire-8
+#| caption: "Comparer trois groupes : l'ANOVA"
+d <- as.data.frame(state.x77); d$region <- state.region
+print(summary(aov(Income ~ region, data = d)))
+reponse <- ______     # une lettre entre guillemets
+reponse
+```
+
+::: {.hint exercise="a-lire-8"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Quelle est l'hypothèse nulle d'une ANOVA à quatre groupes ? Et l'alternative ?
+:::
+:::
+
+::: {.hint exercise="a-lire-8"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · comment raisonner
+H0 : les quatre moyennes sont égales. H1 : au moins une est différente.
+:::
+:::
+
+::: {.solution exercise="a-lire-8"}
+**Raisonnement.**
+
+1. H0 : toutes les moyennes régionales sont égales.
+2. p = 0,006 : on rejette H0 à 1 %.
+3. Le test global ne dit pas où est l'écart : il faut des comparaisons deux à deux avec correction (`TukeyHSD`).
+
+**Lecture économique.** Les écarts de revenu entre régions américaines reflètent des différences de structure productive, de coût de la vie et de composition de la population : un test d'égalité des moyennes constate un écart, il ne l'explique pas, et les revenus nominaux ne tiennent pas compte des prix locaux.
+
+```{webr}
+#| exercise: a-lire-8
+#| solution: true
+d <- as.data.frame(state.x77); d$region <- state.region
+print(summary(aov(Income ~ region, data = d)))
+reponse <- "B"
+reponse
+```
+
+**Pièges fréquents.**
+
+- Conclure que « chaque région est différente des autres ».
+- Enchaîner dix comparaisons de paires sans correction.
+
+**Pour aller plus loin.** Lance `TukeyHSD(aov(Income ~ region, data = d))` et regarde quelles paires diffèrent.
+:::
+
+```{webr}
+#| exercise: a-lire-8
+#| check: true
+rep <- toupper(trimws(as.character(.result)))
+fb <- c(A = "L'hypothèse alternative est « au moins une moyenne diffère », pas « toutes diffèrent ».", B = "L'ANOVA teste l'égalité de toutes les moyennes. Pour savoir lesquelles diffèrent, on compare les paires en corrigeant pour les tests multiples (Tukey, Holm).", C = "Le test global ne compare pas deux régions en particulier ; c'est une comparaison de paires (corrigée) qu'il faudrait.", D = "Avec p = 0,006 on rejette l'égalité de toutes les moyennes.")
+if (length(rep) != 1 || is.na(rep) || !(rep %in% names(fb))) {
+  list(correct = FALSE, message = "Réponds par une seule lettre entre guillemets, par exemple \"B\" (options : A, B, C, D).")
+} else if (rep == "B") {
+  list(correct = TRUE, message = paste0("Correct. ", fb[["B"]]))
+} else {
+  list(correct = FALSE, message = paste0("Pas tout à fait. ", fb[[rep]], " Relis la sortie et réessaie."))
+}
+```
+
+::: {.dojo-done data-id="a-lire-8"}
+:::
+
+
+# Lire un graphique {#lire-graph}
+
+::: {.dojo-track data-track="lire-graph"}
+:::
+
+## Lire une courbe de Lorenz {#a-gra-1}
+
+[Marche 1 sur 6 · Lire un graphique]{.dojo-step}
+
+Exécute le code : la courbe de Lorenz de la **population des 50 États américains**. Les pointillés marquent la moitié des États les moins peuplés. Quelle part de la population totale vivent-ils environ ?
+
+- **A.** Environ 5 %.
+- **B.** Environ 16 %.
+- **C.** Environ 35 %.
+- **D.** Environ 50 %.
+
+```{webr}
+#| exercise: a-gra-1
+#| caption: "Lire une courbe de Lorenz"
+source("R/inegalites.R")
+l <- lorenz(state.x77[, "Population"])
+plot(l$p, l$L, type = "l", lwd = 2, xlab = "Part cumulée des États (du moins au plus peuplé)", ylab = "Part cumulée de la population")
+abline(0, 1, lty = 2)      # égalité parfaite
+abline(v = 0.5, lty = 3)   # la moitié des États
+reponse <- ______     # une lettre entre guillemets
+reponse
+```
+
+::: {.hint exercise="a-gra-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Place-toi sur l'axe horizontal à 0,5 et monte jusqu'à la courbe (pas jusqu'à la diagonale) ; lis la hauteur sur l'axe vertical.
+:::
+:::
+
+::: {.hint exercise="a-gra-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · comment lire le graphique
+La diagonale vaut 0,5 en p = 0,5 ; la courbe est bien en dessous.
+:::
+:::
+
+::: {.solution exercise="a-gra-1"}
+**Raisonnement.**
+
+1. Sur l'axe horizontal, 0,5 = la moitié des États, classés du moins au plus peuplé.
+2. La hauteur de la courbe en ce point donne la part de la population qu'ils représentent : environ 16 %.
+3. Plus la courbe est éloignée de la diagonale, plus la population est concentrée dans quelques États.
+
+**Lecture économique.** La courbe de Lorenz est l'outil de base pour discuter d'inégalité de revenus ou de patrimoines : lire « les 50 % les moins riches détiennent X % du revenu » est plus parlant que le seul Gini. Ici la concentration spatiale de la population est forte.
+
+```{webr}
+#| exercise: a-gra-1
+#| solution: true
+source("R/inegalites.R")
+l <- lorenz(state.x77[, "Population"])
+plot(l$p, l$L, type = "l", lwd = 2, xlab = "Part cumulée des États (du moins au plus peuplé)", ylab = "Part cumulée de la population")
+abline(0, 1, lty = 2)      # égalité parfaite
+abline(v = 0.5, lty = 3)   # la moitié des États
+reponse <- "B"
+reponse
+```
+
+**Pièges fréquents.**
+
+- Lire la hauteur de la diagonale au lieu de celle de la courbe.
+- Confondre la part des États et la part de la population.
+
+**Pour aller plus loin.** Calcule la part des 50 % les plus peuplés et vérifie la cohérence avec la lecture.
+:::
+
+```{webr}
+#| exercise: a-gra-1
+#| check: true
+rep <- toupper(trimws(as.character(.result)))
+fb <- c(A = "Trop bas : la courbe passe nettement au-dessus de 5 % à la verticale de 0,5.", B = "La courbe coupe la verticale en p = 0,5 à une hauteur d'environ 0,16 : la moitié des États les moins peuplés abrite 16 % de la population.", C = "Trop haut : 35 % est la part des 5 États les plus peuplés.", D = "50 % correspondrait à l'égalité parfaite (la diagonale) ; la courbe est très en dessous.")
+if (length(rep) != 1 || is.na(rep) || !(rep %in% names(fb))) {
+  list(correct = FALSE, message = "Réponds par une seule lettre entre guillemets, par exemple \"B\" (options : A, B, C, D).")
+} else if (rep == "B") {
+  list(correct = TRUE, message = paste0("Correct. ", fb[["B"]]))
+} else {
+  list(correct = FALSE, message = paste0("Pas tout à fait. ", fb[[rep]], " Relis la sortie et réessaie."))
+}
+```
+
+::: {.dojo-done data-id="a-gra-1"}
+:::
+
+## Lire un histogramme asymétrique {#a-gra-2}
+
+[Marche 2 sur 6 · Lire un graphique]{.dojo-step}
+
+Exécute le code : histogramme de la part d'hommes ayant fait des études au-delà du primaire (`Education`, en %) dans 47 provinces suisses. Que peut-on dire de la **moyenne** par rapport à la **médiane** ?
+
+- **A.** La moyenne est inférieure à la médiane.
+- **B.** La moyenne et la médiane sont égales : distribution symétrique.
+- **C.** La moyenne est supérieure à la médiane : la distribution a une longue queue à droite.
+- **D.** On ne peut pas comparer moyenne et médiane sur un histogramme.
+
+```{webr}
+#| exercise: a-gra-2
+#| caption: "Lire un histogramme asymétrique"
+hist(swiss$Education, breaks = 12, col = "grey85", main = "Éducation au-delà du primaire (%)", xlab = "%")
+abline(v = c(mean(swiss$Education), median(swiss$Education)), col = c("red", "blue"), lwd = 2)     # rouge : moyenne ; bleu : médiane
+reponse <- ______     # une lettre entre guillemets
+reponse
+```
+
+::: {.hint exercise="a-gra-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Où se situent la plupart des observations ? Où est la queue de la distribution ? Dans quel sens tire-t-elle la moyenne ?
+:::
+:::
+
+::: {.hint exercise="a-gra-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · comment lire le graphique
+Une queue vers la droite tire la moyenne au-dessus de la médiane.
+:::
+:::
+
+::: {.solution exercise="a-gra-2"}
+**Raisonnement.**
+
+1. La plupart des provinces ont une faible part d'éducation (barres à gauche).
+2. Quelques provinces très instruites forment une queue à droite.
+3. La moyenne est sensible aux valeurs extrêmes (≈ 11), la médiane non (8) : moyenne > médiane.
+
+**Lecture économique.** Ce schéma est typique des revenus, des patrimoines et des tailles d'entreprises : on y préfère la médiane pour décrire le cas « typique », et on étudie la queue séparément (hauts revenus). Comparer moyenne et médiane est un test rapide d'asymétrie.
+
+```{webr}
+#| exercise: a-gra-2
+#| solution: true
+hist(swiss$Education, breaks = 12, col = "grey85", main = "Éducation au-delà du primaire (%)", xlab = "%")
+abline(v = c(mean(swiss$Education), median(swiss$Education)), col = c("red", "blue"), lwd = 2)     # rouge : moyenne ; bleu : médiane
+reponse <- "C"
+reponse
+```
+
+**Pièges fréquents.**
+
+- Dire que la moyenne est « au milieu » de la distribution.
+- Confondre la hauteur des barres (fréquence) et la valeur en abscisse.
+
+**Pour aller plus loin.** Ajoute `abline(v = quantile(swiss$Education, c(.25, .75)), lty = 3)` pour visualiser les quartiles.
+:::
+
+```{webr}
+#| exercise: a-gra-2
+#| check: true
+rep <- toupper(trimws(as.character(.result)))
+fb <- c(A = "C'est l'inverse : une longue queue à gauche tirerait la moyenne sous la médiane.", B = "La distribution n'est pas symétrique : la masse est à gauche avec une queue vers les valeurs élevées.", C = "Les rares provinces à très forte éducation tirent la moyenne vers le haut (11 contre 8 pour la médiane) : c'est une asymétrie positive.", D = "La position relative des deux traits verticaux (rouge, bleu) le montre directement.")
+if (length(rep) != 1 || is.na(rep) || !(rep %in% names(fb))) {
+  list(correct = FALSE, message = "Réponds par une seule lettre entre guillemets, par exemple \"B\" (options : A, B, C, D).")
+} else if (rep == "C") {
+  list(correct = TRUE, message = paste0("Correct. ", fb[["C"]]))
+} else {
+  list(correct = FALSE, message = paste0("Pas tout à fait. ", fb[[rep]], " Relis la sortie et réessaie."))
+}
+```
+
+::: {.dojo-done data-id="a-gra-2"}
+:::
+
+## Lire un nuage de points et sa droite {#a-gra-3}
+
+[Marche 3 sur 6 · Lire un graphique]{.dojo-step}
+
+Exécute le code : épargne (`sr`) contre croissance (`ddpi`) dans 50 pays, avec la droite de régression. Comment qualifier la relation ?
+
+- **A.** Relation très forte, presque déterministe.
+- **B.** Relation positive mais faible : les points sont très dispersés autour de la droite (R² ≈ 0,09).
+- **C.** Relation négative.
+- **D.** Aucune relation : la droite est horizontale.
+
+```{webr}
+#| exercise: a-gra-3
+#| caption: "Lire un nuage de points et sa droite"
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+plot(LifeCycleSavings$ddpi, LifeCycleSavings$sr, pch = 19, col = "grey40", xlab = "Croissance (ddpi, %)", ylab = "Taux d'épargne (sr, %)")
+abline(fit, col = "red", lwd = 2)
+reponse <- ______     # une lettre entre guillemets
+reponse
+```
+
+::: {.hint exercise="a-gra-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Regarde à la fois la pente de la droite et la dispersion des points autour d'elle.
+:::
+:::
+
+::: {.hint exercise="a-gra-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · comment lire le graphique
+La pente est positive mais le nuage est large.
+:::
+:::
+
+::: {.solution exercise="a-gra-3"}
+**Raisonnement.**
+
+1. La droite monte : association positive.
+2. Les points s'écartent beaucoup de la droite : la croissance explique peu de la variation d'épargne.
+3. R² = 0,093 : environ 9 % de la variance.
+
+**Lecture économique.** Un graphique de dispersion est le premier réflexe avant toute régression : il révèle l'ampleur de la dispersion, les valeurs atypiques et la forme de la relation, que les coefficients résument mal. Ici d'autres déterminants (démographie, institutions) comptent davantage.
+
+```{webr}
+#| exercise: a-gra-3
+#| solution: true
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+plot(LifeCycleSavings$ddpi, LifeCycleSavings$sr, pch = 19, col = "grey40", xlab = "Croissance (ddpi, %)", ylab = "Taux d'épargne (sr, %)")
+abline(fit, col = "red", lwd = 2)
+reponse <- "B"
+reponse
+```
+
+**Pièges fréquents.**
+
+- Se contenter de la pente sans regarder la dispersion.
+- Conclure à une relation forte parce que la pente est « significative ».
+
+**Pour aller plus loin.** Repère le pays dont le point est le plus éloigné de la droite avec `identify` ou en calculant les résidus.
+:::
+
+```{webr}
+#| exercise: a-gra-3
+#| check: true
+rep <- toupper(trimws(as.character(.result)))
+fb <- c(A = "Un nuage très serré autour de la droite aurait un R² proche de 1 ; ici les points sont étalés.", B = "La pente est positive, mais l'essentiel de la variation d'épargne entre pays n'est pas expliqué par la croissance seule.", C = "La droite monte de gauche à droite : relation positive.", D = "La droite a une pente positive (0,48) ; elle n'est pas horizontale, même si elle est peu inclinée par rapport à la dispersion.")
+if (length(rep) != 1 || is.na(rep) || !(rep %in% names(fb))) {
+  list(correct = FALSE, message = "Réponds par une seule lettre entre guillemets, par exemple \"B\" (options : A, B, C, D).")
+} else if (rep == "B") {
+  list(correct = TRUE, message = paste0("Correct. ", fb[["B"]]))
+} else {
+  list(correct = FALSE, message = paste0("Pas tout à fait. ", fb[[rep]], " Relis la sortie et réessaie."))
+}
+```
+
+::: {.dojo-done data-id="a-gra-3"}
+:::
+
+## Lire une échelle logarithmique {#a-gra-4}
+
+[Marche 4 sur 6 · Lire un graphique]{.dojo-step}
+
+Exécute le code : population des États-Unis (1790-1970) sur un axe vertical **logarithmique**. La courbe est presque une droite. Qu'est-ce que cela signifie ?
+
+- **A.** La population croît de la même quantité à chaque décennie.
+- **B.** La population croît à un taux relatif approximativement constant (croissance exponentielle).
+- **C.** La population stagne.
+- **D.** La population décroît.
+
+```{webr}
+#| exercise: a-gra-4
+#| caption: "Lire une échelle logarithmique"
+plot(time(uspop), uspop, type = "b", log = "y", pch = 19, xlab = "Année", ylab = "Population (millions, échelle log)")
+abline(lm(log(uspop) ~ time(uspop)), lty = 2)     # tendance log-linéaire
+reponse <- ______     # une lettre entre guillemets
+reponse
+```
+
+::: {.hint exercise="a-gra-4"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Que représente une distance verticale sur une échelle logarithmique : une différence ou un rapport ?
+:::
+:::
+
+::: {.hint exercise="a-gra-4"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · comment lire le graphique
+Sur une échelle log, des distances égales = des rapports égaux (taux de croissance égaux).
+:::
+:::
+
+::: {.solution exercise="a-gra-4"}
+**Raisonnement.**
+
+1. Sur un axe log, une même distance verticale correspond à un même **rapport** (par exemple un doublement).
+2. Une droite signifie donc un rapport constant d'une période à l'autre : croissance exponentielle.
+3. La pente de la droite est le taux de croissance continu (≈ 2,2 % par an).
+
+**Lecture économique.** Les économistes utilisent les échelles logarithmiques pour comparer des taux de croissance (PIB par habitant sur longue période) : sur une échelle linéaire, les premières décennies paraîtraient plates. C'est aussi pour cela qu'on estime des **élasticités** avec des logarithmes.
+
+```{webr}
+#| exercise: a-gra-4
+#| solution: true
+plot(time(uspop), uspop, type = "b", log = "y", pch = 19, xlab = "Année", ylab = "Population (millions, échelle log)")
+abline(lm(log(uspop) ~ time(uspop)), lty = 2)     # tendance log-linéaire
+reponse <- "B"
+reponse
+```
+
+**Pièges fréquents.**
+
+- Lire l'axe comme linéaire et conclure à une croissance « de plus en plus rapide » en niveau.
+- Confondre « droite » en linéaire et « droite » en log.
+
+**Pour aller plus loin.** Trace le même graphique en échelle linéaire (`plot(time(uspop), uspop)`) et compare l'impression visuelle.
+:::
+
+```{webr}
+#| exercise: a-gra-4
+#| check: true
+rep <- toupper(trimws(as.character(.result)))
+fb <- c(A = "Une croissance de même quantité chaque décennie serait une droite sur une échelle **linéaire**, pas logarithmique.", B = "Sur une échelle logarithmique, une droite correspond à une croissance à taux constant. Ici, la pente se réduit un peu à la fin (le taux ralentit).", C = "La courbe monte : la population croît.", D = "La population augmente à chaque recensement.")
+if (length(rep) != 1 || is.na(rep) || !(rep %in% names(fb))) {
+  list(correct = FALSE, message = "Réponds par une seule lettre entre guillemets, par exemple \"B\" (options : A, B, C, D).")
+} else if (rep == "B") {
+  list(correct = TRUE, message = paste0("Correct. ", fb[["B"]]))
+} else {
+  list(correct = FALSE, message = paste0("Pas tout à fait. ", fb[[rep]], " Relis la sortie et réessaie."))
+}
+```
+
+::: {.dojo-done data-id="a-gra-4"}
+:::
+
+## Lire des boîtes à moustaches {#a-gra-5}
+
+[Marche 5 sur 6 · Lire un graphique]{.dojo-step}
+
+Exécute le code : l'analphabétisme (`Illiteracy`, en % de la population, 1970) par région des États-Unis. Quelle région a la **médiane la plus élevée** ?
+
+- **A.** Northeast.
+- **B.** South.
+- **C.** North Central.
+- **D.** West.
+
+```{webr}
+#| exercise: a-gra-5
+#| caption: "Lire des boîtes à moustaches"
+d <- as.data.frame(state.x77); d$region <- state.region
+boxplot(Illiteracy ~ region, data = d, col = "grey85", xlab = "Région", ylab = "Analphabétisme (%)")
+reponse <- ______     # une lettre entre guillemets
+reponse
+```
+
+::: {.hint exercise="a-gra-5"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Dans une boîte à moustaches, quel trait indique la médiane ? Compare ce trait entre les quatre boîtes.
+:::
+:::
+
+::: {.hint exercise="a-gra-5"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · comment lire le graphique
+Le trait épais au milieu de chaque boîte est la médiane.
+:::
+:::
+
+::: {.solution exercise="a-gra-5"}
+**Raisonnement.**
+
+1. Le trait épais est la médiane ; les bords de la boîte sont les quartiles.
+2. Pour le Sud, ce trait est le plus haut (≈ 1,75).
+3. La boîte du Sud est aussi plus haute : l'hétérogénéité entre États du Sud est plus grande.
+
+**Lecture économique.** Les boîtes à moustaches permettent de comparer plusieurs groupes sur la position **et** la dispersion : un écart de moyennes entre régions peut venir de quelques États atypiques ou d'un déplacement de toute la distribution. Le diagnostic change la politique publique envisagée.
+
+```{webr}
+#| exercise: a-gra-5
+#| solution: true
+d <- as.data.frame(state.x77); d$region <- state.region
+boxplot(Illiteracy ~ region, data = d, col = "grey85", xlab = "Région", ylab = "Analphabétisme (%)")
+reponse <- "B"
+reponse
+```
+
+**Pièges fréquents.**
+
+- Confondre le trait épais (médiane) avec la moyenne.
+- Lire la hauteur de la boîte comme la médiane.
+
+**Pour aller plus loin.** Calcule les médianes avec `tapply(d$Illiteracy, d$region, median)` pour vérifier ta lecture.
+:::
+
+```{webr}
+#| exercise: a-gra-5
+#| check: true
+rep <- toupper(trimws(as.character(.result)))
+fb <- c(A = "La médiane du Nord-Est (1,1) est nettement inférieure à celle du Sud.", B = "Le trait épais (médiane) du Sud est le plus haut (1,75), avec aussi la dispersion la plus grande.", C = "Le Centre-Nord a la médiane la plus basse (0,7).", D = "L'Ouest a une médiane faible (0,6) avec quelques valeurs élevées qui sortent de la boîte.")
+if (length(rep) != 1 || is.na(rep) || !(rep %in% names(fb))) {
+  list(correct = FALSE, message = "Réponds par une seule lettre entre guillemets, par exemple \"B\" (options : A, B, C, D).")
+} else if (rep == "B") {
+  list(correct = TRUE, message = paste0("Correct. ", fb[["B"]]))
+} else {
+  list(correct = FALSE, message = paste0("Pas tout à fait. ", fb[[rep]], " Relis la sortie et réessaie."))
+}
+```
+
+::: {.dojo-done data-id="a-gra-5"}
+:::
+
+## Lire un graphique de résidus {#a-gra-6}
+
+[Marche 6 sur 6 · Lire un graphique]{.dojo-step}
+
+Les données sont **simulées** : y dépend de x, mais la dispersion de l'erreur augmente avec x. Exécute le code : résidus contre valeurs ajustées. Que révèle la forme du graphique ?
+
+- **A.** Hétéroscédasticité : la dispersion des résidus augmente avec la valeur ajustée ; les erreurs-types usuelles sont à corriger.
+- **B.** Autocorrélation des résidus.
+- **C.** Mauvaise forme fonctionnelle : une relation en U.
+- **D.** Le modèle est parfaitement spécifié.
+
+```{webr}
+#| exercise: a-gra-6
+#| caption: "Lire un graphique de résidus"
+set.seed(5); x <- runif(200, 1, 10); y <- 2 + 3 * x + rnorm(200, 0, 0.4 * x)
+fit <- lm(y ~ x)
+plot(fitted(fit), resid(fit), pch = 19, col = "grey40", xlab = "Valeurs ajustées", ylab = "Résidus")
+abline(h = 0, lty = 2)
+reponse <- ______     # une lettre entre guillemets
+reponse
+```
+
+::: {.hint exercise="a-gra-6"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Regarde la largeur verticale du nuage de gauche à droite. Est-elle constante ?
+:::
+:::
+
+::: {.hint exercise="a-gra-6"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · comment lire le graphique
+Un entonnoir (dispersion croissante) est la signature classique de l'hétéroscédasticité.
+:::
+:::
+
+::: {.solution exercise="a-gra-6"}
+**Raisonnement.**
+
+1. Les résidus sont centrés sur 0 : la relation linéaire est correcte en moyenne.
+2. Mais leur dispersion augmente avec la valeur ajustée : la variance de l'erreur n'est pas constante.
+3. Conséquence : erreurs-types usuelles fausses ; remède : erreurs-types robustes (HC1) ou transformation logarithmique.
+
+**Lecture économique.** L'hétéroscédasticité est la règle en économie : la variance des profits, des salaires ou des dépenses croît avec leur niveau. D'où le réflexe de présenter des erreurs-types robustes, ou de passer aux logarithmes qui stabilisent souvent la variance.
+
+```{webr}
+#| exercise: a-gra-6
+#| solution: true
+set.seed(5); x <- runif(200, 1, 10); y <- 2 + 3 * x + rnorm(200, 0, 0.4 * x)
+fit <- lm(y ~ x)
+plot(fitted(fit), resid(fit), pch = 19, col = "grey40", xlab = "Valeurs ajustées", ylab = "Résidus")
+abline(h = 0, lty = 2)
+reponse <- "A"
+reponse
+```
+
+**Pièges fréquents.**
+
+- Confondre hétéroscédasticité et non-linéarité.
+- Conclure que les coefficients sont biaisés (ils ne le sont pas, seule la précision est mal estimée).
+
+**Pour aller plus loin.** Refais la régression en logarithmes (`lm(log(y) ~ log(x))`) et regarde si l'entonnoir disparaît.
+:::
+
+```{webr}
+#| exercise: a-gra-6
+#| check: true
+rep <- toupper(trimws(as.character(.result)))
+fb <- c(A = "Le nuage s'évase en entonnoir : la variance des erreurs dépend de x. Les coefficients restent sans biais mais les erreurs-types usuelles sont fausses : on utilise des erreurs-types robustes (HC).", B = "L'autocorrélation concerne l'ordre temporel des résidus (série chronologique), pas leur dispersion selon x.", C = "Une forme en U ou en cloche autour de 0 révélerait une relation non linéaire ; ici le centre reste à 0 mais la dispersion croît.", D = "Un bon graphique de résidus est un nuage homogène, sans structure ; ici il y a une structure claire.")
+if (length(rep) != 1 || is.na(rep) || !(rep %in% names(fb))) {
+  list(correct = FALSE, message = "Réponds par une seule lettre entre guillemets, par exemple \"B\" (options : A, B, C, D).")
+} else if (rep == "A") {
+  list(correct = TRUE, message = paste0("Correct. ", fb[["A"]]))
+} else {
+  list(correct = FALSE, message = paste0("Pas tout à fait. ", fb[[rep]], " Relis la sortie et réessaie."))
+}
+```
+
+::: {.dojo-done data-id="a-gra-6"}
+:::
+
+
+# Rédiger l'interprétation {#lire-rediger}
+
+::: {.dojo-track data-track="lire-rediger"}
+:::
+
+## Rédiger l'interprétation d'un coefficient {#a-red-1}
+
+[Marche 1 sur 5 · Rédiger]{.dojo-step}
+
+Rédige **une phrase complète** qui interprète le coefficient de `ddpi`. Elle doit mentionner la valeur (environ 0,48), l'unité (points d'épargne), la comparaison *en moyenne* entre pays, et une **précaution** sur la causalité. Le correcteur vérifie ces éléments.
+
+```{webr}
+#| exercise: a-red-1
+#| caption: "Rédiger l'interprétation d'un coefficient"
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+print(summary(fit)$coefficients)     # estimation, erreur-type, t, p
+interpretation <- "______"     # ta phrase, entre guillemets
+interpretation
+```
+
+::: {.hint exercise="a-red-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Une bonne interprétation donne : la valeur, l'unité, la population de comparaison, et la limite (association ou causalité).
+:::
+:::
+
+::: {.hint exercise="a-red-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les éléments attendus
+Modèle : « En moyenne, les pays dont la croissance est plus élevée d'un point ont une épargne plus élevée de 0,48 point ; c'est une association, pas un effet causal. »
+:::
+:::
+
+::: {.solution exercise="a-red-1"}
+**Raisonnement.**
+
+1. **Valeur et unité** : 0,48 point d'épargne par point de croissance.
+2. **Comparaison** : en moyenne, entre pays (données en coupe).
+3. **Précaution** : association conditionnelle ; la causalité exigerait une stratégie d'identification.
+
+**Lecture économique.** Rédiger l'interprétation est une compétence à part entière : un lecteur d'article ou un décideur ne lit pas le tableau, il lit votre phrase. Une phrase avec unité et précaution évite les contresens fréquents dans le débat public.
+
+```{webr}
+#| exercise: a-red-1
+#| solution: true
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+print(summary(fit)$coefficients)     # estimation, erreur-type, t, p
+interpretation <- "En moyenne, les pays dont la croissance est supérieure d'un point ont un taux d'épargne supérieur d'environ 0,48 point : c'est une association entre pays, pas nécessairement un effet causal."
+interpretation
+```
+
+**Pièges fréquents.**
+
+- Écrire seulement « le coefficient est significatif ».
+- Oublier l'unité (0,48 de quoi ?).
+
+**Pour aller plus loin.** Réécris la phrase pour un public non spécialiste (un journaliste).
+:::
+
+```{webr}
+#| exercise: a-red-1
+#| check: true
+txt <- paste(as.character(.result), collapse = " ")
+low <- tolower(txt)
+need <- list(
+  "la valeur (environ 0,48)" = "0[,.]4[78]|0[,.]5\\b",
+  "l'unité (point d'épargne)" = "point",
+  "« en moyenne »" = "en moyenne|moyennement",
+  "la variable de croissance" = "croissance|ddpi",
+  "l'épargne" = "[ée]pargne|sr\\b",
+  "la précaution sur la causalité (association, corrélation)" = "association|corr[ée]l|caus|n'implique|ne prouve")
+miss <- names(need)[!vapply(need, function(p) grepl(p, low, perl = TRUE), logical(1))]
+nw <- length(strsplit(trimws(txt), "[[:space:]]+")[[1]])
+if (nw < 18) {
+  list(correct = FALSE, message = "Rédige une réponse complète : au moins 18 mots, en phrases.")
+} else if (length(miss)) {
+  list(correct = FALSE, message = paste0("Il manque dans ton interprétation : ", paste(miss, collapse = " ; "), "."))
+} else {
+  list(correct = TRUE, message = "Correct : ton interprétation contient les éléments attendus. Compare avec le modèle de corrigé.")
+}
+```
+
+::: {.dojo-done data-id="a-red-1"}
+:::
+
+## Rédiger la conclusion d'un test {#a-red-2}
+
+[Marche 2 sur 5 · Rédiger]{.dojo-step}
+
+Le test t de Welch compare l'effet de deux somnifères sur la durée de sommeil. La p-value est de 0,079 et l'échantillon compte 10 patients par groupe. Rédige la **conclusion** : la p-value (0,08), le seuil de 5 %, ce qu'on ne peut pas conclure (non-rejet), et une **limite** (petit échantillon, puissance).
+
+```{webr}
+#| exercise: a-red-2
+#| caption: "Rédiger la conclusion d'un test"
+res <- t.test(extra ~ group, data = sleep)
+print(res)
+interpretation <- "______"     # ta phrase, entre guillemets
+interpretation
+```
+
+::: {.hint exercise="a-red-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Distingue « pas de rejet » de « preuve d'égalité ». Que peut-on dire sur la puissance ?
+:::
+:::
+
+::: {.hint exercise="a-red-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les éléments attendus
+Une phrase modèle : « p = 0,079 > 5 % : on ne rejette pas H0 ; avec 10 patients, le test manque de puissance. »
+:::
+:::
+
+::: {.solution exercise="a-red-2"}
+**Raisonnement.**
+
+1. Annoncer la p-value et le seuil.
+2. Conclure en termes de **non-rejet**, pas d'acceptation de l'hypothèse nulle.
+3. Mentionner la taille de l'échantillon : un test non significatif sur un petit échantillon est peu informatif.
+
+**Lecture économique.** En économie expérimentale ou en évaluation de politiques, un résultat « non significatif » sur un petit échantillon ne signifie pas « pas d'effet » : l'intervalle de confiance (ici de −3,4 à +0,2 heure) montre que des effets importants restent compatibles avec les données.
+
+```{webr}
+#| exercise: a-red-2
+#| solution: true
+res <- t.test(extra ~ group, data = sleep)
+print(res)
+interpretation <- "La p-value de 0,079 est supérieure au seuil de 5 % : on ne rejette pas l'égalité des effets des deux médicaments. Ce n'est pas une preuve d'absence de différence : l'échantillon de 10 patients est petit et le test manque de puissance."
+interpretation
+```
+
+**Pièges fréquents.**
+
+- Conclure « les deux médicaments sont équivalents ».
+- Oublier de dire quel seuil on utilise.
+
+**Pour aller plus loin.** Ajoute l'intervalle de confiance de la différence (`res$conf.int`) dans ta phrase.
+:::
+
+```{webr}
+#| exercise: a-red-2
+#| check: true
+txt <- paste(as.character(.result), collapse = " ")
+low <- tolower(txt)
+need <- list(
+  "la p-value (0,079 ou 0,08)" = "0[,.]0[78]",
+  "le seuil de 5 %" = "5 ?%|seuil",
+  "le non-rejet" = "ne rejette|pas rejet|non significatif|pas significatif|n'est pas significatif|pas de diff[ée]rence significative",
+  "une limite (échantillon, puissance)" = "[ée]chantillon|petit|puissance|10 patients")
+miss <- names(need)[!vapply(need, function(p) grepl(p, low, perl = TRUE), logical(1))]
+nw <- length(strsplit(trimws(txt), "[[:space:]]+")[[1]])
+if (nw < 18) {
+  list(correct = FALSE, message = "Rédige une réponse complète : au moins 18 mots, en phrases.")
+} else if (length(miss)) {
+  list(correct = FALSE, message = paste0("Il manque dans ton interprétation : ", paste(miss, collapse = " ; "), "."))
+} else {
+  list(correct = TRUE, message = "Correct : ton interprétation contient les éléments attendus. Compare avec le modèle de corrigé.")
+}
+```
+
+::: {.dojo-done data-id="a-red-2"}
+:::
+
+## Rédiger une mise en garde (paradoxe de Simpson) {#a-red-3}
+
+[Marche 3 sur 5 · Rédiger]{.dojo-step}
+
+Les taux d'admission globaux de Berkeley sont de 44,5 % pour les hommes et 30,4 % pour les femmes, mais par département les écarts sont faibles et de signes variables. Rédige une courte note qui explique l'écart **global** sans conclure à une discrimination : mentionne les **taux d'admission**, les **départements** (ou la répartition des candidatures) et une précaution sur la **causalité**.
+
+```{webr}
+#| exercise: a-red-3
+#| caption: "Rédiger une mise en garde (paradoxe de Simpson)"
+adm <- apply(UCBAdmissions, c(1, 2), sum)
+print(round(100 * prop.table(adm, 2)["Admitted", ], 1))
+print(round(100 * apply(UCBAdmissions, c(2, 3), function(x) x["Admitted"] / sum(x)), 1))
+interpretation <- "______"     # ta phrase, entre guillemets
+interpretation
+```
+
+::: {.hint exercise="a-red-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Explique d'abord pourquoi le taux global mélange des départements différents, puis ce que cela implique pour la conclusion.
+:::
+:::
+
+::: {.hint exercise="a-red-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les éléments attendus
+Idée : « Le taux global ne tient pas compte de la composition des candidatures par département. »
+:::
+:::
+
+::: {.solution exercise="a-red-3"}
+**Raisonnement.**
+
+1. Citer les taux globaux.
+2. Expliquer le mécanisme (composition des candidatures selon les départements).
+3. Conclure avec prudence sur la discrimination.
+
+**Lecture économique.** En économie du travail, la comparaison brute des salaires hommes-femmes pose le même problème : l'écart « brut » mélange des écarts de métiers, de temps de travail et de salaire à poste égal. Rapporter l'écart brut **et** l'écart ajusté est la pratique standard.
+
+```{webr}
+#| exercise: a-red-3
+#| solution: true
+adm <- apply(UCBAdmissions, c(1, 2), sum)
+print(round(100 * prop.table(adm, 2)["Admitted", ], 1))
+print(round(100 * apply(UCBAdmissions, c(2, 3), function(x) x["Admitted"] / sum(x)), 1))
+interpretation <- "L'écart global de taux d'admission (44,5 % contre 30,4 %) vient en partie de la répartition des candidatures : les femmes candidatent davantage dans des départements très sélectifs, et à l'intérieur de chaque département les écarts sont faibles. C'est le paradoxe de Simpson ; l'écart global ne prouve pas à lui seul une discrimination, qui doit être étudiée plus finement."
+interpretation
+```
+
+**Pièges fréquents.**
+
+- Affirmer que les données prouvent l'absence de discrimination.
+- Affirmer l'inverse à partir de l'écart brut.
+
+**Pour aller plus loin.** Écris une phrase sur ce que mesurerait un écart « ajusté » et ce qu'il laisserait de côté.
+:::
+
+```{webr}
+#| exercise: a-red-3
+#| check: true
+txt <- paste(as.character(.result), collapse = " ")
+low <- tolower(txt)
+need <- list(
+  "les taux d'admission" = "taux",
+  "les départements ou la répartition des candidatures" = "d[ée]partement|r[ée]partition|composition",
+  "les femmes" = "femmes?",
+  "une précaution (causalité, discrimination)" = "caus|discrimin|ne prouve|prudence|simpson")
+miss <- names(need)[!vapply(need, function(p) grepl(p, low, perl = TRUE), logical(1))]
+nw <- length(strsplit(trimws(txt), "[[:space:]]+")[[1]])
+if (nw < 30) {
+  list(correct = FALSE, message = "Rédige une réponse complète : au moins 30 mots, en phrases.")
+} else if (length(miss)) {
+  list(correct = FALSE, message = paste0("Il manque dans ton interprétation : ", paste(miss, collapse = " ; "), "."))
+} else {
+  list(correct = TRUE, message = "Correct : ton interprétation contient les éléments attendus. Compare avec le modèle de corrigé.")
+}
+```
+
+::: {.dojo-done data-id="a-red-3"}
+:::
+
+## Rédiger la lecture d'une distribution asymétrique {#a-red-4}
+
+[Marche 4 sur 5 · Rédiger]{.dojo-step}
+
+Pour la part d'éducation au-delà du primaire dans les provinces suisses (moyenne ≈ 11 %, médiane = 8 %), rédige **deux phrases** qui décrivent la distribution : indique que la **moyenne** dépasse la **médiane**, parle d'**asymétrie** (ou de queue à droite) et dis laquelle des deux mesures tu préfères pour décrire un cas « typique ».
+
+```{webr}
+#| exercise: a-red-4
+#| caption: "Rédiger la lecture d'une distribution asymétrique"
+x <- swiss$Education
+print(round(c(moyenne = mean(x), mediane = median(x), ecart_interquartile = IQR(x)), 1))
+interpretation <- "______"     # ta phrase, entre guillemets
+interpretation
+```
+
+::: {.hint exercise="a-red-4"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Pense à la relation moyenne/médiane et à ce qu'elle indique sur la queue.
+:::
+:::
+
+::: {.hint exercise="a-red-4"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les éléments attendus
+Une moyenne supérieure à la médiane signale une asymétrie à droite.
+:::
+:::
+
+::: {.solution exercise="a-red-4"}
+**Raisonnement.**
+
+1. Donner les deux valeurs.
+2. Les comparer : moyenne > médiane.
+3. Nommer le phénomène (asymétrie à droite) et justifier le choix de la médiane.
+
+**Lecture économique.** Ce langage est celui de tout rapport sur les revenus ou les patrimoines : on cite la médiane pour le ménage « typique », la moyenne pour le revenu total, et on mentionne la queue. Choisir entre les deux est un choix de **message**.
+
+```{webr}
+#| exercise: a-red-4
+#| solution: true
+x <- swiss$Education
+print(round(c(moyenne = mean(x), mediane = median(x), ecart_interquartile = IQR(x)), 1))
+interpretation <- "La moyenne (environ 11 %) est supérieure à la médiane (8 %) : la distribution est asymétrique, avec une queue à droite due à quelques provinces très instruites. Pour décrire un cas typique, la médiane est plus robuste que la moyenne."
+interpretation
+```
+
+**Pièges fréquents.**
+
+- Ne donner que la moyenne.
+- Dire « la distribution est normale » alors qu'elle est asymétrique.
+
+**Pour aller plus loin.** Ajoute l'écart interquartile (6) dans ta description.
+:::
+
+```{webr}
+#| exercise: a-red-4
+#| check: true
+txt <- paste(as.character(.result), collapse = " ")
+low <- tolower(txt)
+need <- list(
+  "la moyenne" = "moyenne",
+  "la médiane" = "m[ée]diane",
+  "la comparaison (supérieure, plus élevée…)" = "sup[ée]rieur|plus [ée]lev|d[ée]passe|plus grand|tir[ée]e? vers le haut",
+  "l'asymétrie ou la queue" = "asym[ée]tri|queue|dissym")
+miss <- names(need)[!vapply(need, function(p) grepl(p, low, perl = TRUE), logical(1))]
+nw <- length(strsplit(trimws(txt), "[[:space:]]+")[[1]])
+if (nw < 22) {
+  list(correct = FALSE, message = "Rédige une réponse complète : au moins 22 mots, en phrases.")
+} else if (length(miss)) {
+  list(correct = FALSE, message = paste0("Il manque dans ton interprétation : ", paste(miss, collapse = " ; "), "."))
+} else {
+  list(correct = TRUE, message = "Correct : ton interprétation contient les éléments attendus. Compare avec le modèle de corrigé.")
+}
+```
+
+::: {.dojo-done data-id="a-red-4"}
+:::
+
+## Rédiger l'incertitude d'une estimation {#a-red-5}
+
+[Marche 5 sur 5 · Rédiger]{.dojo-step}
+
+L'intervalle de confiance à 95 % de la pente de `ddpi` est [0,04 ; 0,91]. Rédige une phrase qui donne l'intervalle, dit qu'il est **large** (estimation imprécise), précise qu'il est **positif** ou ne contient pas 0 et rappelle ce que représente le niveau de **95 %**.
+
+```{webr}
+#| exercise: a-red-5
+#| caption: "Rédiger l'incertitude d'une estimation"
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+print(round(confint(fit), 2))
+interpretation <- "______"     # ta phrase, entre guillemets
+interpretation
+```
+
+::: {.hint exercise="a-red-5"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Une bonne phrase donne l'intervalle, son signe, sa largeur et le sens du 95 %.
+:::
+:::
+
+::: {.hint exercise="a-red-5"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · les éléments attendus
+Formule : « [borne basse ; borne haute] à 95 % : positif mais imprécis. »
+:::
+:::
+
+::: {.solution exercise="a-red-5"}
+**Raisonnement.**
+
+1. Donner les bornes.
+2. Dire que l'intervalle exclut 0 (effet significatif à 5 %).
+3. Commenter la largeur : de presque nul à près de 1.
+4. Rappeler que 95 % décrit la **procédure**.
+
+**Lecture économique.** Les décideurs lisent mal les estimations ponctuelles : dire « l'effet est de 0,48 » sans fourchette donne une fausse impression de précision. Les intervalles font passer le message honnête : « plutôt positif, mais on ne sait pas si c'est négligeable ou important ».
+
+```{webr}
+#| exercise: a-red-5
+#| solution: true
+fit <- lm(sr ~ ddpi, data = LifeCycleSavings)
+print(round(confint(fit), 2))
+interpretation <- "L'intervalle de confiance à 95 % de la pente est [0,04 ; 0,91] : il exclut 0, donc l'effet est positif, mais il est très large : l'estimation est imprécise. Le niveau de 95 % signifie que la procédure encadre la vraie valeur dans 95 % des échantillons."
+interpretation
+```
+
+**Pièges fréquents.**
+
+- Écrire « il y a 95 % de chances que la vraie valeur soit dans l'intervalle ».
+- Oublier de commenter la largeur.
+
+**Pour aller plus loin.** Compare avec l'intervalle à 99 % (`confint(fit, level = 0.99)`) : il contient maintenant 0 ?
+:::
+
+```{webr}
+#| exercise: a-red-5
+#| check: true
+txt <- paste(as.character(.result), collapse = " ")
+low <- tolower(txt)
+need <- list(
+  "l'intervalle (0,04 et 0,91)" = "0[,.]04|0[,.]9",
+  "le niveau de 95 %" = "95 ?%",
+  "l'imprécision (large, imprécis, incertitude)" = "large|impr[ée]c|incertitude|vaste",
+  "le signe (positif, exclut 0, ne contient pas 0)" = "positi|exclut|ne contient pas")
+miss <- names(need)[!vapply(need, function(p) grepl(p, low, perl = TRUE), logical(1))]
+nw <- length(strsplit(trimws(txt), "[[:space:]]+")[[1]])
+if (nw < 24) {
+  list(correct = FALSE, message = "Rédige une réponse complète : au moins 24 mots, en phrases.")
+} else if (length(miss)) {
+  list(correct = FALSE, message = paste0("Il manque dans ton interprétation : ", paste(miss, collapse = " ; "), "."))
+} else {
+  list(correct = TRUE, message = "Correct : ton interprétation contient les éléments attendus. Compare avec le modèle de corrigé.")
+}
+```
+
+::: {.dojo-done data-id="a-red-5"}
+:::
+

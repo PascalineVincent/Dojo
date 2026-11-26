@@ -26,6 +26,10 @@ website:
         href: index.qmd
       - text: "Échauffements"
         href: parcours/minis.qmd
+      - text: "Atelier"
+        href: parcours/atelier.qmd
+      - text: "Avancé"
+        href: parcours/avance.qmd
       - text: "Parcours"
         menu:
           - text: "Micro (L1/L2)"

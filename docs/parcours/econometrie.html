@@ -335,6 +335,14 @@ window.Quarto = {
     <a class="nav-link" href="../parcours/minis.html"> 
 <span class="menu-text">Échauffements</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../parcours/atelier.html"> 
+<span class="menu-text">Atelier</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../parcours/avance.html"> 
+<span class="menu-text">Avancé</span></a>
+  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parcours" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Parcours</span>
@@ -458,7 +466,7 @@ Astuce
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Une marche te paraît trop haute ?</strong> Fais d’abord les <a href="../parcours/minis.html">échauffements</a> : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page <em>Aujourd’hui</em> te propose aussi un exercice court.</p>
+<p><strong>Une marche te paraît trop haute ?</strong> Fais d’abord les <a href="../parcours/minis.html">échauffements</a> : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page <em>Aujourd’hui</em> te propose aussi un exercice court. Pour varier les gestes (tableaux, débogage, lecture de sorties et de graphiques, rédaction) : l’<a href="../parcours/atelier.html">Atelier</a> ; pour aller plus loin : le <a href="../parcours/avance.html">niveau avancé</a>.</p>
 </div>
 </div>
 <div class="cell">
@@ -514,7 +522,7 @@ Astuce
 <h2 class="anchored" data-anchor-id="eco-ols-0">MCO à la main : l’algèbre matricielle</h2>
 <p><span class="dojo-step">Marche 1 sur 4 · Guidé</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="121" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 120;"><span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>ols0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"eco-ols-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">pente</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="fl">0.5</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="op">-</span><span class="dv">1</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="123" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 122;"><span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>ols0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"eco-ols-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">pente</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="fl">0.5</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="op">-</span><span class="dv">1</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-2" data-nodetype="declaration">
 
@@ -529,7 +537,7 @@ Astuce
 
 </div>
 <script type="webr-1-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJNQ08gbWF0cmljaWVscyIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZWNvLW9scy0wIiwiaW5wdXQiOlsib2xzMCJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic2V0LnNlZWQob2xzMCRzZWVkKVxubiA8LSAxMDBcbnggPC0gcm5vcm0obilcbnkgPC0gMSArIG9sczAkcGVudGUgKiB4ICsgcm5vcm0obilcblggPC0gY2JpbmQoMSwgeCkgICAgICAgICAgICAgICAgICAgICMgcsOpZ3Jlc3NldXJzIDogdW5lIGNvbnN0YW50ZSBldCB4XG5iZXRhIDwtIF9fX19fXyAgICAgICAgICAgICAgICAgICAgICAjIHLDqXNvdXMgbGVzIMOpcXVhdGlvbnMgbm9ybWFsZXMgOiBzb2x2ZShjcm9zc3Byb2QoWCksIGNyb3NzcHJvZChYLCB5KSlcbmUgICAgPC0gX19fX19fICAgICAgICAgICAgICAgICAgICAgICMgcsOpc2lkdXMgOiB5IC0gWCAlKiUgYmV0YVxuUjIgICA8LSBfX19fX18gICAgICAgICAgICAgICAgICAgICAgIyAxIC0gc29tbWUgZGVzIGNhcnLDqXMgcsOpc2lkdWVscyAvIHNvbW1lIGRlcyBjYXJyw6lzIHRvdGF1eFxuYyhjb25zdCA9IGJldGFbMV0sIHBlbnRlID0gYmV0YVsyXSwgUjIgPSBSMikifQ==
+eyJhdHRyIjp7ImNhcHRpb24iOiJNQ08gbWF0cmljaWVscyIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZWNvLW9scy0wIiwiaW5wdXQiOlsib2xzMCJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic2V0LnNlZWQob2xzMCRzZWVkKVxubiA8LSAxMDBcbnggPC0gcm5vcm0obilcbnkgPC0gMSArIG9sczAkcGVudGUgKiB4ICsgcm5vcm0obilcblggPC0gY2JpbmQoMSwgeCkgICAgICAgICAgICAgICAgICAgICMgcsOpZ3Jlc3NldXJzIDogdW5lIGNvbnN0YW50ZSBldCB4XG5iZXRhIDwtIF9fX19fXyAgICAgICAgICAgICAgICAgICAgICAjIGVzdGltYXRldXIgTUNPIDogcsOpc291cyBsZXMgw6lxdWF0aW9ucyBub3JtYWxlcyBzYW5zIGludmVyc2VyIGV4cGxpY2l0ZW1lbnQgbGEgbWF0cmljZVxuZSAgICA8LSBfX19fX18gICAgICAgICAgICAgICAgICAgICAgIyByw6lzaWR1cyA6IMOpY2FydCBlbnRyZSB5IGV0IGxlcyB2YWxldXJzIGFqdXN0w6llc1xuUjIgICA8LSBfX19fX18gICAgICAgICAgICAgICAgICAgICAgIyBwYXJ0IGRlIGxhIHZhcmlhbmNlIGRlIHkgZXhwbGlxdcOpZSBwYXIgbGUgbW9kw6hsZVxuYyhjb25zdCA9IGJldGFbMV0sIHBlbnRlID0gYmV0YVsyXSwgUjIgPSBSMikifQ==
 </script>
 </div>
 </div>
@@ -600,6 +608,7 @@ c(const = beta[1], pente = beta[2], R2 = R2)</code>
 <span id="interpolate-4-9"><a href="#interpolate-4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">const =</span> beta[<span class="dv">1</span>], <span class="at">pente =</span> beta[<span class="dv">2</span>], <span class="at">R2 =</span> R2)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> Écrire les MCO en matrices montre ce que fait un logiciel : projeter y sur l’espace engendré par les régresseurs. Le coefficient de chaque variable se lit « toutes choses égales par ailleurs » : l’effet marginal de x_j en gardant les autres variables du modèle constantes.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Oublier la colonne de 1 : on estime un modèle sans constante (et le <span class="math inline">\(R^2\)</span> n’est plus comparable).</li>
@@ -621,7 +630,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImVj
 <h2 class="anchored" data-anchor-id="eco-ovb-1">Biais de variable omise</h2>
 <p><span class="dojo-step">Marche 2 sur 4 · À compléter</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="221" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 220;"><span id="cb3-221"><a href="#cb3-221" aria-hidden="true" tabindex="-1"></a>ovb1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"eco-ovb-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">rho</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="fl">0.3</span><span class="op">,</span> <span class="fl">0.5</span><span class="op">,</span> <span class="fl">0.7</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="225" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 224;"><span id="cb3-225"><a href="#cb3-225" aria-hidden="true" tabindex="-1"></a>ovb1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"eco-ovb-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">rho</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="fl">0.3</span><span class="op">,</span> <span class="fl">0.5</span><span class="op">,</span> <span class="fl">0.7</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="declaration">
 
@@ -710,6 +719,7 @@ c(long = unname(longue["x"]), court = unname(court), formule = formule)</code>
 <span id="interpolate-9-11"><a href="#interpolate-9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">long =</span> <span class="fu">unname</span>(longue[<span class="st">"x"</span>]), <span class="at">court =</span> <span class="fu">unname</span>(court), <span class="at">formule =</span> formule)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> Omettre une variable corrélée à la fois avec la variable d’intérêt et avec l’expliquée biaise le coefficient. Exemple classique : le rendement de l’éducation estimé sans contrôler l’aptitude surestime l’effet (biais positif). Le signe et la taille du biais se prédisent à partir des corrélations.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Régresser x sur z pour la régression auxiliaire : on obtient une autre pente (covariance divisée par la variance de z), pas <span class="math inline">\(\delta\)</span>.</li>
@@ -731,7 +741,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImVj
 <h2 class="anchored" data-anchor-id="eco-hc-1">Erreurs-types robustes (HC1) à la main</h2>
 <p><span class="dojo-step">Marche 3 sur 4 · À compléter</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="329" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 328;"><span id="cb4-329"><a href="#cb4-329" aria-hidden="true" tabindex="-1"></a>hc1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"eco-hc-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="335" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 334;"><span id="cb4-335"><a href="#cb4-335" aria-hidden="true" tabindex="-1"></a>hc1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"eco-hc-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-4" data-nodetype="declaration">
 
@@ -745,7 +755,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImVj
 
 </div>
 <script type="webr-11-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJTYW5kd2ljaCBkZSBXaGl0ZSIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZWNvLWhjLTEiLCJpbnB1dCI6WyJoYzEiXSwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKGhjMSRzZWVkKVxubiA8LSAyMDA7IGsgPC0gMlxueCA8LSBybm9ybShuKVxueSA8LSAxICsgMC41ICogeCArICgwLjUgKyBhYnMoeCkpICogcm5vcm0obilcblggPC0gY2JpbmQoMSwgeClcblh0WGkgPC0gc29sdmUoY3Jvc3Nwcm9kKFgpKVxuYmV0YSA8LSBYdFhpICUqJSBjcm9zc3Byb2QoWCwgeSlcbmUgPC0gYXMubnVtZXJpYyh5IC0gWCAlKiUgYmV0YSlcblxubWVhdCAgPC0gX19fX19fICAgICAgICAgICAgICAgICAgICAjIHNvbW1lIGRlcyBlX2leMiB4X2kgeF9pJyA6IGNyb3NzcHJvZChYICogZSlcblZfaGMxIDwtIF9fX19fXyAgICAgICAgICAgICAgICAgICAgIyBuIC8gKG4gLSBrKSAqIFh0WGkgJSolIG1lYXQgJSolIFh0WGlcbnNlX29scyA8LSBzcXJ0KHN1bShlXjIpIC8gKG4gLSBrKSAqIFh0WGlbMiwgMl0pXG5jKG9scyA9IHNlX29scywgaGMxID0gc3FydChWX2hjMVsyLCAyXSkpIn0=
+eyJhdHRyIjp7ImNhcHRpb24iOiJTYW5kd2ljaCBkZSBXaGl0ZSIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiZWNvLWhjLTEiLCJpbnB1dCI6WyJoYzEiXSwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKGhjMSRzZWVkKVxubiA8LSAyMDA7IGsgPC0gMlxueCA8LSBybm9ybShuKVxueSA8LSAxICsgMC41ICogeCArICgwLjUgKyBhYnMoeCkpICogcm5vcm0obilcblggPC0gY2JpbmQoMSwgeClcblh0WGkgPC0gc29sdmUoY3Jvc3Nwcm9kKFgpKVxuYmV0YSA8LSBYdFhpICUqJSBjcm9zc3Byb2QoWCwgeSlcbmUgPC0gYXMubnVtZXJpYyh5IC0gWCAlKiUgYmV0YSlcblxubWVhdCAgPC0gX19fX19fICAgICAgICAgICAgICAgICAgICAjIMKrIHZpYW5kZSDCuyBkdSBzYW5kd2ljaCA6IHNvbW1lLCBwb25kw6lyw6llIHBhciBsZXMgcsOpc2lkdXMgYXUgY2FycsOpLCBkZXMgcHJvZHVpdHMgeF9pIHhfaSdcblZfaGMxIDwtIF9fX19fXyAgICAgICAgICAgICAgICAgICAgIyBhc3NlbWJsZSBsZSBzYW5kd2ljaCAocGFpbiwgdmlhbmRlLCBwYWluKSBhdmVjIGxhIGNvcnJlY3Rpb24gZGUgZGVncsOpcyBkZSBsaWJlcnTDqVxuc2Vfb2xzIDwtIHNxcnQoc3VtKGVeMikgLyAobiAtIGspICogWHRYaVsyLCAyXSlcbmMob2xzID0gc2Vfb2xzLCBoYzEgPSBzcXJ0KFZfaGMxWzIsIDJdKSkifQ==
 </script>
 </div>
 </div>
@@ -824,6 +834,7 @@ c(ols = se_ols, hc1 = sqrt(V_hc1[2, 2]))</code>
 <span id="interpolate-14-13"><a href="#interpolate-14-13" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">ols =</span> se_ols, <span class="at">hc1 =</span> <span class="fu">sqrt</span>(V_hc1[<span class="dv">2</span>, <span class="dv">2</span>]))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> Quand la variance des erreurs dépend des régresseurs (hétéroscédasticité, fréquente avec des revenus ou des profits), les erreurs-types usuelles sont fausses, donc les tests et intervalles aussi. Les erreurs-types robustes corrigent cela sans changer les coefficients : c’est le réflexe en économétrie appliquée.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Diviser par <span class="math inline">\(n\)</span> au lieu de <span class="math inline">\(n-k\)</span> : on obtient HC0.</li>
@@ -934,6 +945,7 @@ c(mco = unname(mco), iv = unname(iv), wald = wald)</code>
 <span id="interpolate-19-11"><a href="#interpolate-19-11" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">mco =</span> <span class="fu">unname</span>(mco), <span class="at">iv =</span> <span class="fu">unname</span>(iv), <span class="at">wald =</span> wald)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> Quand le régresseur est endogène (corrélé avec l’erreur), les MCO sont biaisés. Un instrument valide corrèle avec le régresseur (pertinence) mais n’affecte y que par lui (exclusion). L’estimateur obtenu est un effet local (LATE) pour les individus dont le comportement change avec l’instrument, pas forcément pour tous.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Régresser <span class="math inline">\(y\)</span> sur <span class="math inline">\(x\)</span> à la seconde étape : on retombe sur le MCO.</li>

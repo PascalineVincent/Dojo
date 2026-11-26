@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-23T20:47:52Z",
+  "updated": "2026-11-26T04:14:50Z",
   "items": [
     {
       "id": "https://doi.org/10.5281/zenodo.24281556",
@@ -84,21 +84,6 @@
       ]
     },
     {
-      "id": "https://doi.org/10.3390/urbansci10110634",
-      "title": "Spatial Segregation and Socioeconomic Inequality in Loja, Ecuador: A Comparative Analysis Between 2010 and 2022",
-      "authors": ["Joe Espinosa-Noboa", "Pablo F. Cabrera-Barona", "Francisco Cabrera-Torres", "Vinicio Moya-Almeida"],
-      "venue": "Urban Science",
-      "date": "2026-11-03",
-      "url": "https://doi.org/10.3390/urbansci10110634",
-      "source": "openalex",
-      "score": 18,
-      "topic": "Ségrégation",
-      "matched": [
-        "segregation",
-        "spatial segregation"
-      ]
-    },
-    {
       "id": "https://doi.org/10.1080/00224499.2026.2763038",
       "title": "A Measurement Invariance Study of the Sexual Cognitions Checklist Across Sexual Orientation and Gender Identity",
       "authors": ["Carlos Pérez‐Amorós", "María del Mar Sánchez-Fuentes", "Gracia M. Sánchez-Pérez", "Juan Carlos Sierra"],
@@ -112,22 +97,6 @@
         "gender identity",
         "transgender",
         "sexual orientation"
-      ]
-    },
-    {
-      "id": "https://doi.org/10.1017/laq.2026.10217",
-      "title": "Lidar and the Landscape of Inequality: Comparing Household Wealth at Two Late Classic Maya Sites in Northwestern Belize",
-      "authors": "Amy E. Thompson",
-      "venue": "Latin American Antiquity",
-      "date": "2026-11-03",
-      "url": "https://doi.org/10.1017/laq.2026.10217",
-      "source": "openalex",
-      "score": 15,
-      "topic": "Inégalités",
-      "matched": [
-        "inequality",
-        "gini",
-        "wealth"
       ]
     },
     {
@@ -229,14 +198,14 @@
       ]
     },
     {
-      "id": "https://doi.org/10.48512/xcv8522137",
-      "title": "Macroarchaeology of Economic Growth and Wealth Inequality",
-      "authors": ["Timothy A. Kohler", "Scott Ortman"],
-      "venue": "The Digital Archeological Record (tDAR)",
-      "date": "2026-11-03",
-      "url": "https://doi.org/10.48512/xcv8522137",
+      "id": "https://doi.org/10.6082/4zxg8-3hw30",
+      "title": "Worker Bargaining Power, Unemployment Risk, and Inequality in a Heterogeneous-Agent Search Model",
+      "authors": "Cheetah Zhu",
+      "venue": "University of Chicago",
+      "date": "2026-12-01",
+      "url": "https://doi.org/10.6082/4zxg8-3hw30",
       "source": "openalex",
-      "score": 14,
+      "score": 13,
       "topic": "Inégalités",
       "matched": [
         "inequality",
@@ -245,13 +214,13 @@
       ]
     },
     {
-      "id": "https://doi.org/10.6082/4zxg8-3hw30",
-      "title": "Worker Bargaining Power, Unemployment Risk, and Inequality in a Heterogeneous-Agent Search Model",
-      "authors": "Cheetah Zhu",
-      "venue": "University of Chicago",
-      "date": "2026-12-01",
-      "url": "https://doi.org/10.6082/4zxg8-3hw30",
-      "source": "openalex",
+      "id": "http://arxiv.org/abs/2611.31103v1",
+      "title": "Self-similar Inequality Dynamics in Biased Competition for a Conserved Resource",
+      "authors": ["Giacomo Bartolucci", "Jonathan Bauermann"],
+      "venue": "arXiv",
+      "date": "2026-11-23",
+      "url": "http://arxiv.org/abs/2611.31103v1",
+      "source": "arxiv",
       "score": 13,
       "topic": "Inégalités",
       "matched": [
@@ -275,38 +244,6 @@
         "transgender",
         "lgbt",
         "sexual orientation"
-      ]
-    },
-    {
-      "id": "https://doi.org/10.1145/3846167.3848606",
-      "title": "Navigating Divides: The Effects of Segregation and Inequality on Door-to-Door Tenant Outreach",
-      "authors": ["Alex DiChristofano", "Sanmay Das", "Patrick J. Fowler"],
-      "venue": "ACM Conference on Equity and Access in Algorithms, Mechanisms, and Optimization (EAAMO)",
-      "date": "2026-11-04",
-      "url": "https://doi.org/10.1145/3846167.3848606",
-      "source": "openalex",
-      "score": 13,
-      "topic": "Ségrégation",
-      "matched": [
-        "segregation",
-        "spatial segregation",
-        "neighborhood"
-      ]
-    },
-    {
-      "id": "https://doi.org/10.65864/62ib27q9vw",
-      "title": "How Do Top Earners Respond to Taxation? Own- and Cross-Tax Base Responses, Efficiency, and Inequality",
-      "authors": ["Matías Giaccobasso", "Marcelo Bérgolo", "Gabriel Burdín", "Mauricio De Rosa", "Martín Leites", "Horacio Rueda"],
-      "venue": "CESifo",
-      "date": "2026-11-03",
-      "url": "https://doi.org/10.65864/62ib27q9vw",
-      "source": "openalex",
-      "score": 13,
-      "topic": "Inégalités",
-      "matched": [
-        "inequality",
-        "top income",
-        "income distribution"
       ]
     },
     {
@@ -352,6 +289,21 @@
       "matched": [
         "gender identity",
         "transgender"
+      ]
+    },
+    {
+      "id": "http://arxiv.org/abs/2611.30998v1",
+      "title": "Spurious Information in Large Markets: Random Matrix Laws for Entropy, Mutual Information and the Value of Information",
+      "authors": "James Rice",
+      "venue": "arXiv",
+      "date": "2026-11-23",
+      "url": "http://arxiv.org/abs/2611.30998v1",
+      "source": "arxiv",
+      "score": 12,
+      "topic": "Ségrégation",
+      "matched": [
+        "mutual information",
+        "entropy"
       ]
     },
     {
@@ -476,21 +428,6 @@
       ]
     },
     {
-      "id": "https://doi.org/10.31235/osf.io/r75zh",
-      "title": "Wealth Inequality and Public Support for Financial Stabilization in Economic Crises",
-      "authors": ["Björn Bremer", "Jeffrey M. Chwieroth", "Andrew Walter"],
-      "venue": "SocArXiv (OSF Preprints)",
-      "date": "2026-11-13",
-      "url": "https://doi.org/10.31235/osf.io/r75zh",
-      "source": "openalex",
-      "score": 12,
-      "topic": "Inégalités",
-      "matched": [
-        "inequality",
-        "wealth"
-      ]
-    },
-    {
       "id": "https://doi.org/10.1177/00104140261500270",
       "title": "From Wealth to Welfare: How Economic Elites Made Inequality Work",
       "authors": "Nils Blossey",
@@ -503,6 +440,21 @@
       "matched": [
         "inequality",
         "wealth"
+      ]
+    },
+    {
+      "id": "https://doi.org/10.7759/cureus.119487",
+      "title": "Hidden in the Hills: Cardiovascular Risk in Transgender Populations in Rural Appalachia",
+      "authors": ["Ebubechukwu O. Ezeh", "Maddie Perdoncin", "Chukwuemeka E. Ogbu", "O.S. Ndukwe", "Olayiwola Bolaji", "Linda Keke", "Elizabeth Saunders", "Jason Mader", "Patricia Rodriguez"],
+      "venue": "Cureus",
+      "date": "2026-11-11",
+      "url": "https://doi.org/10.7759/cureus.119487",
+      "source": "openalex",
+      "score": 12,
+      "topic": "Identité de genre",
+      "matched": [
+        "gender identity",
+        "transgender"
       ]
     },
     {
@@ -628,67 +580,6 @@
       ]
     },
     {
-      "id": "https://doi.org/10.1080/00346764.2026.2757824",
-      "title": "How should we target wealth inequality?",
-      "authors": "Tsung‐Hsing Ho",
-      "venue": "Review of Social Economy",
-      "date": "2026-11-04",
-      "url": "https://doi.org/10.1080/00346764.2026.2757824",
-      "source": "openalex",
-      "score": 12,
-      "topic": "Inégalités",
-      "matched": [
-        "inequality",
-        "wealth"
-      ]
-    },
-    {
-      "id": "https://doi.org/10.64898/2026.11.03.26366928",
-      "title": "Oral rehydration salts and zinc for childhood diarrhoea in Bangladesh, 2019 and 2025: coverage, wealth inequality and reported source of care",
-      "authors": ["S.M. Ashraf Ul Hoque", "Mohammad Khalid Hasan", "Md Ashifur Rahman", "Khairul Islam", "Tanvir Ahmed", "S. M. Raysul Haque", "Md. Rabiul Islam", "Kamran Ul Baset"],
-      "venue": "medRxiv",
-      "date": "2026-11-03",
-      "url": "https://doi.org/10.64898/2026.11.03.26366928",
-      "source": "openalex",
-      "score": 12,
-      "topic": "Inégalités",
-      "matched": [
-        "inequality",
-        "wealth"
-      ]
-    },
-    {
-      "id": "https://doi.org/10.21203/rs.3.rs-11368974/v1",
-      "title": "Between Pressure and Acceptance: A Qualitative Study of How LGBTQ+ Identity May Shape Eating Patterns, Disordered Eating, and Body Image",
-      "authors": ["박솔미", "Matthew F. Murray", "Graham C. Miller", "Isabel R. Rooper", "Andrea K. Graham"],
-      "venue": "Research Square",
-      "date": "2026-11-03",
-      "url": "https://doi.org/10.21203/rs.3.rs-11368974/v1",
-      "source": "openalex",
-      "score": 12,
-      "topic": "Identité de genre",
-      "matched": [
-        "gender identity",
-        "transgender",
-        "lgbt"
-      ]
-    },
-    {
-      "id": "https://doi.org/10.54938/ijemd-ss.2026.05.6.880",
-      "title": "Nexus between Income Inequality-Institutional Quality and Environmental Degradation: Evidence from Developing South Asian and ASEAN Countries",
-      "authors": ["Samia Qureshi", "Samina Sabir"],
-      "venue": "International Journal of Emerging Multidisciplinaries Social Science",
-      "date": "2026-11-02",
-      "url": "https://doi.org/10.54938/ijemd-ss.2026.05.6.880",
-      "source": "openalex",
-      "score": 12,
-      "topic": "Inégalités",
-      "matched": [
-        "inequality",
-        "gini"
-      ]
-    },
-    {
       "id": "https://doi.org/10.52342/2587-7666vte_2026_4_140_158",
       "title": "Between-Group and Within-Group Components of Wage Inequality in Russia: an Empirical Analysis",
       "authors": "Анастасия Вадимовна Каравай",
@@ -734,51 +625,6 @@
       ]
     },
     {
-      "id": "https://doi.org/10.1016/j.ssmph.2026.101991",
-      "title": "Racial residential segregation and food insecurity: Examining disparities in Black-White food insecurity across U.S. metropolitan areas",
-      "authors": ["Noah Gibson", "Norbert Lance Weston Wilson"],
-      "venue": "SSM - Population Health",
-      "date": "2026-11-04",
-      "url": "https://doi.org/10.1016/j.ssmph.2026.101991",
-      "source": "openalex",
-      "score": 11,
-      "topic": "Ségrégation",
-      "matched": [
-        "segregation",
-        "residential"
-      ]
-    },
-    {
-      "id": "https://doi.org/10.1073/pnas.2625474123",
-      "title": "Unpacking transatlantic income inequality",
-      "authors": ["James P. Ziliak", "Jonathan Cribb", "Richard W. Blundell", "James W. Banks", "David Green", "Antoine Bozio", "Malka Guillot", "Barra Roantree", "Maxime Tô", "Brindusa Anghel", "Cristina Barceló", "Jim Been", "Patrick Bennett", "Maximilian Blömer", "Olympia Bover", "Koen Caminada", "Bart Capéau", "Daniele Checchi", "Svetoslav Danchev", "André Decoster", "Bram De Rock", "Kelly Foley", "Giorgos Gatopoulos", "Martin Halla", "Bradley L. Hardy", "Elena Herold", "Laura Hospido", "Tullio Jappelli", "Egbert Jongen", "Niki Kalavrezou", "Arizo Karimi", "Elizabeth Krause", "Max Lay", "Søren Leth‐Petersen", "Charlotte Lucke", "Immacolata Marino", "Antonis Mavropoulos", "Carlos Oliveira", "Marten O. Palme", "Tuuli Paukkeri", "Grigoris Pavlou", "Andreas Peichl", "Pedro Portugal", "Lukas Puschnig", "Pedro S. Raposo", "Ann-Christin Rathje", "Terhi Ravaska", "Craig Riddell", "Marja Riihelä", "Johan Sæverud", "Kjell G. Salvanes", "Annalisa Scognamiglio", "Anne Steuernagel", "Jonas Vanderkelen", "Heike Vethaak", "Nikos Vettas", "Andrea Michaela Weber", "Tom Wernham"],
-      "venue": "Proceedings of the National Academy of Sciences",
-      "date": "2026-11-03",
-      "url": "https://doi.org/10.1073/pnas.2625474123",
-      "source": "openalex",
-      "score": 11,
-      "topic": "Inégalités",
-      "matched": [
-        "inequality",
-        "income distribution"
-      ]
-    },
-    {
-      "id": "https://doi.org/10.1016/j.evolhumbehav.2026.106992",
-      "title": "Settlement, wealth inequality and witchcraft",
-      "authors": ["Sarah Peacey", "Gabriel Šaffa", "Ruth H. Mace"],
-      "venue": "Evolution and Human Behavior",
-      "date": "2026-11-03",
-      "url": "https://doi.org/10.1016/j.evolhumbehav.2026.106992",
-      "source": "openalex",
-      "score": 11,
-      "topic": "Inégalités",
-      "matched": [
-        "inequality",
-        "wealth"
-      ]
-    },
-    {
       "id": "https://doi.org/10.11116/9789461668653",
       "title": "The Middle Class Paradox: Affluence and Inequality in Belgium, Past and Present",
       "authors": ["Bruno Blondé", "Ive Marx"],
@@ -806,6 +652,36 @@
       "matched": [
         "inequality",
         "wealth"
+      ]
+    },
+    {
+      "id": "https://doi.org/10.54254/2754-1169/2026.39454",
+      "title": "A Quasi‑Natural Experiment on How National‑Fitness Policy Shapes Digital Sports Industrial Growth: Evidence from Difference-in-Differences and Regression Discontinuity Designs",
+      "authors": "Haonan Liu",
+      "venue": "Advances in Economics Management and Political Sciences",
+      "date": "2026-11-24",
+      "url": "https://doi.org/10.54254/2754-1169/2026.39454",
+      "source": "openalex",
+      "score": 10,
+      "topic": "Méthodes (économétrie appliquée)",
+      "matched": [
+        "difference-in-differences",
+        "regression discontinuity"
+      ]
+    },
+    {
+      "id": "https://doi.org/10.5281/zenodo.24439796",
+      "title": "Code and simulation outputs for a spatial agent-based virtual experiment on segregation, bridging networks and symptom-burden distributions (version 1.0.0)",
+      "authors": "Authors of the associated manuscript",
+      "venue": "Zenodo (CERN European Organization for Nuclear Research)",
+      "date": "2026-11-22",
+      "url": "https://doi.org/10.5281/zenodo.24439796",
+      "source": "openalex",
+      "score": 10,
+      "topic": "Ségrégation",
+      "matched": [
+        "segregation",
+        "residential"
       ]
     },
     {
@@ -845,6 +721,21 @@
       "venue": "Economic Modelling",
       "date": "2026-11-11",
       "url": "https://doi.org/10.1016/j.econmod.2026.107933",
+      "source": "openalex",
+      "score": 10,
+      "topic": "Inégalités",
+      "matched": [
+        "inequality",
+        "wealth"
+      ]
+    },
+    {
+      "id": "https://doi.org/10.1002/jid.70124",
+      "title": "Financial Services for All? Exploring Financial Inclusion Inequality in Kenya and Tanzania",
+      "authors": ["Anna Mader", "Constantin Johnen", "Oliver Mußhoff"],
+      "venue": "Journal of International Development",
+      "date": "2026-11-11",
+      "url": "https://doi.org/10.1002/jid.70124",
       "source": "openalex",
       "score": 10,
       "topic": "Inégalités",
@@ -898,6 +789,34 @@
       ]
     },
     {
+      "id": "http://arxiv.org/abs/2611.32348v1",
+      "title": "Explaining intersectional segregation in multi-attribute social networks",
+      "authors": ["Clara Eminente", "Elisa Omodei", "Michele Starnini"],
+      "venue": "arXiv",
+      "date": "2026-11-24",
+      "url": "http://arxiv.org/abs/2611.32348v1",
+      "source": "arxiv",
+      "score": 9,
+      "topic": "Ségrégation",
+      "matched": [
+        "segregation"
+      ]
+    },
+    {
+      "id": "https://doi.org/10.64898/2026.11.22.26368689",
+      "title": "Partitioning lifespan inequality in hierarchical study designs with an application to global healthy longevity",
+      "authors": "Hal Caswell",
+      "venue": "medRxiv",
+      "date": "2026-11-23",
+      "url": "https://doi.org/10.64898/2026.11.22.26368689",
+      "source": "openalex",
+      "score": 9,
+      "topic": "Inégalités",
+      "matched": [
+        "inequality"
+      ]
+    },
+    {
       "id": "https://doi.org/10.5281/zenodo.24418242",
       "title": "Code for: Socioeconomic school segregation or a national–migrant divide? (TIMSS 2023)",
       "authors": ["university of cape coast", "Davis Mawuena Aweso"],
@@ -925,6 +844,79 @@
         "inequality",
         "wealth",
         "poverty"
+      ]
+    },
+    {
+      "id": "https://doi.org/10.58445/ma6eqw70",
+      "title": "21st Century Fashion Campaigns & Femininity: How Fashion Reinforces Traditional Gender Identity Concepts",
+      "authors": "Fangyu Shen",
+      "venue": "",
+      "date": "2026-11-21",
+      "url": "https://doi.org/10.58445/ma6eqw70",
+      "source": "openalex",
+      "score": 9,
+      "topic": "Identité de genre",
+      "matched": [
+        "gender identity"
+      ]
+    },
+    {
+      "id": "https://doi.org/10.1111/gwao.70292",
+      "title": "Navigating Authenticity and Adversity: A Qualitative Exploration of Employment Experiences of Transgender and Gender Diverse Texans",
+      "authors": ["Paola Roldán", "Jacob Goffnett", "Kelly Lynn Clary", "Angela Matijczak"],
+      "venue": "Gender Work and Organization",
+      "date": "2026-11-21",
+      "url": "https://doi.org/10.1111/gwao.70292",
+      "source": "openalex",
+      "score": 9,
+      "topic": "Identité de genre",
+      "matched": [
+        "transgender"
+      ]
+    },
+    {
+      "id": "https://doi.org/10.1111/phn.70211",
+      "title": "Care for Sexually Transmitted Infections among Transgender Women Provided by Family Health Strategy Nurses in Brazil: A Cross‐sectional Study",
+      "authors": ["Pedro Vitor Rocha Vila Nova", "Iaron Leal Seabra", "Raíssa Millena Silva Florêncio", "Andressa Tavares Parente", "Glenda Roberta Oliveira Naiff Ferreira", "Eliã Pinheiro Botelho"],
+      "venue": "Public Health Nursing",
+      "date": "2026-11-20",
+      "url": "https://doi.org/10.1111/phn.70211",
+      "source": "openalex",
+      "score": 9,
+      "topic": "Identité de genre",
+      "matched": [
+        "transgender"
+      ]
+    },
+    {
+      "id": "https://doi.org/10.11144/javeriana.umed67.pfag",
+      "title": "Prevalencia y factores asociados a la diversidad de género y orientación sexual en el Eje Cafetero (Colombia): un estudio transversal",
+      "authors": "Franklin José Espitia De La Hoz",
+      "venue": "Universitas Médica",
+      "date": "2026-11-19",
+      "url": "https://doi.org/10.11144/javeriana.umed67.pfag",
+      "source": "openalex",
+      "score": 9,
+      "topic": "Identité de genre",
+      "matched": [
+        "transgender",
+        "non-binary",
+        "lgbt",
+        "sexual orientation"
+      ]
+    },
+    {
+      "id": "https://doi.org/10.5281/zenodo.24335295",
+      "title": "Replication Package for 'Gender Identity and Economic Decision Making'",
+      "authors": ["Anne Brenøe", "Zeynep Eyibak", "Lea Heursen", "Eva Ranehill", "Roberto A. Weber"],
+      "venue": "Zenodo (CERN European Organization for Nuclear Research)",
+      "date": "2026-11-18",
+      "url": "https://doi.org/10.5281/zenodo.24335295",
+      "source": "openalex",
+      "score": 9,
+      "topic": "Identité de genre",
+      "matched": [
+        "gender identity"
       ]
     }
   ]

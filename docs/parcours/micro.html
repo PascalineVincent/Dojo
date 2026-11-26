@@ -335,6 +335,14 @@ window.Quarto = {
     <a class="nav-link" href="../parcours/minis.html"> 
 <span class="menu-text">Échauffements</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../parcours/atelier.html"> 
+<span class="menu-text">Atelier</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../parcours/avance.html"> 
+<span class="menu-text">Avancé</span></a>
+  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parcours" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Parcours</span>
@@ -462,7 +470,7 @@ Astuce
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Une marche te paraît trop haute ?</strong> Fais d’abord les <a href="../parcours/minis.html">échauffements</a> : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page <em>Aujourd’hui</em> te propose aussi un exercice court.</p>
+<p><strong>Une marche te paraît trop haute ?</strong> Fais d’abord les <a href="../parcours/minis.html">échauffements</a> : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page <em>Aujourd’hui</em> te propose aussi un exercice court. Pour varier les gestes (tableaux, débogage, lecture de sorties et de graphiques, rédaction) : l’<a href="../parcours/atelier.html">Atelier</a> ; pour aller plus loin : le <a href="../parcours/avance.html">niveau avancé</a>.</p>
 </div>
 </div>
 <div class="cell">
@@ -545,7 +553,7 @@ Astuce
 <h2 class="anchored" data-anchor-id="micro-cpp-1">Offre d’une firme preneuse de prix</h2>
 <p><span class="dojo-step">Marche 1 sur 3 · Guidé</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="125" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 124;"><span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a>micro1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-cpp-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="kw">const</span> a <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">8</span>)<span class="op">;</span> <span class="cf">return</span> { a<span class="op">,</span> <span class="dt">F</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">20</span><span class="op">,</span> <span class="dv">60</span>)<span class="op">,</span> <span class="dt">p</span><span class="op">:</span> a <span class="op">+</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">6</span><span class="op">,</span> <span class="dv">20</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="127" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 126;"><span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a>micro1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-cpp-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="kw">const</span> a <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">8</span>)<span class="op">;</span> <span class="cf">return</span> { a<span class="op">,</span> <span class="dt">F</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">20</span><span class="op">,</span> <span class="dv">60</span>)<span class="op">,</span> <span class="dt">p</span><span class="op">:</span> a <span class="op">+</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">6</span><span class="op">,</span> <span class="dv">20</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-2" data-nodetype="declaration">
 
@@ -559,7 +567,7 @@ Astuce
 
 </div>
 <script type="webr-1-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJRdWFudGl0w6kgZXQgcHJvZml0IiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhlcmNpc2UiOiJtaWNyby1jcHAtMSIsImlucHV0IjpbIm1pY3JvMSJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoiYSA8LSBtaWNybzEkYTsgRiA8LSBtaWNybzEkRjsgcCA8LSBtaWNybzEkcFxuIyBDb8O7dCBtYXJnaW5hbCA6IENtKHEpID0gcSArIGEuIENvbmRpdGlvbiBkZSBwcmVtaWVyIG9yZHJlIDogcCA9IENtKHEpXG5xX3N0YXIgPC0gX19fX19fXG5wcm9maXQgPC0gX19fX19fICAgICAgIyByZWNldHRlIC0gY2/Du3QgdG90YWwgKG4nb3VibGllIHBhcyBsZSBjb8O7dCBmaXhlKVxuYyhxID0gcV9zdGFyLCBwcm9maXQgPSBwcm9maXQpIn0=
+eyJhdHRyIjp7ImNhcHRpb24iOiJRdWFudGl0w6kgZXQgcHJvZml0IiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhlcmNpc2UiOiJtaWNyby1jcHAtMSIsImlucHV0IjpbIm1pY3JvMSJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoiYSA8LSBtaWNybzEkYTsgRiA8LSBtaWNybzEkRjsgcCA8LSBtaWNybzEkcFxuIyBDb8O7dCBtYXJnaW5hbCA6IENtKHEpID0gcSArIGEuIENvbmRpdGlvbiBkZSBwcmVtaWVyIG9yZHJlIDogcCA9IENtKHEpXG5xX3N0YXIgPC0gX19fX19fXG5wcm9maXQgPC0gX19fX19fICAgICAgIyBwcm9maXQgOiByZWNldHRlIG1vaW5zIHRvdXMgbGVzIGNvw7t0cywgeSBjb21wcmlzIGNldXggcXVpIG5lIGTDqXBlbmRlbnQgcGFzIGRlIGxhIHF1YW50aXTDqVxuYyhxID0gcV9zdGFyLCBwcm9maXQgPSBwcm9maXQpIn0=
 </script>
 </div>
 </div>
@@ -620,6 +628,7 @@ c(q = q_star, profit = profit)</code>
 <span id="interpolate-4-4"><a href="#interpolate-4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">q =</span> q_star, <span class="at">profit =</span> profit)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> Une firme preneuse de prix produit jusqu’au point où le coût d’une unité supplémentaire égale le prix : au-delà, chaque unité coûte plus qu’elle ne rapporte. Le profit mesure ce qui reste après avoir couvert tous les coûts, y compris le coût fixe : c’est lui qui décide si la firme reste sur le marché.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Oublier <span class="math inline">\(F\)</span> dans le profit : on conclut à tort que la firme gagne de l’argent.</li>
@@ -641,7 +650,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1p
 <h2 class="anchored" data-anchor-id="micro-cpp-3">Offre de court terme et seuil de fermeture</h2>
 <p><span class="dojo-step">Marche 2 sur 3 · À compléter</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="227" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 226;"><span id="cb3-227"><a href="#cb3-227" aria-hidden="true" tabindex="-1"></a>cpp3 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-cpp-3"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">a</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">8</span>)<span class="op">,</span> <span class="dt">F</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">18</span><span class="op">,</span> <span class="dv">32</span><span class="op">,</span> <span class="dv">50</span><span class="op">,</span> <span class="dv">72</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="231" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 230;"><span id="cb3-231"><a href="#cb3-231" aria-hidden="true" tabindex="-1"></a>cpp3 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-cpp-3"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">a</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">8</span>)<span class="op">,</span> <span class="dt">F</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">18</span><span class="op">,</span> <span class="dv">32</span><span class="op">,</span> <span class="dv">50</span><span class="op">,</span> <span class="dv">72</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="declaration">
 
@@ -725,6 +734,7 @@ rbind(court = sapply(prix, offre_ct), long = sapply(prix, offre_lt))</code>
 <span id="interpolate-9-9"><a href="#interpolate-9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">court =</span> <span class="fu">sapply</span>(prix, offre_ct), <span class="at">long =</span> <span class="fu">sapply</span>(prix, offre_lt))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> À court terme, le coût fixe est déjà engagé : la firme continue de produire tant que le prix couvre le coût variable moyen, même à perte. Le <strong>seuil de fermeture</strong> est donc le minimum du coût variable moyen, pas du coût total moyen. L’offre de court terme est la partie du coût marginal située au-dessus de ce seuil.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Fermer dès que le profit total est négatif <strong>à court terme</strong> : tant que <span class="math inline">\(p\)</span> couvre le coût variable, produire réduit la perte.</li>
@@ -746,12 +756,12 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1p
 <h2 class="anchored" data-anchor-id="micro-cpp-2">Équilibre de long terme et nombre de firmes</h2>
 <p><span class="dojo-step">Marche 3 sur 3 · À compléter</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="325" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 324;"><span id="cb4-325"><a href="#cb4-325" aria-hidden="true" tabindex="-1"></a>micro2 <span class="op">=</span> {</span>
-<span id="cb4-326"><a href="#cb4-326" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-cpp-2"</span><span class="op">,</span> salt)<span class="op">;</span></span>
-<span id="cb4-327"><a href="#cb4-327" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> s <span class="op">=</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">4</span><span class="op">,</span> <span class="dv">6</span><span class="op">,</span> <span class="dv">8</span><span class="op">,</span> <span class="dv">10</span>])<span class="op">;</span>                       <span class="co">// s = sqrt(2F), caché</span></span>
-<span id="cb4-328"><a href="#cb4-328" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> a <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">6</span>)<span class="op">,</span> b <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">4</span>)<span class="op">,</span> N0 <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">10</span><span class="op">,</span> <span class="dv">40</span>)<span class="op">;</span></span>
-<span id="cb4-329"><a href="#cb4-329" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { a<span class="op">,</span> <span class="dt">F</span><span class="op">:</span> s <span class="op">*</span> s <span class="op">/</span> <span class="dv">2</span><span class="op">,</span> b<span class="op">,</span> <span class="dt">D0</span><span class="op">:</span> b <span class="op">*</span> (a <span class="op">+</span> s) <span class="op">+</span> N0 <span class="op">*</span> s }<span class="op">;</span></span>
-<span id="cb4-330"><a href="#cb4-330" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="331" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 330;"><span id="cb4-331"><a href="#cb4-331" aria-hidden="true" tabindex="-1"></a>micro2 <span class="op">=</span> {</span>
+<span id="cb4-332"><a href="#cb4-332" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-cpp-2"</span><span class="op">,</span> salt)<span class="op">;</span></span>
+<span id="cb4-333"><a href="#cb4-333" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> s <span class="op">=</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">4</span><span class="op">,</span> <span class="dv">6</span><span class="op">,</span> <span class="dv">8</span><span class="op">,</span> <span class="dv">10</span>])<span class="op">;</span>                       <span class="co">// s = sqrt(2F), caché</span></span>
+<span id="cb4-334"><a href="#cb4-334" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> a <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">6</span>)<span class="op">,</span> b <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">4</span>)<span class="op">,</span> N0 <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">10</span><span class="op">,</span> <span class="dv">40</span>)<span class="op">;</span></span>
+<span id="cb4-335"><a href="#cb4-335" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { a<span class="op">,</span> <span class="dt">F</span><span class="op">:</span> s <span class="op">*</span> s <span class="op">/</span> <span class="dv">2</span><span class="op">,</span> b<span class="op">,</span> <span class="dt">D0</span><span class="op">:</span> b <span class="op">*</span> (a <span class="op">+</span> s) <span class="op">+</span> N0 <span class="op">*</span> s }<span class="op">;</span></span>
+<span id="cb4-336"><a href="#cb4-336" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-4" data-nodetype="declaration">
 
@@ -830,6 +840,7 @@ c(p = p_lr, q = q_lr, N = N_lr)</code>
 <span id="interpolate-14-6"><a href="#interpolate-14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">p =</span> p_lr, <span class="at">q =</span> q_lr, <span class="at">N =</span> N_lr)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> À long terme, la libre entrée annule le profit économique : le prix tend vers le minimum du coût moyen. Le nombre de firmes s’ajuste pour que la quantité demandée à ce prix soit exactement produite. Un prix supérieur attire des entrants, un prix inférieur provoque des sorties.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Résoudre <span class="math inline">\(p = Cm(q)\)</span> sans imposer le profit nul : on obtient la production de court terme, pas celle de long terme.</li>
@@ -854,7 +865,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1p
 <h2 class="anchored" data-anchor-id="micro-mono-0">Recette totale et recette marginale</h2>
 <p><span class="dojo-step">Marche 1 sur 4 · Guidé</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="419" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 418;"><span id="cb5-419"><a href="#cb5-419" aria-hidden="true" tabindex="-1"></a>micro0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-mono-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">A</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">40</span><span class="op">,</span> <span class="dv">100</span>)<span class="op">,</span> <span class="dt">b</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span>])<span class="op">,</span> <span class="dt">Q</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">3</span><span class="op">,</span> <span class="dv">9</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="427" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 426;"><span id="cb5-427"><a href="#cb5-427" aria-hidden="true" tabindex="-1"></a>micro0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-mono-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">A</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">40</span><span class="op">,</span> <span class="dv">100</span>)<span class="op">,</span> <span class="dt">b</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span>])<span class="op">,</span> <span class="dt">Q</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">3</span><span class="op">,</span> <span class="dv">9</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-5" data-nodetype="declaration">
 
@@ -868,7 +879,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1p
 
 </div>
 <script type="webr-16-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJSZWNldHRlIG1hcmdpbmFsZSIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoibWljcm8tbW9uby0wIiwiaW5wdXQiOlsibWljcm8wIl0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJBIDwtIG1pY3JvMCRBOyBiIDwtIG1pY3JvMCRiOyBRIDwtIG1pY3JvMCRRXG5QICA8LSBfX19fX18gICAgICAgIyBwcml4IGF1cXVlbCBzZSB2ZW5kZW50IFEgdW5pdMOpcyAobHUgc3VyIGxhIGRlbWFuZGUpXG5SICA8LSBfX19fX18gICAgICAgIyByZWNldHRlIHRvdGFsZSA6IHByaXggeCBxdWFudGl0w6lcblJtIDwtIF9fX19fXyAgICAgICAjIHJlY2V0dGUgbWFyZ2luYWxlIDogZMOpcml2w6llIGRlIFIoUSkgcGFyIHJhcHBvcnQgw6AgUVxuaCA8LSAwLjAwMVxuUm1fbnVtIDwtICgoQSAtIGIgKiAoUSArIGgpKSAqIChRICsgaCkgLSBSKSAvIGggICAgICMgdsOpcmlmaWNhdGlvbiBudW3DqXJpcXVlIChuZSBwYXMgbW9kaWZpZXIpXG5jKFAgPSBQLCBSID0gUiwgUm0gPSBSbSwgUm1fbnVtID0gUm1fbnVtKSJ9
+eyJhdHRyIjp7ImNhcHRpb24iOiJSZWNldHRlIG1hcmdpbmFsZSIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoibWljcm8tbW9uby0wIiwiaW5wdXQiOlsibWljcm8wIl0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJBIDwtIG1pY3JvMCRBOyBiIDwtIG1pY3JvMCRiOyBRIDwtIG1pY3JvMCRRXG5QICA8LSBfX19fX18gICAgICAgIyBwcml4IGludmVyc2UgOiBsZSBwcml4IHF1ZSBsZSBtYXJjaMOpIGFjY2VwdGUgcG91ciB2ZW5kcmUgUSB1bml0w6lzXG5SICA8LSBfX19fX18gICAgICAgIyByZWNldHRlIHRvdGFsZSA6IHByaXggeCBxdWFudGl0w6lcblJtIDwtIF9fX19fXyAgICAgICAjIHJlY2V0dGUgbWFyZ2luYWxlIDogZGUgY29tYmllbiBsYSByZWNldHRlIHRvdGFsZSBhdWdtZW50ZSBxdWFuZCBvbiB2ZW5kIHVuZSB1bml0w6kgZGUgcGx1c1xuaCA8LSAwLjAwMVxuUm1fbnVtIDwtICgoQSAtIGIgKiAoUSArIGgpKSAqIChRICsgaCkgLSBSKSAvIGggICAgICMgdsOpcmlmaWNhdGlvbiBudW3DqXJpcXVlIChuZSBwYXMgbW9kaWZpZXIpXG5jKFAgPSBQLCBSID0gUiwgUm0gPSBSbSwgUm1fbnVtID0gUm1fbnVtKSJ9
 </script>
 </div>
 </div>
@@ -935,6 +946,7 @@ c(P = P, R = R, Rm = Rm, Rm_num = Rm_num)</code>
 <span id="interpolate-19-7"><a href="#interpolate-19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">P =</span> P, <span class="at">R =</span> R, <span class="at">Rm =</span> Rm, <span class="at">Rm_num =</span> Rm_num)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> Un monopoleur qui baisse son prix pour vendre une unité de plus perd de la recette sur toutes les unités vendues auparavant : sa recette marginale est donc <strong>inférieure au prix</strong> et décroît deux fois plus vite que la demande (pour une demande linéaire). C’est l’origine du pouvoir de marché : il restreint la quantité pour maintenir un prix élevé.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Confondre recette marginale et prix : pour une firme en concurrence parfaite elles coïncident, pas pour un monopole.</li>
@@ -956,7 +968,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1p
 <h2 class="anchored" data-anchor-id="micro-mono-1">Monopole et perte sèche</h2>
 <p><span class="dojo-step">Marche 2 sur 4 · À compléter</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb6" data-startfrom="515" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 514;"><span id="cb6-515"><a href="#cb6-515" aria-hidden="true" tabindex="-1"></a>micro3 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-mono-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="kw">const</span> b <span class="op">=</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">4</span>])<span class="op">,</span> c <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">10</span>)<span class="op">,</span> k <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">5</span><span class="op">,</span> <span class="dv">15</span>)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">A</span><span class="op">:</span> c <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> b <span class="op">*</span> k<span class="op">,</span> b<span class="op">,</span> c }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb6" data-startfrom="525" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 524;"><span id="cb6-525"><a href="#cb6-525" aria-hidden="true" tabindex="-1"></a>micro3 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-mono-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="kw">const</span> b <span class="op">=</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">4</span>])<span class="op">,</span> c <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">10</span>)<span class="op">,</span> k <span class="op">=</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">5</span><span class="op">,</span> <span class="dv">15</span>)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">A</span><span class="op">:</span> c <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> b <span class="op">*</span> k<span class="op">,</span> b<span class="op">,</span> c }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-6" data-nodetype="declaration">
 
@@ -970,7 +982,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1p
 
 </div>
 <script type="webr-21-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJNb25vcG9sZSIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoibWljcm8tbW9uby0xIiwiaW5wdXQiOlsibWljcm8zIl0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJBIDwtIG1pY3JvMyRBOyBiIDwtIG1pY3JvMyRiOyBjIDwtIG1pY3JvMyRjXG4jIFJlY2V0dGUgdG90YWxlIFIoUSkgPSAoQSAtIGJRKSBRLCBkb25jIFJtKFEpID0gQSAtIDJiUS4gQ29uZGl0aW9uIDogUm0gPSBDbSA9IGNcblFfbSA8LSBfX19fX19cblBfbSA8LSBfX19fX18gICAgICAgICMgbHUgc3VyIGxhIGRlbWFuZGVcbnByb2ZpdCA8LSBfX19fX19cblFfYyA8LSBfX19fX18gICAgICAgICMgcXVhbnRpdMOpIGNvbmN1cnJlbnRpZWxsZSAoUCA9IENtKVxuZHdsIDwtIF9fX19fXyAgICAgICAgIyB0cmlhbmdsZSBkZSBwZXJ0ZSBzw6hjaGUgOiAwLDUgKiAoUF9tIC0gYykgKiAoUV9jIC0gUV9tKVxuYyhRID0gUV9tLCBQID0gUF9tLCBwcm9maXQgPSBwcm9maXQsIERXTCA9IGR3bCkifQ==
+eyJhdHRyIjp7ImNhcHRpb24iOiJNb25vcG9sZSIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoibWljcm8tbW9uby0xIiwiaW5wdXQiOlsibWljcm8zIl0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJBIDwtIG1pY3JvMyRBOyBiIDwtIG1pY3JvMyRiOyBjIDwtIG1pY3JvMyRjXG4jIFJlY2V0dGUgdG90YWxlIFIoUSkgPSAoQSAtIGJRKSBRLCBkb25jIFJtKFEpID0gQSAtIDJiUS4gQ29uZGl0aW9uIDogUm0gPSBDbSA9IGNcblFfbSA8LSBfX19fX19cblBfbSA8LSBfX19fX18gICAgICAgICMgbHUgc3VyIGxhIGRlbWFuZGVcbnByb2ZpdCA8LSBfX19fX19cblFfYyA8LSBfX19fX18gICAgICAgICMgcXVhbnRpdMOpIHF1aSBwcsOpdmF1ZHJhaXQgZW4gY29uY3VycmVuY2UgcGFyZmFpdGVcbmR3bCA8LSBfX19fX18gICAgICAgICMgcGVydGUgc8OoY2hlIDogc3VyZmFjZSBkdSB0cmlhbmdsZSBlbnRyZSBkZW1hbmRlIGV0IGNvw7t0IG1hcmdpbmFsLCBlbnRyZSBsZXMgZGV1eCBxdWFudGl0w6lzXG5jKFEgPSBRX20sIFAgPSBQX20sIHByb2ZpdCA9IHByb2ZpdCwgRFdMID0gZHdsKSJ9
 </script>
 </div>
 </div>
@@ -1038,6 +1050,7 @@ c(Q = Q_m, P = P_m, profit = profit, DWL = dwl)</code>
 <span id="interpolate-24-7"><a href="#interpolate-24-7" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">Q =</span> Q_m, <span class="at">P =</span> P_m, <span class="at">profit =</span> profit, <span class="at">DWL =</span> dwl)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> Le monopole produit là où la recette marginale égale le coût marginal, et fait payer le prix correspondant sur la demande : quantité plus faible et prix plus élevé qu’en concurrence. La <strong>perte sèche</strong> est la valeur des échanges mutuellement avantageux qui n’ont pas lieu : une perte nette de bien-être, qui justifie la régulation et la politique de concurrence.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Lire le prix sur la courbe de recette marginale : elle donne la valeur de la dernière unité pour le monopole, pas le prix payé.</li>
@@ -1059,7 +1072,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1p
 <h2 class="anchored" data-anchor-id="micro-cournot-0">Duopole de Cournot : meilleures réponses</h2>
 <p><span class="dojo-step">Marche 3 sur 4 · À compléter</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb7" data-startfrom="603" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 602;"><span id="cb7-603"><a href="#cb7-603" aria-hidden="true" tabindex="-1"></a>micro5 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-cournot-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">A</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">60</span><span class="op">,</span> <span class="dv">120</span>)<span class="op">,</span> <span class="dt">b</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">3</span>)<span class="op">,</span> <span class="dt">c</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">5</span><span class="op">,</span> <span class="dv">20</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb7" data-startfrom="615" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 614;"><span id="cb7-615"><a href="#cb7-615" aria-hidden="true" tabindex="-1"></a>micro5 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"micro-cournot-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">A</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">60</span><span class="op">,</span> <span class="dv">120</span>)<span class="op">,</span> <span class="dt">b</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">3</span>)<span class="op">,</span> <span class="dt">c</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">5</span><span class="op">,</span> <span class="dv">20</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-7" data-nodetype="declaration">
 
@@ -1138,6 +1151,7 @@ c(q1 = q1, q2 = q2, formule = q_formule)</code>
 <span id="interpolate-29-6"><a href="#interpolate-29-6" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">q1 =</span> q1, <span class="at">q2 =</span> q2, <span class="at">formule =</span> q_formule)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> Dans un duopole de Cournot, chaque firme choisit sa quantité en prenant celle de l’autre comme donnée. La meilleure réponse décroît avec la quantité du rival : les quantités sont des <strong>substituts stratégiques</strong>. L’équilibre de Nash est l’intersection des deux meilleures réponses.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Oublier de diviser par <span class="math inline">\(2b\)</span> : on ignore l’effet de sa propre quantité sur le prix.</li>
@@ -1173,7 +1187,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Im1p
 
 </div>
 <script type="webr-31-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJVbmUgZm9uY3Rpb24gZGUgTiIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoibWljcm8tY291cm5vdC0xIiwiaW5wdXQiOlsibWljcm80Il0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJBIDwtIG1pY3JvNCRBOyBiIDwtIG1pY3JvNCRiOyBjIDwtIG1pY3JvNCRjXG5jb3Vybm90X3ByaWNlIDwtIGZ1bmN0aW9uKE4pIHtcbiAgIyBNZWlsbGV1cmUgcsOpcG9uc2UgOiBxX2kgPSAoQSAtIGMgLSBiICogUV9hdXRyZXMpIC8gKDJiKS4gUGFyIHN5bcOpdHJpZSwgcV9pID0gKEEgLSBjKSAvICgoTiArIDEpIGIpXG4gIHFfaSA8LSBfX19fX19cbiAgX19fX19fICAgIyBwcml4IGQnw6lxdWlsaWJyZSA6IFAgPSBBIC0gYiAqIE4gKiBxX2lcbn1cbnNhcHBseSgxOjYsIGNvdXJub3RfcHJpY2UpIn0=
+eyJhdHRyIjp7ImNhcHRpb24iOiJVbmUgZm9uY3Rpb24gZGUgTiIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoibWljcm8tY291cm5vdC0xIiwiaW5wdXQiOlsibWljcm80Il0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJBIDwtIG1pY3JvNCRBOyBiIDwtIG1pY3JvNCRiOyBjIDwtIG1pY3JvNCRjXG5jb3Vybm90X3ByaWNlIDwtIGZ1bmN0aW9uKE4pIHtcbiAgIyBNZWlsbGV1cmUgcsOpcG9uc2UgOiBxX2kgPSAoQSAtIGMgLSBiICogUV9hdXRyZXMpIC8gKDJiKS4gUGFyIHN5bcOpdHJpZSwgcV9pID0gKEEgLSBjKSAvICgoTiArIDEpIGIpXG4gIHFfaSA8LSBfX19fX19cbiAgX19fX19fICAgIyBwcml4IGQnw6lxdWlsaWJyZSBxdWFuZCBsZXMgTiBmaXJtZXMgcHJvZHVpc2VudCBjaGFjdW5lIGxhIG3Dqm1lIHF1YW50aXTDqVxufVxuc2FwcGx5KDE6NiwgY291cm5vdF9wcmljZSkifQ==
 </script>
 </div>
 </div>
@@ -1238,6 +1252,7 @@ sapply(1:6, cournot_price)</code>
 <span id="interpolate-34-6"><a href="#interpolate-34-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, cournot_price)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> Quand le nombre de firmes N augmente, la quantité totale croît, le prix baisse et la marge diminue : on tend vers la concurrence parfaite. Le pouvoir de marché dépend donc de la structure du marché (nombre de firmes, symétrie), pas seulement de la taille de chaque firme.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Écrire <span class="math inline">\(q_i = (A-c)/(2b)\)</span> : on oublie la réaction aux autres firmes (c’est la quantité de monopole).</li>

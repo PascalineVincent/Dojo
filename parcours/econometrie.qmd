@@ -8,7 +8,7 @@ subtitle: "MCO, endogénéité, inférence : démonstrations par simulation"
 Pour chaque notion : un **processus générateur de données connu**, donc une vérité à retrouver. C'est la meilleure façon de garder l'intuition des biais en tête. Les graines changent chaque jour.
 
 ::: {.callout-tip}
-**Une marche te paraît trop haute ?** Fais d'abord les [échauffements](minis.qmd) : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page *Aujourd'hui* te propose aussi un exercice court.
+**Une marche te paraît trop haute ?** Fais d'abord les [échauffements](minis.qmd) : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page *Aujourd'hui* te propose aussi un exercice court. Pour varier les gestes (tableaux, débogage, lecture de sorties et de graphiques, rédaction) : l'[Atelier](atelier.qmd) ; pour aller plus loin : le [niveau avancé](avance.qmd).
 :::
 
 {{< include ../_ojs.qmd >}}
@@ -39,9 +39,9 @@ n <- 100
 x <- rnorm(n)
 y <- 1 + ols0$pente * x + rnorm(n)
 X <- cbind(1, x)                    # régresseurs : une constante et x
-beta <- ______                      # résous les équations normales : solve(crossprod(X), crossprod(X, y))
-e    <- ______                      # résidus : y - X %*% beta
-R2   <- ______                      # 1 - somme des carrés résiduels / somme des carrés totaux
+beta <- ______                      # estimateur MCO : résous les équations normales sans inverser explicitement la matrice
+e    <- ______                      # résidus : écart entre y et les valeurs ajustées
+R2   <- ______                      # part de la variance de y expliquée par le modèle
 c(const = beta[1], pente = beta[2], R2 = R2)
 ```
 
@@ -81,6 +81,8 @@ e    <- y - X %*% beta                                # résidus
 R2   <- 1 - sum(e^2) / sum((y - mean(y))^2)           # part de variance expliquée
 c(const = beta[1], pente = beta[2], R2 = R2)
 ```
+
+**Lecture économique.** Écrire les MCO en matrices montre ce que fait un logiciel : projeter y sur l'espace engendré par les régresseurs. Le coefficient de chaque variable se lit « toutes choses égales par ailleurs » : l'effet marginal de x_j en gardant les autres variables du modèle constantes.
 
 **Pièges fréquents.**
 
@@ -181,6 +183,8 @@ formule <- unname(longue["x"] + longue["z"] * delta)
 c(long = unname(longue["x"]), court = unname(court), formule = formule)
 ```
 
+**Lecture économique.** Omettre une variable corrélée à la fois avec la variable d'intérêt et avec l'expliquée biaise le coefficient. Exemple classique : le rendement de l'éducation estimé sans contrôler l'aptitude surestime l'effet (biais positif). Le signe et la taille du biais se prédisent à partir des corrélations.
+
 **Pièges fréquents.**
 
 - Régresser x sur z pour la régression auxiliaire : on obtient une autre pente (covariance divisée par la variance de z), pas $\delta$.
@@ -238,8 +242,8 @@ XtXi <- solve(crossprod(X))
 beta <- XtXi %*% crossprod(X, y)
 e <- as.numeric(y - X %*% beta)
 
-meat  <- ______                    # somme des e_i^2 x_i x_i' : crossprod(X * e)
-V_hc1 <- ______                    # n / (n - k) * XtXi %*% meat %*% XtXi
+meat  <- ______                    # « viande » du sandwich : somme, pondérée par les résidus au carré, des produits x_i x_i'
+V_hc1 <- ______                    # assemble le sandwich (pain, viande, pain) avec la correction de degrés de liberté
 se_ols <- sqrt(sum(e^2) / (n - k) * XtXi[2, 2])
 c(ols = se_ols, hc1 = sqrt(V_hc1[2, 2]))
 ```
@@ -284,6 +288,8 @@ V_hc1 <- n / (n - k) * XtXi %*% meat %*% XtXi
 se_ols <- sqrt(sum(e^2) / (n - k) * XtXi[2, 2])
 c(ols = se_ols, hc1 = sqrt(V_hc1[2, 2]))
 ```
+
+**Lecture économique.** Quand la variance des erreurs dépend des régresseurs (hétéroscédasticité, fréquente avec des revenus ou des profits), les erreurs-types usuelles sont fausses, donc les tests et intervalles aussi. Les erreurs-types robustes corrigent cela sans changer les coefficients : c'est le réflexe en économétrie appliquée.
 
 **Pièges fréquents.**
 
@@ -388,6 +394,8 @@ iv    <- coef(lm(y ~ x_hat))["x_hat"]
 wald  <- cov(z, y) / cov(z, x)
 c(mco = unname(mco), iv = unname(iv), wald = wald)
 ```
+
+**Lecture économique.** Quand le régresseur est endogène (corrélé avec l'erreur), les MCO sont biaisés. Un instrument valide corrèle avec le régresseur (pertinence) mais n'affecte y que par lui (exclusion). L'estimateur obtenu est un effet local (LATE) pour les individus dont le comportement change avec l'instrument, pas forcément pour tous.
 
 **Pièges fréquents.**
 

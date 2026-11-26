@@ -56,7 +56,7 @@ set.seed(ineq0$seed)
 x <- round(rlnorm(6, 7, 0.7))                 # six revenus mensuels
 n <- length(x); mu <- mean(x)
 ecarts <- outer(x, x, "-")                    # matrice n x n des écarts x_i - x_j
-G   <- ______                                 # somme des |écarts| / (2 * n^2 * mu)
+G   <- ______                                 # Gini à partir de tous les écarts absolus entre paires d'individus, normalisés
 top <- ______                                 # part du revenu total détenue par le plus riche
 c(gini = G, part_top = top)
 ```
@@ -94,6 +94,8 @@ G   <- sum(abs(ecarts)) / (2 * n^2 * mu)      # écart moyen relatif / 2
 top <- max(x) / sum(x)
 c(gini = G, part_top = top)
 ```
+
+**Lecture économique.** Le Gini est la moitié de l'écart moyen relatif entre deux individus tirés au hasard : 0 pour l'égalité parfaite, proche de 1 si un seul individu détient tout. Il est surtout sensible aux transferts autour du milieu de la distribution, moins à la queue haute. Il ne dit rien de la forme précise de l'inégalité.
 
 **Pièges fréquents.**
 
@@ -152,9 +154,9 @@ x <- rlnorm(n, 3, ineq1$s); w <- runif(n, 0.5, 3)
 
 my_gini <- function(x, w) {
   o <- order(x); x <- x[o]; w <- w[o] / sum(w)
-  L <- ______                      # Lorenz : cumsum(w * x) / sum(w * x)
+  L <- ______                      # courbe de Lorenz : part cumulée du revenu quand on cumule la population triée
   Lprev <- c(0, head(L, -1))
-  ______                           # 1 - sum(w * (L + Lprev))
+  ______                           # Gini = 1 moins deux fois l'aire sous la courbe de Lorenz (méthode des trapèzes)
 }
 c(mon_gini = my_gini(x, w), gini = gini(x, w))
 ```
@@ -198,6 +200,8 @@ my_gini <- function(x, w) {
 }
 c(mon_gini = my_gini(x, w), gini = gini(x, w))
 ```
+
+**Lecture économique.** La courbe de Lorenz donne la part cumulée du revenu détenue par les p % les plus pauvres ; le Gini est deux fois l'aire entre la diagonale et la courbe. Pondérer permet de travailler avec des données d'enquête (poids de sondage) : sans pondération, les résultats sont biaisés.
 
 **Pièges fréquents.**
 
@@ -248,8 +252,8 @@ ineq00 = { const g = rng("ineq-ge-0", salt); return { seed: g.int(1, 9999) }; }
 #|   - ineq00
 set.seed(ineq00$seed)
 x <- round(rlnorm(8, 7, 0.8))                      # huit revenus mensuels
-theil <- function(x) { r <- x / mean(x); ______ }  # moyenne de r * log(r)
-mld   <- function(x) { r <- x / mean(x); ______ }  # moins la moyenne de log(r)
+theil <- function(x) { r <- x / mean(x); ______ }  # mesure qui pondère les écarts à la moyenne par la part de revenu (Theil T)
+mld   <- function(x) { r <- x / mean(x); ______ }  # mesure qui pondère par la part de population (MLD)
 c(theil = theil(x), mld = mld(x), theil_x10 = theil(10 * x))
 ```
 
@@ -285,6 +289,8 @@ theil <- function(x) { r <- x / mean(x); mean(r * log(r)) }
 mld   <- function(x) { r <- x / mean(x); -mean(log(r)) }
 c(theil = theil(x), mld = mld(x), theil_x10 = theil(10 * x))
 ```
+
+**Lecture économique.** Theil T et MLD sont deux membres de la famille d'entropie généralisée : T est sensible au haut de la distribution (pondération par les parts de revenu), la MLD au bas (pondération par les parts de population). Choisir l'indice revient à choisir implicitement un jugement de valeur sur les transferts.
 
 **Pièges fréquents.**
 
@@ -335,11 +341,11 @@ x <- rlnorm(500, 3, 0.7)
 my_ge <- function(x, alpha) {
   r <- x / mean(x)
   if (alpha == 0) {
-    ______                     # -mean(log(r))
+    ______                     # cas α = 0 de la famille GE
   } else if (alpha == 1) {
-    ______                     # mean(r * log(r))
+    ______                     # cas α = 1 de la famille GE (par continuité)
   } else {
-    ______                     # (mean(r^alpha) - 1) / (alpha * (alpha - 1))
+    ______                     # cas général : α différent de 0 et de 1
   }
 }
 sapply(c(-1, 0, 0.5, 1, 2), function(a) c(mon_ge = my_ge(x, a), ge = ge(x, a)))
@@ -387,6 +393,8 @@ my_ge <- function(x, alpha) {
 }
 sapply(c(-1, 0, 0.5, 1, 2), function(a) c(mon_ge = my_ge(x, a), ge = ge(x, a)))
 ```
+
+**Lecture économique.** Le paramètre α de GE(α) règle la sensibilité aux extrêmes : α grand accentue le haut de la distribution, α négatif accentue le bas. Un seul code pour toute la famille facilite les analyses de robustesse : deux distributions dont les courbes de Lorenz se croisent peuvent être classées différemment selon α.
 
 **Pièges fréquents.**
 
@@ -440,9 +448,9 @@ x <- rlnorm(n, c(A = 3, B = 3.3, C = 2.7)[g], 0.7)
 
 s   <- tapply(x, g, sum) / sum(x)          # parts de revenu
 T_g <- tapply(x, g, theil_T)               # Theil dans chaque groupe
-intra <- ______                            # sum(s * T_g)
+intra <- ______                            # part intra : inégalités internes aux groupes, pondérées par la part de revenu de chaque groupe
 moy <- tapply(x, g, mean); f <- as.numeric(table(g)) / n
-inter <- ______                            # Theil des moyennes de groupes pondérées par f : ge(moy, 1, w = f)
+inter <- ______                            # part inter : inégalité entre les moyennes de groupes, pondérée par la part de population
 c(intra = intra, inter = inter, total = intra + inter, direct = theil_T(x))
 ```
 
@@ -485,6 +493,8 @@ moy <- tapply(x, g, mean); f <- as.numeric(table(g)) / n
 inter <- ge(moy, 1, w = f)
 c(intra = intra, inter = inter, total = intra + inter, direct = theil_T(x))
 ```
+
+**Lecture économique.** La décomposition du Theil sépare l'inégalité **entre** groupes (écarts de moyennes entre, par exemple, hommes et femmes ou régions) et **à l'intérieur** des groupes. Elle sert à dire quelle part de l'inégalité totale s'explique par l'appartenance à un groupe : c'est une description, pas une explication causale.
 
 **Pièges fréquents.**
 

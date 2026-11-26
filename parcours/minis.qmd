@@ -78,12 +78,22 @@ mean(women$height)
 ```{webr}
 #| exercise: m-r-1
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- mean(women$height)
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Moyenne de la colonne `height` : `mean(women$height)`.")
+  list(correct = FALSE, message = paste0("Moyenne de la colonne `height` : `mean(women$height)`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". La taille moyenne est de 65 pouces (165 cm)."))
 }
@@ -141,12 +151,22 @@ Un vecteur nommé s'indexe avec le nom **entre guillemets** dans des crochets : 
 ```{webr}
 #| exercise: m-r-2
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- 100 * euro[["FRF"]]
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Multiplie la parité du franc (`\"FRF\"`) par 100.")
+  list(correct = FALSE, message = paste0("Multiplie la parité du franc (`\"FRF\"`) par 100.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". 100 euros valaient 655,96 francs."))
 }
@@ -204,12 +224,22 @@ sum(women$weight > 140)
 ```{webr}
 #| exercise: m-r-3
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- sum(women$weight > 140)
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Utilise l'opérateur `>` (strictement supérieur).")
+  list(correct = FALSE, message = paste0("Utilise l'opérateur `>` (strictement supérieur).", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Six femmes dépassent 140 livres."))
 }
@@ -271,12 +301,22 @@ reponse
 ```{webr}
 #| exercise: m-r-4
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- sum(c(2, 5, 8, 11) > 6)
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Compte les éléments strictement supérieurs à 6.")
+  list(correct = FALSE, message = paste0("Compte les éléments strictement supérieurs à 6.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Prédire avant d'exécuter est un excellent réflexe."))
 }
@@ -294,7 +334,7 @@ if (length(res) != length(ref) || anyNA(res)) {
 ```{webr}
 #| exercise: m-r-5
 #| caption: "La virgule des tableaux"
-nrow(longley[longley$Year >= 1960 ______])     # que faut-il écrire juste avant le crochet fermant ?
+nrow(longley[longley$Year >= 1960 ______])     # il manque un petit signe qui sépare les lignes des colonnes
 ```
 
 ::: {.hint exercise="m-r-5"}
@@ -335,12 +375,22 @@ nrow(longley[longley$Year >= 1960, ])
 ```{webr}
 #| exercise: m-r-5
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- nrow(longley[longley$Year >= 1960, ])
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Il faut la virgule : `longley[longley$Year >= 1960, ]` ; compte ensuite les lignes avec `nrow()`.")
+  list(correct = FALSE, message = paste0("Il faut la virgule : `longley[longley$Year >= 1960, ]` ; compte ensuite les lignes avec `nrow()`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Trois années (1960, 1961, 1962)."))
 }
@@ -530,12 +580,22 @@ sum(en_pct(taux))
 ```{webr}
 #| exercise: m-r-8
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- sum(100 * c(0.021, 0.035, 0.012))
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "La fonction doit renvoyer `100 * x`.")
+  list(correct = FALSE, message = paste0("La fonction doit renvoyer `100 * x`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Une fonction évite de répéter le même calcul."))
 }
@@ -599,12 +659,22 @@ median(swiss$Fertility)
 ```{webr}
 #| exercise: m-st-1
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- median(swiss$Fertility)
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Fonction : `median()`.")
+  list(correct = FALSE, message = paste0("Fonction : `median()`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". La médiane vaut 70,4."))
 }
@@ -622,7 +692,7 @@ if (length(res) != length(ref) || anyNA(res)) {
 ```{webr}
 #| exercise: m-st-2
 #| caption: "Dispersion robuste : l'écart interquartile"
-______(swiss$Education)     # fonction de l'écart interquartile (en majuscules)
+______(swiss$Education)     # mesure de dispersion du centre de la distribution (nom en majuscules)
 ```
 
 ::: {.hint exercise="m-st-2"}
@@ -662,12 +732,22 @@ IQR(swiss$Education)
 ```{webr}
 #| exercise: m-st-2
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- IQR(swiss$Education)
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Fonction : `IQR()`.")
+  list(correct = FALSE, message = paste0("Fonction : `IQR()`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". L'écart interquartile vaut 6 points."))
 }
@@ -725,12 +805,22 @@ sum(UCBAdmissions[, "Female", ])
 ```{webr}
 #| exercise: m-st-3
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- sum(UCBAdmissions[, "Female", ])
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Indexe la 2e dimension (le sexe) avec `\"Female\"`.")
+  list(correct = FALSE, message = paste0("Indexe la 2e dimension (le sexe) avec `\"Female\"`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". 1 835 candidatures de femmes."))
 }
@@ -791,12 +881,22 @@ adm["Admitted", "Male"] / sum(adm[, "Male"])
 ```{webr}
 #| exercise: m-st-4
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- {adm <- apply(UCBAdmissions, c(1, 2), sum); adm["Admitted", "Male"] / (1198 + 1493)}
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Dénominateur : tous les hommes (admis et refusés), `sum(adm[, \"Male\"])`.")
+  list(correct = FALSE, message = paste0("Dénominateur : tous les hommes (admis et refusés), `sum(adm[, \"Male\"])`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Environ 44,5 % des hommes sont admis."))
 }
@@ -863,12 +963,22 @@ c(global = global[["Male"]] - global[["Female"]], depA = A[["Male"]] - A[["Femal
 ```{webr}
 #| exercise: m-st-5
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- {t <- function(m) m['Admitted', ] / colSums(m); a <- apply(UCBAdmissions, c(1, 2), sum); c(t(a)[['Male']] - t(a)[['Female']], t(UCBAdmissions[, , 'A'])[['Male']] - t(UCBAdmissions[, , 'A'])[['Female']])}
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Écart dans le département A : `A[[\"Male\"]] - A[[\"Female\"]]`.")
+  list(correct = FALSE, message = paste0("Écart dans le département A : `A[[\"Male\"]] - A[[\"Female\"]]`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Écarts : +14,2 points globalement, −20,3 points dans le département A."))
 }
@@ -886,7 +996,7 @@ if (length(res) != length(ref) || anyNA(res)) {
 ```{webr}
 #| exercise: m-st-6
 #| caption: "Lire un test : significatif ou non ?"
-t.test(extra ~ group, data = sleep)$______ < 0.05     # élément qui contient la p-value
+t.test(extra ~ group, data = sleep)$______ < 0.05     # élément de la liste renvoyée par le test qui donne la probabilité critique
 ```
 
 ::: {.hint exercise="m-st-6"}
@@ -989,12 +1099,22 @@ cor(longley$GNP, longley$Employed)
 ```{webr}
 #| exercise: m-st-7
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- cor(longley$GNP, longley$Employed)
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Utilise `cor(longley$GNP, longley$Employed)`.")
+  list(correct = FALSE, message = paste0("Utilise `cor(longley$GNP, longley$Employed)`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". La corrélation est très proche de 1, mais deux tendances croissantes se ressemblent presque toujours."))
 }
@@ -1055,12 +1175,22 @@ chisq.test(adm, correct = FALSE)$statistic
 ```{webr}
 #| exercise: m-st-8
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- {a <- apply(UCBAdmissions, c(1, 2), sum); e <- outer(rowSums(a), colSums(a)) / sum(a); sum((a - e)^2 / e)}
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Utilise `chisq.test(adm, correct = FALSE)$statistic`.")
+  list(correct = FALSE, message = paste0("Utilise `chisq.test(adm, correct = FALSE)$statistic`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Statistique ≈ 92,2 : association très forte, mais confondue par le choix du département."))
 }
@@ -1127,12 +1257,22 @@ coef(fit)[["ddpi"]]
 ```{webr}
 #| exercise: m-ec-1
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- {b <- cov(LifeCycleSavings$sr, LifeCycleSavings$ddpi) / var(LifeCycleSavings$ddpi); b}
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Formule : `sr ~ ddpi`, puis `coef(fit)[[\"ddpi\"]]`.")
+  list(correct = FALSE, message = paste0("Formule : `sr ~ ddpi`, puis `coef(fit)[[\"ddpi\"]]`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Pente ≈ 0,476."))
 }
@@ -1193,12 +1333,22 @@ coef(fit)[["(Intercept)"]]
 ```{webr}
 #| exercise: m-ec-2
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- mean(LifeCycleSavings$sr) - cov(LifeCycleSavings$sr, LifeCycleSavings$ddpi) / var(LifeCycleSavings$ddpi) * mean(LifeCycleSavings$ddpi)
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Le nom exact est `\"(Intercept)\"`.")
+  list(correct = FALSE, message = paste0("Le nom exact est `\"(Intercept)\"`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Constante ≈ 7,88."))
 }
@@ -1258,12 +1408,22 @@ summary(fit)$r.squared
 ```{webr}
 #| exercise: m-ec-3
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- cor(LifeCycleSavings$sr, LifeCycleSavings$ddpi)^2
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "`summary(fit)$r.squared`.")
+  list(correct = FALSE, message = paste0("`summary(fit)$r.squared`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". R² ≈ 0,093."))
 }
@@ -1324,12 +1484,22 @@ predict(fit, newdata = data.frame(ddpi = 5))
 ```{webr}
 #| exercise: m-ec-4
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- {b <- cov(LifeCycleSavings$sr, LifeCycleSavings$ddpi) / var(LifeCycleSavings$ddpi); mean(LifeCycleSavings$sr) + b * (5 - mean(LifeCycleSavings$ddpi))}
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Passe `ddpi = 5` (en pourcentage).")
+  list(correct = FALSE, message = paste0("Passe `ddpi = 5` (en pourcentage).", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Épargne prédite ≈ 10,3 %."))
 }
@@ -1347,7 +1517,7 @@ Ajoute des variables explicatives : part des moins de 15 ans (`pop15`), part des
 ```{webr}
 #| exercise: m-ec-5
 #| caption: "Contrôler d'autres variables"
-fit5 <- lm(sr ~ pop15 + ______, data = LifeCycleSavings)     # les trois autres variables, séparées par +
+fit5 <- lm(sr ~ pop15 + ______, data = LifeCycleSavings)     # ajoute les trois autres variables explicatives de l'énoncé
 coef(fit5)[["pop15"]]
 ```
 
@@ -1390,12 +1560,22 @@ coef(fit5)[["pop15"]]
 ```{webr}
 #| exercise: m-ec-5
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- {X <- cbind(1, as.matrix(LifeCycleSavings[, c('pop15', 'pop75', 'dpi', 'ddpi')])); solve(t(X) %*% X, t(X) %*% LifeCycleSavings$sr)[2]}
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Formule : `sr ~ pop15 + pop75 + dpi + ddpi`.")
+  list(correct = FALSE, message = paste0("Formule : `sr ~ pop15 + pop75 + dpi + ddpi`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Coefficient de pop15 ≈ −0,46."))
 }
@@ -1525,12 +1705,22 @@ Une variation en % est (valeur finale / valeur initiale − 1) × 100. La valeur
 ```{webr}
 #| exercise: m-ma-1
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- (longley$GNP[16] / longley$GNP[1] - 1) * 100
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Divise par la valeur de 1947 : `longley$GNP[1]`.")
+  list(correct = FALSE, message = paste0("Divise par la valeur de 1947 : `longley$GNP[1]`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Croissance cumulée ≈ 136,8 %."))
 }
@@ -1588,12 +1778,22 @@ De 1947 à 1962, il y a 15 intervalles (16 années, donc 15 écarts).
 ```{webr}
 #| exercise: m-ma-2
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- ((longley$GNP[16] / longley$GNP[1])^(1 / 15) - 1) * 100
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "T = 1962 − 1947 = 15.")
+  list(correct = FALSE, message = paste0("T = 1962 − 1947 = 15.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Environ 5,9 % par an."))
 }
@@ -1656,12 +1856,22 @@ mean(infl) * 100
 ```{webr}
 #| exercise: m-ma-3
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- {d <- longley$GNP.deflator; mean((d[-1] - d[-length(d)]) / d[-length(d)]) * 100}
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Divise par `head(d, -1)` pour que les longueurs coïncident.")
+  list(correct = FALSE, message = paste0("Divise par `head(d, -1)` pour que les longueurs coïncident.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Inflation moyenne ≈ 2,3 % par an."))
 }
@@ -1722,12 +1932,22 @@ prod <- longley$GNP / longley$Employed
 ```{webr}
 #| exercise: m-ma-4
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- {p <- longley$GNP / longley$Employed; (p[16] / p[1] - 1) * 100}
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Divise `GNP` par `Employed`.")
+  list(correct = FALSE, message = paste0("Divise `GNP` par `Employed`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Productivité +102,5 % (production +136,8 %, emploi +17,0 %) : l'essentiel de la croissance vient de la productivité."))
 }
@@ -1786,12 +2006,22 @@ euro[["DEM"]] / euro[["FRF"]]
 ```{webr}
 #| exercise: m-ma-5
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- euro[["DEM"]] / euro[["FRF"]]
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Taux croisé : `euro[[\"DEM\"]] / euro[[\"FRF\"]]`.")
+  list(correct = FALSE, message = paste0("Taux croisé : `euro[[\"DEM\"]] / euro[[\"FRF\"]]`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". 1 franc ≈ 0,298 mark (inversement, 1 mark = 3,35 francs)."))
 }
@@ -1852,12 +2082,22 @@ sd(r) * sqrt(252) * 100
 ```{webr}
 #| exercise: m-ma-6
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- sd(diff(log(EuStockMarkets[, 'CAC']))) * sqrt(252) * 100
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Annualise avec `sqrt(252)`.")
+  list(correct = FALSE, message = paste0("Annualise avec `sqrt(252)`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Volatilité annualisée ≈ 17,5 % (1991-1998)."))
 }
@@ -1928,12 +2168,22 @@ ep
 ```{webr}
 #| exercise: m-mi-1
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- ((450 - 500) / ((500 + 450) / 2)) / ((12 - 10) / ((10 + 12) / 2))
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Variation relative du prix : `(P1 - P0) / ((P0 + P1) / 2)`.")
+  list(correct = FALSE, message = paste0("Variation relative du prix : `(P1 - P0) / ((P0 + P1) / 2)`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Élasticité ≈ −0,58 : demande inélastique."))
 }
@@ -1994,12 +2244,22 @@ p <- 8; q <- (20 - p) / 0.5
 ```{webr}
 #| exercise: m-mi-2
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- 0.5 * (20 - 8) * 24
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-09 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Surplus = ½ × (20 − p) × q.")
+  list(correct = FALSE, message = paste0("Surplus = ½ × (20 − p) × q.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Surplus = 144."))
 }
@@ -2062,12 +2322,22 @@ sum(cm <= 45)
 ```{webr}
 #| exercise: m-mi-3
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- 4
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-09 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Compte les coûts marginaux inférieurs ou égaux à 45.")
+  list(correct = FALSE, message = paste0("Compte les coûts marginaux inférieurs ou égaux à 45.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". La firme produit 4 unités."))
 }
@@ -2130,12 +2400,22 @@ which.max(profit) - 1
 ```{webr}
 #| exercise: m-mi-4
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- 4
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-09 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Donne la quantité : `which.max(profit) - 1`.")
+  list(correct = FALSE, message = paste0("Donne la quantité : `which.max(profit) - 1`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Profit maximal 65, pour q = 4."))
 }
@@ -2201,12 +2481,22 @@ sum(sort(pop, decreasing = TRUE)[1:5]) / sum(pop)
 ```{webr}
 #| exercise: m-in-1
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- {pop <- state.x77[, 'Population']; sum(pop[order(-pop)][1:5]) / sum(pop)}
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Garde les 5 premiers après tri décroissant.")
+  list(correct = FALSE, message = paste0("Garde les 5 premiers après tri décroissant.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Environ un tiers de la population (35 %)."))
 }
@@ -2266,12 +2556,22 @@ max(pop) / min(pop)
 ```{webr}
 #| exercise: m-in-2
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- max(state.x77[, 'Population']) / min(state.x77[, 'Population'])
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Fonction du minimum : `min()`.")
+  list(correct = FALSE, message = paste0("Fonction du minimum : `min()`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Le plus peuplé a 58 fois la population du moins peuplé."))
 }
@@ -2333,12 +2633,22 @@ gini(pop)
 ```{webr}
 #| exercise: m-in-3
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- {source('R/inegalites.R'); gini(state.x77[, 'Population'])}
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Appelle `gini(pop)` après `source(\"R/inegalites.R\")`.")
+  list(correct = FALSE, message = paste0("Appelle `gini(pop)` après `source(\"R/inegalites.R\")`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Gini ≈ 0,50."))
 }
@@ -2402,12 +2712,22 @@ approx(l$p, l$L, xout = 0.5)$y
 ```{webr}
 #| exercise: m-in-4
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- {source('R/inegalites.R'); l <- lorenz(state.x77[, 'Population']); approx(l$p, l$L, xout = 0.5)$y}
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 0.0001 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Interpole en `xout = 0.5`.")
+  list(correct = FALSE, message = paste0("Interpole en `xout = 0.5`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". La moitié des États les moins peuplés abrite environ 16 % de la population."))
 }
@@ -2473,12 +2793,22 @@ Le rapport entre la dernière et la première valeur est élevé à la puissance
 ```{webr}
 #| exercise: m-hi-1
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- ((as.numeric(uspop)[19] / as.numeric(uspop)[1])^(1 / 180) - 1) * 100
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Il y a 180 années entre 1790 et 1970.")
+  list(correct = FALSE, message = paste0("Il y a 180 années entre 1790 et 1970.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Environ 2,2 % par an sur 180 ans."))
 }
@@ -2539,12 +2869,22 @@ as.numeric(time(uspop))[-1][which.max(g)]
 ```{webr}
 #| exercise: m-hi-2
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- {g <- diff(as.numeric(uspop)) / head(as.numeric(uspop), -1); as.numeric(time(uspop))[-1][which.max(g)]}
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Cherche le maximum de `g` et lis l'année avec `time(uspop)[-1]`.")
+  list(correct = FALSE, message = paste0("Cherche le maximum de `g` et lis l'année avec `time(uspop)[-1]`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Décennie finissant en 1810 (+36 %)."))
 }
@@ -2603,12 +2943,22 @@ WorldPhones["1951", "Europe"] / sum(WorldPhones["1951", ]) * 100
 ```{webr}
 #| exercise: m-hi-3
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- WorldPhones['1951', 'Europe'] / sum(WorldPhones['1951', ]) * 100
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "La ligne s'écrit `\"1951\"` avec des guillemets.")
+  list(correct = FALSE, message = paste0("La ligne s'écrit `\"1951\"` avec des guillemets.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". L'Europe pesait environ 29 % du parc mondial."))
 }
@@ -2627,7 +2977,7 @@ if (length(res) != length(ref) || anyNA(res)) {
 #| exercise: m-hi-4
 #| caption: "Évaluer une loi : la ceinture de sécurité"
 d <- as.data.frame(Seatbelts)
-m <- tapply(d$DriversKilled, ______, mean)     # groupes : avant / après la loi
+m <- tapply(d$DriversKilled, ______, mean)     # variable qui définit les deux périodes
 (m[["1"]] / m[["0"]] - 1) * 100
 ```
 
@@ -2671,12 +3021,22 @@ m <- tapply(d$DriversKilled, d$law, mean)
 ```{webr}
 #| exercise: m-hi-4
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ref <- {d <- as.data.frame(Seatbelts); (mean(d$DriversKilled[d$law == 1]) / mean(d$DriversKilled[d$law == 0]) - 1) * 100}
 res <- suppressWarnings(as.numeric(.result))
 if (length(res) != length(ref) || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie un nombre (la dernière ligne du bloc doit donner le résultat).")
 } else if (any(abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = "Le groupe est `d$law`.")
+  list(correct = FALSE, message = paste0("Le groupe est `d$law`.", .diag(res, ref)))
 } else {
   list(correct = TRUE, message = paste0("Correct : ", paste(format(round(ref, 4), nsmall = 0), collapse = " ; "), ". Environ −20 % (comparaison descriptive, pas causale)."))
 }

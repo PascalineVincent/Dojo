@@ -335,6 +335,14 @@ window.Quarto = {
     <a class="nav-link" href="../parcours/minis.html"> 
 <span class="menu-text">Échauffements</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../parcours/atelier.html"> 
+<span class="menu-text">Atelier</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../parcours/avance.html"> 
+<span class="menu-text">Avancé</span></a>
+  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parcours" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Parcours</span>
@@ -555,7 +563,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImNhcHRpb24iOiJWaWxsZXMgc3ludGjDqXRpcXVlcyA6IEQg
 <h2 class="anchored" data-anchor-id="seg-d-0">Parts de chaque groupe et indice D sur 6 quartiers</h2>
 <p><span class="dojo-step">Marche 1 sur 6 · Guidé</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="135" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 134;"><span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>seg0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"seg-d-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="137" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 136;"><span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>seg0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"seg-d-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-2" data-nodetype="declaration">
 
@@ -569,7 +577,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImNhcHRpb24iOiJWaWxsZXMgc3ludGjDqXRpcXVlcyA6IEQg
 
 </div>
 <script type="webr-2-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJEIHN1ciA2IHF1YXJ0aWVycyIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoic2VnLWQtMCIsImlucHV0IjpbInNlZzAiXSwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKHNlZzAkc2VlZClcbmEgPC0gc2FtcGxlKDU6ODAsIDYpOyBiIDwtIHNhbXBsZSg1OjgwLCA2KVxucGEgPC0gX19fX19fICAgICAgIyBwYXJ0IGR1IGdyb3VwZSBBIHZpdmFudCBkYW5zIGNoYXF1ZSBxdWFydGllciA6IGEgLyBzdW0oYSlcbnBiIDwtIF9fX19fXyAgICAgICMgaWRlbSBwb3VyIGxlIGdyb3VwZSBCXG5EICA8LSBfX19fX18gICAgICAjIDAsNSAqIHNvbW1lIGRlcyB2YWxldXJzIGFic29sdWVzIGRlcyDDqWNhcnRzIGRlIHBhcnRzXG5jKEQgPSBELCBxdWFydGllcl9tYXggPSB3aGljaC5tYXgoYWJzKHBhIC0gcGIpKSkifQ==
+eyJhdHRyIjp7ImNhcHRpb24iOiJEIHN1ciA2IHF1YXJ0aWVycyIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoic2VnLWQtMCIsImlucHV0IjpbInNlZzAiXSwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKHNlZzAkc2VlZClcbmEgPC0gc2FtcGxlKDU6ODAsIDYpOyBiIDwtIHNhbXBsZSg1OjgwLCA2KVxucGEgPC0gX19fX19fICAgICAgIyByw6lwYXJ0aXRpb24gZHUgZ3JvdXBlIEEgZW50cmUgbGVzIHF1YXJ0aWVyc1xucGIgPC0gX19fX19fICAgICAgIyBpZGVtIHBvdXIgbGUgZ3JvdXBlIEJcbkQgIDwtIF9fX19fXyAgICAgICMgaW5kaWNlIGRlIGRpc3NpbWlsYXJpdMOpIDogZGVtaS1zb21tZSBkZXMgw6ljYXJ0cyBlbnRyZSBsZXMgZGV1eCByw6lwYXJ0aXRpb25zXG5jKEQgPSBELCBxdWFydGllcl9tYXggPSB3aGljaC5tYXgoYWJzKHBhIC0gcGIpKSkifQ==
 </script>
 </div>
 </div>
@@ -634,6 +642,7 @@ c(D = D, quartier_max = which.max(abs(pa - pb)))</code>
 <span id="interpolate-5-6"><a href="#interpolate-5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">D =</span> D, <span class="at">quartier_max =</span> <span class="fu">which.max</span>(<span class="fu">abs</span>(pa <span class="sc">-</span> pb)))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> L’indice de dissimilarité mesure la part d’un groupe qui devrait déménager pour que les deux groupes aient la même répartition entre quartiers. C’est un indice d’<strong>uniformité</strong> : il ne dit rien de l’exposition réelle d’un groupe à l’autre. Sa valeur dépend du découpage en quartiers.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Calculer des parts <strong>dans</strong> le quartier (<span class="math inline">\(a_i/(a_i+b_i)\)</span>) : c’est une mesure d’exposition ou d’isolement, pas D.</li>
@@ -655,7 +664,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNl
 <h2 class="anchored" data-anchor-id="seg-d-1">Coder l’indice D de Duncan</h2>
 <p><span class="dojo-step">Marche 2 sur 6 · À compléter</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="227" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 226;"><span id="cb3-227"><a href="#cb3-227" aria-hidden="true" tabindex="-1"></a>seg1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"seg-d-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">kappa</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">2</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">8</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="231" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 230;"><span id="cb3-231"><a href="#cb3-231" aria-hidden="true" tabindex="-1"></a>seg1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"seg-d-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">kappa</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="dv">2</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">8</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="declaration">
 
@@ -669,7 +678,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNl
 
 </div>
 <script type="webr-7-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJEIMOgIGxhIG1haW4iLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNlZy1kLTEiLCJpbnB1dCI6WyJzZWcxIl0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzb3VyY2UoXCJSL3NlZ3JlZ2F0aW9uLlJcIilcbnRhYiA8LSBzZWdfc2ltX2NpdHkoVSA9IDQwLCBzaXplID0gMTUwLCBwID0gMC4zLCBrYXBwYSA9IHNlZzEka2FwcGEsIHNlZWQgPSBzZWcxJHNlZWQpXG5cbm15X0QgPC0gZnVuY3Rpb24odGFiKSB7XG4gIGEgPC0gdGFiWywgMV07IGIgPC0gdGFiWywgMl1cbiAgX19fX19fICAgICAjIDAsNSAqIHNvbW1lIGRlcyB2YWxldXJzIGFic29sdWVzIGRlcyDDqWNhcnRzIGRlIHBhcnRzXG59XG5jKG1vbl9EID0gbXlfRCh0YWIpLCBzZWdfRCA9IHNlZ19EKHRhYikpIn0=
+eyJhdHRyIjp7ImNhcHRpb24iOiJEIMOgIGxhIG1haW4iLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNlZy1kLTEiLCJpbnB1dCI6WyJzZWcxIl0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzb3VyY2UoXCJSL3NlZ3JlZ2F0aW9uLlJcIilcbnRhYiA8LSBzZWdfc2ltX2NpdHkoVSA9IDQwLCBzaXplID0gMTUwLCBwID0gMC4zLCBrYXBwYSA9IHNlZzEka2FwcGEsIHNlZWQgPSBzZWcxJHNlZWQpXG5cbm15X0QgPC0gZnVuY3Rpb24odGFiKSB7XG4gIGEgPC0gdGFiWywgMV07IGIgPC0gdGFiWywgMl1cbiAgX19fX19fICAgICAjIGluZGljZSBkZSBkaXNzaW1pbGFyaXTDqSA6IGRlbWktc29tbWUgZGVzIMOpY2FydHMgZW50cmUgbGVzIGRldXggcsOpcGFydGl0aW9uc1xufVxuYyhtb25fRCA9IG15X0QodGFiKSwgc2VnX0QgPSBzZWdfRCh0YWIpKSJ9
 </script>
 </div>
 </div>
@@ -738,6 +747,7 @@ c(mon_D = my_D(tab), seg_D = seg_D(tab))</code>
 <span id="interpolate-10-8"><a href="#interpolate-10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">mon_D =</span> <span class="fu">my_D</span>(tab), <span class="at">seg_D =</span> <span class="fu">seg_D</span>(tab))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> Coder l’indice D soi-même permet de voir ce qu’il compare : deux répartitions entre unités. Il est invariant à la taille totale des groupes, mais pas à leur découpage spatial (voir le problème de l’unité spatiale modifiable). On le complète par des indices d’exposition ou d’entropie.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Oublier la valeur absolue : la somme des écarts signés vaut toujours 0.</li>
@@ -759,7 +769,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNl
 <h2 class="anchored" data-anchor-id="seg-m-0">Entropie d’une composition</h2>
 <p><span class="dojo-step">Marche 3 sur 6 · Guidé</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="320" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 319;"><span id="cb4-320"><a href="#cb4-320" aria-hidden="true" tabindex="-1"></a>seg00 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"seg-m-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">p</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="fl">0.1</span><span class="op">,</span> <span class="fl">0.2</span><span class="op">,</span> <span class="fl">0.3</span><span class="op">,</span> <span class="fl">0.4</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="326" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 325;"><span id="cb4-326"><a href="#cb4-326" aria-hidden="true" tabindex="-1"></a>seg00 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"seg-m-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">p</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="fl">0.1</span><span class="op">,</span> <span class="fl">0.2</span><span class="op">,</span> <span class="fl">0.3</span><span class="op">,</span> <span class="fl">0.4</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-4" data-nodetype="declaration">
 
@@ -773,7 +783,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNl
 
 </div>
 <script type="webr-12-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJFbnRyb3BpZSBkZSBTaGFubm9uIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhlcmNpc2UiOiJzZWctbS0wIiwiaW5wdXQiOlsic2VnMDAiXSwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6ImVudHJvcGllIDwtIGZ1bmN0aW9uKHApIHtcbiAgcCA8LSBwW3AgPiAwXSAgICAgICAgICAgICAgICAgICMgY29udmVudGlvbiAwICogbG9nKDApID0gMFxuICBfX19fX18gICAgICAgICAgICAgICAgICAgICAgICAgIyAtIHNvbW1lIGRlcyBwICogbG9nKHApXG59XG5wIDwtIHNlZzAwJHBcbmMoc2VwYXJlZSA9IGVudHJvcGllKGMoMSwgMCkpLCBkZXV4X2dyb3VwZXMgPSBlbnRyb3BpZShjKHAsIDEgLSBwKSksXG4gIGVnYWwyID0gZW50cm9waWUoYygwLjUsIDAuNSkpLCBlZ2FsMyA9IGVudHJvcGllKHJlcCgxIC8gMywgMykpKSJ9
+eyJhdHRyIjp7ImNhcHRpb24iOiJFbnRyb3BpZSBkZSBTaGFubm9uIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhlcmNpc2UiOiJzZWctbS0wIiwiaW5wdXQiOlsic2VnMDAiXSwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6ImVudHJvcGllIDwtIGZ1bmN0aW9uKHApIHtcbiAgcCA8LSBwW3AgPiAwXSAgICAgICAgICAgICAgICAgICMgY29udmVudGlvbiAwICogbG9nKDApID0gMFxuICBfX19fX18gICAgICAgICAgICAgICAgICAgICAgICAgIyBlbnRyb3BpZSBkZSBsYSBjb21wb3NpdGlvbiAoaW5kaWNlIGRlIGRpdmVyc2l0w6kpXG59XG5wIDwtIHNlZzAwJHBcbmMoc2VwYXJlZSA9IGVudHJvcGllKGMoMSwgMCkpLCBkZXV4X2dyb3VwZXMgPSBlbnRyb3BpZShjKHAsIDEgLSBwKSksXG4gIGVnYWwyID0gZW50cm9waWUoYygwLjUsIDAuNSkpLCBlZ2FsMyA9IGVudHJvcGllKHJlcCgxIC8gMywgMykpKSJ9
 </script>
 </div>
 </div>
@@ -839,6 +849,7 @@ c(separee = entropie(c(1, 0)), deux_groupes = entropie(c(p, 1 - p)),
 <span id="interpolate-15-7"><a href="#interpolate-15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">egal2 =</span> <span class="fu">entropie</span>(<span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>)), <span class="at">egal3 =</span> <span class="fu">entropie</span>(<span class="fu">rep</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="dv">3</span>, <span class="dv">3</span>)))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> L’entropie mesure la diversité d’une composition : maximale quand les groupes sont à parts égales, nulle quand un seul groupe est présent. C’est la brique de l’indice d’information mutuelle : la ségrégation est le fait que la diversité à l’intérieur des unités soit plus faible que la diversité de la ville.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Oublier le signe moins : l’entropie serait négative.</li>
@@ -860,7 +871,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNl
 <h2 class="anchored" data-anchor-id="seg-m-1">Coder l’indice d’information mutuelle M</h2>
 <p><span class="dojo-step">Marche 4 sur 6 · À compléter</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="504" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 503;"><span id="cb5-504"><a href="#cb5-504" aria-hidden="true" tabindex="-1"></a>seg2 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"seg-m-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="514" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 513;"><span id="cb5-514"><a href="#cb5-514" aria-hidden="true" tabindex="-1"></a>seg2 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"seg-m-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-5" data-nodetype="declaration">
 
@@ -874,7 +885,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNl
 
 </div>
 <script type="webr-17-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJNIG11bHRpZ3JvdXBlIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhlcmNpc2UiOiJzZWctbS0xIiwiaW5wdXQiOlsic2VnMiJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic291cmNlKFwiUi9zZWdyZWdhdGlvbi5SXCIpXG5zZXQuc2VlZChzZWcyJHNlZWQpXG50YWIzIDwtIG1hdHJpeChycG9pcyg4ICogMywgMjUpICsgMSwgOCwgMykgICAgICAgIyA4IHVuaXTDqXMsIDMgZ3JvdXBlc1xuXG5lbnRyb3BpZSA8LSBmdW5jdGlvbihwKSB7IHAgPC0gcFtwID4gMF07IC1zdW0ocCAqIGxvZyhwKSkgfVxubXlfTSA8LSBmdW5jdGlvbih0YWIpIHtcbiAgRSAgPC0gX19fX19fICAgICAgICAgICMgZW50cm9waWUgZGUgbGEgY29tcG9zaXRpb24gZ2xvYmFsZSAocGFydHMgZGVzIGNvbG9ubmVzKVxuICBFaSA8LSBfX19fX18gICAgICAgICAgIyBlbnRyb3BpZSBkZSBjaGFxdWUgdW5pdMOpIDogYXBwbHkocGFydHMgcGFyIGxpZ25lLCAxLCBlbnRyb3BpZSlcbiAgdGkgPC0gX19fX19fICAgICAgICAgICMgcGFydCBkZSBjaGFxdWUgdW5pdMOpIGRhbnMgbGEgcG9wdWxhdGlvbiB0b3RhbGVcbiAgRSAtIHN1bSh0aSAqIEVpKVxufVxuYyhtb25fTSA9IG15X00odGFiMyksIHNlZ19NID0gc2VnX00odGFiMykpIn0=
+eyJhdHRyIjp7ImNhcHRpb24iOiJNIG11bHRpZ3JvdXBlIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhlcmNpc2UiOiJzZWctbS0xIiwiaW5wdXQiOlsic2VnMiJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic291cmNlKFwiUi9zZWdyZWdhdGlvbi5SXCIpXG5zZXQuc2VlZChzZWcyJHNlZWQpXG50YWIzIDwtIG1hdHJpeChycG9pcyg4ICogMywgMjUpICsgMSwgOCwgMykgICAgICAgIyA4IHVuaXTDqXMsIDMgZ3JvdXBlc1xuXG5lbnRyb3BpZSA8LSBmdW5jdGlvbihwKSB7IHAgPC0gcFtwID4gMF07IC1zdW0ocCAqIGxvZyhwKSkgfVxubXlfTSA8LSBmdW5jdGlvbih0YWIpIHtcbiAgRSAgPC0gX19fX19fICAgICAgICAgICMgZW50cm9waWUgZGUgbGEgY29tcG9zaXRpb24gZ2xvYmFsZSAocGFydHMgZGVzIGNvbG9ubmVzKVxuICBFaSA8LSBfX19fX18gICAgICAgICAgIyBlbnRyb3BpZSBkZSBsYSBjb21wb3NpdGlvbiBkZSBjaGFxdWUgdW5pdMOpIChsaWduZSBwYXIgbGlnbmUpXG4gIHRpIDwtIF9fX19fXyAgICAgICAgICAjIHBhcnQgZGUgY2hhcXVlIHVuaXTDqSBkYW5zIGxhIHBvcHVsYXRpb24gdG90YWxlXG4gIEUgLSBzdW0odGkgKiBFaSlcbn1cbmMobW9uX00gPSBteV9NKHRhYjMpLCBzZWdfTSA9IHNlZ19NKHRhYjMpKSJ9
 </script>
 </div>
 </div>
@@ -951,6 +962,7 @@ c(mon_M = my_M(tab3), seg_M = seg_M(tab3))</code>
 <span id="interpolate-20-12"><a href="#interpolate-20-12" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">mon_M =</span> <span class="fu">my_M</span>(tab3), <span class="at">seg_M =</span> <span class="fu">seg_M</span>(tab3))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> L’indice M compare la diversité de la ville à celle de chaque unité. Il se décompose exactement entre zones et à l’intérieur des zones, ce qui permet de dire où se situe la ségrégation (entre arrondissements ou entre quartiers d’un même arrondissement). Cette propriété le rend utile pour comparer des villes ou des dates.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Pondérer les <span class="math inline">\(E_i\)</span> par la part du groupe au lieu de la part de population <span class="math inline">\(t_i\)</span> de l’unité.</li>
@@ -1045,6 +1057,7 @@ round(res, 3)</code>
 <span id="interpolate-25-7"><a href="#interpolate-25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(res, <span class="dv">3</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> Avec de petites unités, le hasard seul produit des écarts de composition : D et M sont positifs même sans ségrégation. Ce biais est fort pour de petites unités, de petits groupes ou des écoles, et peut faire croire à tort que la ségrégation a augmenté quand les unités rétrécissent. Les corrections par simulation (benchmark aléatoire) sont donc standard.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Lire un D de 0,25 comme une « forte ségrégation » sans le comparer au D attendu sous H0.</li>
@@ -1080,7 +1093,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6InNl
 
 </div>
 <script type="webr-27-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJFbnRyZSAvIGludHJhIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhlcmNpc2UiOiJzZWctZGVjb21wLTEiLCJpbnB1dCI6WyJzZWc0Il0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzb3VyY2UoXCJSL3NlZ3JlZ2F0aW9uLlJcIilcbnRhYiA8LSBzZWdfc2ltX2NpdHkoVSA9IDEyLCBzaXplID0gODAsIHAgPSAwLjQsIGthcHBhID0gMywgc2VlZCA9IHNlZzQkc2VlZClcbnpvbmUgPC0gcmVwKGMoXCJub3JkXCIsIFwiY2VudHJlXCIsIFwic3VkXCIpLCBlYWNoID0gNClcblxuYWdnIDwtIF9fX19fXyAgICAgICAgICAgICAgICAgICAgICAgICMgZWZmZWN0aWZzIGFncsOpZ8OpcyBwYXIgem9uZSA6IHJvd3N1bSh0YWIsIHpvbmUpXG5NX2ludGVyIDwtIHNlZ19NKGFnZylcbk5fciA8LSBfX19fX18gICAgICAgICAgICAgICAgICAgICAgICAjIHBvcHVsYXRpb24gZGUgY2hhcXVlIHpvbmUgKG3Dqm1lIG9yZHJlIHF1ZSBhZ2cpXG5NX3IgPC0gX19fX19fICAgICAgICAgICAgICAgICAgICAgICAgIyBNIGRhbnMgY2hhcXVlIHpvbmUgOiBzYXBwbHkoc3BsaXQoc2VxX2xlbihucm93KHRhYikpLCB6b25lKSwgZnVuY3Rpb24oaSkgc2VnX00odGFiW2ksICwgZHJvcCA9IEZBTFNFXSkpXG5NX2ludHJhIDwtIHN1bShOX3IgLyBzdW0oTl9yKSAqIE1fcilcbmMoaW50ZXIgPSBNX2ludGVyLCBpbnRyYSA9IE1faW50cmEsIHRvdGFsID0gTV9pbnRlciArIE1faW50cmEsIGRpcmVjdCA9IHNlZ19NKHRhYikpIn0=
+eyJhdHRyIjp7ImNhcHRpb24iOiJFbnRyZSAvIGludHJhIiwiZWRpdCI6dHJ1ZSwiZXZhbCI6dHJ1ZSwiZXhlcmNpc2UiOiJzZWctZGVjb21wLTEiLCJpbnB1dCI6WyJzZWc0Il0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzb3VyY2UoXCJSL3NlZ3JlZ2F0aW9uLlJcIilcbnRhYiA8LSBzZWdfc2ltX2NpdHkoVSA9IDEyLCBzaXplID0gODAsIHAgPSAwLjQsIGthcHBhID0gMywgc2VlZCA9IHNlZzQkc2VlZClcbnpvbmUgPC0gcmVwKGMoXCJub3JkXCIsIFwiY2VudHJlXCIsIFwic3VkXCIpLCBlYWNoID0gNClcblxuYWdnIDwtIF9fX19fXyAgICAgICAgICAgICAgICAgICAgICAgICMgcmVncm91cGUgbGVzIHVuaXTDqXMgcGFyIHpvbmVcbk1faW50ZXIgPC0gc2VnX00oYWdnKVxuTl9yIDwtIF9fX19fXyAgICAgICAgICAgICAgICAgICAgICAgICMgcG9wdWxhdGlvbiBkZSBjaGFxdWUgem9uZSAobcOqbWUgb3JkcmUgcXVlIGFnZylcbk1fciA8LSBfX19fX18gICAgICAgICAgICAgICAgICAgICAgICAjIE0gw6AgbCdpbnTDqXJpZXVyIGRlIGNoYXF1ZSB6b25lIChhcHBsaXF1ZSBzZWdfTSDDoCBjaGFxdWUgc291cy10YWJsZWF1KVxuTV9pbnRyYSA8LSBzdW0oTl9yIC8gc3VtKE5fcikgKiBNX3IpXG5jKGludGVyID0gTV9pbnRlciwgaW50cmEgPSBNX2ludHJhLCB0b3RhbCA9IE1faW50ZXIgKyBNX2ludHJhLCBkaXJlY3QgPSBzZWdfTSh0YWIpKSJ9
 </script>
 </div>
 </div>
@@ -1153,6 +1166,7 @@ c(inter = M_inter, intra = M_intra, total = M_inter + M_intra, direct = seg_M(ta
 <span id="interpolate-30-10"><a href="#interpolate-30-10" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">inter =</span> M_inter, <span class="at">intra =</span> M_intra, <span class="at">total =</span> M_inter <span class="sc">+</span> M_intra, <span class="at">direct =</span> <span class="fu">seg_M</span>(tab))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> Décomposer M entre et intra zones répond à la question : la ségrégation tient-elle à la différence entre zones (grandes frontières) ou à l’intérieur (micro-ségrégation) ? Le terme inter est la ségrégation qui subsiste si l’on agrège ; le terme intra est celle que l’agrégation efface (voir MAUP).</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Désaligner les zones : <code>rowsum</code> et <code>split</code> trient par ordre alphabétique ; garde le même ordre pour les poids.</li>

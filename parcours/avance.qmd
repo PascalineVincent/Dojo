@@ -1,0 +1,813 @@
+---
+title: "Niveau avancé"
+subtitle: "Simulation, identification causale, équilibre de marché"
+---
+
+{{< include ../_extensions/r-wasm/live/_knitr.qmd >}}
+
+Ces pistes (niveaux 4 et 5) demandent d'avoir terminé la piste de base correspondante : **stats-avance** après « Comparaisons et tests », **eco-avance** après « Économétrie », **micro-avance** après « Concurrence parfaite ». La première marche est verrouillée tant que la piste préalable n'est pas terminée. Les énoncés sont plus ouverts et les gabarits ne comportent qu'un ou deux trous.
+
+
+# Statistiques avancées : bootstrap, puissance, tests multiples {#stats-avance}
+
+::: {.dojo-track data-track="stats-avance"}
+:::
+
+## Bootstrap de la médiane {#v-sta-1}
+
+[Marche 1 sur 4 · Avancé]{.dojo-step}
+
+La médiane n'a pas d'erreur-type simple. Par **bootstrap** : tire 2 000 échantillons avec remise dans la fécondité des 47 provinces suisses (`swiss$Fertility`), calcule la médiane de chacun et renvoie les quantiles 2,5 % et 97,5 % (intervalle percentile à 95 %). Place `set.seed(1)` avant la boucle.
+
+```{webr}
+#| exercise: v-sta-1
+#| caption: "Bootstrap de la médiane"
+set.seed(1)
+x <- swiss$Fertility
+b <- replicate(2000, median(______))     # un rééchantillon de même taille que x, tiré avec remise
+unname(quantile(b, c(0.025, 0.975)))
+```
+
+::: {.hint exercise="v-sta-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Un rééchantillon bootstrap a la même taille que l'échantillon et se tire **avec remise**.
+:::
+:::
+
+::: {.hint exercise="v-sta-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la démarche
+`sample(x, replace = TRUE)` tire un rééchantillon ; l'intervalle attendu est environ [65,5 ; 75,5].
+:::
+:::
+
+::: {.solution exercise="v-sta-1"}
+**Raisonnement.**
+
+1. Le bootstrap traite l'échantillon observé comme une population.
+2. Pour chaque rééchantillon, on recalcule la statistique (ici la médiane).
+3. Les quantiles de ces 2 000 médianes donnent un intervalle percentile.
+
+**Lecture économique.** Le bootstrap est le recours standard quand la statistique (médiane, indice de Gini, ratio) n'a pas de formule d'erreur-type simple : il permet de donner des intervalles pour des indicateurs d'inégalité ou de concentration.
+
+```{webr}
+#| exercise: v-sta-1
+#| solution: true
+set.seed(1)
+x <- swiss$Fertility
+b <- replicate(2000, median(sample(x, replace = TRUE)))
+unname(quantile(b, c(0.025, 0.975)))
+```
+
+**Pièges fréquents.**
+
+- Tirer sans remise : on retrouve toujours l'échantillon d'origine.
+- Oublier `set.seed` : l'intervalle change à chaque exécution.
+
+**Pour aller plus loin.** Refais avec 200 puis 5 000 rééchantillons : l'intervalle se stabilise-t-il ?
+:::
+
+```{webr}
+#| exercise: v-sta-1
+#| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
+ref <- {set.seed(1)
+x <- swiss$Fertility
+b <- replicate(2000, median(sample(x, replace = TRUE)))
+unname(quantile(b, c(0.025, 0.975)))}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un résultat numérique de la bonne longueur (dernière ligne du bloc).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = paste0("Mauvais intervalle : vérifie `replace = TRUE`, la taille du rééchantillon et les quantiles 0,025 et 0,975.", .diag(res, ref)))
+} else {
+  list(correct = TRUE, message = "Correct. Compare avec le corrigé pour la démarche.")
+}
+```
+
+::: {.dojo-done data-id="v-sta-1"}
+:::
+
+## Puissance d'un test par simulation {#v-sta-2}
+
+[Marche 2 sur 4 · Avancé]{.dojo-step}
+
+La **puissance** est la probabilité de rejeter H0 quand elle est fausse. Simule 2 000 expériences où deux groupes de **20** observations diffèrent de 0,5 écart-type (`rnorm(20, 0.5)` contre `rnorm(20)`), applique `t.test` à chacune et renvoie la part de p-values inférieures à 0,05. Place `set.seed(2)` avant la boucle.
+
+```{webr}
+#| exercise: v-sta-2
+#| caption: "Puissance d'un test par simulation"
+set.seed(2)
+rejet <- replicate(2000, {
+  a <- rnorm(20, 0.5); b <- rnorm(20)
+  t.test(a, b)$p.value < ______     # seuil de 5 %
+})
+mean(rejet)
+```
+
+::: {.hint exercise="v-sta-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+On compte les cas où le test rejette alors que l'écart de 0,5 est bien réel.
+:::
+:::
+
+::: {.hint exercise="v-sta-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la démarche
+`mean()` d'un vecteur de TRUE/FALSE donne la proportion de TRUE. Résultat attendu : environ 0,34.
+:::
+:::
+
+::: {.solution exercise="v-sta-2"}
+**Raisonnement.**
+
+1. On simule le « vrai monde » avec un écart de 0,5.
+2. On teste à chaque simulation.
+3. La proportion de rejets estime la puissance (environ un tiers : très insuffisant).
+
+**Lecture économique.** Avec 20 observations par groupe, on détecte un effet moyen (0,5 écart-type) une fois sur trois : de nombreux « effets non significatifs » d'études expérimentales en économie viennent de ce défaut de puissance, pas de l'absence d'effet.
+
+```{webr}
+#| exercise: v-sta-2
+#| solution: true
+set.seed(2)
+rejet <- replicate(2000, {
+  a <- rnorm(20, 0.5); b <- rnorm(20)
+  t.test(a, b)$p.value < 0.05
+})
+mean(rejet)
+```
+
+**Pièges fréquents.**
+
+- Interpréter une non-significativité comme une absence d'effet.
+- Oublier que la puissance dépend de n, de l'effet et du seuil.
+
+**Pour aller plus loin.** Passe à n = 50 par groupe : la puissance double environ.
+:::
+
+```{webr}
+#| exercise: v-sta-2
+#| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
+ref <- {set.seed(2)
+rejet <- replicate(2000, {
+  a <- rnorm(20, 0.5); b <- rnorm(20)
+  t.test(a, b)$p.value < 0.05
+})
+mean(rejet)}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un résultat numérique de la bonne longueur (dernière ligne du bloc).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = paste0("La puissance attendue est assez faible : vérifie le seuil (0,05), les 2 000 répétitions et la taille 20.", .diag(res, ref)))
+} else {
+  list(correct = TRUE, message = "Correct. Compare avec le corrigé pour la démarche.")
+}
+```
+
+::: {.dojo-done data-id="v-sta-2"}
+:::
+
+## Corriger les tests multiples {#v-sta-3}
+
+[Marche 3 sur 4 · Avancé]{.dojo-step}
+
+On a 18 p-values : 15 tirées au hasard (`runif(15)`) et trois petites (0,0004 ; 0,002 ; 0,01), avec `set.seed(3)`. Renvoie, dans l'ordre, le nombre de tests significatifs à 5 % (1) **sans correction**, (2) avec la correction de **Bonferroni**, (3) avec la correction de **Benjamini-Hochberg** (`p.adjust`).
+
+```{webr}
+#| exercise: v-sta-3
+#| caption: "Corriger les tests multiples"
+set.seed(3)
+p <- c(runif(15), 0.0004, 0.002, 0.01)
+c(brut = sum(p < 0.05),
+  bonferroni = sum(p.adjust(p, method = "______") < 0.05),
+  bh = sum(p.adjust(p, method = "BH") < 0.05))
+```
+
+::: {.hint exercise="v-sta-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`p.adjust(p, method = ...)` renvoie les p-values corrigées ; on les compare à 0,05.
+:::
+:::
+
+::: {.hint exercise="v-sta-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la démarche
+Résultat attendu : 3, 2, 2.
+:::
+:::
+
+::: {.solution exercise="v-sta-3"}
+**Raisonnement.**
+
+1. Sans correction, 18 tests à 5 % produisent des faux positifs.
+2. Bonferroni multiplie les p-values par 18 : très prudent.
+3. BH contrôle la part de fausses découvertes : plus puissant quand beaucoup de tests sont vrais.
+
+**Lecture économique.** Quand une étude teste de nombreux critères (sous-groupes, résultats secondaires), seuls les résultats qui survivent à la correction sont fiables : c'est la logique de la pré-inscription des analyses dans les essais randomisés.
+
+```{webr}
+#| exercise: v-sta-3
+#| solution: true
+set.seed(3)
+p <- c(runif(15), 0.0004, 0.002, 0.01)
+c(brut = sum(p < 0.05),
+  bonferroni = sum(p.adjust(p, method = "bonferroni") < 0.05),
+  bh = sum(p.adjust(p, method = "BH") < 0.05))
+```
+
+**Pièges fréquents.**
+
+- Corriger après avoir choisi le meilleur test.
+- Confondre contrôle de l'erreur par famille (Bonferroni) et du taux de fausses découvertes (BH).
+
+**Pour aller plus loin.** Change `runif(15)` en `runif(150)` : l'écart entre « brut » et « corrigé » s'agrandit.
+:::
+
+```{webr}
+#| exercise: v-sta-3
+#| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
+ref <- {set.seed(3)
+p <- c(runif(15), 0.0004, 0.002, 0.01)
+c(brut = sum(p < 0.05),
+  bonferroni = sum(p.adjust(p, method = "bonferroni") < 0.05),
+  bh = sum(p.adjust(p, method = "BH") < 0.05))}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un résultat numérique de la bonne longueur (dernière ligne du bloc).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = paste0("Vérifie le nom de la méthode (\"bonferroni\") et compare les trois nombres.", .diag(res, ref)))
+} else {
+  list(correct = TRUE, message = "Correct. Compare avec le corrigé pour la démarche.")
+}
+```
+
+::: {.dojo-done data-id="v-sta-3"}
+:::
+
+## Le p-hacking par simulation {#v-sta-4}
+
+[Marche 4 sur 4 · Autonome]{.dojo-step}
+
+Un chercheur teste 20 hypothèses **toutes fausses** (aucun effet) à 5 % et publie s'il en trouve au moins une de significative. Simule 2 000 chercheurs (`set.seed(4)`), chacun avec 20 p-values uniformes (`runif(20)`), et renvoie un vecteur : (1) la part qui trouve au moins un résultat « significatif », (2) la valeur théorique `1 - 0.95^20`.
+
+```{webr}
+#| exercise: v-sta-4
+#| caption: "Le p-hacking par simulation"
+set.seed(4)
+au_moins_un <- replicate(2000, any(______ < 0.05))     # 20 p-values uniformes
+c(simule = mean(au_moins_un), theorique = ______)
+```
+
+::: {.hint exercise="v-sta-4"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Sous H0, une p-value suit une loi uniforme sur [0, 1].
+:::
+:::
+
+::: {.hint exercise="v-sta-4"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la démarche
+Probabilité d'au moins un succès sur 20 essais indépendants : 1 moins la probabilité de n'en avoir aucun.
+:::
+:::
+
+::: {.solution exercise="v-sta-4"}
+**Raisonnement.**
+
+1. Sous H0, p ~ U(0, 1).
+2. `any(...)` vaut TRUE si au moins une p-value est inférieure à 0,05.
+3. La simulation (≈ 0,65) rejoint la théorie (0,64) : deux « chercheurs » sur trois publient un faux effet.
+
+**Lecture économique.** C'est le mécanisme de la « crise de la reproductibilité » : explorer de nombreuses spécifications puis ne rapporter que la significative produit des résultats faux avec une grande probabilité.
+
+```{webr}
+#| exercise: v-sta-4
+#| solution: true
+set.seed(4)
+au_moins_un <- replicate(2000, any(runif(20) < 0.05))
+c(simule = mean(au_moins_un), theorique = 1 - 0.95^20)
+```
+
+**Pièges fréquents.**
+
+- Croire que 5 % de risque par test donne 5 % de risque global.
+- Oublier que les tests ne sont pas toujours indépendants.
+
+**Pour aller plus loin.** Fais varier le nombre de tests (5, 50) et trace le risque global.
+:::
+
+```{webr}
+#| exercise: v-sta-4
+#| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
+ref <- {set.seed(4)
+au_moins_un <- replicate(2000, any(runif(20) < 0.05))
+c(simule = mean(au_moins_un), theorique = 1 - 0.95^20)}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un résultat numérique de la bonne longueur (dernière ligne du bloc).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = paste0("Le résultat doit être proche de 0,64 : vérifie `runif(20)` et la formule `1 - 0.95^20`.", .diag(res, ref)))
+} else {
+  list(correct = TRUE, message = "Correct. Compare avec le corrigé pour la démarche.")
+}
+```
+
+::: {.dojo-done data-id="v-sta-4"}
+:::
+
+
+# Économétrie avancée : effets fixes, différence de différences, instruments {#eco-avance}
+
+::: {.dojo-track data-track="eco-avance"}
+:::
+
+## Effets fixes : l'estimateur intra {#v-eco-1}
+
+[Marche 1 sur 3 · Avancé]{.dojo-step}
+
+Données de panel **simulées** (50 individus, 5 périodes, `set.seed(1)`) : un effet individuel `a` corrèle avec `x` (`x = 0.8*a + bruit`) et `y = 2*x + a + bruit`. La vraie pente est 2. Renvoie c(pente MCO sur les niveaux, pente **intra**), la seconde étant obtenue après avoir retiré la moyenne de chaque individu (`ave`) à `x` et à `y`.
+
+```{webr}
+#| exercise: v-eco-1
+#| caption: "Effets fixes : l'estimateur intra"
+set.seed(1); N <- 50; T <- 5; id <- rep(1:N, each = T)
+a <- rnorm(N, 0, 2)[id]; x <- 0.8 * a + rnorm(N * T); y <- 2 * x + a + rnorm(N * T)
+xd <- x - ave(x, ______)     # écart à la moyenne de l'individu
+yd <- y - ave(y, id)
+unname(c(coef(lm(y ~ x))[2], coef(lm(yd ~ xd))[2]))
+```
+
+::: {.hint exercise="v-eco-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`ave(x, id)` calcule la moyenne de x pour chaque individu ; on la retranche.
+:::
+:::
+
+::: {.hint exercise="v-eco-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la démarche
+Résultat attendu : environ 2,80 (MCO) puis 2,18 (intra), la vraie valeur étant 2.
+:::
+:::
+
+::: {.solution exercise="v-eco-1"}
+**Raisonnement.**
+
+1. L'effet individuel `a` est omis et corrèle avec x : les MCO sont biaisés (≈ 2,8).
+2. Retirer la moyenne par individu élimine `a`.
+3. L'estimateur intra se rapproche de 2 (≈ 2,2).
+
+**Lecture économique.** Les effets fixes permettent de contrôler les caractéristiques inobservées constantes dans le temps (talent, institutions, culture) ; au prix de ne plus identifier l'effet de variables qui ne varient pas dans le temps.
+
+```{webr}
+#| exercise: v-eco-1
+#| solution: true
+set.seed(1); N <- 50; T <- 5; id <- rep(1:N, each = T)
+a <- rnorm(N, 0, 2)[id]; x <- 0.8 * a + rnorm(N * T); y <- 2 * x + a + rnorm(N * T)
+xd <- x - ave(x, id)
+yd <- y - ave(y, id)
+unname(c(coef(lm(y ~ x))[2], coef(lm(yd ~ xd))[2]))
+```
+
+**Pièges fréquents.**
+
+- Oublier que les effets fixes ne traitent que l'hétérogénéité **constante** dans le temps.
+- Interpréter l'écart à la vraie valeur comme une erreur de code : il reflète le bruit d'échantillonnage.
+
+**Pour aller plus loin.** Augmente N à 500 : la pente intra se rapproche de 2.
+:::
+
+```{webr}
+#| exercise: v-eco-1
+#| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
+ref <- {set.seed(1); N <- 50; T <- 5; id <- rep(1:N, each = T)
+a <- rnorm(N, 0, 2)[id]; x <- 0.8 * a + rnorm(N * T); y <- 2 * x + a + rnorm(N * T)
+xd <- x - ave(x, id)
+yd <- y - ave(y, id)
+unname(c(coef(lm(y ~ x))[2], coef(lm(yd ~ xd))[2]))}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un résultat numérique de la bonne longueur (dernière ligne du bloc).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = paste0("Compare les deux pentes : la première est biaisée vers le haut, la seconde se rapproche de 2.", .diag(res, ref)))
+} else {
+  list(correct = TRUE, message = "Correct. Compare avec le corrigé pour la démarche.")
+}
+```
+
+::: {.dojo-done data-id="v-eco-1"}
+:::
+
+## Différence de différences {#v-eco-2}
+
+[Marche 2 sur 3 · Avancé]{.dojo-step}
+
+Simulation (`set.seed(2)`, 400 observations) : un groupe traité (`tr`) et un groupe témoin, observés avant et après (`po`). Le vrai effet du traitement est **2**. Calcule l'estimateur de **différence de différences** : (moyenne traités après − moyenne traités avant) − (moyenne témoins après − moyenne témoins avant).
+
+```{webr}
+#| exercise: v-eco-2
+#| caption: "Différence de différences"
+set.seed(2); n <- 400
+tr <- rep(0:1, each = n / 2); po <- rep(c(0, 1), n / 2)
+y <- 1 + 0.5 * tr + 0.8 * po + 2 * tr * po + rnorm(n)
+m <- tapply(y, list(tr, po), mean)
+(m["1", "1"] - m["1", "0"]) - (m["0", ______] - m["0", "0"])
+```
+
+::: {.hint exercise="v-eco-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`m` est une matrice : lignes = groupe (0, 1), colonnes = période (0, 1).
+:::
+:::
+
+::: {.hint exercise="v-eco-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la démarche
+Résultat attendu : environ 2,09.
+:::
+:::
+
+::: {.solution exercise="v-eco-2"}
+**Raisonnement.**
+
+1. La première différence (traités) mélange l'effet du traitement et la tendance commune.
+2. La seconde (témoins) mesure la tendance commune.
+3. Leur différence isole l'effet, sous l'hypothèse de tendances parallèles.
+
+**Lecture économique.** La différence de différences est l'outil central de l'évaluation des politiques (salaire minimum, réformes fiscales). Sa validité repose sur l'hypothèse de tendances parallèles, que l'on teste sur les périodes antérieures.
+
+```{webr}
+#| exercise: v-eco-2
+#| solution: true
+set.seed(2); n <- 400
+tr <- rep(0:1, each = n / 2); po <- rep(c(0, 1), n / 2)
+y <- 1 + 0.5 * tr + 0.8 * po + 2 * tr * po + rnorm(n)
+m <- tapply(y, list(tr, po), mean)
+(m["1", "1"] - m["1", "0"]) - (m["0", "1"] - m["0", "0"])
+```
+
+**Pièges fréquents.**
+
+- Comparer uniquement avant/après sans groupe témoin.
+- Oublier l'hypothèse de tendances parallèles.
+
+**Pour aller plus loin.** Vérifie le même résultat avec `coef(lm(y ~ tr * po))["tr:po"]`.
+:::
+
+```{webr}
+#| exercise: v-eco-2
+#| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
+ref <- {set.seed(2); n <- 400
+tr <- rep(0:1, each = n / 2); po <- rep(c(0, 1), n / 2)
+y <- 1 + 0.5 * tr + 0.8 * po + 2 * tr * po + rnorm(n)
+m <- tapply(y, list(tr, po), mean)
+(m["1", "1"] - m["1", "0"]) - (m["0", "1"] - m["0", "0"])}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un résultat numérique de la bonne longueur (dernière ligne du bloc).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = paste0("L'estimateur doit être proche de 2 : relis la formule (traités après-avant moins témoins après-avant).", .diag(res, ref)))
+} else {
+  list(correct = TRUE, message = "Correct. Compare avec le corrigé pour la démarche.")
+}
+```
+
+::: {.dojo-done data-id="v-eco-2"}
+:::
+
+## Variable instrumentale et instrument faible {#v-eco-3}
+
+[Marche 3 sur 3 · Autonome]{.dojo-step}
+
+Simulation (`set.seed(5)`, 1 000 répétitions de 500 observations) : `x` est endogène (corrélé à l'erreur `u`) et l'instrument `z` est **faible** (`x = 0.05*z + 0.8*u + bruit`). La vraie pente de y sur x est 1. Dans chaque répétition, calcule la pente MCO `cov(x,y)/var(x)` et l'estimateur de Wald `cov(z,y)/cov(z,x)`. Renvoie les **médianes** des deux estimateurs.
+
+```{webr}
+#| exercise: v-eco-3
+#| caption: "Variable instrumentale et instrument faible"
+set.seed(5)
+sim <- function() {
+  n <- 500; z <- rnorm(n); u <- rnorm(n)
+  x <- 0.05 * z + 0.8 * u + rnorm(n, 0, 0.6); y <- 1 * x + u + rnorm(n)
+  c(mco = cov(x, y) / var(x), iv = cov(z, y) / cov(z, ______))     # Wald : cov(z, y) / cov(z, x)
+}
+r <- replicate(1000, sim())
+unname(apply(r, 1, median))
+```
+
+::: {.hint exercise="v-eco-3"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Le ratio de Wald divise la covariance (instrument, résultat) par la covariance (instrument, régresseur).
+:::
+:::
+
+::: {.hint exercise="v-eco-3"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la démarche
+`apply(r, 1, median)` calcule la médiane de chaque ligne (chaque estimateur).
+:::
+:::
+
+::: {.solution exercise="v-eco-3"}
+**Raisonnement.**
+
+1. MCO est biaisé par l'endogénéité : médiane ≈ 1,80 pour une vraie valeur de 1.
+2. IV est centré près de la vraie valeur (≈ 1,21) mais très dispersé.
+3. Un instrument faible rend l'estimateur imprécis : vérifier la statistique F du premier étage.
+
+**Lecture économique.** Les instruments faibles sont le piège classique de l'économétrie appliquée : l'estimateur IV peut être plus trompeur que les MCO. D'où l'exigence d'une statistique F du premier étage supérieure à 10 (règle empirique).
+
+```{webr}
+#| exercise: v-eco-3
+#| solution: true
+set.seed(5)
+sim <- function() {
+  n <- 500; z <- rnorm(n); u <- rnorm(n)
+  x <- 0.05 * z + 0.8 * u + rnorm(n, 0, 0.6); y <- 1 * x + u + rnorm(n)
+  c(mco = cov(x, y) / var(x), iv = cov(z, y) / cov(z, x))
+}
+r <- replicate(1000, sim())
+unname(apply(r, 1, median))
+```
+
+**Pièges fréquents.**
+
+- Utiliser un instrument sans tester sa force.
+- Oublier que l'instrument doit aussi être exogène (non corrélé à u).
+
+**Pour aller plus loin.** Mesure aussi l'étendue interquartile de l'IV (`IQR`) : elle illustre l'imprécision.
+:::
+
+```{webr}
+#| exercise: v-eco-3
+#| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
+ref <- {set.seed(5)
+sim <- function() {
+  n <- 500; z <- rnorm(n); u <- rnorm(n)
+  x <- 0.05 * z + 0.8 * u + rnorm(n, 0, 0.6); y <- 1 * x + u + rnorm(n)
+  c(mco = cov(x, y) / var(x), iv = cov(z, y) / cov(z, x))
+}
+r <- replicate(1000, sim())
+unname(apply(r, 1, median))}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un résultat numérique de la bonne longueur (dernière ligne du bloc).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = paste0("Les deux médianes sont proches de 1,8 (MCO) et 1,2 (IV) : vérifie le dénominateur du ratio de Wald.", .diag(res, ref)))
+} else {
+  list(correct = TRUE, message = "Correct. Compare avec le corrigé pour la démarche.")
+}
+```
+
+::: {.dojo-done data-id="v-eco-3"}
+:::
+
+
+# Micro avancée : entrée et bien-être {#micro-avance}
+
+::: {.dojo-track data-track="micro-avance"}
+:::
+
+## Cournot avec libre entrée {#v-mic-1}
+
+[Marche 1 sur 2 · Avancé]{.dojo-step}
+
+Demande inverse `P = 100 - Q`, coût marginal 10, coût fixe 200. À l'équilibre de Cournot à N firmes, chaque firme produit `90/(N+1)`. Avec libre entrée, les firmes entrent tant que le profit est positif. Renvoie le **plus grand N** pour lequel le profit net du coût fixe est positif ou nul.
+
+```{webr}
+#| exercise: v-mic-1
+#| caption: "Cournot avec libre entrée"
+P0 <- 100; cmg <- 10; F <- 200; a <- P0 - cmg      # demande P = 100 - Q ; coût marginal 10 ; coût fixe 200
+N <- 1:10; q <- a / (N + 1); Q <- N * q; P <- P0 - Q; profit <- (P - cmg) * q - ______
+max(N[profit >= 0])
+```
+
+::: {.hint exercise="v-mic-1"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+Il faut soustraire le coût fixe F au profit brut.
+:::
+:::
+
+::: {.hint exercise="v-mic-1"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la démarche
+Le profit net est décroissant en N ; `N[profit >= 0]` liste les N viables.
+:::
+:::
+
+::: {.solution exercise="v-mic-1"}
+**Raisonnement.**
+
+1. Profit brut d'une firme : (P − cmg) q = (90/(N+1))².
+2. On soustrait F = 200.
+3. Le plus grand N avec profit ≥ 0 est 5.
+
+**Lecture économique.** Plus le coût fixe est élevé, moins le marché peut accueillir de firmes : les coûts fixes (réseaux, infrastructures) expliquent la concentration de nombreux secteurs sans qu'il y ait de collusion.
+
+```{webr}
+#| exercise: v-mic-1
+#| solution: true
+P0 <- 100; cmg <- 10; F <- 200; a <- P0 - cmg      # demande P = 100 - Q ; coût marginal 10 ; coût fixe 200
+N <- 1:10; q <- a / (N + 1); Q <- N * q; P <- P0 - Q; profit <- (P - cmg) * q - F
+max(N[profit >= 0])
+```
+
+**Pièges fréquents.**
+
+- Oublier de soustraire F.
+- Confondre q (production par firme) et Q (production totale).
+
+**Pour aller plus loin.** Augmente F à 500 : combien de firmes restent ?
+:::
+
+```{webr}
+#| exercise: v-mic-1
+#| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
+ref <- {P0 <- 100; cmg <- 10; F <- 200; a <- P0 - cmg      # demande P = 100 - Q ; coût marginal 10 ; coût fixe 200
+N <- 1:10; q <- a / (N + 1); Q <- N * q; P <- P0 - Q; profit <- (P - cmg) * q - F
+max(N[profit >= 0])}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un résultat numérique de la bonne longueur (dernière ligne du bloc).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = paste0("Le profit net vaut (P − cmg) × q − F : cherche le dernier N où il reste ≥ 0.", .diag(res, ref)))
+} else {
+  list(correct = TRUE, message = "Correct. Compare avec le corrigé pour la démarche.")
+}
+```
+
+::: {.dojo-done data-id="v-mic-1"}
+:::
+
+## Trop d'entrée : optimum social {#v-mic-2}
+
+[Marche 2 sur 2 · Autonome]{.dojo-step}
+
+Reprends le marché précédent. Le **surplus total** est `Q²/2` (surplus des consommateurs) plus les profits nets de tous les entrants (`N × profit`). Renvoie le nombre de firmes **N qui maximise le surplus total** : est-il inférieur au nombre d'entrants libres ?
+
+```{webr}
+#| exercise: v-mic-2
+#| caption: "Trop d'entrée : optimum social"
+P0 <- 100; cmg <- 10; F <- 200; a <- P0 - cmg      # demande P = 100 - Q ; coût marginal 10 ; coût fixe 200
+N <- 1:10; q <- a / (N + 1); Q <- N * q; P <- P0 - Q; profit <- (P - cmg) * q - F
+W <- Q^2 / 2 + N * profit
+N[which.______(W)]
+```
+
+::: {.hint exercise="v-mic-2"}
+::: {.callout-tip collapse="false"}
+## Indice 1 · par où commencer
+`which.max(W)` renvoie la position du maximum ; `N[...]` donne le nombre de firmes correspondant.
+:::
+:::
+
+::: {.hint exercise="v-mic-2"}
+::: {.callout-tip collapse="false"}
+## Indice 2 · la démarche
+Résultat attendu : 2, contre 5 avec libre entrée.
+:::
+:::
+
+::: {.solution exercise="v-mic-2"}
+**Raisonnement.**
+
+1. Le surplus des consommateurs augmente avec Q, donc avec N.
+2. Mais chaque entrant paie un coût fixe de 200.
+3. L'optimum social (N = 2) est inférieur à l'équilibre libre (N = 5) : il y a **excès d'entrée**.
+
+**Lecture économique.** Les firmes qui entrent ne tiennent pas compte du fait qu'elles volent des parts de marché aux autres (effet de « vol d'activité ») : le résultat est un excès d'entrée par rapport à l'optimum, argument classique pour la régulation de l'entrée dans les industries à coûts fixes élevés.
+
+```{webr}
+#| exercise: v-mic-2
+#| solution: true
+P0 <- 100; cmg <- 10; F <- 200; a <- P0 - cmg      # demande P = 100 - Q ; coût marginal 10 ; coût fixe 200
+N <- 1:10; q <- a / (N + 1); Q <- N * q; P <- P0 - Q; profit <- (P - cmg) * q - F
+W <- Q^2 / 2 + N * profit
+N[which.max(W)]
+```
+
+**Pièges fréquents.**
+
+- Maximiser le profit au lieu du surplus total.
+- Oublier de compter les coûts fixes de chaque entrant.
+
+**Pour aller plus loin.** Trace W en fonction de N pour visualiser le maximum.
+:::
+
+```{webr}
+#| exercise: v-mic-2
+#| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
+ref <- {P0 <- 100; cmg <- 10; F <- 200; a <- P0 - cmg      # demande P = 100 - Q ; coût marginal 10 ; coût fixe 200
+N <- 1:10; q <- a / (N + 1); Q <- N * q; P <- P0 - Q; profit <- (P - cmg) * q - F
+W <- Q^2 / 2 + N * profit
+N[which.max(W)]}
+res <- suppressWarnings(as.numeric(.result))
+if (length(res) != length(ref) || anyNA(res)) {
+  list(correct = FALSE, message = "Renvoie un résultat numérique de la bonne longueur (dernière ligne du bloc).")
+} else if (any(abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
+  list(correct = FALSE, message = paste0("Il faut le N pour lequel W est le plus grand : `which.max`.", .diag(res, ref)))
+} else {
+  list(correct = TRUE, message = "Correct. Compare avec le corrigé pour la démarche.")
+}
+```
+
+::: {.dojo-done data-id="v-mic-2"}
+:::
+

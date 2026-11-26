@@ -8,7 +8,7 @@ subtitle: "Vecteurs, tableaux, fonctions, puis graphiques de base pas à pas"
 Deux pistes progressives, avec indices et corrigés. *R : bases* couvre les vecteurs, les tableaux de données et les fonctions ; *R : graphiques* part de `plot()` et va jusqu'aux figures à plusieurs panneaux. Les graphiques se vérifient par ce que R **renvoie** (limites des axes avec `par("usr")`, objets renvoyés par `hist()`, `boxplot()`, `barplot()`), pas par l'œil. Les énoncés changent chaque jour.
 
 ::: {.callout-tip}
-**Une marche te paraît trop haute ?** Fais d'abord les [échauffements](minis.qmd) : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page *Aujourd'hui* te propose aussi un exercice court.
+**Une marche te paraît trop haute ?** Fais d'abord les [échauffements](minis.qmd) : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page *Aujourd'hui* te propose aussi un exercice court. Pour varier les gestes (tableaux, débogage, lecture de sorties et de graphiques, rédaction) : l'[Atelier](atelier.qmd) ; pour aller plus loin : le [niveau avancé](avance.qmd).
 :::
 
 {{< include ../_ojs.qmd >}}
@@ -89,6 +89,16 @@ c(n_sup = n_sup, moy_sup = moy_sup, pos_max = pos_max, somme_plafond = sum(plafo
 ```{webr}
 #| exercise: r-base-0
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 set.seed(rb0$seed); x <- round(runif(15, 10, 100)); s <- rb0$s
 ref <- c(sum(x > s), mean(x[x > s]), which.max(x), sum(pmin(x, s)))
 res <- suppressWarnings(as.numeric(.result))
@@ -96,7 +106,7 @@ msgs <- c("Nombre : sum(x > s).", "Moyenne des valeurs supérieures : mean(x[x >
 if (length(res) != 4 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(n_sup = ..., moy_sup = ..., pos_max = ..., somme_plafond = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : %d valeurs au-dessus de %g, de moyenne %.1f ; maximum en position %d.", as.integer(ref[1]), rb0$s, ref[2], as.integer(ref[3])))
 }
@@ -125,7 +135,7 @@ set.seed(rb1$seed)
 df <- data.frame(age = sample(18:65, 80, replace = TRUE), sexe = sample(c("F", "H"), 80, replace = TRUE))
 df$revenu <- round(1200 + 25 * df$age + ifelse(df$sexe == "H", rb1$ecart, 0) + rnorm(80, 0, 150))
 cible <- ______                  # df[condition_sur_les_lignes, ] : sexe "F" et age >= 30
-moy_sexe <- ______               # revenu moyen par sexe (tapply)
+moy_sexe <- ______               # résumé du revenu par groupe de sexe
 c(n_cible = nrow(cible), moy_cible = mean(cible$revenu),
   ecart_HF = moy_sexe[["H"]] - moy_sexe[["F"]], age_plus_riche = ______)
 ```
@@ -176,6 +186,16 @@ c(n_cible = nrow(cible), moy_cible = mean(cible$revenu),
 ```{webr}
 #| exercise: r-base-1
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 set.seed(rb1$seed)
 df <- data.frame(age = sample(18:65, 80, replace = TRUE), sexe = sample(c("F", "H"), 80, replace = TRUE))
 df$revenu <- round(1200 + 25 * df$age + ifelse(df$sexe == "H", rb1$ecart, 0) + rnorm(80, 0, 150))
@@ -186,7 +206,7 @@ msgs <- c("Sélection : df[df$sexe == \"F\" & df$age >= 30, ].", "Revenu moyen d
 if (length(res) != 4 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(n_cible = ..., moy_cible = ..., ecart_HF = ..., age_plus_riche = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : %d femmes de 30 ans ou plus, revenu moyen %.0f ; écart hommes - femmes %+.0f.", as.integer(ref[1]), ref[2], ref[3]))
 }
@@ -213,7 +233,7 @@ On simule 5 séries de prix (graine ${rb2.seed}, facteur de bruit ${rb2.k}). Éc
 #|   - rb2
 set.seed(rb2$seed)
 series <- lapply(1:5, function(i) round(100 * cumprod(1 + rnorm(20, 0.01, 0.005 * i * rb2$k)), 2))
-______     # définis ici : volatilite <- function(x) { ... }
+______     # définis ici ta fonction `volatilite` (voir l'énoncé)
 vol <- vapply(series, volatilite, numeric(1))
 c(plus_volatile = which.max(vol), vol_max = max(vol), vol_min = min(vol))
 ```
@@ -262,6 +282,16 @@ c(plus_volatile = which.max(vol), vol_max = max(vol), vol_min = min(vol))
 ```{webr}
 #| exercise: r-base-2
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 set.seed(rb2$seed)
 series <- lapply(1:5, function(i) round(100 * cumprod(1 + rnorm(20, 0.01, 0.005 * i * rb2$k)), 2))
 v <- sapply(series, function(x) sd(diff(x) / x[-length(x)]))
@@ -271,7 +301,7 @@ msgs <- c("Série la plus volatile : which.max(vol).", "Volatilité maximale : m
 if (length(res) != 3 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(plus_volatile = ..., vol_max = ..., vol_min = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : la série %d est la plus volatile (écart-type des variations de %.2f %%).", as.integer(ref[1]), 100 * ref[2]))
 }
@@ -351,6 +381,16 @@ par("usr")
 ```{webr}
 #| exercise: r-graph-0
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 set.seed(rg0$seed); a <- 2010:2024; p <- round(100 * cumprod(1 + rnorm(15, rg0$g / 100, 0.01)), 1)
 ref <- c(2010 - 0.04 * 14, 2024 + 0.04 * 14, -0.04 * max(p), 1.04 * max(p))
 res <- suppressWarnings(as.numeric(.result))
@@ -358,7 +398,7 @@ msgs <- c("Axe x : laisse la valeur par défaut (xlim automatique).", "Axe x : l
 if (length(res) != 4 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(xmin = ..., xmax = ..., ymin = ..., ymax = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : l'axe vertical va de %.1f à %.1f (marge de 4 %% incluse) ; il part bien de 0.", ref[3], ref[4]))
 }
@@ -386,8 +426,8 @@ Représente la distribution de 500 revenus (milliers d'euros, graine ${rg1.seed}
 set.seed(rg1$seed)
 x <- rlnorm(500, 0.5, 0.6)
 L <- rg1$L
-h <- hist(x, ______)                       # breaks = seq(0, borne_haute, by = L), freq = FALSE, col, main, xlab
-lines(______)                              # courbe de densité : density(x), en rouge
+h <- hist(x, ______)                       # arguments : classes de largeur L couvrant toute la série, échelle en densité, couleur, titres
+lines(______)                              # ajoute la courbe de densité estimée (en rouge)
 c(classes = length(h$counts), aire = sum(h$density * diff(h$breaks)), ymax_axe = par("usr")[4])
 ```
 
@@ -437,6 +477,16 @@ c(classes = length(h$counts), aire = sum(h$density * diff(h$breaks)), ymax_axe =
 ```{webr}
 #| exercise: r-graph-1
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 set.seed(rg1$seed); x <- rlnorm(500, 0.5, 0.6); L <- rg1$L
 hr <- hist(x, breaks = seq(0, ceiling(max(x) / L) * L, by = L), plot = FALSE)
 ref <- c(length(hr$counts), 1, 1.04 * max(hr$density))
@@ -445,7 +495,7 @@ msgs <- c("Nombre de classes : breaks = seq(0, ceiling(max(x) / L) * L, by = L).
 if (length(res) != 3 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(classes = ..., aire = ..., ymax_axe = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : %d classes, aire = 1, axe vertical jusqu'à %.2f (densité).", as.integer(ref[1]), ref[3]))
 }
@@ -529,6 +579,16 @@ c(b$stats[3, ], n_atypiques = length(b$out), barres = length(bp))
 ```{webr}
 #| exercise: r-graph-2
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 set.seed(rg2$seed); n <- 200
 diplome <- factor(sample(c("Bac", "Licence", "Master"), n, replace = TRUE, prob = c(0.5, 0.3, 0.2)), levels = c("Bac", "Licence", "Master"))
 salaire <- round(c(Bac = rg2$b, Licence = rg2$b + 3, Master = rg2$b + 7)[diplome] * exp(rnorm(n, 0, 0.3)), 2)
@@ -539,7 +599,7 @@ msgs <- c("Les médianes sont dans b$stats[3, ] : vérifie que b contient bien b
 if (length(res) != 5 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(med_Bac = ..., med_Licence = ..., med_Master = ..., n_atypiques = ..., barres = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : médianes %.1f / %.1f / %.1f €, %d valeur(s) atypique(s).", ref[1], ref[2], ref[3], as.integer(ref[4])))
 }
@@ -627,6 +687,16 @@ c(pente = coef(fit)[[2]], ordonnee = coef(fit)[[1]], lignes = m[1], colonnes = m
 ```{webr}
 #| exercise: r-graph-3
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 set.seed(rg3$seed); x <- rnorm(80, 10, 2); y <- 3 + rg3$b * x + rnorm(80, 0, 2)
 b <- cov(x, y) / var(x)
 ref <- c(b, mean(y) - b * mean(x), 1, 2)
@@ -635,7 +705,7 @@ msgs <- c("Pente : lm(y ~ x), coefficient de x.", "Ordonnée à l'origine : prem
 if (length(res) != 4 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(pente = ..., ordonnee = ..., lignes = ..., colonnes = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : y = %.2f + %.2f x ; disposition %d x %d lue avant restauration.", ref[2], ref[1], as.integer(ref[3]), as.integer(ref[4])))
 }

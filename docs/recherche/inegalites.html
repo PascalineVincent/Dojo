@@ -335,6 +335,14 @@ window.Quarto = {
     <a class="nav-link" href="../parcours/minis.html"> 
 <span class="menu-text">Échauffements</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../parcours/atelier.html"> 
+<span class="menu-text">Atelier</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../parcours/avance.html"> 
+<span class="menu-text">Avancé</span></a>
+  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parcours" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Parcours</span>
@@ -549,7 +557,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImNhcHRpb24iOiJMb3JlbnogZXQgaW5kaWNlcyBwb3VyIGRl
 <h2 class="anchored" data-anchor-id="ineq-gini-0">Gini sur 6 revenus : la double somme</h2>
 <p><span class="dojo-step">Marche 1 sur 5 · Guidé</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="135" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 134;"><span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>ineq0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"ineq-gini-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="137" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 136;"><span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>ineq0 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"ineq-gini-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-2" data-nodetype="declaration">
 
@@ -563,7 +571,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImNhcHRpb24iOiJMb3JlbnogZXQgaW5kaWNlcyBwb3VyIGRl
 
 </div>
 <script type="webr-2-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJHaW5pIHBhciBsYSBkb3VibGUgc29tbWUiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImluZXEtZ2luaS0wIiwiaW5wdXQiOlsiaW5lcTAiXSwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKGluZXEwJHNlZWQpXG54IDwtIHJvdW5kKHJsbm9ybSg2LCA3LCAwLjcpKSAgICAgICAgICAgICAgICAgIyBzaXggcmV2ZW51cyBtZW5zdWVsc1xubiA8LSBsZW5ndGgoeCk7IG11IDwtIG1lYW4oeClcbmVjYXJ0cyA8LSBvdXRlcih4LCB4LCBcIi1cIikgICAgICAgICAgICAgICAgICAgICMgbWF0cmljZSBuIHggbiBkZXMgw6ljYXJ0cyB4X2kgLSB4X2pcbkcgICA8LSBfX19fX18gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIHNvbW1lIGRlcyB8w6ljYXJ0c3wgLyAoMiAqIG5eMiAqIG11KVxudG9wIDwtIF9fX19fXyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgcGFydCBkdSByZXZlbnUgdG90YWwgZMOpdGVudWUgcGFyIGxlIHBsdXMgcmljaGVcbmMoZ2luaSA9IEcsIHBhcnRfdG9wID0gdG9wKSJ9
+eyJhdHRyIjp7ImNhcHRpb24iOiJHaW5pIHBhciBsYSBkb3VibGUgc29tbWUiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImluZXEtZ2luaS0wIiwiaW5wdXQiOlsiaW5lcTAiXSwidGltZWxpbWl0IjoiNjAifSwiY29kZSI6InNldC5zZWVkKGluZXEwJHNlZWQpXG54IDwtIHJvdW5kKHJsbm9ybSg2LCA3LCAwLjcpKSAgICAgICAgICAgICAgICAgIyBzaXggcmV2ZW51cyBtZW5zdWVsc1xubiA8LSBsZW5ndGgoeCk7IG11IDwtIG1lYW4oeClcbmVjYXJ0cyA8LSBvdXRlcih4LCB4LCBcIi1cIikgICAgICAgICAgICAgICAgICAgICMgbWF0cmljZSBuIHggbiBkZXMgw6ljYXJ0cyB4X2kgLSB4X2pcbkcgICA8LSBfX19fX18gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIEdpbmkgw6AgcGFydGlyIGRlIHRvdXMgbGVzIMOpY2FydHMgYWJzb2x1cyBlbnRyZSBwYWlyZXMgZCdpbmRpdmlkdXMsIG5vcm1hbGlzw6lzXG50b3AgPC0gX19fX19fICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBwYXJ0IGR1IHJldmVudSB0b3RhbCBkw6l0ZW51ZSBwYXIgbGUgcGx1cyByaWNoZVxuYyhnaW5pID0gRywgcGFydF90b3AgPSB0b3ApIn0=
 </script>
 </div>
 </div>
@@ -629,6 +637,7 @@ c(gini = G, part_top = top)</code>
 <span id="interpolate-5-7"><a href="#interpolate-5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">gini =</span> G, <span class="at">part_top =</span> top)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> Le Gini est la moitié de l’écart moyen relatif entre deux individus tirés au hasard : 0 pour l’égalité parfaite, proche de 1 si un seul individu détient tout. Il est surtout sensible aux transferts autour du milieu de la distribution, moins à la queue haute. Il ne dit rien de la forme précise de l’inégalité.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Diviser par <span class="math inline">\(n(n-1)\)</span> au lieu de <span class="math inline">\(n^2\)</span> : on obtient le Gini corrigé pour petit <span class="math inline">\(n\)</span> (égal à <span class="math inline">\(G\times n/(n-1)\)</span>), pas le Gini usuel.</li>
@@ -650,7 +659,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Imlu
 <h2 class="anchored" data-anchor-id="ineq-gini-1">Gini pondéré et courbe de Lorenz</h2>
 <p><span class="dojo-step">Marche 2 sur 5 · À compléter</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="238" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 237;"><span id="cb3-238"><a href="#cb3-238" aria-hidden="true" tabindex="-1"></a>ineq1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"ineq-gini-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">s</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="fl">0.5</span><span class="op">,</span> <span class="fl">0.8</span><span class="op">,</span> <span class="fl">1.1</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="242" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 241;"><span id="cb3-242"><a href="#cb3-242" aria-hidden="true" tabindex="-1"></a>ineq1 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"ineq-gini-1"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>)<span class="op">,</span> <span class="dt">s</span><span class="op">:</span> g<span class="op">.</span><span class="fu">pick</span>([<span class="fl">0.5</span><span class="op">,</span> <span class="fl">0.8</span><span class="op">,</span> <span class="fl">1.1</span>]) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="declaration">
 
@@ -665,7 +674,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Imlu
 
 </div>
 <script type="webr-7-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJHaW5pIHBvbmTDqXLDqSIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiaW5lcS1naW5pLTEiLCJpbnB1dCI6WyJpbmVxMSJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic291cmNlKFwiUi9pbmVnYWxpdGVzLlJcIilcbnNldC5zZWVkKGluZXExJHNlZWQpXG5uIDwtIDIwMFxueCA8LSBybG5vcm0obiwgMywgaW5lcTEkcyk7IHcgPC0gcnVuaWYobiwgMC41LCAzKVxuXG5teV9naW5pIDwtIGZ1bmN0aW9uKHgsIHcpIHtcbiAgbyA8LSBvcmRlcih4KTsgeCA8LSB4W29dOyB3IDwtIHdbb10gLyBzdW0odylcbiAgTCA8LSBfX19fX18gICAgICAgICAgICAgICAgICAgICAgIyBMb3JlbnogOiBjdW1zdW0odyAqIHgpIC8gc3VtKHcgKiB4KVxuICBMcHJldiA8LSBjKDAsIGhlYWQoTCwgLTEpKVxuICBfX19fX18gICAgICAgICAgICAgICAgICAgICAgICAgICAjIDEgLSBzdW0odyAqIChMICsgTHByZXYpKVxufVxuYyhtb25fZ2luaSA9IG15X2dpbmkoeCwgdyksIGdpbmkgPSBnaW5pKHgsIHcpKSJ9
+eyJhdHRyIjp7ImNhcHRpb24iOiJHaW5pIHBvbmTDqXLDqSIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiaW5lcS1naW5pLTEiLCJpbnB1dCI6WyJpbmVxMSJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic291cmNlKFwiUi9pbmVnYWxpdGVzLlJcIilcbnNldC5zZWVkKGluZXExJHNlZWQpXG5uIDwtIDIwMFxueCA8LSBybG5vcm0obiwgMywgaW5lcTEkcyk7IHcgPC0gcnVuaWYobiwgMC41LCAzKVxuXG5teV9naW5pIDwtIGZ1bmN0aW9uKHgsIHcpIHtcbiAgbyA8LSBvcmRlcih4KTsgeCA8LSB4W29dOyB3IDwtIHdbb10gLyBzdW0odylcbiAgTCA8LSBfX19fX18gICAgICAgICAgICAgICAgICAgICAgIyBjb3VyYmUgZGUgTG9yZW56IDogcGFydCBjdW11bMOpZSBkdSByZXZlbnUgcXVhbmQgb24gY3VtdWxlIGxhIHBvcHVsYXRpb24gdHJpw6llXG4gIExwcmV2IDwtIGMoMCwgaGVhZChMLCAtMSkpXG4gIF9fX19fXyAgICAgICAgICAgICAgICAgICAgICAgICAgICMgR2luaSA9IDEgbW9pbnMgZGV1eCBmb2lzIGwnYWlyZSBzb3VzIGxhIGNvdXJiZSBkZSBMb3JlbnogKG3DqXRob2RlIGRlcyB0cmFww6h6ZXMpXG59XG5jKG1vbl9naW5pID0gbXlfZ2luaSh4LCB3KSwgZ2luaSA9IGdpbmkoeCwgdykpIn0=
 </script>
 </div>
 </div>
@@ -742,6 +751,7 @@ c(mon_gini = my_gini(x, w), gini = gini(x, w))</code>
 <span id="interpolate-10-12"><a href="#interpolate-10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">mon_gini =</span> <span class="fu">my_gini</span>(x, w), <span class="at">gini =</span> <span class="fu">gini</span>(x, w))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> La courbe de Lorenz donne la part cumulée du revenu détenue par les p % les plus pauvres ; le Gini est deux fois l’aire entre la diagonale et la courbe. Pondérer permet de travailler avec des données d’enquête (poids de sondage) : sans pondération, les résultats sont biaisés.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Trier <code>x</code> sans réordonner <code>w</code>.</li>
@@ -763,7 +773,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Imlu
 <h2 class="anchored" data-anchor-id="ineq-ge-0">Theil et MLD à la main</h2>
 <p><span class="dojo-step">Marche 3 sur 5 · Guidé</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="424" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 423;"><span id="cb4-424"><a href="#cb4-424" aria-hidden="true" tabindex="-1"></a>ineq00 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"ineq-ge-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="432" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 431;"><span id="cb4-432"><a href="#cb4-432" aria-hidden="true" tabindex="-1"></a>ineq00 <span class="op">=</span> { <span class="kw">const</span> g <span class="op">=</span> <span class="fu">rng</span>(<span class="st">"ineq-ge-0"</span><span class="op">,</span> salt)<span class="op">;</span> <span class="cf">return</span> { <span class="dt">seed</span><span class="op">:</span> g<span class="op">.</span><span class="fu">int</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">9999</span>) }<span class="op">;</span> }</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-4" data-nodetype="declaration">
 
@@ -777,7 +787,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Imlu
 
 </div>
 <script type="webr-12-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJUaGVpbCBUIGV0IE1MRCIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiaW5lcS1nZS0wIiwiaW5wdXQiOlsiaW5lcTAwIl0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzZXQuc2VlZChpbmVxMDAkc2VlZClcbnggPC0gcm91bmQocmxub3JtKDgsIDcsIDAuOCkpICAgICAgICAgICAgICAgICAgICAgICMgaHVpdCByZXZlbnVzIG1lbnN1ZWxzXG50aGVpbCA8LSBmdW5jdGlvbih4KSB7IHIgPC0geCAvIG1lYW4oeCk7IF9fX19fXyB9ICAjIG1veWVubmUgZGUgciAqIGxvZyhyKVxubWxkICAgPC0gZnVuY3Rpb24oeCkgeyByIDwtIHggLyBtZWFuKHgpOyBfX19fX18gfSAgIyBtb2lucyBsYSBtb3llbm5lIGRlIGxvZyhyKVxuYyh0aGVpbCA9IHRoZWlsKHgpLCBtbGQgPSBtbGQoeCksIHRoZWlsX3gxMCA9IHRoZWlsKDEwICogeCkpIn0=
+eyJhdHRyIjp7ImNhcHRpb24iOiJUaGVpbCBUIGV0IE1MRCIsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImV4ZXJjaXNlIjoiaW5lcS1nZS0wIiwiaW5wdXQiOlsiaW5lcTAwIl0sInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzZXQuc2VlZChpbmVxMDAkc2VlZClcbnggPC0gcm91bmQocmxub3JtKDgsIDcsIDAuOCkpICAgICAgICAgICAgICAgICAgICAgICMgaHVpdCByZXZlbnVzIG1lbnN1ZWxzXG50aGVpbCA8LSBmdW5jdGlvbih4KSB7IHIgPC0geCAvIG1lYW4oeCk7IF9fX19fXyB9ICAjIG1lc3VyZSBxdWkgcG9uZMOocmUgbGVzIMOpY2FydHMgw6AgbGEgbW95ZW5uZSBwYXIgbGEgcGFydCBkZSByZXZlbnUgKFRoZWlsIFQpXG5tbGQgICA8LSBmdW5jdGlvbih4KSB7IHIgPC0geCAvIG1lYW4oeCk7IF9fX19fXyB9ICAjIG1lc3VyZSBxdWkgcG9uZMOocmUgcGFyIGxhIHBhcnQgZGUgcG9wdWxhdGlvbiAoTUxEKVxuYyh0aGVpbCA9IHRoZWlsKHgpLCBtbGQgPSBtbGQoeCksIHRoZWlsX3gxMCA9IHRoZWlsKDEwICogeCkpIn0=
 </script>
 </div>
 </div>
@@ -840,6 +850,7 @@ c(theil = theil(x), mld = mld(x), theil_x10 = theil(10 * x))</code>
 <span id="interpolate-15-5"><a href="#interpolate-15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">theil =</span> <span class="fu">theil</span>(x), <span class="at">mld =</span> <span class="fu">mld</span>(x), <span class="at">theil_x10 =</span> <span class="fu">theil</span>(<span class="dv">10</span> <span class="sc">*</span> x))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> Theil T et MLD sont deux membres de la famille d’entropie généralisée : T est sensible au haut de la distribution (pondération par les parts de revenu), la MLD au bas (pondération par les parts de population). Choisir l’indice revient à choisir implicitement un jugement de valeur sur les transferts.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Ne pas diviser par la moyenne : l’indice dépend alors de l’unité monétaire.</li>
@@ -867,7 +878,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Imlu
 
 </div>
 <script type="webr-17-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJHRShhbHBoYSkiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImluZXEtZ2UtMSIsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzb3VyY2UoXCJSL2luZWdhbGl0ZXMuUlwiKVxuc2V0LnNlZWQoMylcbnggPC0gcmxub3JtKDUwMCwgMywgMC43KVxuXG5teV9nZSA8LSBmdW5jdGlvbih4LCBhbHBoYSkge1xuICByIDwtIHggLyBtZWFuKHgpXG4gIGlmIChhbHBoYSA9PSAwKSB7XG4gICAgX19fX19fICAgICAgICAgICAgICAgICAgICAgIyAtbWVhbihsb2cocikpXG4gIH0gZWxzZSBpZiAoYWxwaGEgPT0gMSkge1xuICAgIF9fX19fXyAgICAgICAgICAgICAgICAgICAgICMgbWVhbihyICogbG9nKHIpKVxuICB9IGVsc2Uge1xuICAgIF9fX19fXyAgICAgICAgICAgICAgICAgICAgICMgKG1lYW4ocl5hbHBoYSkgLSAxKSAvIChhbHBoYSAqIChhbHBoYSAtIDEpKVxuICB9XG59XG5zYXBwbHkoYygtMSwgMCwgMC41LCAxLCAyKSwgZnVuY3Rpb24oYSkgYyhtb25fZ2UgPSBteV9nZSh4LCBhKSwgZ2UgPSBnZSh4LCBhKSkpIn0=
+eyJhdHRyIjp7ImNhcHRpb24iOiJHRShhbHBoYSkiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImluZXEtZ2UtMSIsInRpbWVsaW1pdCI6IjYwIn0sImNvZGUiOiJzb3VyY2UoXCJSL2luZWdhbGl0ZXMuUlwiKVxuc2V0LnNlZWQoMylcbnggPC0gcmxub3JtKDUwMCwgMywgMC43KVxuXG5teV9nZSA8LSBmdW5jdGlvbih4LCBhbHBoYSkge1xuICByIDwtIHggLyBtZWFuKHgpXG4gIGlmIChhbHBoYSA9PSAwKSB7XG4gICAgX19fX19fICAgICAgICAgICAgICAgICAgICAgIyBjYXMgzrEgPSAwIGRlIGxhIGZhbWlsbGUgR0VcbiAgfSBlbHNlIGlmIChhbHBoYSA9PSAxKSB7XG4gICAgX19fX19fICAgICAgICAgICAgICAgICAgICAgIyBjYXMgzrEgPSAxIGRlIGxhIGZhbWlsbGUgR0UgKHBhciBjb250aW51aXTDqSlcbiAgfSBlbHNlIHtcbiAgICBfX19fX18gICAgICAgICAgICAgICAgICAgICAjIGNhcyBnw6luw6lyYWwgOiDOsSBkaWZmw6lyZW50IGRlIDAgZXQgZGUgMVxuICB9XG59XG5zYXBwbHkoYygtMSwgMCwgMC41LCAxLCAyKSwgZnVuY3Rpb24oYSkgYyhtb25fZ2UgPSBteV9nZSh4LCBhKSwgZ2UgPSBnZSh4LCBhKSkpIn0=
 </script>
 </div>
 </div>
@@ -950,6 +961,7 @@ sapply(c(-1, 0, 0.5, 1, 2), function(a) c(mon_ge = my_ge(x, a), ge = ge(x, a)))<
 <span id="interpolate-20-15"><a href="#interpolate-20-15" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="cf">function</span>(a) <span class="fu">c</span>(<span class="at">mon_ge =</span> <span class="fu">my_ge</span>(x, a), <span class="at">ge =</span> <span class="fu">ge</span>(x, a)))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> Le paramètre α de GE(α) règle la sensibilité aux extrêmes : α grand accentue le haut de la distribution, α négatif accentue le bas. Un seul code pour toute la famille facilite les analyses de robustesse : deux distributions dont les courbes de Lorenz se croisent peuvent être classées différemment selon α.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Tester <code>alpha == 0</code> sur un <code>alpha</code> calculé : on compare des flottants, ce qui peut échouer (utilise <code>abs(alpha) &lt; 1e-12</code>).</li>
@@ -985,7 +997,7 @@ eyJhdHRyIjp7ImNoZWNrIjp0cnVlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6Imlu
 
 </div>
 <script type="webr-22-contents">
-eyJhdHRyIjp7ImNhcHRpb24iOiJUaGVpbCBUIDogaW50cmEgZXQgaW50ZXIiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImluZXEtZGVjb21wLTEiLCJpbnB1dCI6WyJpbmVxMyJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic291cmNlKFwiUi9pbmVnYWxpdGVzLlJcIilcbnNldC5zZWVkKGluZXEzJHNlZWQpXG5uIDwtIDMwMFxuZyA8LSBzYW1wbGUoYyhcIkFcIiwgXCJCXCIsIFwiQ1wiKSwgbiwgVFJVRSwgcHJvYiA9IGMoMC41LCAwLjMsIDAuMikpXG54IDwtIHJsbm9ybShuLCBjKEEgPSAzLCBCID0gMy4zLCBDID0gMi43KVtnXSwgMC43KVxuXG5zICAgPC0gdGFwcGx5KHgsIGcsIHN1bSkgLyBzdW0oeCkgICAgICAgICAgIyBwYXJ0cyBkZSByZXZlbnVcblRfZyA8LSB0YXBwbHkoeCwgZywgdGhlaWxfVCkgICAgICAgICAgICAgICAjIFRoZWlsIGRhbnMgY2hhcXVlIGdyb3VwZVxuaW50cmEgPC0gX19fX19fICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgc3VtKHMgKiBUX2cpXG5tb3kgPC0gdGFwcGx5KHgsIGcsIG1lYW4pOyBmIDwtIGFzLm51bWVyaWModGFibGUoZykpIC8gblxuaW50ZXIgPC0gX19fX19fICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgVGhlaWwgZGVzIG1veWVubmVzIGRlIGdyb3VwZXMgcG9uZMOpcsOpZXMgcGFyIGYgOiBnZShtb3ksIDEsIHcgPSBmKVxuYyhpbnRyYSA9IGludHJhLCBpbnRlciA9IGludGVyLCB0b3RhbCA9IGludHJhICsgaW50ZXIsIGRpcmVjdCA9IHRoZWlsX1QoeCkpIn0=
+eyJhdHRyIjp7ImNhcHRpb24iOiJUaGVpbCBUIDogaW50cmEgZXQgaW50ZXIiLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6ImluZXEtZGVjb21wLTEiLCJpbnB1dCI6WyJpbmVxMyJdLCJ0aW1lbGltaXQiOiI2MCJ9LCJjb2RlIjoic291cmNlKFwiUi9pbmVnYWxpdGVzLlJcIilcbnNldC5zZWVkKGluZXEzJHNlZWQpXG5uIDwtIDMwMFxuZyA8LSBzYW1wbGUoYyhcIkFcIiwgXCJCXCIsIFwiQ1wiKSwgbiwgVFJVRSwgcHJvYiA9IGMoMC41LCAwLjMsIDAuMikpXG54IDwtIHJsbm9ybShuLCBjKEEgPSAzLCBCID0gMy4zLCBDID0gMi43KVtnXSwgMC43KVxuXG5zICAgPC0gdGFwcGx5KHgsIGcsIHN1bSkgLyBzdW0oeCkgICAgICAgICAgIyBwYXJ0cyBkZSByZXZlbnVcblRfZyA8LSB0YXBwbHkoeCwgZywgdGhlaWxfVCkgICAgICAgICAgICAgICAjIFRoZWlsIGRhbnMgY2hhcXVlIGdyb3VwZVxuaW50cmEgPC0gX19fX19fICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgcGFydCBpbnRyYSA6IGluw6lnYWxpdMOpcyBpbnRlcm5lcyBhdXggZ3JvdXBlcywgcG9uZMOpcsOpZXMgcGFyIGxhIHBhcnQgZGUgcmV2ZW51IGRlIGNoYXF1ZSBncm91cGVcbm1veSA8LSB0YXBwbHkoeCwgZywgbWVhbik7IGYgPC0gYXMubnVtZXJpYyh0YWJsZShnKSkgLyBuXG5pbnRlciA8LSBfX19fX18gICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBwYXJ0IGludGVyIDogaW7DqWdhbGl0w6kgZW50cmUgbGVzIG1veWVubmVzIGRlIGdyb3VwZXMsIHBvbmTDqXLDqWUgcGFyIGxhIHBhcnQgZGUgcG9wdWxhdGlvblxuYyhpbnRyYSA9IGludHJhLCBpbnRlciA9IGludGVyLCB0b3RhbCA9IGludHJhICsgaW50ZXIsIGRpcmVjdCA9IHRoZWlsX1QoeCkpIn0=
 </script>
 </div>
 </div>
@@ -1062,6 +1074,7 @@ c(intra = intra, inter = inter, total = intra + inter, direct = theil_T(x))</cod
 <span id="interpolate-25-12"><a href="#interpolate-25-12" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">intra =</span> intra, <span class="at">inter =</span> inter, <span class="at">total =</span> intra <span class="sc">+</span> inter, <span class="at">direct =</span> <span class="fu">theil_T</span>(x))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
+<p><strong>Lecture économique.</strong> La décomposition du Theil sépare l’inégalité <strong>entre</strong> groupes (écarts de moyennes entre, par exemple, hommes et femmes ou régions) et <strong>à l’intérieur</strong> des groupes. Elle sert à dire quelle part de l’inégalité totale s’explique par l’appartenance à un groupe : c’est une description, pas une explication causale.</p>
 <p><strong>Pièges fréquents.</strong></p>
 <ul>
 <li>Pondérer l’intra par les parts de <strong>population</strong> : c’est la règle de la MLD, pas celle du Theil T.</li>

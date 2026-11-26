@@ -8,7 +8,7 @@ subtitle: "Probabilités, estimation, tests : rappels et simulation"
 Rappels de L1 par la **simulation** : on ne se contente pas de la formule, on la vérifie. Les énoncés changent chaque jour (graine = date). Trois pistes : *estimation et simulation*, *statistiques descriptives* (résumer, comparer des groupes, repérer les valeurs atypiques) et *comparaisons et tests* (Welch, khi-deux, permutation, comparaisons multiples). Une section d'aide R (réflexes, erreurs fréquentes) et une boîte à outils « quelle méthode, quelle fonction ? » terminent la page ; chaque exercice a **trois indices** (orientation, formule, fonction R sur un exemple).
 
 ::: {.callout-tip}
-**Une marche te paraît trop haute ?** Fais d'abord les [échauffements](minis.qmd) : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page *Aujourd'hui* te propose aussi un exercice court.
+**Une marche te paraît trop haute ?** Fais d'abord les [échauffements](minis.qmd) : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page *Aujourd'hui* te propose aussi un exercice court. Pour varier les gestes (tableaux, débogage, lecture de sorties et de graphiques, rédaction) : l'[Atelier](atelier.qmd) ; pour aller plus loin : le [niveau avancé](avance.qmd).
 :::
 
 {{< include ../_ojs.qmd >}}
@@ -34,8 +34,8 @@ On tire **n = ${tcl1.n}** observations indépendantes d'une loi exponentielle d'
 #|   - tcl1
 n <- tcl1$n; m <- tcl1$m
 set.seed(42)
-moyennes <- replicate(2000, mean(______))     # n tirages de rexp(n, rate = 1 / m)
-c(simule = sd(moyennes), theorie = ______)    # sigma / sqrt(n)
+moyennes <- replicate(2000, mean(______))     # moyenne d'un échantillon de n tirages exponentiels de moyenne m
+c(simule = sd(moyennes), theorie = ______)    # écart-type théorique de la moyenne ; que vaut sigma pour une exponentielle ?
 ```
 
 ::: {.hint exercise="stats-tcl-1"}
@@ -82,6 +82,8 @@ set.seed(42)
 moyennes <- replicate(2000, mean(rexp(n, rate = 1 / m)))
 c(simule = sd(moyennes), theorie = m / sqrt(n))
 ```
+
+**Lecture économique.** Le TCL justifie qu'on construise des intervalles de confiance et des tests sur des moyennes, même si la variable (ici des durées ou des revenus, très asymétriques) n'est pas normale. L'écart-type de la moyenne décroît en 1/√n : pour diviser l'incertitude par 2, il faut **quatre fois** plus d'observations.
 
 **Pièges fréquents.**
 
@@ -134,7 +136,7 @@ Un échantillon de ${ic1.x.length} mesures est tiré d'une loi supposée normale
 #|   - ic1
 x <- as.numeric(unlist(ic1$x))
 n <- length(x); m <- mean(x); s <- sd(x)
-marge <- ______ * s / sqrt(n)      # quantile de Student à n - 1 ddl : qt(0.975, df = n - 1)
+marge <- ______ * s / sqrt(n)      # valeur critique de la loi de Student pour un IC à 95 % (quels degrés de liberté ?)
 c(inf = m - marge, sup = m + marge)
 ```
 
@@ -182,6 +184,8 @@ n <- length(x); m <- mean(x); s <- sd(x)
 marge <- qt(0.975, df = n - 1) * s / sqrt(n)
 c(inf = m - marge, sup = m + marge)
 ```
+
+**Lecture économique.** Un intervalle de confiance à 95 % ne signifie pas qu'il y a 95 % de chances que la vraie moyenne soit dedans : c'est la procédure qui, répétée, capte la vraie valeur dans 95 % des échantillons. En économie, on l'utilise pour dire quelles valeurs d'un effet (par exemple un rendement de l'éducation) restent compatibles avec les données.
 
 **Pièges fréquents.**
 
@@ -233,7 +237,7 @@ couverture <- function(crit, B = 4000) {
   set.seed(1)                                   # mêmes échantillons pour les deux IC
   mean(replicate(B, {
     x <- rnorm(n, mu, sigma)
-    marge <- ______                             # valeur critique x erreur-type de la moyenne
+    marge <- ______                             # demi-largeur de l'intervalle de confiance
     ______                                      # TRUE si l'IC contient mu
   }))
 }
@@ -293,6 +297,8 @@ couverture <- function(crit, B = 4000) {
 c(student = couverture(qt(0.975, n - 1)), normale = couverture(1.96))
 ```
 
+**Lecture économique.** Le taux de couverture réel d'un intervalle dépend des hypothèses : avec un petit échantillon, remplacer le quantile de Student par 1,96 donne un intervalle trop étroit qui couvre moins de 95 % du temps. C'est l'idée générale : une **inférence trop confiante** conduit à surinterpréter des résultats incertains.
+
 **Pièges fréquents.**
 
 - Utiliser `sigma` (inconnu en pratique) à la place de `sd(x)` : l'IC serait trop précis, et l'on perdrait précisément ce que la loi de Student corrige.
@@ -349,9 +355,9 @@ set.seed(desc1$seed)
 x <- round(rlnorm(desc1$n, meanlog = 7.4, sdlog = 0.6))      # revenus mensuels
 moy  <- ______       # moyenne
 med  <- ______       # médiane
-sdx  <- ______       # écart-type (fonction sd)
-iqr  <- ______       # écart interquartile : troisième quartile - premier quartile
-asym <- ______       # asymétrie : moyenne de ((x - moyenne) / écart-type) ^ 3
+sdx  <- ______       # dispersion autour de la moyenne
+iqr  <- ______       # dispersion du centre de la distribution (entre le 1er et le 3e quartile)
+asym <- ______       # asymétrie : moment d'ordre 3 de la variable standardisée
 c(moyenne = moy, mediane = med, ecart_type = sdx, iqr = iqr, asymetrie = asym)
 ```
 
@@ -403,6 +409,8 @@ iqr  <- IQR(x)                                   # = diff(quantile(x, c(0.25, 0.
 asym <- mean(((x - mean(x)) / sd(x))^3)
 c(moyenne = moy, mediane = med, ecart_type = sdx, iqr = iqr, asymetrie = asym)
 ```
+
+**Lecture économique.** Les revenus ont une distribution asymétrique à droite : la moyenne dépasse la médiane, car quelques hauts revenus la tirent vers le haut. Pour décrire la situation « typique », on préfère la médiane et l'écart interquartile. L'asymétrie positive est une signature des distributions de revenus et de patrimoines.
 
 **Pièges fréquents.**
 
@@ -460,7 +468,7 @@ salaire <- round(base * exp(rnorm(n, 0, 0.25)), 2)
 effectif <- ______        # nombre d'observations par diplôme
 moyenne  <- ______
 mediane  <- ______
-ecart    <- ______        # écart-type par diplôme
+ecart    <- ______        # dispersion des salaires dans chaque groupe
 tableau <- rbind(effectif = effectif, moyenne = moyenne, mediane = mediane,
                  ecart_type = ecart, part = effectif / sum(effectif))
 round(tableau, 3)
@@ -521,6 +529,8 @@ tableau <- rbind(effectif = effectif, moyenne = moyenne, mediane = mediane,
 round(tableau, 3)
 ```
 
+**Lecture économique.** Un tableau par groupe (diplôme, sexe, région) est la première étape de presque toute étude empirique : il donne les ordres de grandeur avant tout modèle. Comparer moyennes **et** dispersions évite de conclure trop vite : deux groupes de même moyenne peuvent avoir des distributions très différentes.
+
 **Pièges fréquents.**
 
 - Valeurs manquantes : sans `na.rm = TRUE`, une seule `NA` rend toute la moyenne de son groupe `NA`.
@@ -580,7 +590,7 @@ x <- c(rnorm(190, 50, 8), rnorm(10, 110, 15))      # 190 valeurs ordinaires + 10
 k <- desc3$k
 atypiques <- function(x, k) {
   q <- quantile(x, c(0.25, 0.75))
-  ______         # positions (which) des valeurs hors de [Q1 - k * IQR ; Q3 + k * IQR]
+  ______         # positions des valeurs hors des barrières de Tukey (quartiles étendus de k fois l'écart interquartile)
 }
 t_idx <- atypiques(x, k)
 z_idx <- which(abs(x - mean(x)) / sd(x) > 3)       # règle des 3 écarts-types
@@ -641,6 +651,8 @@ c(n_tukey = length(t_idx), n_z3 = length(z_idx),
   moy_avant = mean(x), moy_apres = mean(sans), med_avant = median(x), med_apres = median(sans))
 ```
 
+**Lecture économique.** Une valeur atypique peut être une erreur de saisie, un cas rare réel (un très haut salaire) ou le signe d'une autre population. Les supprimer change la moyenne bien plus que la médiane. En économie, on les examine d'abord, on documente le choix (exclusion, winsorisation) et on vérifie la robustesse des résultats.
+
 **Pièges fréquents.**
 
 - Écrire la clôture avec l'écart-type au lieu de l'IQR : on retombe sur la règle qui se laisse masquer.
@@ -699,10 +711,10 @@ a <- rnorm(tt1$n1, mean = 10 + tt1$delta, sd = 3)
 b <- rnorm(tt1$n2, mean = 10, sd = 5)
 m1 <- mean(a); m2 <- mean(b); v1 <- var(a); v2 <- var(b); n1 <- length(a); n2 <- length(b)
 se <- ______          # erreur-type de la différence de moyennes
-t  <- ______          # statistique de test : différence de moyennes / erreur-type
+t  <- ______          # statistique de test : écart observé exprimé en unités d'erreur-type
 df <- (v1 / n1 + v2 / n2)^2 / ((v1 / n1)^2 / (n1 - 1) + (v2 / n2)^2 / (n2 - 1))   # degrés de liberté de Welch (fourni)
 p  <- ______          # p-value bilatérale
-d  <- ______          # d de Cohen : différence de moyennes / écart-type poolé
+d  <- ______          # taille d'effet : écart de moyennes standardisé par l'écart-type commun des deux groupes
 c(t = t, df = df, p = p, d = d)
 ```
 
@@ -758,6 +770,8 @@ sp <- sqrt(((n1 - 1) * v1 + (n2 - 1) * v2) / (n1 + n2 - 2))       # écart-type 
 d  <- (m1 - m2) / sp
 c(t = t, df = df, p = p, d = d)
 ```
+
+**Lecture économique.** Le test de Welch compare deux moyennes sans supposer des variances égales : utile pour comparer des salaires entre groupes très inégalement dispersés. Une p-value faible dit que l'écart est peu compatible avec l'égalité des moyennes ; le d de Cohen dit si l'écart est **important**, ce qu'une grande taille d'échantillon peut masquer.
 
 **Pièges fréquents.**
 
@@ -818,10 +832,10 @@ diplome <- sample(c("Bac", "Licence", "Master"), n, replace = TRUE, prob = c(0.5
 p_emploi <- c(Bac = 0.75, Licence = 0.75 + chi1$effet, Master = 0.75 + 2 * chi1$effet)[diplome]
 statut <- ifelse(rbinom(n, 1, p_emploi) == 1, "Emploi", "Chômage")
 tab <- table(diplome, statut)
-attendus <- ______     # effectifs attendus si les variables étaient indépendantes : total ligne x total colonne / total
-chi2 <- ______         # somme de (observé - attendu)^2 / attendu
-ddl  <- ______         # (nombre de lignes - 1) x (nombre de colonnes - 1)
-p    <- ______         # queue droite de la loi du khi-deux
+attendus <- ______     # effectifs théoriques si diplôme et statut étaient indépendants
+chi2 <- ______         # distance entre observé et attendu, pondérée par l'attendu
+ddl  <- ______         # degrés de liberté d'un tableau croisé
+p    <- ______         # probabilité de dépasser la statistique observée sous H0
 c(chi2 = chi2, ddl = ddl, p = p)
 ```
 
@@ -878,6 +892,8 @@ ddl  <- (nrow(tab) - 1) * (ncol(tab) - 1)
 p    <- pchisq(chi2, ddl, lower.tail = FALSE)
 c(chi2 = chi2, ddl = ddl, p = p)
 ```
+
+**Lecture économique.** Le khi-deux teste l'indépendance entre deux variables catégorielles, par exemple diplôme et statut d'emploi. Il détecte une association, pas sa cause : le diplôme peut aider à trouver un emploi, ou des caractéristiques non observées (origine sociale) peuvent jouer sur les deux.
 
 **Pièges fréquents.**
 
@@ -941,10 +957,10 @@ obs <- mean(a) - mean(b)
 perm_p <- function(x, groupe, obs, B = 4000) {
   set.seed(1)
   stat <- replicate(B, {
-    g <- ______                                     # ré-étiquetage au hasard des observations
+    g <- ______                                     # nouvelle affectation aléatoire des étiquettes, valable sous l'hypothèse nulle
     mean(x[g == "A"]) - mean(x[g == "B"])
   })
-  ______                                            # p-value bilatérale : (1 + nombre de |stat| >= |obs|) / (B + 1)
+  ______                                            # p-value de permutation bilatérale (l'observation réelle compte aussi)
 }
 c(obs = obs, p_perm = perm_p(x, groupe, obs), p_welch = t.test(a, b)$p.value)
 ```
@@ -1004,6 +1020,8 @@ perm_p <- function(x, groupe, obs, B = 4000) {
 }
 c(obs = obs, p_perm = perm_p(x, groupe, obs), p_welch = t.test(a, b)$p.value)
 ```
+
+**Lecture économique.** Le test de permutation ne repose sur aucune hypothèse de loi : il compare l'écart observé à ceux obtenus en réaffectant au hasard les étiquettes. C'est l'esprit de l'**inférence par randomisation**, très utilisée pour des échantillons petits ou des distributions asymétriques (salaires, prix).
 
 **Pièges fréquents.**
 
@@ -1067,7 +1085,7 @@ p <- c(runif(m - 2), 0.0004, 0.003)             # m - 2 p-values sous H0 (unifor
 bonf <- function(p) ______                       # Bonferroni : m x p, plafonné à 1
 holm <- function(p) {
   m <- length(p); o <- order(p)
-  aj <- ______                                   # Holm : (m - rang + 1) x p trié, pour les rangs 1..m
+  aj <- ______                                   # p-values ajustées de Holm, calculées sur les p triées par ordre croissant
   aj <- pmin(1, cummax(aj))                      # monotonie et plafond à 1
   aj[order(o)]                                   # retour à l'ordre initial
 }
@@ -1130,6 +1148,8 @@ c(sans_correction = sum(p < 0.05), bonferroni = sum(bonf(p) < 0.05), holm = sum(
   somme_bonf = sum(bonf(p)), somme_holm = sum(holm(p)))
 ```
 
+**Lecture économique.** Quand on teste plusieurs hypothèses (plusieurs résultats, sous-groupes, spécifications), les faux positifs s'accumulent : avec 20 tests à 5 %, on en attend un par hasard. Bonferroni et Holm contrôlent la probabilité d'au moins une fausse découverte. C'est un enjeu central de la crédibilité des études empiriques.
+
 **Pièges fréquents.**
 
 - Oublier `pmin(1, ...)` : une p-value ajustée dépasserait 1.
@@ -1180,8 +1200,8 @@ Une maladie touche ${bayes1.prev} % de la population. Le test a une sensibilité
 #| input:
 #|   - bayes1
 prev <- bayes1$prev / 100; se <- bayes1$se / 100; sp <- bayes1$sp / 100
-vpp <- ______     # P(malade | positif) par la formule de Bayes
-vpn <- ______     # P(sain | négatif)
+vpp <- ______     # probabilité d'être malade sachant que le test est positif
+vpn <- ______     # probabilité d'être sain sachant que le test est négatif
 c(VPP = vpp, VPN = vpn)
 ```
 
@@ -1230,6 +1250,8 @@ vpp <- se * prev / (se * prev + (1 - sp) * (1 - prev))
 vpn <- sp * (1 - prev) / (sp * (1 - prev) + (1 - se) * prev)
 c(VPP = vpp, VPN = vpn)
 ```
+
+**Lecture économique.** Même un test très fiable peut donner surtout des faux positifs si la maladie (ou l'événement recherché) est rare : la valeur prédictive positive dépend de la **prévalence**. Le même raisonnement s'applique en économie, par exemple pour un modèle de détection de fraude ou de défaut de paiement.
 
 **Pièges fréquents.**
 

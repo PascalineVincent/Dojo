@@ -220,13 +220,25 @@ function mountDone(el) {
 // ------------------------------------------------------------------ exercice du jour
 const dayRank = () => { const d = new Date().getDay(); return d === 0 || d === 6; };     // week-end ?
 const TRACK_LABEL = { 'micro-cpp': 'Concurrence parfaite', 'micro-pouvoir': 'Pouvoir de marché', 'stats-est': 'Estimation et simulation', 'stats-desc': 'Statistiques descriptives', 'stats-tests': 'Comparaisons et tests',
-  eco: 'Économétrie', 'con-dette': 'Dette publique', 'con-prix': 'Inflation et prix', 'con-croiss': 'Croissance', 'con-travail': 'Marché du travail', 'con-monnaie': 'Politique monétaire', 'con-commerce': 'Commerce extérieur', 'r-base': 'R : bases', 'mini-r': 'Échauffements : R', 'mini-stats': 'Échauffements : stats', 'mini-eco': 'Échauffements : économétrie', 'mini-macro': 'Échauffements : Macro', 'mini-micro': 'Échauffements : Micro', 'mini-ineq': 'Échauffements : inégalités', 'mini-hist': 'Échauffements : histoire',  'r-graph': 'R : graphiques', seg: 'Ségrégation', ineq: 'Inégalités' };
-const PREP = { 'micro-cpp': 'mini-micro', 'micro-pouvoir': 'mini-micro', 'stats-est': 'mini-stats', 'stats-desc': 'mini-stats', 'stats-tests': 'mini-stats',
+  eco: 'Économétrie', 'con-dette': 'Dette publique', 'con-prix': 'Inflation et prix', 'con-croiss': 'Croissance', 'con-travail': 'Marché du travail', 'con-monnaie': 'Politique monétaire', 'con-commerce': 'Commerce extérieur', 'r-base': 'R : bases', 'lire-tab': 'Atelier : tableaux', 'lire-debug': 'Atelier : débogage', 'lire-sortie': 'Atelier : interpréter', 'lire-graph': 'Atelier : graphiques', 'lire-rediger': 'Atelier : rédiger', 'stats-avance': 'Avancé : statistiques', 'eco-avance': 'Avancé : économétrie', 'micro-avance': 'Avancé : micro', 'mini-r': 'Échauffements : R', 'mini-stats': 'Échauffements : stats', 'mini-eco': 'Échauffements : économétrie', 'mini-macro': 'Échauffements : Macro', 'mini-micro': 'Échauffements : Micro', 'mini-ineq': 'Échauffements : inégalités', 'mini-hist': 'Échauffements : histoire',  'r-graph': 'R : graphiques', seg: 'Ségrégation', ineq: 'Inégalités' };
+const PREP = { 'lire-tab': 'mini-r', 'lire-debug': 'mini-r', 'lire-sortie': 'mini-eco', 'lire-graph': 'mini-stats', 'lire-rediger': 'mini-stats', 'stats-avance': 'mini-stats', 'eco-avance': 'mini-eco', 'micro-avance': 'mini-micro', 'micro-cpp': 'mini-micro', 'micro-pouvoir': 'mini-micro', 'stats-est': 'mini-stats', 'stats-desc': 'mini-stats', 'stats-tests': 'mini-stats',
   eco: 'mini-eco', 'con-dette': 'mini-macro', 'con-prix': 'mini-macro', 'con-croiss': 'mini-macro', 'con-travail': 'mini-macro', 'con-monnaie': 'mini-macro',
   'con-commerce': 'mini-macro', seg: 'mini-ineq', ineq: 'mini-ineq', 'r-base': 'mini-r', 'r-graph': 'mini-r' };
 const trackOf = (t) => DATA.exercises.filter((e) => e.track === t).sort((a, b) => a.step - b.step);
 // une marche est accessible quand toutes les précédentes de sa piste ont été réussies au moins une fois
-const unlocked = (e) => !e.track || trackOf(e.track).filter((x) => x.step < e.step).every((x) => S.done[x.id] || S.paid[x.id]);
+const isDone = (x) => S.done[x.id] || S.paid[x.id];
+const unlocked = (e) => !e.track || (!e.after || trackOf(e.after).every(isDone)) && trackOf(e.track).filter((x) => x.step < e.step).every(isDone);
+const daysAgo = (d) => Math.max(0, Math.round((Date.now() - new Date(d + 'T12:00:00').getTime()) / 864e5));
+// mode révision : on ne reprend que des exercices déjà réussis, les plus anciens étant les plus probables
+function chooseRevision(salt = 0, short = false) {
+  const pool = DATA.exercises.filter((e) => S.done[e.id] && (!short || e.minutes <= 5));
+  if (!pool.length) return null;
+  const w = pool.map((e) => 1 + daysAgo(S.done[e.id]) ** 1.5);
+  const rnd = prng(hashStr(ymd() + ':rev:' + salt)), tot = w.reduce((a, b) => a + b, 0);
+  let r = rnd() * tot;
+  for (let i = 0; i < pool.length; i++) { r -= w[i]; if (r <= 0) return pool[i]; }
+  return pool[pool.length - 1];
+}
 function chooseExercise(salt = 0, short = false) {
   const m = mastery(), t = ymd(), weekend = dayRank();
   const cutoff = ymd(addDays(new Date(), -14));
@@ -240,22 +252,26 @@ function chooseExercise(salt = 0, short = false) {
   return pool[pool.length - 1];
 }
 function mountExo(el) {
-  let salt = 0, short = false;
+  let salt = 0, short = false, revise = false;
   const draw = () => {
-    const e = chooseExercise(salt, short);
+    const e = revise ? chooseRevision(salt, short) : chooseExercise(salt, short);
     el.innerHTML = '';
+    if (revise && !e) { el.append(h('div', { class: 'dojo-panel' }, 'Rien à réviser pour l\'instant : réussis d\'abord quelques exercices.',
+      h('div', {}, h('button', { class: 'dojo-btn', onclick: () => { revise = false; salt++; draw(); } }, '↩ Retour aux nouveaux exercices')))); return; }
     if (!e) { el.append(h('div', { class: 'dojo-panel' }, 'Aucun exercice dans le catalogue.')); return; }
     const done = h('div', { class: 'dojo-done', 'data-id': e.id });
     el.append(h('div', { class: 'dojo-panel' },
       h('div', {}, h('span', { class: 'dojo-badge red' }, COURSE_LABEL[e.course] || e.course),
         h('span', { class: 'dojo-badge' }, '★'.repeat(e.level) + '☆'.repeat(5 - e.level)),
+        revise ? h('span', { class: 'dojo-badge' }, `réussi il y a ${daysAgo(S.done[e.id])} j`) : '',
         h('span', { class: 'dojo-badge' }, `~${e.minutes} min`), h('span', { class: 'dojo-badge gold' }, `+${e.xp} XP`),
         e.track ? h('span', { class: 'dojo-badge pine' }, `${TRACK_LABEL[e.track] || e.track} · marche ${e.step}/${trackOf(e.track).length}`) : ''),
       h('h4', { style: 'margin:.6rem 0' }, e.title),
       h('a', { class: 'dojo-btn primary', href: new URL(`${e.page}#${e.id}`, ROOT).href, style: 'text-decoration:none;display:inline-block' }, 'Ouvrir l\'exercice'),
       h('button', { class: 'dojo-btn', onclick: () => { salt++; draw(); } }, '🎲 Un autre'),
+      h('button', { class: 'dojo-btn', title: 'Reprendre des exercices déjà réussis, les plus anciens d\'abord (les données sont retirées au hasard à chaque fois)', onclick: () => { revise = !revise; salt++; draw(); } }, revise ? '↩ Nouveaux exercices' : '🔁 Réviser'),
       h('button', { class: 'dojo-btn', title: 'Un échauffement de 5 minutes maximum', onclick: () => { short = !short; salt++; draw(); } }, short ? '↩ Tous les exercices' : '⚡ Plus court (≤ 5 min)'),
-      h('p', { class: 'dojo-meta', style: 'margin:.7rem 0 .3rem' }, dayRank() ? 'Week-end : la recherche est mise en avant.' : 'Choisi selon tes points faibles (radar « Progression »).'),
+      h('p', { class: 'dojo-meta', style: 'margin:.7rem 0 .3rem' }, revise ? 'Mode révision : exercices déjà réussis, les plus anciens en priorité ; les données sont retirées au hasard, donc rien à recopier.' : dayRank() ? 'Week-end : la recherche est mise en avant.' : 'Choisi selon tes points faibles (radar « Progression »).'),
       done));
     mountDone(done);
   };

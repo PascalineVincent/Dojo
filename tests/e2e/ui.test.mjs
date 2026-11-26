@@ -71,6 +71,11 @@ ok(await ev("document.querySelectorAll('.dojo-ladder').length === 2 && document.
 ok(await ev("document.querySelectorAll('.dojo-step').length === 7"), "micro : 7 badges « Marche k sur n »");
 ok(await ev("document.querySelectorAll('.exercise-hint, .hint').length >= 14 || document.querySelectorAll('[class*=hint]').length >= 14"), "micro : au moins 2 indices par exercice");
 const pick = `(() => { const out = []; for (let i = 0; i < 60; i++) { const b = [...document.querySelectorAll('.dojo-exo .dojo-btn')].find(x => x.textContent.includes('Un autre')); b.click(); const m = document.querySelector('.dojo-exo .dojo-badge.pine'); out.push(m ? m.textContent : 'libre'); } return out; })()`;
+await go("http://localhost:8765/parcours/atelier.html");
+ok(await ev("document.querySelectorAll('.dojo-ladder').length === 5 && document.querySelectorAll('.dojo-steps li').length === 30"), "atelier : 5 pistes, 30 marches");
+await go("http://localhost:8765/parcours/avance.html"); await ev("localStorage.clear()"); await go("http://localhost:8765/parcours/avance.html");
+ok(await ev("document.querySelectorAll('.dojo-ladder').length === 3 && document.querySelectorAll('.dojo-steps li').length === 9"), "avancé : 3 pistes, 9 marches");
+ok(await ev("document.querySelectorAll('.dojo-steps li.next').length === 0"), "avancé : verrouillé tant que les pistes de base ne sont pas faites");
 await go("http://localhost:8765/index.html"); await ev("localStorage.clear()"); await go("http://localhost:8765/index.html");
 { const t = await ev(pick);
   ok(t.every((x) => x === "libre" || /marche 1\//.test(x)), "départ : seules les marches 1 (ou exercices libres) sont proposées : " + [...new Set(t)].join(" | ")); }
@@ -97,4 +102,12 @@ ok(await ev("[...document.querySelectorAll('.dojo-ladder a')].some(a => a.href.i
 await go("http://localhost:8765/index.html"); await ev("localStorage.clear()"); await go("http://localhost:8765/index.html");
 { const t = await ev("(() => { const btn = (txt) => [...document.querySelectorAll('.dojo-exo .dojo-btn')].find(x => x.textContent.includes(txt)); btn('Plus court').click(); const out = []; for (let i = 0; i < 20; i++) { const m = [...document.querySelectorAll('.dojo-exo .dojo-badge')].find(x => x.textContent.startsWith('~')); out.push(parseInt(m.textContent.replace('~', ''))); btn('Un autre').click(); } return out; })()");
   ok(t.length === 20 && t.every((x) => x <= 5), "« Plus court » : exercices de 5 minutes maximum"); }
+{ const btn = "(txt) => [...document.querySelectorAll('.dojo-exo .dojo-btn')].find(x => x.textContent.includes(txt))";
+  await ev(`(${btn})('Réviser').click()`);
+  ok(await ev("document.querySelector('.dojo-exo').textContent.includes('Rien à réviser')"), "révision : message si rien de réussi");
+  await ev(`(${btn})('Retour').click()`);
+  await ev("localStorage.setItem('dojo.v1', JSON.stringify({ done: { 'm-r-1': '2026-01-01', 'm-r-2': '2026-11-20' }, paid: {} }))");
+  await go("http://localhost:8765/index.html");
+  await ev(`(${btn})('Réviser').click()`);
+  ok(await ev("/réussi il y a [0-9]+ j/.test(document.querySelector('.dojo-exo').textContent)"), "révision : propose un exercice déjà réussi"); }
 ws.close(); process.exit(process.exitCode || 0);

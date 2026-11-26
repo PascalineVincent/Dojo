@@ -10,7 +10,7 @@ Six pistes d'exercices progressifs (guidé, à compléter, autonome), chacune av
 Les **identités** et les **mécanismes** valent mieux que les chiffres du jour : pour tout chiffre d'actualité, va chercher la source officielle (INSEE, Eurostat, BCE, OFCE) au moment où tu en as besoin.
 
 ::: {.callout-tip}
-**Une marche te paraît trop haute ?** Fais d'abord les [échauffements](minis.qmd) : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page *Aujourd'hui* te propose aussi un exercice court.
+**Une marche te paraît trop haute ?** Fais d'abord les [échauffements](minis.qmd) : un seul trou, des données réelles, 2 à 5 minutes. Le bouton « ⚡ Plus court » de la page *Aujourd'hui* te propose aussi un exercice court. Pour varier les gestes (tableaux, débogage, lecture de sorties et de graphiques, rédaction) : l'[Atelier](atelier.qmd) ; pour aller plus loin : le [niveau avancé](avance.qmd).
 :::
 
 {{< include ../_ojs.qmd >}}
@@ -35,8 +35,8 @@ La dette publique représente ${dette0.d0} % du PIB. Le taux d'intérêt nominal
 #| input:
 #|   - dette0
 d0 <- dette0$d0; r <- dette0$r / 100; g <- dette0$g / 100; pb <- dette0$pb
-boule <- ______      # effet de l'écart r - g : d0 * (r - g) / (1 + g)
-d1 <- ______         # ratio de l'an prochain : d0 + boule - pb
+boule <- ______      # part de la variation du ratio due à l'écart entre taux d'intérêt et croissance
+d1 <- ______         # ratio de l'année suivante : ratio actuel, plus l'effet précédent, moins quoi ?
 c(boule = boule, d1 = d1)
 ```
 
@@ -70,6 +70,8 @@ boule <- d0 * (r - g) / (1 + g)       # effet boule de neige
 d1 <- d0 + boule - pb                 # = d0 * (1 + r) / (1 + g) - pb
 c(boule = boule, d1 = d1)
 ```
+
+**Lecture économique.** Si le taux d'intérêt dépasse la croissance (r > g), la dette augmente mécaniquement même sans déficit primaire : c'est l'effet boule de neige. Inversement, quand r < g (comme dans les années 2010), la dette se dilue spontanément et l'espace budgétaire s'élargit. Les débats sur la soutenabilité portent sur la durée de cet écart.
 
 **Pièges fréquents.**
 
@@ -118,7 +120,7 @@ La dette publique représente ${dette1.d0} % du PIB. Le taux d'intérêt nominal
 #|   - dette1
 d0 <- dette1$d0; r <- dette1$r / 100; g <- dette1$g / 100; pb <- dette1$pb
 d <- numeric(11); d[1] <- d0
-for (t in 1:10) d[t + 1] <- ______      # d[t] * (1 + r) / (1 + g) - pb
+for (t in 1:10) d[t + 1] <- ______      # récurrence d'une année sur l'autre : intérêts, dilution par la croissance, solde primaire
 c(d_final = d[11], variation = d[11] - d0)
 ```
 
@@ -153,6 +155,8 @@ d <- numeric(11); d[1] <- d0
 for (t in 1:10) d[t + 1] <- d[t] * (1 + r) / (1 + g) - pb
 c(d_final = d[11], variation = d[11] - d0)
 ```
+
+**Lecture économique.** La trajectoire du ratio dette/PIB combine trois forces : le solde primaire, le taux d'intérêt et la croissance. Une consolidation budgétaire réduit la dette mais peut freiner la croissance (le dénominateur) : l'effet net dépend de la taille du multiplicateur budgétaire.
 
 **Pièges fréquents.**
 
@@ -239,6 +243,8 @@ d <- d0; for (t in 1:10) d <- d * (1 + r) / (1 + g) - pb
 c(pb_stabilisant = pb, d_apres_10_ans = d)
 ```
 
+**Lecture économique.** Le solde primaire stabilisant est l'excédent primaire nécessaire pour que le ratio dette/PIB ne varie pas : il augmente avec le niveau de dette et avec l'écart r − g. Si le solde réel est inférieur à ce seuil, le ratio monte : l'écart entre les deux mesure l'effort d'ajustement.
+
 **Pièges fréquents.**
 
 - Donner $d\,(r-g)$ sans le facteur $1/(1+g)$ : l'écart est faible, mais la simulation à dix ans le révèle.
@@ -288,9 +294,9 @@ L'indice des prix à la consommation passe de ${prix0.p0} à ${prix0.p1} en un a
 #| input:
 #|   - prix0
 p0 <- prix0$p0; p1 <- prix0$p1; w0 <- prix0$w0; w1 <- prix0$w1
-inflation <- ______     # (p1 / p0 - 1) * 100
+inflation <- ______     # variation relative de l'indice des prix, en %
 nominal   <- ______     # variation du salaire nominal, en %
-reel      <- ______     # variation du salaire réel : (w1 / p1) / (w0 / p0) - 1, en %
+reel      <- ______     # variation du salaire réel : compare ce que le salaire permet d'acheter avant et après, en %
 c(inflation = inflation, nominal = nominal, reel = reel)
 ```
 
@@ -337,6 +343,16 @@ c(inflation = inflation, nominal = nominal, reel = reel)
 ```{webr}
 #| exercise: con-prix-0
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 p0 <- prix0$p0; p1 <- prix0$p1; w0 <- prix0$w0; w1 <- prix0$w1
 ref <- c((p1 / p0 - 1) * 100, (w1 / w0 - 1) * 100, ((w1 / w0) / (p1 / p0) - 1) * 100)
 res <- suppressWarnings(as.numeric(.result))
@@ -344,7 +360,7 @@ msgs <- c("Inflation : (p1 / p0 - 1) * 100.", "Salaire nominal : (w1 / w0 - 1) *
 if (length(res) != 3 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(inflation = ..., nominal = ..., reel = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : inflation %.2f %%, salaire nominal %+.2f %%, pouvoir d'achat %+.2f %%.", ref[1], ref[2], ref[3]))
 }
@@ -373,10 +389,10 @@ set.seed(prix1$seed)
 infl <- sample(0:6, 4, replace = TRUE) / 100            # inflation de chaque année (4 années)
 gn   <- prix1$gn / 100
 pib_nom <- prix1$pib0 * (1 + gn)^(0:4)                  # PIB nominal, 5 années
-ip      <- 100 * c(1, cumprod(______))                  # indice des prix : produit cumulé des (1 + inflation)
-pib_reel <- ______                                      # PIB nominal / indice * 100
+ip      <- 100 * c(1, cumprod(______))                  # les inflations successives se composent : quelle fonction de cumul utiliser ?
+pib_reel <- ______                                      # retire l'effet des prix du PIB nominal
 cumul <- ______                                         # croissance réelle cumulée, en %
-tcam  <- ______                                         # taux annuel moyen : (dernier / premier)^(1/4) - 1, en %
+tcam  <- ______                                         # taux annuel moyen composé entre la première et la dernière année (combien de périodes ?), en %
 c(pib_reel_5 = pib_reel[5], cumul = cumul, tcam = tcam)
 ```
 
@@ -428,6 +444,16 @@ c(pib_reel_5 = pib_reel[5], cumul = cumul, tcam = tcam)
 ```{webr}
 #| exercise: con-prix-1
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 set.seed(prix1$seed); infl <- sample(0:6, 4, replace = TRUE) / 100
 pn <- prix1$pib0 * (1 + prix1$gn / 100)^(0:4)
 pr <- pn / (100 * c(1, cumprod(1 + infl))) * 100
@@ -437,7 +463,7 @@ msgs <- c("PIB réel de la 5e année : PIB nominal / indice * 100, avec indice =
 if (length(res) != 3 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(pib_reel_5 = ..., cumul = ..., tcam = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : PIB réel final %.0f, croissance cumulée %+.2f %%, soit %+.2f %% par an.", ref[1], ref[2], ref[3]))
 }
@@ -511,6 +537,16 @@ c(reel_exact = reel_exact, fisher = fisher, capital_reel = capital_reel)
 ```{webr}
 #| exercise: con-prix-2
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 i <- prix2$i / 100; pi_a <- prix2$pi / 100
 ref <- c(((1 + i) / (1 + pi_a) - 1) * 100, (i - pi_a) * 100, prix2$K * (1 + i)^prix2$T / (1 + pi_a)^prix2$T)
 res <- suppressWarnings(as.numeric(.result))
@@ -518,7 +554,7 @@ msgs <- c("Taux réel exact : (1 + i) / (1 + pi) - 1, en %.", "Fisher : i - pi, 
 if (length(res) != 3 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(reel_exact = ..., fisher = ..., capital_reel = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : taux réel exact %.3f %% (Fisher : %.2f %%) ; capital final en euros d'aujourd'hui : %.0f.", ref[1], ref[2], ref[3]))
 }
@@ -547,9 +583,9 @@ Le PIB par habitant d'un pays passe de ${croi0.y0} € à ${croi0.y1} € en ${c
 #| input:
 #|   - croi0
 y0 <- croi0$y0; y1 <- croi0$y1; T <- croi0$T
-cumul    <- ______     # (y1 / y0 - 1) * 100
-tcam     <- ______     # (y1 / y0)^(1 / T) - 1, en %
-doublement <- ______   # log(2) / log(1 + tcam / 100)
+cumul    <- ______     # croissance totale sur la période, en %
+tcam     <- ______     # taux annuel qui, composé T fois, redonne le niveau final, en %
+doublement <- ______   # durée pour doubler le niveau à ce rythme
 c(cumul = cumul, tcam = tcam, doublement = doublement)
 ```
 
@@ -597,6 +633,16 @@ c(cumul = cumul, tcam = tcam, doublement = doublement)
 ```{webr}
 #| exercise: con-croiss-0
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 y0 <- croi0$y0; y1 <- croi0$y1; T <- croi0$T
 g <- (y1 / y0)^(1 / T) - 1
 ref <- c((y1 / y0 - 1) * 100, g * 100, log(2) / log(1 + g))
@@ -605,7 +651,7 @@ msgs <- c("Cumul : (y1 / y0 - 1) * 100.", "Taux annuel moyen : (y1 / y0)^(1 / T)
 if (length(res) != 3 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(cumul = ..., tcam = ..., doublement = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : +%.1f %% au total, %.2f %% par an, niveau de vie doublé en %.1f ans.", ref[1], ref[2], ref[3]))
 }
@@ -631,8 +677,8 @@ Un pays pauvre a un PIB par habitant de ${croi1.a0} € et croît de ${croi1.gp}
 #| input:
 #|   - croi1
 a0 <- croi1$a0; b0 <- croi1$b0; gp <- croi1$gp / 100; gr <- croi1$gr / 100
-annees  <- ______     # n tel que a0 (1 + gp)^n = b0 (1 + gr)^n
-ratio30 <- ______     # a(30) / b(30)
+annees  <- ______     # durée n à laquelle les deux niveaux sont égaux : résous l'égalité avec des logarithmes
+ratio30 <- ______     # ratio des niveaux dans 30 ans
 c(annees = annees, ratio30 = ratio30)
 ```
 
@@ -679,6 +725,16 @@ c(annees = annees, ratio30 = ratio30)
 ```{webr}
 #| exercise: con-croiss-1
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 a0 <- croi1$a0; b0 <- croi1$b0; gp <- croi1$gp / 100; gr <- croi1$gr / 100
 ref <- c(log(b0 / a0) / log((1 + gp) / (1 + gr)), (a0 / b0) * ((1 + gp) / (1 + gr))^30)
 res <- suppressWarnings(as.numeric(.result))
@@ -686,7 +742,7 @@ msgs <- c("Années : log(b0 / a0) / (log(1 + gp) - log(1 + gr)).", "Ratio à 30 
 if (length(res) != 2 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(annees = ..., ratio30 = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : rattrapage en %.0f ans ; après 30 ans le pays pauvre est à %.0f %% du niveau du riche.", ref[1], 100 * ref[2]))
 }
@@ -761,6 +817,16 @@ c(contrib_K = contrib_K, contrib_L = contrib_L, pgf = pgf, part_pgf = part_pgf)
 ```{webr}
 #| exercise: con-croiss-2
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 gy <- croi2$gy; gk <- croi2$gk; gl <- croi2$gl; a <- croi2$alpha
 ref <- c(a * gk, (1 - a) * gl, gy - a * gk - (1 - a) * gl, (gy - a * gk - (1 - a) * gl) / gy * 100)
 res <- suppressWarnings(as.numeric(.result))
@@ -768,7 +834,7 @@ msgs <- c("Contribution du capital : alpha * gk.", "Contribution du travail : (1
 if (length(res) != 4 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(contrib_K = ..., contrib_L = ..., pgf = ..., part_pgf = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : capital %.2f pt, travail %.2f pt, PGF %.2f pt, soit %.0f %% de la croissance.", ref[1], ref[2], ref[3], ref[4]))
 }
@@ -797,9 +863,9 @@ Dans la population de 15 à 64 ans (effectif : ${trav0.N} milliers), il y a ${tr
 #| input:
 #|   - trav0
 N <- trav0$N; E <- trav0$E; U <- trav0$U
-chomage  <- ______     # U / (E + U) * 100
-activite <- ______     # (E + U) / N * 100
-emploi   <- ______     # E / N * 100
+chomage  <- ______     # taux de chômage : chômeurs rapportés à quel ensemble ? (en %)
+activite <- ______     # taux d'activité : actifs rapportés à quel ensemble ? (en %)
+emploi   <- ______     # taux d'emploi : personnes en emploi rapportées à quel ensemble ? (en %)
 c(chomage = chomage, activite = activite, emploi = emploi)
 ```
 
@@ -848,6 +914,16 @@ c(chomage = chomage, activite = activite, emploi = emploi)
 ```{webr}
 #| exercise: con-trav-0
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 N <- trav0$N; E <- trav0$E; U <- trav0$U
 ref <- c(U / (E + U), (E + U) / N, E / N) * 100
 res <- suppressWarnings(as.numeric(.result))
@@ -855,7 +931,7 @@ msgs <- c("Chômage : U / (E + U) * 100.", "Activité : (E + U) / N * 100.", "Em
 if (length(res) != 3 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(chomage = ..., activite = ..., emploi = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : chômage %.1f %%, activité %.1f %%, emploi %.1f %%.", ref[1], ref[2], ref[3]))
 }
@@ -881,9 +957,9 @@ Chaque mois, ${trav1.s} % des personnes en emploi perdent leur poste (taux de s�
 #| input:
 #|   - trav1
 s <- trav1$s / 100; f <- trav1$f / 100; u <- trav1$u0 / 100
-u_star <- ______                 # taux d'équilibre : s / (s + f), en %
+u_star <- ______                 # taux de chômage d'équilibre : flux d'entrée = flux de sortie, en %
 for (mois in 1:12) {
-  u <- ______                    # u + s * (1 - u) - f * u
+  u <- ______                    # mise à jour mensuelle : qui entre au chômage, qui en sort ?
 }
 c(u_star = u_star, u_12 = u * 100)
 ```
@@ -933,6 +1009,16 @@ c(u_star = u_star, u_12 = u * 100)
 ```{webr}
 #| exercise: con-trav-1
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 s <- trav1$s / 100; f <- trav1$f / 100; u <- trav1$u0 / 100
 for (m in 1:12) u <- u * (1 - s - f) + s
 ref <- c(s / (s + f) * 100, u * 100)
@@ -941,7 +1027,7 @@ msgs <- c("Chômage d'équilibre : s / (s + f) * 100.", "Dynamique mensuelle : u
 if (length(res) != 2 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(u_star = ..., u_12 = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : chômage d'équilibre %.2f %% ; après 12 mois : %.2f %%.", ref[1], ref[2]))
 }
@@ -1019,6 +1105,16 @@ c(beta = beta, gstar = a / beta, r2 = summary(fit)$r.squared)
 ```{webr}
 #| exercise: con-trav-2
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 set.seed(trav2$seed); g <- rnorm(40, 1.8, 1.6); du <- -trav2$beta * (g - trav2$gstar) + rnorm(40, 0, 0.25)
 b <- cov(g, du) / var(g); a <- mean(du) - b * mean(g)
 ref <- c(-b, a / -b, cor(g, du)^2)
@@ -1027,7 +1123,7 @@ msgs <- c("β = −pente de lm(du ~ g).", "g* = ordonnée à l'origine / β (car
 if (length(res) != 3 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(beta = ..., gstar = ..., r2 = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-05 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : β = %.3f, g* = %.2f %%, R² = %.2f.", ref[1], ref[2], ref[3]))
 }
@@ -1056,8 +1152,8 @@ La banque centrale vise une inflation de 2 %. Le taux réel neutre est de ${mon0
 #| input:
 #|   - mon0
 rstar <- mon0$rstar; pi <- mon0$pi; gap <- mon0$gap; pistar <- 2
-i_taylor <- ______       # rstar + pi + 0.5 * (pi - pistar) + 0.5 * gap
-r_implicite <- ______    # taux réel : i_taylor - pi
+i_taylor <- ______       # règle de Taylor : taux réel neutre + inflation + réaction à l'écart d'inflation + réaction à l'écart de production
+r_implicite <- ______    # taux réel implicite de la règle
 c(i_taylor = i_taylor, r_implicite = r_implicite)
 ```
 
@@ -1104,6 +1200,16 @@ c(i_taylor = i_taylor, r_implicite = r_implicite)
 ```{webr}
 #| exercise: con-mon-0
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 rstar <- mon0$rstar; pi <- mon0$pi; gap <- mon0$gap
 it <- rstar + pi + 0.5 * (pi - 2) + 0.5 * gap
 ref <- c(it, it - pi)
@@ -1112,7 +1218,7 @@ msgs <- c("Taylor : rstar + pi + 0.5 * (pi - pistar) + 0.5 * gap.", "Taux réel 
 if (length(res) != 2 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(i_taylor = ..., r_implicite = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : taux directeur préconisé %.2f %%, soit un taux réel de %.2f %%.", ref[1], ref[2]))
 }
@@ -1141,8 +1247,8 @@ set.seed(mon1$seed)
 pi  <- round(runif(8, 1, 6), 1)
 gap <- round(rnorm(8, 0, 1.5), 1)
 i_obs <- round(2 + 0.6 * pi + 0.4 * gap + rnorm(8, 0, 0.3), 2)
-i_taylor <- ______                    # vectorisé : rstar + pi + w * (pi - 2) + 0.5 * gap
-ecart <- ______                       # i_obs - i_taylor
+i_taylor <- ______                    # règle de Taylor appliquée aux 8 trimestres d'un coup (sans boucle), avec le coefficient w sur l'inflation
+ecart <- ______                       # écart entre le taux effectif et le taux préconisé
 c(ecart_moyen = mean(ecart), nb_accommodant = ______, pire = min(ecart))
 ```
 
@@ -1193,6 +1299,16 @@ c(ecart_moyen = mean(ecart), nb_accommodant = sum(ecart < 0), pire = min(ecart))
 ```{webr}
 #| exercise: con-mon-1
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 set.seed(mon1$seed); pi <- round(runif(8, 1, 6), 1); gap <- round(rnorm(8, 0, 1.5), 1)
 i_obs <- round(2 + 0.6 * pi + 0.4 * gap + rnorm(8, 0, 0.3), 2)
 it <- mon1$rstar + pi + mon1$w * (pi - 2) + 0.5 * gap
@@ -1202,7 +1318,7 @@ msgs <- c("Écart moyen : mean(i_obs - i_taylor), avec i_taylor = rstar + pi + w
 if (length(res) != 3 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(ecart_moyen = ..., nb_accommodant = ..., pire = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : écart moyen %+.2f pt, %d trimestre(s) plus accommodant(s) que la règle, pire écart %+.2f pt.", ref[1], as.integer(ref[2]), ref[3]))
 }
@@ -1279,6 +1395,16 @@ c(mensualite = M0, mensualite_hausse = M1, hausse_pct = (M1 / M0 - 1) * 100, sur
 ```{webr}
 #| exercise: con-mon-2
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 K <- mon2$K; i <- mon2$i / 100; n <- mon2$n
 mens <- function(tx) { r <- tx / 12; K * r / (1 - (1 + r)^(-12 * n)) }
 ref <- c(mens(i), mens(i + 0.01), (mens(i + 0.01) / mens(i) - 1) * 100, (mens(i + 0.01) - mens(i)) * 12 * n)
@@ -1287,7 +1413,7 @@ msgs <- c("Mensualité : K * r / (1 - (1 + r)^(-m)), r = taux / 12 et m = 12 * a
 if (length(res) != 4 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(mensualite = ..., mensualite_hausse = ..., hausse_pct = ..., surcout_total = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : mensualité %.0f € -> %.0f € (%+.1f %%), surcoût total %.0f €.", ref[1], ref[2], ref[3], ref[4]))
 }
@@ -1316,9 +1442,9 @@ Une économie ouverte (milliards d'euros) a une consommation privée de ${comm0.
 #| input:
 #|   - comm0
 C <- comm0$C; G <- comm0$G; I <- comm0$I; X <- comm0$X; M <- comm0$M
-Y  <- ______         # PIB = C + I + G + X - M
-S  <- ______         # épargne nationale = Y - C - G
-solde <- ______      # X - M
+Y  <- ______         # PIB par l'optique des dépenses
+S  <- ______         # épargne nationale : ce qui reste du revenu après consommation privée et publique
+solde <- ______      # solde commercial
 c(PIB = Y, S_moins_I = S - I, solde = solde, solde_pct_PIB = solde / Y * 100)
 ```
 
@@ -1366,6 +1492,16 @@ c(PIB = Y, S_moins_I = S - I, solde = solde, solde_pct_PIB = solde / Y * 100)
 ```{webr}
 #| exercise: con-comm-0
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 C <- comm0$C; G <- comm0$G; I <- comm0$I; X <- comm0$X; M <- comm0$M
 Y <- C + I + G + X - M
 ref <- c(Y, X - M, X - M, (X - M) / Y * 100)
@@ -1374,7 +1510,7 @@ msgs <- c("PIB = C + I + G + X - M.", "S - I avec S = Y - C - G : doit être ég
 if (length(res) != 4 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(PIB = ..., S_moins_I = ..., solde = ..., solde_pct_PIB = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : PIB %.0f, S - I = solde commercial = %+.0f (%.1f %% du PIB).", ref[1], ref[3], ref[4]))
 }
@@ -1400,8 +1536,8 @@ Le taux de change nominal e est le prix d'une unité de monnaie étrangère en m
 #| input:
 #|   - comm1
 e0 <- comm1$e0; e1 <- comm1$e1; P1 <- 1 + comm1$pi / 100; Pstar1 <- 1 + comm1$pistar / 100
-q0 <- ______          # année 0 : P = P* = 1
-q1 <- ______          # e1 * Pstar1 / P1
+q0 <- ______          # taux de change réel de départ, quand les deux niveaux de prix valent 1
+q1 <- ______          # taux de change réel de l'année 1 : prix étrangers convertis en monnaie nationale, rapportés aux prix nationaux
 c(q0 = q0, q1 = q1, variation_pct = ______)
 ```
 
@@ -1448,6 +1584,16 @@ c(q0 = q0, q1 = q1, variation_pct = (q1 / q0 - 1) * 100)
 ```{webr}
 #| exercise: con-comm-1
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 e0 <- comm1$e0; e1 <- comm1$e1; P1 <- 1 + comm1$pi / 100; Ps <- 1 + comm1$pistar / 100
 q0 <- e0; q1 <- e1 * Ps / P1
 ref <- c(q0, q1, (q1 / q0 - 1) * 100)
@@ -1456,7 +1602,7 @@ msgs <- c("q0 = e0 (les niveaux de prix valent 1).", "q1 = e1 * Pstar1 / P1.", "
 if (length(res) != 3 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(q0 = ..., q1 = ..., variation_pct = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : q passe de %.3f à %.3f (%+.1f %%) : %s.", ref[1], ref[2], ref[3], if (ref[3] > 0) "gain de compétitivité-prix" else "perte de compétitivité-prix"))
 }
@@ -1529,6 +1675,16 @@ c(solde = X1 - M1, variation = (X1 - M1) - (X0 - M0), somme_elast = ex + em, ML 
 ```{webr}
 #| exercise: con-comm-2
 #| check: true
+.diag <- function(res, ref) {
+  ok <- function(a, b, tol = 1e-3) length(a) == length(b) && !anyNA(a) && all(abs(a - b) <= tol * (1 + abs(b)))
+  if (ok(res * 100, ref)) return(" Indice : ton résultat est 100 fois trop petit (passage en % oublié ?).")
+  if (ok(res / 100, ref)) return(" Indice : ton résultat est 100 fois trop grand (conversion % → décimal en trop ?).")
+  if (any(ref != 0) && ok(-res, ref)) return(" Indice : le signe est inversé (différence dans le mauvais sens ?).")
+  if (ok(res - 1, ref, 1e-6) || ok(res + 1, ref, 1e-6)) return(" Indice : décalage d'une unité (nombre de périodes ou position à revoir ?).")
+  if (length(res) == length(ref) && ok(sort(res), sort(ref))) return(" Indice : les bonnes valeurs, mais dans le mauvais ordre.")
+  if (ok(res, ref, 0.05)) return(" Indice : très proche de la valeur attendue : formule approchée au lieu de la formule exacte, ou arrondi ?")
+  ""
+}
 ex <- comm2$ex; em <- comm2$em; d <- comm2$d / 100
 s <- 100 * (1 + ex * d) - 100 * (1 + d) * (1 - em * d)
 ref <- c(s, s, ex + em, as.numeric(ex + em > 1))
@@ -1537,7 +1693,7 @@ msgs <- c("Solde : X0 * (1 + ex * d) - M0 * (1 + d) * (1 - em * d).", "Variation
 if (length(res) != 4 || anyNA(res)) {
   list(correct = FALSE, message = "Renvoie c(solde = ..., variation = ..., somme_elast = ..., ML = ...).")
 } else if (any(bad <- abs(res - ref) > 1e-06 * (1 + abs(ref)))) {
-  list(correct = FALSE, message = msgs[which(bad)[1]])
+  list(correct = FALSE, message = paste0(msgs[which(bad)[1]], .diag(res, ref)))
 } else {
   list(correct = TRUE, message = sprintf("Correct : solde %+.2f après dépréciation ; Marshall-Lerner %s (somme des élasticités %.1f).", ref[1], if (ref[4] == 1) "vérifiée" else "non vérifiée", ref[3]))
 }
